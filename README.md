@@ -9,3 +9,7 @@ ToDo:
 - Finalize the flow from recipe management to sending the cart to an online store
 - Add authentication
 - Write proper documentation
+
+## Teaser
+
+![Screenshot](screenshot.png)
