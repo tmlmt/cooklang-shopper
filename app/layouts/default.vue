@@ -32,7 +32,7 @@ useSeoMeta({
 
 <template>
   <div class="absolute flex h-full w-full flex-col">
-    <UHeader>
+    <UHeader class="min-h-16">
       <template #title> Cooklang Shopper </template>
       <UBreadcrumb :items="items" />
       <template #right>
