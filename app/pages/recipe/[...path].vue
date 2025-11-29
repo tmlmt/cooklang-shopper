@@ -65,7 +65,7 @@ const nonTitleMetaData = computed(() => {
 // View / Edit Recipe
 //---------------------
 
-const isEditMode = ref(false);
+const isEditMode = ref(route.query.mode === "edit");
 const formState = computed(() => {
   return {
     recipe: rawRecipe.value,
@@ -172,7 +172,7 @@ const editServingsInShoppingList = () => {
             :ui="{ base: 'w-24' }"
           />
           <UButton
-            v-if="!shoppingStore.isRecipeInList(path)"
+            v-if="!shoppingStore.isRecipeInSelection(path)"
             size="sm"
             color="primary"
             @click="addToShoppingList"

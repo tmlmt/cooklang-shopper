@@ -93,6 +93,7 @@ const diffRowSelection = (
 
 const ULink = resolveComponent("ULink");
 const UCheckbox = resolveComponent("UCheckbox");
+const UButton = resolveComponent("UButton");
 
 const columns: TableColumn<RecipeEssentials>[] = [
   {
@@ -141,7 +142,70 @@ const columns: TableColumn<RecipeEssentials>[] = [
     enableColumnFilter: true,
     filterFn: "arrIncludes",
   },
+  {
+    id: "action",
+    header: "Actions",
+  },
 ];
+
+const modal = await useModalConfirmation();
+
+function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
+  return [
+    [
+      {
+        label: "View",
+        icon: "prime:eye",
+        onClick: async () => {
+          await navigateTo(
+            `/recipe/${recipe.dir ? recipe.dir + "/" : ""}${recipe.name}`,
+          );
+        },
+      },
+      {
+        label: "Edit",
+        icon: "prime:file-edit",
+        onClick: async () => {
+          await navigateTo(
+            `/recipe/${recipe.dir ? recipe.dir + "/" : ""}${recipe.name}?mode=edit`,
+          );
+        },
+      },
+      {
+        label: "Delete",
+        icon: "prime:trash",
+        color: "error",
+        onClick: async () => {
+          const result = await modal.open(
+            "Are you sure you want to delete this recipe?",
+          );
+          if (result) {
+            // Delete recipe and remove from index
+            const newIndex = await $fetch(
+              `/api/recipe/${recipe.dir ? recipe.dir + "/" : ""}${recipe.name}`,
+              { method: "DELETE" },
+            );
+            if (newIndex) {
+              recipesIndex.value = newIndex;
+            }
+
+            // Remove from selected list (if present)
+            shoppingStore.removeRecipe(
+              recipe.dir ? recipe.dir + "/" + recipe.name : recipe.name,
+            );
+
+            // Show success toast
+            toast.add({
+              title: "Success",
+              description: "Recipe deleted",
+              color: "success",
+            });
+          }
+        },
+      },
+    ],
+  ];
+}
 
 //--------------------
 // Shopping List
@@ -189,6 +253,17 @@ watch(selectedRows, (newSelected, oldSelected) => {
       v-model:row-selection="selectedRows"
       :data="allRecipesList"
       :columns="columns"
-    />
+    >
+      <template #action-cell="{ row }">
+        <UDropdownMenu :items="getDropdownActions(row.original)">
+          <UButton
+            icon="prime:ellipsis-v"
+            color="neutral"
+            variant="ghost"
+            aria-label="Actions"
+          />
+        </UDropdownMenu>
+      </template>
+    </UTable>
   </div>
 </template>
