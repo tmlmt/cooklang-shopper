@@ -13,7 +13,7 @@ const toast = useToast();
 // Retrieving recipe list
 //------------------------
 
-const res = await useFetch<{ recipes: RecipeIndex }>("/api/recipes");
+const res = await useFetch("/api/recipes");
 const recipesIndex = ref<{ recipes: RecipeIndex }>();
 
 if (res.data.value) {
@@ -32,9 +32,7 @@ const allRecipesList = computed(() => {
 //--------------------
 
 const reindexRecipes = async () => {
-  const newIndex = (await $fetch("/api/recipes/rebuild-index")) as {
-    recipes: RecipeIndex;
-  };
+  const newIndex = await $fetch("/api/recipes/rebuild-index");
   if (newIndex) {
     recipesIndex.value = newIndex;
     toast.add({
