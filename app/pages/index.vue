@@ -131,18 +131,21 @@ const columns: TableColumn<RecipeEssentials>[] = [
   {
     accessorKey: "dir",
     header: "Directory",
-    cell: ({ row }) => row.getValue("dir"),
+    cell: ({ row }) => `/${row.getValue("dir")}`,
   },
   {
     accessorKey: "tags",
     header: "Tags",
-    cell: ({ row }) => (row.getValue("tags") as Array<string>).join(", "),
+    cell: ({ row }) => {
+      const tags = (row.getValue("tags") as Array<string>).join(", ");
+      return tags || "-";
+    },
     enableColumnFilter: true,
     filterFn: "arrIncludes",
   },
   {
     id: "action",
-    header: "Actions",
+    header: () => h("div", { class: "text-center" }, "Actions"),
   },
 ];
 
@@ -253,14 +256,16 @@ watch(selectedRows, (newSelected, oldSelected) => {
       :columns="columns"
     >
       <template #action-cell="{ row }">
-        <UDropdownMenu :items="getDropdownActions(row.original)">
-          <UButton
-            icon="prime:ellipsis-v"
-            color="neutral"
-            variant="ghost"
-            aria-label="Actions"
-          />
-        </UDropdownMenu>
+        <div class="text-center">
+          <UDropdownMenu :items="getDropdownActions(row.original)">
+            <UButton
+              icon="prime:ellipsis-v"
+              color="neutral"
+              variant="ghost"
+              aria-label="Actions"
+            />
+          </UDropdownMenu>
+        </div>
       </template>
     </UTable>
   </div>
