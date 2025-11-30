@@ -7,6 +7,20 @@
   --container-10xl: 112rem;
 }
 
+@theme static {
+  --color-royal-50: #aab6ee;
+  --color-royal-100: #9aa7ea;
+  --color-royal-200: #8a99e5;
+  --color-royal-300: #798be2;
+  --color-royal-400: #687cde;
+  --color-royal-500: #586dda;
+  --color-royal-600: #445fda;
+  --color-royal-700: #3351d7;
+  --color-royal-800: #2846cc;
+  --color-royal-900: #2541bb;
+  --color-royal-950: #223baa;
+}
+
 :root {
   --ui-container: var(--container-9xl);
 }
