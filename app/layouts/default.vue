@@ -28,6 +28,26 @@ useSeoMeta({
     (route.meta.description as string) ||
     "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
 });
+
+const navRight = computed(() => {
+  if (route.path === "/") {
+    return { text: "Continue to shopping list", to: "/list" };
+  } else if (route.path === "/list") {
+    return { text: "Continue to shopping cart", to: "/cart" };
+  } else {
+    return undefined;
+  }
+});
+
+const navLeft = computed(() => {
+  if (route.path === "/list") {
+    return { text: "Back to recipes", to: "/" };
+  } else if (route.path === "/cart") {
+    return { text: "Back to shopping list", to: "/list" };
+  } else {
+    return undefined;
+  }
+});
 </script>
 
 <template>
@@ -44,5 +64,30 @@ useSeoMeta({
         <slot />
       </main>
     </UContainer>
+    <USeparator class="h-px" />
+    <UFooter>
+      <template v-if="navLeft" #left>
+        <UCard class="hover:bg-elevated" @click="navigateTo(navLeft.to)">
+          <UButton
+            class="rounded-full"
+            variant="outline"
+            color="neutral"
+            icon="prime:arrow-left"
+          />
+          <p class="text-md mt-2">{{ navLeft.text }}</p>
+        </UCard>
+      </template>
+      <template v-if="navRight" #right>
+        <UCard class="group hover:bg-elevated" @click="navigateTo(navRight.to)">
+          <UButton
+            class="group-hover:bg-elevated rounded-full"
+            variant="outline"
+            color="neutral"
+            icon="prime:arrow-right"
+          />
+          <p class="text-md mt-2">{{ navRight.text }}</p>
+        </UCard>
+      </template>
+    </UFooter>
   </div>
 </template>
