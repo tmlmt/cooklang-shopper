@@ -10,7 +10,6 @@ definePageMeta({
 
 const toast = useToast();
 
-const router = useRouter();
 const route = useRoute();
 
 if (!route.params.path) {
@@ -151,13 +150,6 @@ const editServingsInShoppingList = () => {
           <h1 v-if="recipe.metadata.title" class="mb-4 text-3xl">
             {{ recipe.metadata.title }}
           </h1>
-          <UButton
-            class="mb-4"
-            size="lg"
-            color="secondary"
-            icon="prime:arrow-left"
-            @click="router.back"
-          />
         </div>
         <div class="mb-4 flex flex-row gap-4">
           <UButton size="sm" color="primary" @click="isEditMode = true"

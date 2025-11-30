@@ -40,7 +40,7 @@ const navRight = computed(() => {
 });
 
 const navLeft = computed(() => {
-  if (route.path === "/list") {
+  if (route.path === "/list" || route.path.startsWith("/recipe/")) {
     return { text: "Back to recipes", to: "/" };
   } else if (route.path === "/cart") {
     return { text: "Back to shopping list", to: "/list" };
