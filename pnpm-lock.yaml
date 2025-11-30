@@ -29,6 +29,9 @@ importers:
       tailwindcss:
         specifier: 4.1.11
         version: 4.1.11
+      vue:
+        specifier: 3.5.25
+        version: 3.5.25(typescript@5.9.2)
     devDependencies:
       '@iconify-json/material-symbols':
         specifier: 1.2.42
