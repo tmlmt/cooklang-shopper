@@ -46,6 +46,14 @@ const shoppingStore = useShoppingStore();
 
 const rawRecipe = ref<string>();
 const res = await useFetch(`/api/recipe/${path}`);
+
+if (res.error.value) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Recipe not found",
+  });
+}
+
 rawRecipe.value = String(res.data.value);
 const recipe = ref<Recipe>();
 watch(
