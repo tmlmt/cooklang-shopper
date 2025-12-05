@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Recipe } from "@tmlmt/cooklang-parser";
-import type { FormSubmitEvent } from "@nuxt/ui";
+import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
 import { FetchError } from "ofetch";
 
 definePageMeta({
@@ -9,7 +9,6 @@ definePageMeta({
 });
 
 const toast = useToast();
-
 const route = useRoute();
 
 if (!route.params.path) {
@@ -19,10 +18,21 @@ if (!route.params.path) {
   });
 }
 
-const path =
+const pathParams =
   typeof route.params.path === "string"
-    ? route.params.path
-    : route.params.path.join("/");
+    ? [route.params.path]
+    : route.params.path;
+
+const dir = [
+  "Recipes",
+  ...pathParams.reduce((acc, item) => {
+    acc.push("/");
+    acc.push(item);
+    return acc;
+  }, [] as string[]),
+];
+
+const path = pathParams.join("/");
 
 // Regex-based validation of provided path
 if (!/^(?!\/)(?:[\p{L}\p{N}_ +%.-]+\/)*[\p{L}\p{N}_ +%.-]+$/u.test(path)) {
@@ -60,11 +70,74 @@ const nonTitleMetaData = computed(() => {
   return undefined;
 });
 
+//---------------------------
+// Edit, Move, Delete recipe
+//---------------------------
+
+const isEditMode = ref(route.query.mode === "edit");
+const modalFile = await useModalFile();
+const modalConf = await useModalConfirmation();
+
+const menuItems = ref<DropdownMenuItem[]>([
+  {
+    label: "Edit",
+    icon: "prime:file-edit",
+    onSelect: () => {
+      isEditMode.value = true;
+    },
+  },
+  {
+    label: "Move",
+    icon: "prime:arrow-right",
+    onSelect: async () => {
+      const result = await modalFile.open(
+        "move",
+        path,
+        recipe.value?.metadata.title,
+      );
+      if (result) {
+        toast.add({
+          title: "Success",
+          description: `Recipe moved to ${result.dir}/${result.name}`,
+          color: "success",
+        });
+      }
+    },
+  },
+  {
+    label: "Delete",
+    icon: "prime:trash",
+    color: "error",
+    onSelect: async () => {
+      const result = await modalConf.open(
+        "Are you sure you want to delete this recipe?",
+      );
+      if (result) {
+        // Delete recipe
+        await $fetch(`/api/recipe/${path}`, {
+          method: "DELETE",
+        });
+
+        // Remove from selected list (if present)
+        shoppingStore.removeRecipe(`/api/recipe/${path}`);
+
+        // Show success toast
+        toast.add({
+          title: "Success",
+          description: "Recipe deleted",
+          color: "success",
+        });
+
+        await navigateTo("/");
+      }
+    },
+  },
+]);
+
 //---------------------
 // View / Edit Recipe
 //---------------------
 
-const isEditMode = ref(route.query.mode === "edit");
 const formState = computed(() => {
   return {
     recipe: rawRecipe.value,
@@ -74,7 +147,7 @@ const formState = computed(() => {
 const onEditSubmit = async (event: FormSubmitEvent<{ recipe: string }>) => {
   try {
     await $fetch(`/api/recipe/${path}`, {
-      method: "POST",
+      method: "PUT",
       body: event.data,
     });
     toast.add({
@@ -146,17 +219,26 @@ const editServingsInShoppingList = () => {
   <div class="flex w-full">
     <div v-if="recipe" class="flex w-full flex-col">
       <div v-if="!isEditMode" class="flex w-full flex-col">
-        <div class="flex flex-row gap-4">
-          <h1 v-if="recipe.metadata.title" class="mb-4 text-3xl">
-            {{ recipe.metadata.title }}
-          </h1>
+        <div class="mb-4 flex flex-col gap-4">
+          <div class="flex flex-row gap-4">
+            <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
+          </div>
+          <div class="flex flex-row gap-4">
+            <h1 v-if="recipe.metadata.title" class="text-3xl">
+              {{ recipe.metadata.title }}
+            </h1>
+            <UDropdownMenu :items="menuItems" :content="{ align: 'start' }">
+              <UButton
+                icon="prime:bars"
+                size="lg"
+                color="secondary"
+                variant="soft"
+              />
+            </UDropdownMenu>
+          </div>
         </div>
         <div class="mb-4 flex flex-row gap-4">
-          <UButton size="sm" color="primary" @click="isEditMode = true"
-            ><Icon
-              class="text-lg"
-              name="material-symbols:edit-document-rounded"
-          /></UButton>
+          <div class="mt-1">Scale:</div>
           <UInputNumber
             v-model="servingsSpinner"
             :step="1"
@@ -165,13 +247,12 @@ const editServingsInShoppingList = () => {
           />
           <UButton
             v-if="!shoppingStore.isRecipeInSelection(path)"
-            size="sm"
+            size="md"
             color="primary"
+            label="Add to shopping list"
+            icon="material-symbols:add-shopping-cart-rounded"
             @click="addToShoppingList"
-            ><Icon
-              class="text-lg"
-              name="material-symbols:add-shopping-cart-rounded"
-          /></UButton>
+          />
           <UButton
             v-else
             size="sm"
