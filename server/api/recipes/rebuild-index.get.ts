@@ -1,9 +1,8 @@
-import type { RecipeIndex } from "~~/types";
+import { initRecipeIndex } from "~~/server/utils/recipeIndex";
 
 export default defineEventHandler(async () => {
-  const storage = useStorage("recipes");
-  await rebuildRecipeIndex();
-  return (await storage.getItem("index.json")) as
-    | { recipes: RecipeIndex }
-    | undefined;
+  await initRecipeIndex();
+  const recipeIndex = getRecipeIndex();
+  const recipes = Object.fromEntries(recipeIndex.entries());
+  return { recipes };
 });

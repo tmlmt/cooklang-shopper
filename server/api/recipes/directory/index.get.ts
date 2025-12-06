@@ -1,5 +1,5 @@
 import { glob } from "glob";
-import path from "path";
+import path from "node:path";
 
 export default defineEventHandler(async () => {
   const dir = path.join(process.cwd(), "public", "recipes");

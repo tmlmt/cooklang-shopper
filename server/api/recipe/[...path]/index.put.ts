@@ -1,5 +1,4 @@
-import { Recipe } from "@tmlmt/cooklang-parser";
-import type { RecipeIndex } from "~~/types";
+import { updateRecipeIndex } from "~~/server/utils/recipeIndex";
 
 export default defineEventHandler(async (event) => {
   const path = getRouterParam(event, "path");
@@ -29,23 +28,11 @@ export default defineEventHandler(async (event) => {
 
   // Saving
   const storage = useStorage("recipes");
-  await storage.setItem(decodedPath + ".cook", body.recipe.trim());
+  const recipeKey = decodedPath.replace(/\//g, ":");
+  await storage.setItem(recipeKey + ".cook", body.recipe.trim());
 
   // Update index entry
-  const index = (await storage.getItem("index.json")) as
-    | { recipes: RecipeIndex }
-    | undefined;
-  const indexParsed: { recipes: RecipeIndex } = index ?? { recipes: {} };
-  const parsed = new Recipe(body.recipe.trim());
-  const name = decodedPath.split("/").pop()!;
-  indexParsed.recipes[decodedPath.replace("/", ":")] = {
-    name,
-    title: parsed.metadata.title || name,
-    dir: decodedPath.split("/").slice(0, -1).join("/"),
-    servings: parsed.servings ?? 1,
-    tags: parsed.metadata.tags || [],
-  };
-  await storage.setItem("index.json", indexParsed);
+  updateRecipeIndex(recipeKey, body.recipe.trim());
 
   return "Recipe saved";
 });

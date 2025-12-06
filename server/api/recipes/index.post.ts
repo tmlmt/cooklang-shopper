@@ -4,6 +4,7 @@ import {
   isSystemError,
   isSystemErrorWithCode,
 } from "~~/server/utils/isSystemError";
+import { updateRecipeIndex } from "~~/server/utils/recipeIndex";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -78,5 +79,13 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return { renamed: originalExists, name: body.name + suffix };
+  const recipeName = body.name.trim() + suffix;
+  const recipeKey = (
+    body.dir.trim() ? `${body.dir.trim()}/${recipeName}` : recipeName
+  )
+    .replace(/\//g, ":")
+    .replace(".cook", "");
+  updateRecipeIndex(`${recipeKey}.cook`, body.content);
+
+  return { renamed: originalExists, name: recipeName };
 });

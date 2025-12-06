@@ -68,7 +68,7 @@ const recipe = ref<Recipe>();
 watch(
   rawRecipe,
   (newRawRecipe) => {
-    if (newRawRecipe && route.query.mode !== "new") {
+    if (newRawRecipe) {
       recipe.value = new Recipe(newRawRecipe);
       const servings = shoppingStore.getServings(path);
       if (servings) recipe.value = recipe.value.scaleTo(servings);
@@ -94,6 +94,7 @@ const nonTitleMetaData = computed(() => {
 const isEditMode = ref(
   route.query.mode === "edit" || route.query.mode === "new",
 );
+const isManualEdit = ref(false);
 const modalFile = await useModalFile();
 const modalConf = await useModalConfirmation();
 
@@ -103,6 +104,7 @@ const menuItems = ref<DropdownMenuItem[]>([
     icon: "prime:file-edit",
     onSelect: () => {
       isEditMode.value = true;
+      isManualEdit.value = true;
     },
   },
   {
@@ -115,11 +117,21 @@ const menuItems = ref<DropdownMenuItem[]>([
         recipe.value?.metadata.title,
       );
       if (result) {
+        await $fetch(`/api/recipe/${path}`, {
+          method: "PATCH",
+          body: {
+            dir: result.dir,
+            fileName: result.name,
+          },
+        });
         toast.add({
           title: "Success",
           description: `Recipe moved to ${result.dir}/${result.name}`,
           color: "success",
         });
+        await navigateTo(
+          `/recipe/${result.dir ? result.dir + "/" : ""}${result.name}`,
+        );
       }
     },
   },
@@ -138,7 +150,7 @@ const menuItems = ref<DropdownMenuItem[]>([
         });
 
         // Remove from selected list (if present)
-        shoppingStore.removeRecipe(`/api/recipe/${path}`);
+        shoppingStore.removeRecipe(path);
 
         // Show success toast
         toast.add({
@@ -164,7 +176,7 @@ const formState = computed(() => {
 });
 
 const onEditSubmit = async (event: FormSubmitEvent<{ recipe: string }>) => {
-  if (route.query.mode === "edit") {
+  if (route.query.mode === "edit" || isManualEdit.value) {
     try {
       await $fetch(`/api/recipe/${path}`, {
         method: "PUT",

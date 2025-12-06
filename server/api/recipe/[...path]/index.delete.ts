@@ -1,4 +1,7 @@
-import type { RecipeIndex } from "~~/types";
+import {
+  deleteFromRecipeIndex,
+  getRecipeIndex,
+} from "~~/server/utils/recipeIndex";
 
 export default defineEventHandler(async (event) => {
   const path = getRouterParam(event, "path");
@@ -21,17 +24,13 @@ export default defineEventHandler(async (event) => {
   const storage = useStorage("recipes");
 
   // Remove the recipe file itself
-  await storage.removeItem(decodedPath + ".cook");
+  const recipeKey = decodedPath.replace(/\//g, ":");
+  await storage.removeItem(recipeKey + ".cook");
 
   // Remove the recipe from the index
-  const index = (await storage.getItem("index.json")) as
-    | { recipes: RecipeIndex }
-    | undefined;
-  if (!index) return false;
-  const recipeKey = decodedPath.replace("/", ":");
-  /* eslint-disable @typescript-eslint/no-dynamic-delete */
-  delete index.recipes[recipeKey];
-  await storage.setItem("index.json", index);
+  deleteFromRecipeIndex(recipeKey);
 
-  return index;
+  const recipeIndex = getRecipeIndex();
+  const recipes = Object.fromEntries(recipeIndex.entries());
+  return { recipes };
 });
