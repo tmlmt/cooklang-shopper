@@ -234,19 +234,34 @@ watch(selectedRows, (newSelected, oldSelected) => {
     }
   }
 });
+
+//---------------------
+// New Recipe
+//---------------------
+
+const modalFile = await useModalFile();
+
+const openNewRecipeModal = async () => {
+  const result = await modalFile.open("new");
+  if (result) {
+    await navigateTo(`/recipe/${pathJoin(result.dir, result.name)}?mode=new`);
+  }
+};
 </script>
 
 <template>
   <div class="flex w-full flex-col gap-4">
     <div class="flex flex-row gap-4">
-      <h1 class="text-3xl">Recipes</h1>
+      <h1 class="mb-0.5 text-3xl">Recipes</h1>
+      <UButton
+        icon="prime:plus"
+        color="primary"
+        variant="soft"
+        label="New recipe"
+        @click="openNewRecipeModal"
+      />
       <UDropdownMenu :items="items" :content="{ align: 'start' }">
-        <UButton
-          icon="prime:bars"
-          size="lg"
-          color="secondary"
-          variant="outline"
-        />
+        <UButton icon="prime:bars" size="lg" color="secondary" variant="soft" />
       </UDropdownMenu>
     </div>
     <UTable

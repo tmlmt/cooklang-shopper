@@ -20,9 +20,11 @@
     "@nuxt/ui": "4.2.1",
     "@pinia/nuxt": "0.11.2",
     "@tmlmt/cooklang-parser": "link:../cooklang-parser/dist",
+    "glob": "^13.0.0",
     "nuxt": "4.2.0",
     "pinia": "3.0.3",
     "tailwindcss": "4.1.11",
+    "valibot": "^1.2.0",
     "vue": "3.5.25"
   },
   "devDependencies": {

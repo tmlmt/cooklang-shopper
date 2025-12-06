@@ -10,6 +10,7 @@ definePageMeta({
 
 const toast = useToast();
 const route = useRoute();
+const router = useRouter();
 
 if (!route.params.path) {
   throw createError({
@@ -33,6 +34,8 @@ const dir = [
 ];
 
 const path = pathParams.join("/");
+const recipeDir = path.substring(0, path.lastIndexOf("/"));
+const recipeName = path.substring(path.lastIndexOf("/") + 1);
 
 // Regex-based validation of provided path
 if (!/^(?!\/)(?:[\p{L}\p{N}_ +%.-]+\/)*[\p{L}\p{N}_ +%.-]+$/u.test(path)) {
@@ -45,21 +48,27 @@ if (!/^(?!\/)(?:[\p{L}\p{N}_ +%.-]+\/)*[\p{L}\p{N}_ +%.-]+$/u.test(path)) {
 const shoppingStore = useShoppingStore();
 
 const rawRecipe = ref<string>();
-const res = await useFetch(`/api/recipe/${path}`);
 
-if (res.error.value) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: "Recipe not found",
-  });
+if (route.query.mode === "new") {
+  rawRecipe.value = "";
+} else {
+  const res = await useFetch(`/api/recipe/${path}`);
+
+  if (res.error.value) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Recipe not found",
+    });
+  }
+
+  rawRecipe.value = String(res.data.value);
 }
 
-rawRecipe.value = String(res.data.value);
 const recipe = ref<Recipe>();
 watch(
   rawRecipe,
   (newRawRecipe) => {
-    if (newRawRecipe) {
+    if (newRawRecipe && route.query.mode !== "new") {
       recipe.value = new Recipe(newRawRecipe);
       const servings = shoppingStore.getServings(path);
       if (servings) recipe.value = recipe.value.scaleTo(servings);
@@ -82,7 +91,9 @@ const nonTitleMetaData = computed(() => {
 // Edit, Move, Delete recipe
 //---------------------------
 
-const isEditMode = ref(route.query.mode === "edit");
+const isEditMode = ref(
+  route.query.mode === "edit" || route.query.mode === "new",
+);
 const modalFile = await useModalFile();
 const modalConf = await useModalConfirmation();
 
@@ -153,27 +164,65 @@ const formState = computed(() => {
 });
 
 const onEditSubmit = async (event: FormSubmitEvent<{ recipe: string }>) => {
-  try {
-    await $fetch(`/api/recipe/${path}`, {
-      method: "PUT",
-      body: event.data,
-    });
-    toast.add({
-      color: "success",
-      title: "Success",
-      description: "Recipe successfully saved",
-      duration: 3000,
-    });
-    isEditMode.value = false;
-  } catch (error: unknown) {
-    if (error instanceof FetchError) {
+  if (route.query.mode === "edit") {
+    try {
+      await $fetch(`/api/recipe/${path}`, {
+        method: "PUT",
+        body: event.data,
+      });
       toast.add({
-        color: "error",
-        title: "Error",
-        description: error.data,
+        color: "success",
+        title: "Success",
+        description: "Recipe successfully saved",
         duration: 3000,
       });
+      isEditMode.value = false;
+    } catch (error: unknown) {
+      if (error instanceof FetchError) {
+        toast.add({
+          color: "error",
+          title: "Error",
+          description: error.data,
+          duration: 3000,
+        });
+      }
     }
+  } else if (route.query.mode === "new") {
+    try {
+      await $fetch(`/api/recipes`, {
+        method: "POST",
+        body: {
+          dir: recipeDir,
+          name: recipeName,
+          content: event.data.recipe,
+        },
+      });
+      toast.add({
+        color: "success",
+        title: "Success",
+        description: "Recipe successfully saved",
+        duration: 3000,
+      });
+      isEditMode.value = false;
+      rawRecipe.value = event.data.recipe;
+    } catch (error: unknown) {
+      if (error instanceof FetchError) {
+        toast.add({
+          color: "error",
+          title: "Error",
+          description: error.data,
+          duration: 3000,
+        });
+      }
+    }
+  }
+};
+
+const onEditCancel = async () => {
+  if (route.query.mode === "new") {
+    await router.back();
+  } else {
+    isEditMode.value = false;
   }
 };
 
@@ -225,126 +274,125 @@ const editServingsInShoppingList = () => {
 
 <template>
   <div class="flex w-full">
-    <div v-if="recipe" class="flex w-full flex-col">
-      <div v-if="!isEditMode" class="flex w-full flex-col">
-        <div class="mb-4 flex flex-col gap-4">
-          <div class="flex flex-row gap-4">
-            <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
-          </div>
-          <div class="flex flex-row gap-4">
-            <h1 v-if="recipe.metadata.title" class="text-3xl">
-              {{ recipe.metadata.title }}
-            </h1>
-            <UDropdownMenu :items="menuItems" :content="{ align: 'start' }">
-              <UButton
-                icon="prime:bars"
-                size="lg"
-                color="secondary"
-                variant="soft"
-              />
-            </UDropdownMenu>
-          </div>
+    <div v-if="recipe && !isEditMode" class="flex w-full flex-col">
+      <div class="mb-4 flex flex-col gap-4">
+        <div class="flex flex-row gap-4">
+          <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
         </div>
-        <div class="mb-4 flex flex-row gap-4">
-          <div class="mt-1">Scale:</div>
-          <UInputNumber
-            v-model="servingsSpinner"
-            :step="1"
-            :min="1"
-            :ui="{ base: 'w-24' }"
-          />
-          <UButton
-            v-if="!shoppingStore.isRecipeInSelection(path)"
-            size="md"
-            color="primary"
-            label="Add to shopping list"
-            icon="material-symbols:add-shopping-cart-rounded"
-            @click="addToShoppingList"
-          />
-          <UButton
-            v-else
-            size="sm"
-            color="secondary"
-            @click="editServingsInShoppingList"
-            ><Icon
-              class="text-lg"
-              name="material-symbols:change-circle-rounded"
-          /></UButton>
+        <div class="flex flex-row gap-4">
+          <h1 v-if="recipe.metadata.title" class="text-3xl">
+            {{ recipe.metadata.title }}
+          </h1>
+          <UDropdownMenu :items="menuItems" :content="{ align: 'start' }">
+            <UButton
+              icon="prime:bars"
+              size="lg"
+              color="secondary"
+              variant="soft"
+            />
+          </UDropdownMenu>
         </div>
-        <div class="my-4 flex flex-col">
-          <ul
-            class="ml-6 list-disc text-sm text-neutral-600 dark:text-neutral-400"
-          >
-            <li v-for="(value, key) in nonTitleMetaData" :key>
-              {{ key }}:
-              <ULink
-                v-if="typeof value === 'string' && value.startsWith('http')"
-                :to="value"
-                :boolean="true"
-                target="_blank"
-              >
-                {{ value }}
-              </ULink>
-              <span v-else>{{ value }}</span>
-            </li>
-          </ul>
+      </div>
+      <div class="mb-4 flex flex-row gap-4">
+        <div class="mt-1">Scale:</div>
+        <UInputNumber
+          v-model="servingsSpinner"
+          :step="1"
+          :min="1"
+          :ui="{ base: 'w-24' }"
+        />
+        <UButton
+          v-if="!shoppingStore.isRecipeInSelection(path)"
+          size="md"
+          color="primary"
+          label="Add to shopping list"
+          icon="material-symbols:add-shopping-cart-rounded"
+          @click="addToShoppingList"
+        />
+        <UButton
+          v-else
+          size="sm"
+          color="secondary"
+          @click="editServingsInShoppingList"
+          ><Icon class="text-lg" name="material-symbols:change-circle-rounded"
+        /></UButton>
+      </div>
+      <div class="my-4 flex flex-col">
+        <ul
+          class="ml-6 list-disc text-sm text-neutral-600 dark:text-neutral-400"
+        >
+          <li v-for="(value, key) in nonTitleMetaData" :key>
+            {{ key }}:
+            <ULink
+              v-if="typeof value === 'string' && value.startsWith('http')"
+              :to="value"
+              :boolean="true"
+              target="_blank"
+            >
+              {{ value }}
+            </ULink>
+            <span v-else>{{ value }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="mt-4 grid grid-cols-3">
+        <div class="col-start-1">
+          <h2 class="mb-2 text-2xl">Ingredients</h2>
+          <p v-if="recipe.servings" class="mb-4 text-sm">
+            Pour {{ recipe.servings }} personnes
+          </p>
+          <IngredientList :ingredients="recipe.ingredients" />
         </div>
-        <div class="mt-4 grid grid-cols-3">
-          <div class="col-start-1">
-            <h2 class="mb-2 text-2xl">Ingredients</h2>
-            <p v-if="recipe.servings" class="mb-4 text-sm">
-              Pour {{ recipe.servings }} personnes
-            </p>
-            <IngredientList :ingredients="recipe.ingredients" />
-          </div>
-          <div class="col-span-2">
-            <h2 class="mb-4 text-2xl">Preparation</h2>
-            <div v-for="section in recipe.sections" :key="section.name">
-              <h3 v-if="section.name" class="mb-6 text-2xl">
-                {{ section.name }}
-              </h3>
-              <div
-                v-for="(step, stepIndex) in section.content"
-                :key="stepIndex"
-                class="mb-4"
-              >
-                <div v-if="'note' in step">{{ step.note }}</div>
-                <div v-if="'items' in step">
-                  <PreparationItem
-                    v-for="(item, itemIndex) in step.items"
-                    :key="itemIndex"
-                    :item
-                    :recipe
-                  />
-                </div>
+        <div class="col-span-2">
+          <h2 class="mb-4 text-2xl">Preparation</h2>
+          <div v-for="section in recipe.sections" :key="section.name">
+            <h3 v-if="section.name" class="mb-6 text-2xl">
+              {{ section.name }}
+            </h3>
+            <div
+              v-for="(step, stepIndex) in section.content"
+              :key="stepIndex"
+              class="mb-4"
+            >
+              <div v-if="'note' in step">{{ step.note }}</div>
+              <div v-if="'items' in step">
+                <PreparationItem
+                  v-for="(item, itemIndex) in step.items"
+                  :key="itemIndex"
+                  :item
+                  :recipe
+                />
               </div>
             </div>
           </div>
         </div>
-        <!--<div class="mt-4 flex flex-row gap-4">
+      </div>
+      <!--<div class="mt-4 flex flex-row gap-4">
           <pre>{{ recipe }}</pre>
         </div>-->
+    </div>
+    <div v-else class="flex w-full flex-col gap-4">
+      <div class="flex flex-row gap-4">
+        <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
       </div>
-      <div v-else class="flex w-full flex-col">
-        <UForm
-          :state="formState"
-          class="flex w-full flex-col"
-          @submit="onEditSubmit"
-        >
-          <UFormField name="recipe">
-            <UTextarea v-model="rawRecipe" class="w-full" :rows="20" fluid />
-          </UFormField>
-          <div class="mt-4 flex flex-row gap-4">
-            <UButton type="submit" label="Save" class="resize-y" />
-            <UButton
-              type="button"
-              color="secondary"
-              label="Cancel"
-              @click="isEditMode = false"
-            />
-          </div>
-        </UForm>
-      </div>
+      <UForm
+        :state="formState"
+        class="flex w-full flex-col"
+        @submit="onEditSubmit"
+      >
+        <UFormField name="recipe">
+          <UTextarea v-model="rawRecipe" class="w-full" :rows="20" fluid />
+        </UFormField>
+        <div class="mt-4 flex flex-row gap-4">
+          <UButton type="submit" label="Save" class="resize-y" />
+          <UButton
+            type="button"
+            color="secondary"
+            label="Cancel"
+            @click="onEditCancel"
+          />
+        </div>
+      </UForm>
     </div>
   </div>
 </template>
