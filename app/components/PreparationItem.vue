@@ -14,8 +14,8 @@ const { recipe, item } = defineProps<Props>();
     :class="{
       'font-bold': item.type !== 'text',
       'text-primary': item.type === 'ingredient',
-      'text-primary-300': item.type === 'cookware',
-      'text-primary-700': item.type === 'timer',
+      'text-secondary': item.type === 'cookware',
+      'text-teal': item.type === 'timer',
     }"
     >{{ renderItem(item, recipe) }}</span
   >

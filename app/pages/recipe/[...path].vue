@@ -362,7 +362,7 @@ const editServingsInShoppingList = () => {
           class="ml-6 list-disc text-sm text-neutral-600 dark:text-neutral-400"
         >
           <li v-for="(value, key) in nonTitleMetaData" :key>
-            {{ key }}:
+            <b>{{ key }}: </b>
             <ULink
               v-if="typeof value === 'string' && value.startsWith('http')"
               :to="value"
@@ -375,16 +375,26 @@ const editServingsInShoppingList = () => {
           </li>
         </ul>
       </div>
-      <div class="mt-4 grid grid-cols-1 md:grid-cols-3">
+      <div class="mt-0 grid grid-cols-1 md:mt-4 md:grid-cols-3">
         <div class="col-start-1">
-          <h2 class="mb-2 text-2xl">Ingredients</h2>
+          <USeparator
+            :ui="{ border: 'border-gray-600' }"
+            size="sm"
+            class="mt-4 h-px md:mt-0 md:pr-10"
+          />
+          <h2 class="mt-1 mb-2 text-2xl font-bold">Ingredients</h2>
           <p v-if="recipe.servings" class="mb-4 text-sm">
-            Pour {{ recipe.servings }} personnes
+            <b>Yield:</b> {{ recipe.servings }} servings
           </p>
           <IngredientList :ingredients="recipe.ingredients" />
         </div>
         <div class="col-span-2">
-          <h2 class="mt-5 mb-4 text-2xl md:mt-0">Preparation</h2>
+          <USeparator
+            :ui="{ border: 'border-gray-600' }"
+            size="sm"
+            class="mt-10 h-px md:mt-0 md:pr-0"
+          />
+          <h2 class="mt-1 mb-4 text-2xl font-bold">Preparation</h2>
           <div v-for="section in recipe.sections" :key="section.name">
             <h3 v-if="section.name" class="mb-6 text-2xl">
               {{ section.name }}
@@ -396,6 +406,7 @@ const editServingsInShoppingList = () => {
             >
               <div v-if="'note' in step">{{ step.note }}</div>
               <div v-if="'items' in step">
+                <h3 class="text-lg font-semibold">Step {{ stepIndex + 1 }}</h3>
                 <PreparationItem
                   v-for="(item, itemIndex) in step.items"
                   :key="itemIndex"

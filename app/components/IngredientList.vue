@@ -15,11 +15,11 @@ const { ingredients } = defineProps<Props>();
       )"
       :key="ingredient.name"
     >
-      {{ ingredient.name }}:
       <span v-if="ingredient.quantity">
         {{ getQuantityValue(ingredient.quantity) }}
         {{ ingredient.unit }}
       </span>
+      {{ ingredient.name }}
       <span v-if="ingredient.preparation">
         ({{ ingredient.preparation }})
       </span>
