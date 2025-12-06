@@ -258,6 +258,14 @@ const onEditCancel = async () => {
   }
 };
 
+defineShortcuts({
+  escape: () => {
+    if (isEditMode.value && route.query.mode !== "new") {
+      isEditMode.value = false;
+    }
+  },
+});
+
 //--------------------
 // Scaling
 //--------------------
