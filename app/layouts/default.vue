@@ -64,7 +64,7 @@ const navLeft = computed(() => {
         <slot />
       </main>
     </UContainer>
-    <USeparator class="h-px" />
+    <USeparator class="mt-4 h-px" />
     <UFooter>
       <template v-if="navLeft" #left>
         <UCard class="hover:bg-elevated" @click="navigateTo(navLeft.to)">
