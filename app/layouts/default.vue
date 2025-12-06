@@ -67,7 +67,10 @@ const navLeft = computed(() => {
     <USeparator class="mt-4 h-px" />
     <UFooter>
       <template v-if="navLeft" #left>
-        <UCard class="hover:bg-elevated" @click="navigateTo(navLeft.to)">
+        <UCard
+          class="hover:bg-elevated cursor-pointer"
+          @click="navigateTo(navLeft.to)"
+        >
           <UButton
             class="rounded-full"
             variant="outline"
@@ -78,7 +81,10 @@ const navLeft = computed(() => {
         </UCard>
       </template>
       <template v-if="navRight" #right>
-        <UCard class="group hover:bg-elevated" @click="navigateTo(navRight.to)">
+        <UCard
+          class="group hover:bg-elevated cursor-pointer"
+          @click="navigateTo(navRight.to)"
+        >
           <UButton
             class="group-hover:bg-elevated rounded-full"
             variant="outline"
