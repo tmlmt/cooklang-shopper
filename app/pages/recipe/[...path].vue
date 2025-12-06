@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Recipe } from "@tmlmt/cooklang-parser";
+import * as v from "valibot";
 import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
 import { FetchError } from "ofetch";
 
@@ -169,18 +170,36 @@ const menuItems = ref<DropdownMenuItem[]>([
 // View / Edit Recipe
 //---------------------
 
-const formState = computed(() => {
-  return {
-    recipe: rawRecipe.value,
-  };
+const formState = ref({
+  recipe: rawRecipe.value ?? "",
 });
 
-const onEditSubmit = async (event: FormSubmitEvent<{ recipe: string }>) => {
+const isParsableRecipe = (value: string): boolean => {
+  try {
+    new Recipe(value);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const schema = v.object({
+  recipe: v.pipe(
+    v.string(),
+    v.trim(),
+    v.nonEmpty("Please enter a recipe"),
+    v.check(isParsableRecipe, "Invalid recipe. Check syntax"),
+  ),
+});
+
+type Schema = v.InferOutput<typeof schema>;
+
+const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
   if (route.query.mode === "edit" || isManualEdit.value) {
     try {
       await $fetch(`/api/recipe/${path}`, {
         method: "PUT",
-        body: event.data,
+        body: event.data.recipe,
       });
       toast.add({
         color: "success",
@@ -189,6 +208,7 @@ const onEditSubmit = async (event: FormSubmitEvent<{ recipe: string }>) => {
         duration: 3000,
       });
       isEditMode.value = false;
+      rawRecipe.value = event.data.recipe;
     } catch (error: unknown) {
       if (error instanceof FetchError) {
         toast.add({
@@ -386,11 +406,17 @@ const editServingsInShoppingList = () => {
       </div>
       <UForm
         :state="formState"
+        :schema="schema"
         class="flex w-full flex-col"
         @submit="onEditSubmit"
       >
-        <UFormField name="recipe">
-          <UTextarea v-model="rawRecipe" class="w-full" :rows="20" fluid />
+        <UFormField name="recipe" :required="true">
+          <UTextarea
+            v-model="formState.recipe"
+            class="w-full"
+            :rows="20"
+            fluid
+          />
         </UFormField>
         <div class="mt-4 flex flex-row gap-4">
           <UButton type="submit" label="Save" class="resize-y" />
