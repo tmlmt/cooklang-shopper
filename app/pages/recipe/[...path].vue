@@ -379,9 +379,6 @@ const editServingsInShoppingList = () => {
           </div>
         </div>
       </div>
-      <!--<div class="mt-4 flex flex-row gap-4">
-          <pre>{{ recipe }}</pre>
-        </div>-->
     </div>
     <div v-else class="flex w-full flex-col gap-4">
       <div class="flex flex-row gap-4">
