@@ -316,7 +316,7 @@ const editServingsInShoppingList = () => {
   <div class="flex w-full">
     <div v-if="recipe && !isEditMode" class="flex w-full flex-col">
       <div class="mb-4 flex flex-col gap-4">
-        <div class="flex flex-row gap-4">
+        <div class="mt-5 flex flex-row gap-4 md:mt-0">
           <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
         </div>
         <div class="flex flex-row gap-4">
@@ -375,7 +375,7 @@ const editServingsInShoppingList = () => {
           </li>
         </ul>
       </div>
-      <div class="mt-4 grid grid-cols-3">
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-3">
         <div class="col-start-1">
           <h2 class="mb-2 text-2xl">Ingredients</h2>
           <p v-if="recipe.servings" class="mb-4 text-sm">
@@ -384,7 +384,7 @@ const editServingsInShoppingList = () => {
           <IngredientList :ingredients="recipe.ingredients" />
         </div>
         <div class="col-span-2">
-          <h2 class="mb-4 text-2xl">Preparation</h2>
+          <h2 class="mt-5 mb-4 text-2xl md:mt-0">Preparation</h2>
           <div v-for="section in recipe.sections" :key="section.name">
             <h3 v-if="section.name" class="mb-6 text-2xl">
               {{ section.name }}
