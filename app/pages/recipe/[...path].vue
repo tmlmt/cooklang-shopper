@@ -320,8 +320,8 @@ const editServingsInShoppingList = () => {
           <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
         </div>
         <div class="flex flex-row gap-4">
-          <h1 v-if="recipe.metadata.title" class="text-3xl">
-            {{ recipe.metadata.title }}
+          <h1 class="text-3xl">
+            {{ recipe.metadata.title ?? "(Untitled)" }}
           </h1>
           <UDropdownMenu :items="menuItems" :content="{ align: 'start' }">
             <UButton
