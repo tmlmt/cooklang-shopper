@@ -199,7 +199,7 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
     try {
       await $fetch(`/api/recipe/${path}`, {
         method: "PUT",
-        body: event.data.recipe,
+        body: { recipe: event.data.recipe },
       });
       toast.add({
         color: "success",
@@ -214,7 +214,7 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
         toast.add({
           color: "error",
           title: "Error",
-          description: error.data,
+          description: error.message,
           duration: 3000,
         });
       }
