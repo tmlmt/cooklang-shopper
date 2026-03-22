@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { TableColumn } from "@nuxt/ui";
-import type { ProductMisMatch, ProductSelection } from "@tmlmt/cooklang-parser";
-import getQuantityValue from "~/utils/getQuantityValue";
+import {
+  formatQuantityWithUnit,
+  type ProductMisMatch,
+  type ProductSelection,
+} from "@tmlmt/cooklang-parser";
 
 definePageMeta({
   title: "Cook Lister - Shopping List",
@@ -43,15 +46,20 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
     accessorKey: "quantity",
     header: "Quantity",
     cell: ({ row }) => {
-      if (!row.original.ingredient.quantity) {
+      const quantities = row.original.ingredient.quantities;
+      if (!quantities?.length) {
         return "-";
-      } else {
-        let quantityString = getQuantityValue(row.original.ingredient.quantity);
-        if (row.original.ingredient.unit) {
-          quantityString += ` ${row.original.ingredient.unit}`;
-        }
-        return quantityString;
       }
+      return quantities
+        .map((q) => {
+          if ("and" in q) {
+            return q.and
+              .map((a) => formatQuantityWithUnit(a.quantity, a.unit))
+              .join(" + ");
+          }
+          return formatQuantityWithUnit(q.quantity, q.unit);
+        })
+        .join(", ");
     },
   },
   {

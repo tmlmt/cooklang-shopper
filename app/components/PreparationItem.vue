@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Recipe, Item } from "@tmlmt/cooklang-parser";
+import type { Recipe, StepItem } from "@tmlmt/cooklang-parser";
 
 interface Props {
   recipe: Recipe;
-  item: Item;
+  item: StepItem;
 }
 
 const { recipe, item } = defineProps<Props>();

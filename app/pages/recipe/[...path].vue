@@ -404,8 +404,15 @@ const editServingsInShoppingList = () => {
               :key="stepIndex"
               class="mb-4"
             >
-              <div v-if="'note' in step">{{ step.note }}</div>
-              <div v-if="'items' in step">
+              <div v-if="step.type === 'note'" class="italic">
+                <template
+                  v-for="(noteItem, noteIndex) in step.items"
+                  :key="noteIndex"
+                >
+                  <span v-if="noteItem.type === 'text'">{{ noteItem.value }}</span>
+                </template>
+              </div>
+              <div v-if="step.type === 'step'">
                 <h3 class="text-lg font-semibold">Step {{ stepIndex + 1 }}</h3>
                 <PreparationItem
                   v-for="(item, itemIndex) in step.items"

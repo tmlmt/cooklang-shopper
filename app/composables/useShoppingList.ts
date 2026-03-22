@@ -14,8 +14,8 @@ export default async function () {
       if (!rawRecipe) {
         rawRecipe = await shoppingStore.fetchRecipe(recipe.path);
       }
-      shoppingList.add_recipe(new Recipe(rawRecipe), {
-        servings: recipe.servings,
+      shoppingList.addRecipe(new Recipe(rawRecipe), {
+        scaling: { servings: recipe.servings },
       });
     }
     return shoppingList;

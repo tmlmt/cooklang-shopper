@@ -1,38 +1,28 @@
-import type {
-  Item,
-  Recipe,
-  FixedValue,
-  Range,
-  QuantityPart,
+import type { StepItem, Recipe } from "@tmlmt/cooklang-parser";
+import {
+  formatQuantity,
+  formatQuantityWithUnit,
 } from "@tmlmt/cooklang-parser";
-import getQuantityValue from "./getQuantityValue";
 
-export default function (item: Item, recipe: Recipe): string {
+export default function (item: StepItem, recipe: Recipe): string {
   if (item.type === "ingredient") {
-    let itemString = item.displayName;
-    if (item.quantityPartIndex !== undefined) {
-      const itemQuantity = recipe.ingredients[item.index]!.quantityParts![
-        item.quantityPartIndex
-      ] as QuantityPart;
-      itemString += ` (${getQuantityValue(itemQuantity.value)}`;
-      if (recipe.ingredients[item.index]!.unit) {
-        itemString += " " + recipe.ingredients[item.index]!.unit;
-      }
-      itemString += ")";
+    const alt = item.alternatives[0]!;
+    let itemString = alt.displayName;
+    if (alt.quantity) {
+      itemString += ` (${formatQuantityWithUnit(alt.quantity, alt.unit)})`;
     }
     return itemString;
   } else if (item.type === "cookware") {
     let itemString = recipe.cookware[item.index]!.name;
-    if (item.quantityPartIndex !== undefined) {
-      const itemQuantity = recipe.cookware[item.index]!.quantityParts![
-        item.quantityPartIndex
-      ] as FixedValue | Range;
-      itemString += ` (${getQuantityValue(itemQuantity)})`;
+    if (item.quantity) {
+      itemString += ` (${formatQuantity(item.quantity)})`;
     }
     return itemString;
   } else if (item.type === "timer") {
-    return `${getQuantityValue(recipe.timers[item.index]!.duration)} ${recipe.timers[item.index]!.unit}`;
-  } else {
+    const timer = recipe.timers[item.index]!;
+    return `${formatQuantity(timer.duration)} ${timer.unit}`;
+  } else if (item.type === "text") {
     return item.value;
   }
+  return "";
 }

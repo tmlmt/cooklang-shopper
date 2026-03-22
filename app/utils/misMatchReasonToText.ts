@@ -10,6 +10,8 @@ export default function (val: NoProductMatchErrorCode): string {
       return "Ingredient without quantity: skipped";
     case "textValue":
       return "Ingredient with text value: skipped";
+    case "textValue_incompatibleUnits":
+      return "Ingredient with text value and incompatible units: skipped";
     default:
       return "Unknown error";
       break;
