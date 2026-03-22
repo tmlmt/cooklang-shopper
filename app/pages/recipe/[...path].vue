@@ -1,5 +1,15 @@
 <script setup lang="ts">
-import { Recipe } from "@tmlmt/cooklang-parser";
+import {
+  Recipe,
+  formatQuantityWithUnit,
+  isSectionActive,
+  isStepActive,
+  getEffectiveChoices,
+  type RecipeChoices,
+  type Yield,
+  type MetadataTime,
+  type MetadataSource,
+} from "@tmlmt/cooklang-parser";
 import * as v from "valibot";
 import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
 import { FetchError } from "ofetch";
@@ -78,14 +88,160 @@ watch(
   { immediate: true },
 );
 const nonTitleMetaData = computed(() => {
-  if (recipe.value) {
-    if (!("title" in recipe.value.metadata)) {
-      return recipe.value?.metadata;
+  if (!recipe.value) return [];
+  const entries: Array<{ key: string; value: string; isLink?: boolean }> = [];
+  const metadata = recipe.value.metadata;
+
+  for (const [key, value] of Object.entries(metadata)) {
+    if (key === "title") continue;
+    if (value === undefined || value === null) continue;
+
+    if (key === "yield") {
+      const yieldValue = value as Yield;
+      entries.push({
+        key: "yield",
+        value:
+          `${yieldValue.textBefore ?? ""} ${formatQuantityWithUnit(yieldValue.quantity, yieldValue.unit)} ${yieldValue.textAfter ?? ""}`.trim(),
+      });
+      continue;
     }
-    const { title, ...filtered } = recipe.value.metadata;
-    return filtered;
+
+    if (key === "time") {
+      const timeValue = value as MetadataTime;
+      if (timeValue.prep)
+        entries.push({ key: "prep time", value: timeValue.prep });
+      if (timeValue.cook)
+        entries.push({ key: "cook time", value: timeValue.cook });
+      if (timeValue.total)
+        entries.push({ key: "total time", value: timeValue.total });
+      continue;
+    }
+
+    if (key === "source") {
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !Array.isArray(value)
+      ) {
+        const sourceValue = value as MetadataSource;
+        const parts: string[] = [];
+        if (sourceValue.name) parts.push(sourceValue.name);
+        if (sourceValue.author) parts.push(`by ${sourceValue.author}`);
+        if (sourceValue.url) {
+          entries.push({
+            key: "source",
+            value:
+              parts.length > 0
+                ? `${parts.join(" ")} (${sourceValue.url})`
+                : sourceValue.url,
+            isLink: true,
+          });
+        } else {
+          entries.push({ key: "source", value: parts.join(" ") });
+        }
+      } else {
+        const strVal = String(value);
+        entries.push({
+          key: "source",
+          value: strVal,
+          isLink: strVal.startsWith("http"),
+        });
+      }
+      continue;
+    }
+
+    if (key === "servings" || key === "serves") {
+      entries.push({ key, value: String(value) });
+      continue;
+    }
+
+    const displayValue = Array.isArray(value)
+      ? value.join(", ")
+      : String(value);
+    entries.push({ key, value: displayValue });
   }
-  return undefined;
+
+  return entries;
+});
+
+//---------------------
+// Variant & Choices
+//---------------------
+
+const selectedVariant = ref<string | undefined>(undefined);
+const choices = ref<RecipeChoices>({});
+
+const hasVariants = computed(
+  () => (recipe.value?.choices.variants.length ?? 0) > 0,
+);
+
+const variantMenuItems = computed<DropdownMenuItem[]>(() => {
+  if (!recipe.value) return [];
+  const items: DropdownMenuItem[] = [
+    {
+      label: "Default",
+      onSelect: () => {
+        selectedVariant.value = undefined;
+        choices.value = getEffectiveChoices(recipe.value!, undefined);
+      },
+    },
+  ];
+  for (const variant of recipe.value.choices.variants) {
+    if (variant === "*") continue;
+    items.push({
+      label: variant,
+      onSelect: () => {
+        selectedVariant.value = variant;
+        choices.value = getEffectiveChoices(recipe.value!, variant);
+      },
+    });
+  }
+  return items;
+});
+
+const filteredIngredients = computed(() => {
+  if (!recipe.value) return [];
+  const ingredients = recipe.value.getIngredientQuantities({
+    choices: choices.value,
+  });
+  return ingredients.filter(
+    (ing) => !ing.flags?.includes("hidden") && ing.usedAsPrimary,
+  );
+});
+
+const sectionsWithStepNumbers = computed(() => {
+  if (!recipe.value) return [];
+  let stepCounter = 0;
+  const activeVariant = choices.value?.variant;
+  return recipe.value.sections.map((section) => {
+    const sectionIsActive = isSectionActive(section, activeVariant);
+    const contentWithNumbers = section.content.map((item) => {
+      if (item.type === "step") {
+        const stepIsActive =
+          sectionIsActive && isStepActive(item, activeVariant);
+        const stepNumber = stepIsActive ? ++stepCounter : null;
+        return {
+          ...item,
+          stepNumber,
+          active: stepIsActive,
+          optional: item.optional,
+        };
+      }
+      return {
+        ...item,
+        stepNumber: null,
+        active: sectionIsActive,
+        optional: false,
+      };
+    });
+    return {
+      name: section.name,
+      active: sectionIsActive,
+      variants: section.variants,
+      optional: section.optional,
+      content: contentWithNumbers,
+    };
+  });
 });
 
 //---------------------------
@@ -98,6 +254,7 @@ const isEditMode = ref(
 const isManualEdit = ref(false);
 const modalFile = await useModalFile();
 const modalConf = await useModalConfirmation();
+const modalChoices = await useModalChoices();
 
 const menuItems = ref<DropdownMenuItem[]>([
   {
@@ -283,25 +440,42 @@ const servingsSpinner = computed({
 // Shopping List
 //--------------------
 
-const addToShoppingList = () => {
-  if (recipe.value?.metadata.title && servingsSpinner.value) {
-    shoppingStore.addRecipe(
-      recipe.value.metadata.title,
-      path,
-      servingsSpinner.value,
-    );
-    toast.add({
-      color: "success",
-      title: "Success",
-      description: "Recipe successfully added to shopping list",
-      duration: 3000,
-    });
+const hasIngredientChoices = computed(() => {
+  if (!recipe.value) return false;
+  return (
+    recipe.value.choices.ingredientItems.size > 0 ||
+    recipe.value.choices.ingredientGroups.size > 0
+  );
+});
+
+const addToShoppingList = async () => {
+  if (!recipe.value?.metadata.title || !servingsSpinner.value) return;
+
+  let choicesToStore: RecipeChoices | undefined = choices.value;
+
+  if (hasIngredientChoices.value) {
+    const result = await modalChoices.open(recipe.value, selectedVariant.value);
+    if (!result) return; // User cancelled
+    choicesToStore = result;
   }
+
+  shoppingStore.addRecipe(
+    recipe.value.metadata.title,
+    path,
+    servingsSpinner.value,
+    choicesToStore,
+  );
+  toast.add({
+    color: "success",
+    title: "Success",
+    description: "Recipe successfully added to shopping list",
+    duration: 3000,
+  });
 };
 
 const editServingsInShoppingList = () => {
   if (recipe.value?.metadata.title && servingsSpinner.value) {
-    shoppingStore.editServings(path, servingsSpinner.value);
+    shoppingStore.editServings(path, servingsSpinner.value, choices.value);
     toast.add({
       color: "success",
       title: "Success",
@@ -341,6 +515,19 @@ const editServingsInShoppingList = () => {
           :min="1"
           :ui="{ base: 'w-24' }"
         />
+        <UDropdownMenu
+          v-if="hasVariants"
+          :items="variantMenuItems"
+          :content="{ align: 'start' }"
+        >
+          <UButton
+            size="md"
+            color="neutral"
+            variant="soft"
+            :label="selectedVariant ?? 'Default'"
+            icon="i-lucide-git-branch"
+          />
+        </UDropdownMenu>
         <UButton
           v-if="!shoppingStore.isRecipeInSelection(path)"
           size="md"
@@ -361,17 +548,17 @@ const editServingsInShoppingList = () => {
         <ul
           class="ml-6 list-disc text-sm text-neutral-600 dark:text-neutral-400"
         >
-          <li v-for="(value, key) in nonTitleMetaData" :key>
-            <b>{{ key }}: </b>
+          <li v-for="entry in nonTitleMetaData" :key="entry.key">
+            <b>{{ entry.key }}: </b>
             <ULink
-              v-if="typeof value === 'string' && value.startsWith('http')"
-              :to="value"
+              v-if="entry.isLink"
+              :to="entry.value"
               :boolean="true"
               target="_blank"
             >
-              {{ value }}
+              {{ entry.value }}
             </ULink>
-            <span v-else>{{ value }}</span>
+            <span v-else>{{ entry.value }}</span>
           </li>
         </ul>
       </div>
@@ -383,10 +570,24 @@ const editServingsInShoppingList = () => {
             class="mt-4 h-px md:mt-0 md:pr-10"
           />
           <h2 class="mt-1 mb-2 text-2xl font-bold">Ingredients</h2>
-          <p v-if="recipe.servings" class="mb-4 text-sm">
+          <p v-if="recipe.metadata.yield" class="mb-4 text-sm">
+            <b>Yield:</b>
+            {{ (recipe.metadata.yield as Yield).textBefore ?? "" }}
+            {{
+              formatQuantityWithUnit(
+                (recipe.metadata.yield as Yield).quantity,
+                (recipe.metadata.yield as Yield).unit,
+              )
+            }}
+            {{ (recipe.metadata.yield as Yield).textAfter ?? "" }}
+          </p>
+          <p v-else-if="recipe.servings" class="mb-4 text-sm">
             <b>Yield:</b> {{ recipe.servings }} servings
           </p>
-          <IngredientList :ingredients="recipe.ingredients" />
+          <IngredientList
+            :ingredients="filteredIngredients"
+            :all-ingredients="recipe.ingredients"
+          />
         </div>
         <div class="col-span-2">
           <USeparator
@@ -395,33 +596,106 @@ const editServingsInShoppingList = () => {
             class="mt-10 h-px md:mt-0 md:pr-0"
           />
           <h2 class="mt-1 mb-4 text-2xl font-bold">Preparation</h2>
-          <div v-for="section in recipe.sections" :key="section.name">
-            <h3 v-if="section.name" class="mb-6 text-2xl">
-              {{ section.name }}
-            </h3>
-            <div
-              v-for="(step, stepIndex) in section.content"
-              :key="stepIndex"
-              class="mb-4"
-            >
-              <div v-if="step.type === 'note'" class="italic">
-                <template
-                  v-for="(noteItem, noteIndex) in step.items"
-                  :key="noteIndex"
+          <div v-for="(section, sIdx) in sectionsWithStepNumbers" :key="sIdx">
+            <!-- Optional/inactive sections behind collapsible -->
+            <template v-if="section.optional || !section.active">
+              <UCollapsible class="mb-4">
+                <UButton
+                  class="group"
+                  :label="section.name || 'Optional section'"
+                  color="neutral"
+                  variant="soft"
+                  trailing-icon="i-lucide-chevron-down"
+                  size="sm"
+                  :ui="{
+                    trailingIcon:
+                      'group-data-[state=open]:rotate-180 transition-transform duration-200',
+                  }"
                 >
-                  <span v-if="noteItem.type === 'text'">{{ noteItem.value }}</span>
+                  <template #leading>
+                    <span
+                      v-if="!section.active"
+                      class="text-xs text-neutral-500"
+                      >(inactive)</span
+                    >
+                    <span
+                      v-else-if="section.optional"
+                      class="text-xs text-neutral-500"
+                      >(optional)</span
+                    >
+                  </template>
+                </UButton>
+                <template #content>
+                  <div class="mt-2 ml-2 opacity-70">
+                    <div
+                      v-for="(item, cIdx) in section.content"
+                      :key="cIdx"
+                      class="mb-4"
+                    >
+                      <div v-if="item.type === 'note'" class="italic">
+                        Note:
+                        <RecipeNoteContent :note="item" :recipe="recipe!" />
+                      </div>
+                      <div v-if="item.type === 'step'">
+                        <h3 class="text-lg font-semibold">
+                          <span v-if="item.optional" class="font-normal"
+                            >(Optional)
+                          </span>
+                          <template v-if="item.active"
+                            >Step {{ item.stepNumber }}</template
+                          >
+                          <template v-else>Step (inactive)</template>
+                        </h3>
+                        <PreparationItem
+                          :step="item"
+                          :recipe="recipe!"
+                          :choices="choices"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </template>
+              </UCollapsible>
+            </template>
+            <!-- Active, non-optional sections rendered normally -->
+            <template v-else>
+              <h3 v-if="section.name" class="mb-6 text-2xl">
+                {{ section.name }}
+                <span
+                  v-if="section.variants"
+                  class="text-sm font-normal text-neutral-400"
+                >
+                  [{{ section.variants.join(", ") }}]
+                </span>
+              </h3>
+              <div
+                v-for="(item, cIdx) in section.content"
+                :key="cIdx"
+                class="mb-4"
+                :class="{ 'opacity-30': !item.active }"
+              >
+                <div v-if="item.type === 'note'" class="italic">
+                  Note:
+                  <RecipeNoteContent :note="item" :recipe="recipe!" />
+                </div>
+                <div v-if="item.type === 'step'">
+                  <h3 class="text-lg font-semibold">
+                    <span v-if="item.optional" class="font-normal"
+                      >(Optional)
+                    </span>
+                    <template v-if="item.active"
+                      >Step {{ item.stepNumber }}</template
+                    >
+                    <template v-else>Step (inactive)</template>
+                  </h3>
+                  <PreparationItem
+                    :step="item"
+                    :recipe="recipe!"
+                    :choices="choices"
+                  />
+                </div>
               </div>
-              <div v-if="step.type === 'step'">
-                <h3 class="text-lg font-semibold">Step {{ stepIndex + 1 }}</h3>
-                <PreparationItem
-                  v-for="(item, itemIndex) in step.items"
-                  :key="itemIndex"
-                  :item
-                  :recipe
-                />
-              </div>
-            </div>
+            </template>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   modules: [
+    "@nuxt/hints",
     "@nuxt/eslint",
     "@nuxt/image",
     "@nuxt/test-utils",

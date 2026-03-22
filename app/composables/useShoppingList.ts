@@ -16,6 +16,7 @@ export default async function () {
       }
       shoppingList.addRecipe(new Recipe(rawRecipe), {
         scaling: { servings: recipe.servings },
+        choices: recipe.choices,
       });
     }
     return shoppingList;

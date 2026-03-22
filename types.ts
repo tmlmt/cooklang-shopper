@@ -1,7 +1,10 @@
+import type { RecipeChoices } from "@tmlmt/cooklang-parser";
+
 export interface RecipeInfo {
   title: string;
   path: string;
   servings: number;
+  choices?: RecipeChoices;
 }
 
 export interface RecipeRaw {

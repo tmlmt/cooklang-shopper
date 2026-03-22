@@ -1,4 +1,5 @@
 import type { RecipeRaw, RecipeInfo } from "~~/types";
+import type { RecipeChoices } from "@tmlmt/cooklang-parser";
 
 export const useShoppingStore = defineStore("shopping", () => {
   const recipeSelection = ref<RecipeInfo[]>([]);
@@ -8,16 +9,25 @@ export const useShoppingStore = defineStore("shopping", () => {
   // recipeSelection methods
   //------------------------------
 
-  function addRecipe(title: string, path: string, servings: number): boolean {
+  function addRecipe(
+    title: string,
+    path: string,
+    servings: number,
+    choices?: RecipeChoices,
+  ): boolean {
     // Checking if a recipe is already in the list
     if (isRecipeInSelection(path)) {
       return false;
     }
-    recipeSelection.value.push({ title, path, servings });
+    recipeSelection.value.push({ title, path, servings, choices });
     return true;
   }
 
-  function editServings(path: string, servings: number): boolean {
+  function editServings(
+    path: string,
+    servings: number,
+    choices?: RecipeChoices,
+  ): boolean {
     // Checking if a recipe is already in the list
     if (!isRecipeInSelection(path)) {
       console.log("false", JSON.stringify(recipeSelection.value));
@@ -27,6 +37,9 @@ export const useShoppingStore = defineStore("shopping", () => {
       (recipe) => recipe.path === path,
     );
     recipeSelection.value[index]!.servings = servings;
+    if (choices !== undefined) {
+      recipeSelection.value[index]!.choices = choices;
+    }
     console.log(JSON.stringify(recipeSelection.value));
     return true;
   }
