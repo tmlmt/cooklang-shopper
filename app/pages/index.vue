@@ -252,7 +252,6 @@ const openNewRecipeModal = async () => {
 <template>
   <div class="flex w-full flex-col gap-4">
     <div class="flex flex-row gap-4">
-      <h1 class="mb-0.5 text-3xl">Recipes</h1>
       <UButton
         icon="prime:plus"
         color="primary"
