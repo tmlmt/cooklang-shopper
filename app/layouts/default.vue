@@ -52,8 +52,11 @@ const navLeft = computed(() => {
 
 <template>
   <div class="absolute flex h-full w-full flex-col">
-    <UHeader class="min-h-16">
-      <template #title> Cooklang Shopper </template>
+    <UHeader class="min-h-16" :ui="{ title: 'items-center gap-3' }">
+      <template #title
+        ><Icon name="material-symbols:chef-hat-rounded" size="1.2em" />
+        Cooklang Shopper
+      </template>
       <UBreadcrumb :ui="{ root: 'mt-1', link: 'text-md' }" :items="items" />
       <template #body>
         <UNavigationMenu
