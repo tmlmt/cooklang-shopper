@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BreadcrumbItem } from "@nuxt/ui";
+import type { BreadcrumbItem, NavigationMenuItem } from "@nuxt/ui";
 
 const route = useRoute();
 
@@ -55,6 +55,14 @@ const navLeft = computed(() => {
     <UHeader class="min-h-16">
       <template #title> Cooklang Shopper </template>
       <UBreadcrumb :ui="{ root: 'mt-1', link: 'text-md' }" :items="items" />
+      <template #body>
+        <UNavigationMenu
+          :ui="{ root: 'mt-1', link: 'text-md' }"
+          :items="items as NavigationMenuItem[]"
+          orientation="vertical"
+          class="-mx-2.5"
+        />
+      </template>
       <template #right>
         <UColorModeButton />
       </template>
