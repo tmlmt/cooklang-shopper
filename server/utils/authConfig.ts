@@ -1,8 +1,5 @@
 import { loadConfig } from "c12";
-
-interface AuthConfig {
-  password: string;
-}
+import type { AuthConfig } from "~~/types";
 
 let cachedConfig: AuthConfig | null = null;
 
