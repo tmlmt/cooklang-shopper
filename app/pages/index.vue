@@ -92,27 +92,30 @@ const diffRowSelection = (
 const ULink = resolveComponent("ULink");
 const UCheckbox = resolveComponent("UCheckbox");
 const UButton = resolveComponent("UButton");
+const { experimental } = usePublicConfig();
 
-const columns: TableColumn<RecipeEssentials>[] = [
-  {
-    id: "select",
-    header: ({ table }) =>
-      h(UCheckbox, {
-        modelValue: table.getIsSomePageRowsSelected()
-          ? "indeterminate"
-          : table.getIsAllPageRowsSelected(),
-        "onUpdate:modelValue": (value: boolean | "indeterminate") =>
-          table.toggleAllPageRowsSelected(!!value),
-        "aria-label": "Select all",
-      }),
-    cell: ({ row }) =>
-      h(UCheckbox, {
-        modelValue: row.getIsSelected(),
-        "onUpdate:modelValue": (value: boolean | "indeterminate") =>
-          row.toggleSelected(!!value),
-        "aria-label": "Select row",
-      }),
-  },
+const selectColumn: TableColumn<RecipeEssentials> = {
+  id: "select",
+  header: ({ table }) =>
+    h(UCheckbox, {
+      modelValue: table.getIsSomePageRowsSelected()
+        ? "indeterminate"
+        : table.getIsAllPageRowsSelected(),
+      "onUpdate:modelValue": (value: boolean | "indeterminate") =>
+        table.toggleAllPageRowsSelected(!!value),
+      "aria-label": "Select all",
+    }),
+  cell: ({ row }) =>
+    h(UCheckbox, {
+      modelValue: row.getIsSelected(),
+      "onUpdate:modelValue": (value: boolean | "indeterminate") =>
+        row.toggleSelected(!!value),
+      "aria-label": "Select row",
+    }),
+};
+
+const columns = computed<TableColumn<RecipeEssentials>[]>(() => [
+  ...(experimental.value ? [selectColumn] : []),
   {
     accessorKey: "title",
     header: "Title",
@@ -147,7 +150,7 @@ const columns: TableColumn<RecipeEssentials>[] = [
     id: "action",
     header: () => h("div", { class: "text-center" }, "Actions"),
   },
-];
+]);
 
 const modal = await useModalConfirmation();
 

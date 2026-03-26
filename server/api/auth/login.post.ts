@@ -1,5 +1,5 @@
 import * as v from "valibot";
-import { getAuthConfig } from "#server/utils/authConfig";
+import { getAppConfig } from "#server/utils/appConfig";
 
 const LoginSchema = v.object({
   password: v.pipe(v.string(), v.nonEmpty()),
@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     v.parse(LoginSchema, body),
   );
 
-  const { password: hashedPassword } = await getAuthConfig();
+  const { password: hashedPassword } = await getAppConfig();
   const valid = await verifyPassword(hashedPassword, password);
 
   if (!valid) {

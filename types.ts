@@ -1,7 +1,8 @@
 import type { RecipeChoices } from "@tmlmt/cooklang-parser";
 
-export interface AuthConfig {
+export interface AppConfig {
   password: string;
+  experimental?: boolean;
 }
 
 declare module "#auth-utils" {

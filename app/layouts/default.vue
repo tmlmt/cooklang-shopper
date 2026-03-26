@@ -2,6 +2,7 @@
 import type { BreadcrumbItem, NavigationMenuItem } from "@nuxt/ui";
 
 const route = useRoute();
+const { experimental } = usePublicConfig();
 
 const items = computed<BreadcrumbItem[]>(() => [
   { label: "Recipes", to: "/", active: route.path === "/" },
@@ -30,6 +31,7 @@ useSeoMeta({
 });
 
 const navRight = computed(() => {
+  if (!experimental.value) return undefined;
   if (route.path === "/") {
     return { text: "Continue to shopping list", to: "/list" };
   } else if (route.path === "/list") {
@@ -40,7 +42,11 @@ const navRight = computed(() => {
 });
 
 const navLeft = computed(() => {
-  if (route.path === "/list" || route.path.startsWith("/recipe/")) {
+  if (route.path.startsWith("/recipe/")) {
+    return { text: "Back to recipes", to: "/" };
+  }
+  if (!experimental.value) return undefined;
+  if (route.path === "/list") {
     return { text: "Back to recipes", to: "/" };
   } else if (route.path === "/cart") {
     return { text: "Back to shopping list", to: "/list" };
@@ -57,8 +63,12 @@ const navLeft = computed(() => {
         ><Icon name="material-symbols:chef-hat-rounded" size="1.2em" />
         Cooklang Shopper
       </template>
-      <UBreadcrumb :ui="{ root: 'mt-1', link: 'text-md' }" :items="items" />
-      <template #body>
+      <UBreadcrumb
+        v-if="experimental"
+        :ui="{ root: 'mt-1', link: 'text-md' }"
+        :items="items"
+      />
+      <template v-if="experimental" #body>
         <UNavigationMenu
           :ui="{ root: 'mt-1', link: 'text-md' }"
           :items="items as NavigationMenuItem[]"

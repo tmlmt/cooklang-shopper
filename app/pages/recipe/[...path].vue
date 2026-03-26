@@ -57,6 +57,7 @@ if (!/^(?!\/)(?:[\p{L}\p{N}_ +%.-]+\/)*[\p{L}\p{N}_ +%.-]+$/u.test(path)) {
 }
 
 const shoppingStore = useShoppingStore();
+const { experimental } = usePublicConfig();
 
 const rawRecipe = ref<string>();
 
@@ -536,7 +537,7 @@ const editServingsInShoppingList = () => {
           />
         </UDropdownMenu>
         <UButton
-          v-if="!shoppingStore.isRecipeInSelection(path)"
+          v-if="experimental && !shoppingStore.isRecipeInSelection(path)"
           size="md"
           color="primary"
           label="Add to shopping list"
@@ -544,7 +545,7 @@ const editServingsInShoppingList = () => {
           @click="addToShoppingList"
         />
         <UButton
-          v-else
+          v-else-if="experimental && shoppingStore.isRecipeInSelection(path)"
           size="sm"
           color="secondary"
           @click="editServingsInShoppingList"

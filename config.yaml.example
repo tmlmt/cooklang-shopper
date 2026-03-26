@@ -1,2 +1,5 @@
 # Generate a hashed password with: pnpx tsx scripts/hash-password.ts <password>
 password: "<scrypt-hashed-password>"
+
+# Enable experimental features (shopping list, shopping cart)
+experimental: false

@@ -1,12 +1,12 @@
 import { loadConfig } from "c12";
-import type { AuthConfig } from "~~/types";
+import type { AppConfig } from "~~/types";
 
-let cachedConfig: AuthConfig | null = null;
+let cachedConfig: AppConfig | null = null;
 
-export async function getAuthConfig(): Promise<AuthConfig> {
+export async function getAppConfig(): Promise<AppConfig> {
   if (cachedConfig) return cachedConfig;
 
-  const { config } = await loadConfig<AuthConfig>({
+  const { config } = await loadConfig<AppConfig>({
     configFile: "config.yaml",
     rcFile: false,
     packageJson: false,
@@ -20,6 +20,6 @@ export async function getAuthConfig(): Promise<AuthConfig> {
     });
   }
 
-  cachedConfig = config as AuthConfig;
+  cachedConfig = config as AppConfig;
   return cachedConfig;
 }
