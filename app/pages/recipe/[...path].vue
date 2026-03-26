@@ -497,6 +497,13 @@ const editServingsInShoppingList = () => {
           <h1 class="text-3xl">
             {{ recipe.metadata.title ?? "(Untitled)" }}
           </h1>
+          <UButton
+            icon="material-symbols:undo"
+            size="lg"
+            variant="outline"
+            color="neutral"
+            @click="$router.back()"
+          />
           <UDropdownMenu :items="menuItems" :content="{ align: 'start' }">
             <UButton
               icon="prime:bars"
