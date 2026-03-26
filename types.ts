@@ -1,5 +1,11 @@
 import type { RecipeChoices } from "@tmlmt/cooklang-parser";
 
+declare module "#auth-utils" {
+  interface User {
+    profile: string;
+  }
+}
+
 export interface RecipeInfo {
   title: string;
   path: string;

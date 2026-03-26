@@ -67,6 +67,13 @@ const navLeft = computed(() => {
         />
       </template>
       <template #right>
+        <UButton
+          v-if="route.path !== '/auth'"
+          variant="ghost"
+          color="neutral"
+          icon="material-symbols:fingerprint"
+          to="/auth"
+        />
         <UColorModeButton />
       </template>
     </UHeader>
