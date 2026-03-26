@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     "@nuxt/hints",
     "@nuxt/eslint",
     "@nuxt/image",
-    "@nuxt/test-utils",
+    "@nuxt/test-utils/module",
     "@pinia/nuxt",
     "@vueuse/nuxt",
     "@nuxt/ui",
