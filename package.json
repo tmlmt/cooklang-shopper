@@ -19,7 +19,7 @@
     "@nuxt/image": "2.0.0",
     "@nuxt/ui": "4.5.1",
     "@pinia/nuxt": "0.11.3",
-    "@tmlmt/cooklang-parser": "link:../cooklang-parser/dist",
+    "@tmlmt/cooklang-parser": "3.0.0-alpha.21",
     "c12": "4.0.0-beta.4",
     "glob": "13.0.6",
     "nuxt": "4.4.2",
