@@ -16,6 +16,10 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
+  icon: {
+    serverBundle: "remote",
+  },
+
   nitro: {
     storage: {
       recipes: {
