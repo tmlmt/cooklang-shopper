@@ -13,7 +13,8 @@
     "preview": "nuxt preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "release": "node scripts/release.mjs"
   },
   "dependencies": {
     "@nuxt/image": "2.0.0",
