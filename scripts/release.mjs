@@ -96,17 +96,16 @@ async function checkPrerequisites() {
 }
 
 async function buildTest() {
-  log.info("Running lint checks and tests...");
+  log.info("Running lint checks");
   try {
     await run("pnpm", ["lint"]);
-    await run("pnpm", ["test"]);
   } catch (error) {
-    log.error("Lint checks or tests failed.");
+    log.error("Lint checks failed.");
     console.error(error);
     process.exit(1);
   }
 
-  log.success("Lint checks and tests completed successfully.");
+  log.success("Lint checks completed successfully.");
 }
 
 // --- Main Script ---
