@@ -26,12 +26,8 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
    cd /path/to/cooklang-shopper/dist
    cp config.yaml.example config.yaml
    ```
-4. Generate a hashed password and add it to `config.yaml`:
-   ```bash
-   pnpx tsx scripts/hash-password.ts <your-password>
-   ```
-5. Add your `.cook` recipe files to `dist/public/recipes/`
-6. Start the server using your favorite method (pm2, systemctl, ...) or simply:
+4. Add your `.cook` recipe files to `dist/public/recipes/`
+5. Start the server using your favorite method (pm2, systemctl, ...) or simply:
    ```bash
    cd /path/to/cooklang-shopper/dist
    node server/index.mjs

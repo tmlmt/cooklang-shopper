@@ -268,6 +268,10 @@ async function main() {
       path.resolve(process.cwd(), "config.yaml.example"),
       path.join(stagingDir, "dist", "config.yaml.example"),
     );
+    fs.copyFileSync(
+      path.resolve(process.cwd(), "scripts/hash-password.mjs"),
+      path.join(stagingDir, "dist", "hash-password.mjs"),
+    );
   }
 
   log.info(`Creating release archive: ${archiveName}`);

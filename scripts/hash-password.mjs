@@ -3,7 +3,7 @@ import { randomBytes, scrypt } from "node:crypto";
 const password = process.argv[2];
 
 if (!password) {
-  console.error("Usage: npx tsx scripts/hash-password.ts <password>");
+  console.error("Usage: node dist/hash-password.mjs <password>");
   process.exit(1);
 }
 
@@ -14,7 +14,7 @@ const keyLength = 64;
 const saltSize = 16;
 
 const salt = randomBytes(saltSize);
-const hash = await new Promise<Buffer>((resolve, reject) => {
+const hash = await new Promise((resolve, reject) => {
   scrypt(
     password,
     salt,
