@@ -201,14 +201,11 @@ async function main() {
       line.startsWith("[compare changes]"),
     );
 
-    if (notesStartIndex === -1) {
-      log.error(
-        `Could not find '[compare changes]' link for version ${tag} in CHANGELOG.md.`,
-      );
-      process.exit(1);
-    }
+    // For the first release, there is no '[compare changes]' link—use
+    // everything after the version header instead.
+    const sliceFrom = notesStartIndex !== -1 ? notesStartIndex : 1;
 
-    return sectionLines.slice(notesStartIndex).join("\n").trim();
+    return sectionLines.slice(sliceFrom).join("\n").trim();
   }
 
   let releaseNotes = extractReleaseNotes();
