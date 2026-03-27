@@ -6,6 +6,10 @@
 .cache
 dist
 
+# Release artifacts
+.release-staging
+cooklang-shopper-*.tar.gz
+
 # Node dependencies
 node_modules
 

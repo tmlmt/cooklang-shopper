@@ -248,12 +248,39 @@ async function main() {
   // 6. Build the project and create a release archive
   const archiveName = `cooklang-shopper-${tag}.tar.gz`;
   const archivePath = path.resolve(process.cwd(), archiveName);
+  const stagingDir = path.resolve(process.cwd(), ".release-staging");
 
   log.info("Building the project...");
   await run("pnpm", ["build"]);
 
+  log.info("Preparing release archive staging directory...");
+  if (!DRY_RUN) {
+    if (fs.existsSync(stagingDir)) {
+      fs.rmSync(stagingDir, { recursive: true });
+    }
+    fs.mkdirSync(path.join(stagingDir, "dist"), { recursive: true });
+    fs.cpSync(
+      path.resolve(process.cwd(), ".output"),
+      path.join(stagingDir, "dist"),
+      { recursive: true },
+    );
+    fs.copyFileSync(
+      path.resolve(process.cwd(), "scripts/upgrade.sh"),
+      path.join(stagingDir, "upgrade.sh"),
+    );
+    fs.copyFileSync(
+      path.resolve(process.cwd(), "config.yaml.example"),
+      path.join(stagingDir, "dist", "config.yaml.example"),
+    );
+  }
+
   log.info(`Creating release archive: ${archiveName}`);
-  await run("tar", ["-czf", archiveName, "-C", ".output", "."]);
+  await run("tar", ["-czf", archiveName, "-C", stagingDir, "."]);
+
+  log.info("Cleaning up staging directory...");
+  if (!DRY_RUN) {
+    fs.rmSync(stagingDir, { recursive: true });
+  }
 
   // 7. Stage and commit the changes
   log.info("Staging package.json and CHANGELOG.md...");
