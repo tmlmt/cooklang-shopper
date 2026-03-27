@@ -5,12 +5,6 @@ export interface AppConfig {
   experimental?: boolean;
 }
 
-declare module "#auth-utils" {
-  interface User {
-    profile: string;
-  }
-}
-
 export interface RecipeInfo {
   title: string;
   path: string;
