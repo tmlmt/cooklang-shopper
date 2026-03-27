@@ -32,4 +32,10 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  vite: {
+    optimizeDeps: {
+      include: ["@tmlmt/cooklang-parser", "valibot"],
+    },
+  },
 });
