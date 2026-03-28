@@ -258,7 +258,7 @@ async function main() {
     fs.cpSync(
       path.resolve(process.cwd(), ".output"),
       path.join(stagingDir, "dist"),
-      { recursive: true },
+      { recursive: true, dereference: true },
     );
     fs.copyFileSync(
       path.resolve(process.cwd(), "scripts/upgrade.sh"),
