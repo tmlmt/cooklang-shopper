@@ -31,6 +31,10 @@ export default defineNuxtConfig({
         base: "./public/config",
       },
     },
+    // Inline chokidar into the bundle to avoid CJS/ESM resolution issues
+    externals: {
+      inline: ["chokidar"],
+    },
   },
 
   vite: {
