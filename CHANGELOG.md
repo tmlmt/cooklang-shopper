@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.4
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.3...v0.1.4)
+
+### 🩹 Fixes
+
+- **build:** Inline all dependencies likely leading to ESM/CJS resolution errors ([0a80c74](https://github.com/tmlmt/cooklang-shopper/commit/0a80c74))
+
+### 🏡 Chore
+
+- **config:** Replace example secret by placeholder ([a4041d6](https://github.com/tmlmt/cooklang-shopper/commit/a4041d6))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.3
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.2...v0.1.3)
