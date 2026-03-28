@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn, DropdownMenuItem } from "@nuxt/ui";
-import type { RecipeIndex, RecipeEssentials } from "~~/types";
+import type { RecipeEssentials } from "~~/types";
 
 definePageMeta({
   title: "Cooklang Shopper",
@@ -13,35 +13,21 @@ const toast = useToast();
 // Retrieving recipe list
 //------------------------
 
-const res = await useFetch("/api/recipes");
-const recipesIndex = ref<{ recipes: RecipeIndex }>();
-
-if (res.data.value) {
-  recipesIndex.value = res.data.value;
-}
-
-const allRecipesList = computed(() => {
-  if (recipesIndex.value && recipesIndex.value.recipes) {
-    return Object.values(recipesIndex.value.recipes);
-  }
-  return undefined;
-});
+const recipeStore = useRecipeStore();
+await recipeStore.fetchIndex();
 
 //--------------------
 // Menu
 //--------------------
 
 const reindexRecipes = async () => {
-  const newIndex = await $fetch("/api/recipes/rebuild-index");
-  if (newIndex) {
-    recipesIndex.value = newIndex;
-    toast.add({
-      title: "Success",
-      description: "Recipes reindexed",
-      color: "success",
-      duration: 3000,
-    });
-  }
+  await recipeStore.rebuildIndex();
+  toast.add({
+    title: "Success",
+    description: "Recipes reindexed",
+    color: "success",
+    duration: 3000,
+  });
 };
 
 const items = ref<DropdownMenuItem[]>([
@@ -61,12 +47,12 @@ const shoppingStore = useShoppingStore();
 const initialSelectedRows: RowSelectionState = {};
 
 shoppingStore.recipeSelection.forEach((recipe) => {
-  const index = allRecipesList.value?.findIndex((r) =>
+  const index = recipeStore.recipeList.findIndex((r) =>
     r.dir === ""
       ? r.name === recipe.path
       : [r.dir, r.name].join("/") === recipe.path,
   );
-  if (index !== undefined && index !== -1) {
+  if (index !== -1) {
     initialSelectedRows[String(index)] = true;
   }
 });
@@ -184,14 +170,14 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
             "Are you sure you want to delete this recipe?",
           );
           if (result) {
-            // Delete recipe and remove from index
-            const newIndex = await $fetch(
+            // Delete recipe from server
+            await $fetch(
               `/api/recipe/${recipe.dir ? recipe.dir + "/" : ""}${recipe.name}`,
               { method: "DELETE" },
             );
-            if (newIndex) {
-              recipesIndex.value = newIndex;
-            }
+
+            // Remove from store index
+            recipeStore.removeRecipe(recipe.name, recipe.dir);
 
             // Remove from selected list (if present)
             shoppingStore.removeRecipe(
@@ -216,12 +202,10 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
 //--------------------
 
 watch(selectedRows, (newSelected, oldSelected) => {
-  if (!allRecipesList.value) return;
-
   const changedIndexes = diffRowSelection(oldSelected, newSelected);
 
   for (const index of changedIndexes.added) {
-    const recipe = allRecipesList.value[parseInt(index)];
+    const recipe = recipeStore.recipeList[parseInt(index)];
     if (recipe) {
       const recipePath =
         recipe.dir === "" ? recipe.name : [recipe.dir, recipe.name].join("/");
@@ -229,7 +213,7 @@ watch(selectedRows, (newSelected, oldSelected) => {
     }
   }
   for (const index of changedIndexes.removed) {
-    const recipe = allRecipesList.value[parseInt(index)];
+    const recipe = recipeStore.recipeList[parseInt(index)];
     if (recipe) {
       const recipePath =
         recipe.dir === "" ? recipe.name : [recipe.dir, recipe.name].join("/");
@@ -269,7 +253,7 @@ const openNewRecipeModal = async () => {
     <UTable
       ref="table"
       v-model:row-selection="selectedRows"
-      :data="allRecipesList"
+      :data="recipeStore.recipeList"
       :columns="columns"
     >
       <template #action-cell="{ row }">

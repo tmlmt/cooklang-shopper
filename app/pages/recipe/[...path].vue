@@ -57,6 +57,7 @@ if (!/^(?!\/)(?:[\p{L}\p{N}_ +%.-]+\/)*[\p{L}\p{N}_ +%.-]+$/u.test(path)) {
 }
 
 const shoppingStore = useShoppingStore();
+const recipeStore = useRecipeStore();
 const { experimental } = usePublicConfig();
 
 const rawRecipe = ref<string>();
@@ -283,6 +284,7 @@ const menuItems = ref<DropdownMenuItem[]>([
             fileName: result.name,
           },
         });
+        recipeStore.moveRecipe(recipeName, recipeDir, result.name, result.dir);
         toast.add({
           title: "Success",
           description: `Recipe moved to ${result.dir}/${result.name}`,
@@ -307,6 +309,9 @@ const menuItems = ref<DropdownMenuItem[]>([
         await $fetch(`/api/recipe/${path}`, {
           method: "DELETE",
         });
+
+        // Remove from store index
+        recipeStore.removeRecipe(recipeName, recipeDir);
 
         // Remove from selected list (if present)
         shoppingStore.removeRecipe(path);
@@ -367,6 +372,7 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
       });
       isEditMode.value = false;
       rawRecipe.value = event.data.recipe;
+      recipeStore.updateRecipe(recipeName, recipeDir, event.data.recipe);
     } catch (error: unknown) {
       if (error instanceof FetchError) {
         toast.add({
@@ -395,6 +401,7 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
       });
       isEditMode.value = false;
       rawRecipe.value = event.data.recipe;
+      recipeStore.addRecipe(recipeName, recipeDir, event.data.recipe);
     } catch (error: unknown) {
       if (error instanceof FetchError) {
         toast.add({
