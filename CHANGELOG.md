@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.5
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.4...v0.1.5)
+
+### 🩹 Fixes
+
+- **runtime:** Revert inline bundling and switch to systemd ([8063269](https://github.com/tmlmt/cooklang-shopper/commit/8063269))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.4
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.3...v0.1.4)
