@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.6
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.5...v0.1.6)
+
+### 🩹 Fixes
+
+- **runtime:** Dereference symlinks when copying build dir to staging dir ([2622860](https://github.com/tmlmt/cooklang-shopper/commit/2622860))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.5
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.4...v0.1.5)
