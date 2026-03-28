@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.2
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.1...v0.1.2)
+
+### 🩹 Fixes
+
+- **build:** Inline chokidar into the bundle to avoid ESM resolution issues ([7664617](https://github.com/tmlmt/cooklang-shopper/commit/7664617))
+- Create nuxt-auth-utils secret env var from config.yaml file ([57b5556](https://github.com/tmlmt/cooklang-shopper/commit/57b5556))
+- **subdir:** Create recipes folder if it does not exist ([0773b00](https://github.com/tmlmt/cooklang-shopper/commit/0773b00))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.0...v0.1.1)
