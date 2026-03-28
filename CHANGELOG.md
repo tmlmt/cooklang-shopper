@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.3
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.2...v0.1.3)
+
+### 🩹 Fixes
+
+- **build:** Also inline chokidar's dependencies ([062082c](https://github.com/tmlmt/cooklang-shopper/commit/062082c))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.2
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.1...v0.1.2)
