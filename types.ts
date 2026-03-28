@@ -2,6 +2,7 @@ import type { RecipeChoices } from "@tmlmt/cooklang-parser";
 
 export interface AppConfig {
   password: string;
+  sessionSecret: string;
   experimental?: boolean;
 }
 

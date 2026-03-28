@@ -20,6 +20,13 @@ export async function getAppConfig(): Promise<AppConfig> {
     });
   }
 
+  if (!config.sessionSecret) {
+    throw createError({
+      statusCode: 500,
+      message: "Missing sessionSecret in config.yaml",
+    });
+  }
+
   cachedConfig = config as AppConfig;
   return cachedConfig;
 }

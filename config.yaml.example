@@ -1,5 +1,9 @@
 # Generate a hashed password with: node hash-password.mjs <password>
 password: "<scrypt-hashed-password>"
 
+# Secret used to encrypt session cookies (minimum 32 characters)
+# Generate one with: openssl rand -base64 32
+sessionSecret: "Mw0w9botGTKuN/qxy9oYRWDEuOjJPW1DC8BCFNcMtvo="
+
 # Enable experimental features (shopping list, shopping cart)
 experimental: false
