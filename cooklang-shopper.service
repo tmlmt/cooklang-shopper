@@ -1,0 +1,18 @@
+[Unit]
+Description=Cooklang Shopper
+After=network.target
+
+[Service]
+Type=simple
+# Adjust the user/group to match your setup
+User=www-data
+Group=www-data
+# Adjust the paths below to match your installation directory
+WorkingDirectory=/path/to/cooklang-shopper/dist
+ExecStart=/usr/bin/node server/index.mjs
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

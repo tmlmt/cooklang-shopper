@@ -26,8 +26,17 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
    cd /path/to/cooklang-shopper/dist
    cp config.yaml.example config.yaml
    ```
-4. Add your `.cook` recipe files to `dist/public/recipes/`
-5. Start the server using your favorite method (pm2, systemctl, ...) or simply:
+4. Edit `config.yaml` — set your hashed password and session secret (see the file for instructions)
+5. Add your `.cook` recipe files to `dist/public/recipes/`
+6. Set up the systemd service:
+   ```bash
+   # Edit the service file to adjust User, WorkingDirectory, and ExecStart paths
+   sudo cp /path/to/cooklang-shopper/dist/cooklang-shopper.service /etc/systemd/system/
+   sudo systemctl daemon-reload
+   sudo systemctl enable --now cooklang-shopper
+   ```
+
+   Alternatively, start the server manually:
    ```bash
    cd /path/to/cooklang-shopper/dist
    node server/index.mjs
@@ -54,6 +63,12 @@ rm -rf dist && mv dist.bak dist
 ```
 
 > **Note:** Stop the server before upgrading and restart it afterward.
+>
+> ```bash
+> sudo systemctl stop cooklang-shopper
+> ./upgrade.sh
+> sudo systemctl start cooklang-shopper
+> ```
 
 ## Roadmap
 

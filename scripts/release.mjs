@@ -272,6 +272,10 @@ async function main() {
       path.resolve(process.cwd(), "scripts/hash-password.mjs"),
       path.join(stagingDir, "dist", "hash-password.mjs"),
     );
+    fs.copyFileSync(
+      path.resolve(process.cwd(), "cooklang-shopper.service"),
+      path.join(stagingDir, "dist", "cooklang-shopper.service"),
+    );
   }
 
   log.info(`Creating release archive: ${archiveName}`);
