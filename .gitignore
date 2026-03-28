@@ -7,7 +7,6 @@
 dist
 
 # Release artifacts
-.release-staging
 cooklang-shopper-*.tar.gz
 
 # Node dependencies
