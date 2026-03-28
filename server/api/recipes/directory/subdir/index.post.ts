@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    await mkdir(newDir);
+    await mkdir(newDir, { recursive: true });
   } catch (err) {
     throw createError({
       statusCode: 500,
