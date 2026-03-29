@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.10
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.9...v0.1.10)
+
+### 🏡 Chore
+
+- **ai:** Instruct use of types.ts for shared types ([0a617b9](https://github.com/tmlmt/cooklang-shopper/commit/0a617b9))
+
+### 🎨 Styles
+
+- **ui:** Improved display on mobile ([7af5e81](https://github.com/tmlmt/cooklang-shopper/commit/7af5e81))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.9
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.8...v0.1.9)
