@@ -4,6 +4,18 @@
 
 Self-hosted solution to interact with [Cooklang](https://cooklang.org/) recipes. Browse and manage recipes, generate shopping lists, and more. The project is built using Nuxt 4 and TypeScript.
 
+## Package manager
+
+The project uses `pnpm` as the package manager. Therefore, all package management commands should be run using `pnpm` instead of `npm` or `yarn`. For example:
+
+- To install dependencies: `pnpm install`
+- To add a new package: `pnpm add <package-name>`
+- To run the development server: `pnpm dev`
+- To build the project: `pnpm build`
+- To run tests: `pnpm test`
+- To lint the code: `pnpm lint`
+- To run test with coverage: `pnpm test:coverage`
+
 ## Architecture
 
 The project is structured as per Nuxt 4 conventions. In particular:
