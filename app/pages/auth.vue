@@ -46,6 +46,12 @@ async function logout() {
     <template #header>Cooklang Shopper - Authentication</template>
     <div v-if="loggedIn" class="flex flex-col items-center gap-4">
       <p>You are logged in.</p>
+      <UButton
+        color="neutral"
+        variant="outline"
+        label="Go to Cookbook"
+        @click="navigateTo('/')"
+      />
       <UButton color="primary" @click="logout">Logout</UButton>
     </div>
     <div v-else class="flex flex-col items-center gap-4">
