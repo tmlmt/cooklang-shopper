@@ -20,7 +20,7 @@
     "@nuxt/image": "2.0.0",
     "@nuxt/ui": "4.6.0",
     "@pinia/nuxt": "0.11.3",
-    "@tmlmt/cooklang-parser": "3.0.0-alpha.21",
+    "@tmlmt/cooklang-parser": "3.0.0-alpha.22",
     "c12": "4.0.0-beta.4",
     "glob": "13.0.6",
     "nuxt": "4.4.2",
@@ -31,7 +31,7 @@
     "vue": "3.5.31"
   },
   "devDependencies": {
-    "@iconify-json/material-symbols": "1.2.63",
+    "@iconify-json/material-symbols": "1.2.64",
     "@iconify-json/prime": "1.2.4",
     "@nuxt/devtools": "3.2.4",
     "@nuxt/eslint": "1.15.2",
