@@ -29,6 +29,10 @@ The project is structured as per Nuxt 4 conventions. In particular:
 - `app/utils/`: Contains utility functions and helpers.
 - `server/api/`: Contains server-side API routes for handling backend logic.
 
+## Special files
+
+- `types.ts`: contain all Typescript type definitions used across the project. Use this file to define interfaces, types, and enums that are shared across multiple components or modules.
+
 ## Coding Style
 
 - Use TypeScript for all code.
