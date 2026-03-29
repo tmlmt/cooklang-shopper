@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.9
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.8...v0.1.9)
+
+### 🩹 Fixes
+
+- **layout:** Center auth container ([94d978b](https://github.com/tmlmt/cooklang-shopper/commit/94d978b))
+
+### 🏡 Chore
+
+- **auth:** Add link to homepage ([eb4d95c](https://github.com/tmlmt/cooklang-shopper/commit/eb4d95c))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.8
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.7...v0.1.8)
