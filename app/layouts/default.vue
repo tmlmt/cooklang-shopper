@@ -3,6 +3,19 @@ import type { BreadcrumbItem, NavigationMenuItem } from "@nuxt/ui";
 
 const route = useRoute();
 const { experimental } = usePublicConfig();
+const { headerMenuItems } = useHeaderMenu();
+
+const headerOpen = ref(false);
+
+const wrappedHeaderMenuItems = computed(() =>
+  headerMenuItems.value.map((item) => ({
+    ...item,
+    onSelect: (e: Event) => {
+      item.onSelect?.(e);
+      headerOpen.value = false;
+    },
+  })),
+);
 
 const items = computed<BreadcrumbItem[]>(() => [
   { label: "Recipes", to: "/", active: route.path === "/" },
@@ -58,7 +71,11 @@ const navLeft = computed(() => {
 
 <template>
   <div class="absolute flex h-full w-full flex-col">
-    <UHeader class="min-h-16" :ui="{ title: 'items-center gap-3' }">
+    <UHeader
+      v-model:open="headerOpen"
+      class="min-h-16"
+      :ui="{ title: 'items-center gap-3' }"
+    >
       <template #title
         ><Icon name="material-symbols:chef-hat-rounded" size="1.2em" />
         Cooklang Shopper
@@ -68,10 +85,22 @@ const navLeft = computed(() => {
         :ui="{ root: 'mt-1', link: 'text-md' }"
         :items="items"
       />
-      <template v-if="experimental" #body>
+      <template #body>
         <UNavigationMenu
+          v-if="experimental"
           :ui="{ root: 'mt-1', link: 'text-md' }"
           :items="items as NavigationMenuItem[]"
+          orientation="vertical"
+          class="-mx-2.5"
+        />
+        <USeparator
+          v-if="experimental && headerMenuItems.length > 0"
+          class="my-2"
+        />
+        <UNavigationMenu
+          v-if="headerMenuItems.length > 0"
+          :ui="{ root: 'mt-1', link: 'text-md' }"
+          :items="wrappedHeaderMenuItems as NavigationMenuItem[]"
           orientation="vertical"
           class="-mx-2.5"
         />
@@ -87,7 +116,10 @@ const navLeft = computed(() => {
         <UColorModeButton />
       </template>
     </UHeader>
-    <UContainer class="mt-0 flex w-full flex-auto px-4 md:mt-5">
+    <UContainer
+      class="mt-0 flex w-full flex-auto md:mt-5"
+      :ui="{ base: 'px-0' }"
+    >
       <main class="flex w-full">
         <slot />
       </main>

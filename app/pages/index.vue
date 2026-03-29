@@ -234,11 +234,33 @@ const openNewRecipeModal = async () => {
     await navigateTo(`/recipe/${pathJoin(result.dir, result.name)}?mode=new`);
   }
 };
+
+//---------------------
+// Header menu (mobile)
+//---------------------
+
+const { setHeaderMenuItems, clearHeaderMenuItems } = useHeaderMenu();
+
+setHeaderMenuItems([
+  {
+    label: "New recipe",
+    icon: "prime:plus",
+    onSelect: openNewRecipeModal,
+  },
+  {
+    label: "Re-index recipes",
+    onSelect: reindexRecipes,
+  },
+]);
+
+onBeforeRouteLeave(() => {
+  clearHeaderMenuItems();
+});
 </script>
 
 <template>
-  <div class="flex w-full flex-col gap-4">
-    <div class="flex flex-row gap-4">
+  <div class="flex w-full flex-col gap-4 md:px-1">
+    <div class="hidden flex-row gap-4 md:flex">
       <UButton
         icon="prime:plus"
         color="primary"
@@ -255,6 +277,7 @@ const openNewRecipeModal = async () => {
       v-model:row-selection="selectedRows"
       :data="recipeStore.recipeList"
       :columns="columns"
+      :ui="{ td: 'px-4 py-2 md:py-4' }"
     >
       <template #action-cell="{ row }">
         <div class="text-center">

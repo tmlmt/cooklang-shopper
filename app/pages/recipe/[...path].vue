@@ -492,26 +492,50 @@ const editServingsInShoppingList = () => {
     });
   }
 };
+
+//---------------------
+// Header menu (mobile)
+//---------------------
+
+const { setHeaderMenuItems, clearHeaderMenuItems } = useHeaderMenu();
+
+setHeaderMenuItems(
+  (
+    menuItems.value as {
+      label?: string;
+      icon?: string;
+      onSelect?: (e: Event) => void;
+    }[]
+  ).map((item) => ({
+    label: item.label,
+    icon: item.icon,
+    onSelect: item.onSelect,
+  })),
+);
+
+onBeforeRouteLeave(() => {
+  clearHeaderMenuItems();
+});
 </script>
 
 <template>
-  <div class="flex w-full">
+  <div class="flex w-full px-4 md:px-1">
     <div v-if="recipe && !isEditMode" class="flex w-full flex-col">
       <div class="mb-4 flex flex-col gap-4">
-        <div class="mt-5 flex flex-row gap-4 md:mt-0">
+        <div class="mt-5 flex flex-row items-center gap-4 md:mt-0">
           <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
-        </div>
-        <div class="flex flex-row gap-4">
-          <h1 class="text-3xl">
-            {{ recipe.metadata.title ?? "(Untitled)" }}
-          </h1>
           <UButton
             icon="material-symbols:undo"
-            size="lg"
+            size="xs"
             variant="outline"
             color="neutral"
             @click="$router.back()"
           />
+        </div>
+        <div class="hidden flex-row gap-4 md:flex">
+          <h1 class="text-3xl">
+            {{ recipe.metadata.title ?? "(Untitled)" }}
+          </h1>
           <UDropdownMenu :items="menuItems" :content="{ align: 'start' }">
             <UButton
               icon="prime:bars"
@@ -521,6 +545,9 @@ const editServingsInShoppingList = () => {
             />
           </UDropdownMenu>
         </div>
+        <h1 class="text-2xl md:hidden">
+          {{ recipe.metadata.title ?? "(Untitled)" }}
+        </h1>
       </div>
       <div class="mb-4 flex flex-row gap-4">
         <div class="mt-1">Scale:</div>
@@ -715,7 +742,7 @@ const editServingsInShoppingList = () => {
         </div>
       </div>
     </div>
-    <div v-else class="flex w-full flex-col gap-4">
+    <div v-else class="mt-4 flex w-full flex-col gap-4 md:mt-0">
       <div class="flex flex-row gap-4">
         <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
       </div>
