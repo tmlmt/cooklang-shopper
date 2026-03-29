@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.1.8
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.7...v0.1.8)
+
+### 🩹 Fixes
+
+- **ingredients:** Handle subgroups of grouped ingredients ([a90dd68](https://github.com/tmlmt/cooklang-shopper/commit/a90dd68))
+
+### 💅 Refactors
+
+- Store recipes with Pinia and fix reactivity of recipe list ([d8d5466](https://github.com/tmlmt/cooklang-shopper/commit/d8d5466))
+
+### 🏡 Chore
+
+- **ai:** Instruct to use pnpm ([9332864](https://github.com/tmlmt/cooklang-shopper/commit/9332864))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.7
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.6...v0.1.7)
