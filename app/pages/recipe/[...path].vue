@@ -594,13 +594,6 @@ onBeforeRouteLeave(() => {
       <div class="mb-4 flex flex-col gap-4">
         <div class="mt-5 flex flex-row items-center gap-4 md:mt-0">
           <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
-          <UButton
-            icon="material-symbols:undo"
-            size="xs"
-            variant="outline"
-            color="neutral"
-            @click="$router.back()"
-          />
         </div>
         <div class="hidden flex-row gap-4 md:flex">
           <h1 class="text-3xl">
