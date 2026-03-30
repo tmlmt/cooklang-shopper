@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.11
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.10...v0.1.11)
+
+### 🩹 Fixes
+
+- Parsing and rendering of list of objects as metadata variable ([c351a70](https://github.com/tmlmt/cooklang-shopper/commit/c351a70))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.10
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.9...v0.1.10)
