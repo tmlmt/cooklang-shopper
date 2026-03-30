@@ -648,22 +648,25 @@ onBeforeRouteLeave(() => {
             </ULink>
             <span v-else-if="entry.value">{{ entry.value }}</span>
             <template v-if="entry.subEntries">
-              <ul
+              <div
                 v-for="(obj, oIdx) in entry.subEntries"
                 :key="oIdx"
-                class="ml-4 list-inside"
+                class="my-0.5 ml-2 flex flex-row gap-2"
               >
-                <li
-                  v-for="(field, fIdx) in obj"
-                  :key="fIdx"
-                  :class="fIdx === 0 ? 'list-disc' : 'ml-5 list-none'"
-                >
-                  <span v-if="field.key" class="font-medium"
-                    >{{ field.key }}:</span
+                <div class="text-base">•</div>
+                <ul class="mt-[0.1rem] list-inside">
+                  <li
+                    v-for="(field, fIdx) in obj"
+                    :key="fIdx"
+                    class="list-none"
                   >
-                  {{ field.value }}
-                </li>
-              </ul>
+                    <span v-if="field.key" class="font-medium"
+                      >{{ field.key }}:</span
+                    >
+                    {{ field.value }}
+                  </li>
+                </ul>
+              </div>
             </template>
           </li>
         </ul>
