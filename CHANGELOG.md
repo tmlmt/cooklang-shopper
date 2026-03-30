@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.12
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.11...v0.1.12)
+
+### 🎨 Styles
+
+- **metadata:** Improved alignment of list of objects ([0bf3a1c](https://github.com/tmlmt/cooklang-shopper/commit/0bf3a1c))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.11
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.10...v0.1.11)
