@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.1.13
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.12...v0.1.13)
+
+### 🚀 Enhancements
+
+- **servingsSpinner:** Do not focus on change ([3e0dd38](https://github.com/tmlmt/cooklang-shopper/commit/3e0dd38))
+- **servingsSpinner:** Adapt step to original servings value ([dd1981b](https://github.com/tmlmt/cooklang-shopper/commit/dd1981b))
+- **recipe:** Render cookware ([a42cb28](https://github.com/tmlmt/cooklang-shopper/commit/a42cb28))
+- **Header:** Add About modal ([5259873](https://github.com/tmlmt/cooklang-shopper/commit/5259873))
+- **recipe:** Move back button up to header ([40a4e1c](https://github.com/tmlmt/cooklang-shopper/commit/40a4e1c))
+- Add close on 'Esc' to all modals ([ffaf61e](https://github.com/tmlmt/cooklang-shopper/commit/ffaf61e))
+
+### 🩹 Fixes
+
+- **seo:** Align description and fix titles ([969ca1a](https://github.com/tmlmt/cooklang-shopper/commit/969ca1a))
+
+### 🎨 Styles
+
+- **recipe:** Put title in bold ([3c894b5](https://github.com/tmlmt/cooklang-shopper/commit/3c894b5))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.12
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.11...v0.1.12)
