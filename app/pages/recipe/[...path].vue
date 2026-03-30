@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   Recipe,
+  formatQuantity,
   formatQuantityWithUnit,
   isSectionActive,
   isStepActive,
@@ -258,6 +259,11 @@ const filteredIngredients = computed(() => {
   return ingredients.filter(
     (ing) => !ing.flags?.includes("hidden") && ing.usedAsPrimary,
   );
+});
+
+const filteredCookware = computed(() => {
+  if (!recipe.value) return [];
+  return recipe.value.getCookwareForVariant({ choices: choices.value });
 });
 
 const sectionsWithStepNumbers = computed(() => {
@@ -716,6 +722,47 @@ onBeforeRouteLeave(() => {
             :ingredients="filteredIngredients"
             :all-ingredients="recipe.ingredients"
           />
+          <template v-if="filteredCookware.length > 0">
+            <!-- Desktop: always visible -->
+            <div class="mt-6 hidden md:block">
+              <h2 class="mb-2 text-2xl font-bold">Cookware</h2>
+              <ul class="ml-6 list-disc">
+                <li v-for="item in filteredCookware" :key="item.name">
+                  {{ item.name }}
+                  <span v-if="item.quantity" class="text-neutral-500">
+                    ({{ formatQuantity(item.quantity) }})
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <!-- Mobile: collapsible, collapsed by default -->
+            <div class="mt-6 md:hidden">
+              <UCollapsible>
+                <UButton
+                  class="group"
+                  label="Cookware"
+                  color="neutral"
+                  variant="soft"
+                  trailing-icon="i-lucide-chevron-down"
+                  size="sm"
+                  :ui="{
+                    trailingIcon:
+                      'group-data-[state=open]:rotate-180 transition-transform duration-200',
+                  }"
+                />
+                <template #content>
+                  <ul class="mt-2 ml-6 list-disc">
+                    <li v-for="item in filteredCookware" :key="item.name">
+                      {{ item.name }}
+                      <span v-if="item.quantity" class="text-neutral-500">
+                        ({{ formatQuantity(item.quantity) }})
+                      </span>
+                    </li>
+                  </ul>
+                </template>
+              </UCollapsible>
+            </div>
+          </template>
         </div>
         <div class="col-span-2">
           <USeparator
