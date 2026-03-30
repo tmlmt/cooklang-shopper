@@ -602,6 +602,7 @@ onBeforeRouteLeave(() => {
           :step="1"
           :min="1"
           :ui="{ base: 'w-24' }"
+          :focus-on-change="false"
         />
         <UDropdownMenu
           v-if="hasVariants"
