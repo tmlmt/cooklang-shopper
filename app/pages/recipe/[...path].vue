@@ -596,7 +596,7 @@ onBeforeRouteLeave(() => {
           <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
         </div>
         <div class="hidden flex-row gap-4 md:flex">
-          <h1 class="text-3xl">
+          <h1 class="text-3xl font-bold">
             {{ recipe.metadata.title ?? "(Untitled)" }}
           </h1>
           <UDropdownMenu :items="menuItems" :content="{ align: 'start' }">
@@ -608,7 +608,7 @@ onBeforeRouteLeave(() => {
             />
           </UDropdownMenu>
         </div>
-        <h1 class="text-2xl md:hidden">
+        <h1 class="text-2xl font-bold md:hidden">
           {{ recipe.metadata.title ?? "(Untitled)" }}
         </h1>
       </div>
