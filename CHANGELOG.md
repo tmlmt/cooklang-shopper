@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.14
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.13...v0.1.14)
+
+### 🩹 Fixes
+
+- Secure all api endpoints ([ad186ef](https://github.com/tmlmt/cooklang-shopper/commit/ad186ef))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.13
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.12...v0.1.13)
