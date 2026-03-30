@@ -172,7 +172,7 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
           );
           if (result) {
             // Delete recipe from server
-            await $fetch(
+            await $fetchWithHeaders(
               `/api/recipe/${recipe.dir ? recipe.dir + "/" : ""}${recipe.name}`,
               { method: "DELETE" },
             );

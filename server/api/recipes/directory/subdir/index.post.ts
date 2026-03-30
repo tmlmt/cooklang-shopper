@@ -6,6 +6,8 @@ import {
 } from "~~/server/utils/isSystemError";
 
 export default defineEventHandler(async (event) => {
+  await requireUserSession(event);
+
   const body = await readBody(event);
   if (body.parentDir === undefined) {
     throw createError({

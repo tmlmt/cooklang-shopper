@@ -1,7 +1,9 @@
 import { glob } from "glob";
 import path from "node:path";
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
+  await requireUserSession(event);
+
   const dir = path.join(process.cwd(), "public", "recipes");
   const entries = await glob("**/", { cwd: dir });
   return entries

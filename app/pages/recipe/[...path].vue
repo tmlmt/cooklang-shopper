@@ -332,7 +332,7 @@ const menuItems = ref<DropdownMenuItem[]>([
         recipe.value?.metadata.title,
       );
       if (result) {
-        await $fetch(`/api/recipe/${path}`, {
+        await $fetchWithHeaders(`/api/recipe/${path}`, {
           method: "PATCH",
           body: {
             dir: result.dir,
@@ -361,7 +361,7 @@ const menuItems = ref<DropdownMenuItem[]>([
       );
       if (result) {
         // Delete recipe
-        await $fetch(`/api/recipe/${path}`, {
+        await $fetchWithHeaders(`/api/recipe/${path}`, {
           method: "DELETE",
         });
 
@@ -415,7 +415,7 @@ type Schema = v.InferOutput<typeof schema>;
 const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
   if (route.query.mode === "edit" || isManualEdit.value) {
     try {
-      await $fetch(`/api/recipe/${path}`, {
+      await $fetchWithHeaders(`/api/recipe/${path}`, {
         method: "PUT",
         body: { recipe: event.data.recipe },
       });
@@ -440,7 +440,7 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
     }
   } else if (route.query.mode === "new") {
     try {
-      await $fetch(`/api/recipes`, {
+      await $fetchWithHeaders(`/api/recipes`, {
         method: "POST",
         body: {
           dir: recipeDir,

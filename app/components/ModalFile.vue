@@ -147,13 +147,16 @@ const pendingSubDirCreate = ref(false);
 const createSubDir = async () => {
   pendingSubDirCreate.value = true;
   try {
-    const data = await $fetch("/api/recipes/directory/subdir", {
-      method: "POST",
-      body: {
-        parentDir: mainState.value.dir!.path,
-        name: newDirState.value,
+    const data = await $fetchWithHeaders<{ renamed: boolean; name: string }>(
+      "/api/recipes/directory/subdir",
+      {
+        method: "POST",
+        body: {
+          parentDir: mainState.value.dir!.path,
+          name: newDirState.value,
+        },
       },
-    });
+    );
     if (data) {
       // Update tree
       const newPath = pathJoin(mainState.value.dir!.path, data.name);

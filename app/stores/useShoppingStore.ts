@@ -81,7 +81,7 @@ export const useShoppingStore = defineStore("shopping", () => {
 
   async function fetchRecipe(path: string): Promise<string> {
     if (!isRecipeInList(path)) {
-      const res = await $fetch(`/api/recipe/${path}`);
+      const res = await $fetchWithHeaders<string>(`/api/recipe/${path}`);
       recipeList.value.push({ path, rawRecipe: res });
       return res;
     }

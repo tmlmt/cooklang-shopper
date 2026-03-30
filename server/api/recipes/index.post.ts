@@ -7,6 +7,8 @@ import {
 import { updateRecipeIndex } from "~~/server/utils/recipeIndex";
 
 export default defineEventHandler(async (event) => {
+  await requireUserSession(event);
+
   const body = await readBody(event);
   if (body.dir === undefined) {
     throw createError({

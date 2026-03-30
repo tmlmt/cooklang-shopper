@@ -1,4 +1,6 @@
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
+  await requireUserSession(event);
+
   const storage = useStorage("config");
   const catalogFileName = "product-catalog.toml";
 

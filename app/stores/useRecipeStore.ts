@@ -7,14 +7,18 @@ export const useRecipeStore = defineStore("recipe", () => {
   const recipeList = computed(() => Object.values(recipes.value));
 
   async function fetchIndex() {
-    const data = await $fetch("/api/recipes");
+    const data = await $fetchWithHeaders<{ recipes: RecipeIndex }>(
+      "/api/recipes",
+    );
     if (data?.recipes) {
       recipes.value = data.recipes;
     }
   }
 
   async function rebuildIndex() {
-    const data = await $fetch("/api/recipes/rebuild-index");
+    const data = await $fetchWithHeaders<{ recipes: RecipeIndex }>(
+      "/api/recipes/rebuild-index",
+    );
     if (data?.recipes) {
       recipes.value = data.recipes;
     }

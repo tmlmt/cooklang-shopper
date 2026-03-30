@@ -1,6 +1,8 @@
 import { updateRecipeIndex } from "~~/server/utils/recipeIndex";
 
 export default defineEventHandler(async (event) => {
+  await requireUserSession(event);
+
   const path = getRouterParam(event, "path");
   // Validating incoming value
   if (!path) {

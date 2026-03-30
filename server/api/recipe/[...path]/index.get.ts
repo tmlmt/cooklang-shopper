@@ -1,4 +1,6 @@
 export default defineEventHandler(async (event) => {
+  await requireUserSession(event);
+
   const path = getRouterParam(event, "path");
   if (!path) {
     throw createError({
