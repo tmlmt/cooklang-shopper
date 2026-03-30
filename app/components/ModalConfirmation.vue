@@ -8,7 +8,12 @@ const {
   yes?: string;
   no?: string;
 }>();
+
 const emit = defineEmits<{ close: [boolean] }>();
+
+defineShortcuts({
+  escape: () => emit("close", false),
+});
 </script>
 
 <template>

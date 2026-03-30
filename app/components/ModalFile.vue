@@ -17,6 +17,9 @@ const {
   title?: string;
 }>();
 const emit = defineEmits<{ close: [{ dir: string; name: string } | false] }>();
+defineShortcuts({
+  escape: () => emit("close", false),
+});
 const toast = useToast();
 
 //--------------------

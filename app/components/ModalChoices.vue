@@ -16,6 +16,10 @@ const props = defineProps<{
 
 const emit = defineEmits<{ close: [RecipeChoices | undefined] }>();
 
+defineShortcuts({
+  escape: () => emit("close", undefined),
+});
+
 const choices = ref<RecipeChoices>(
   getEffectiveChoices(props.recipe, props.initialVariant),
 );
