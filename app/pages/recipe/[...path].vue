@@ -9,6 +9,7 @@ import {
   type Yield,
   type MetadataTime,
   type MetadataSource,
+  type MetadataObject,
 } from "@tmlmt/cooklang-parser";
 import * as v from "valibot";
 import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
@@ -89,9 +90,27 @@ watch(
   },
   { immediate: true },
 );
+interface MetadataEntry {
+  key: string;
+  value?: string;
+  isLink?: boolean;
+  subEntries?: Array<Array<{ key: string; value: string }>>;
+}
+
+const formatMetadataValue = (val: unknown): string => {
+  if (val === undefined || val === null) return "";
+  if (typeof val === "string" || typeof val === "number") return String(val);
+  if (Array.isArray(val)) return val.map(formatMetadataValue).join(", ");
+  if (typeof val === "object")
+    return Object.entries(val)
+      .map(([k, v]) => `${k}: ${formatMetadataValue(v)}`)
+      .join(", ");
+  return String(val);
+};
+
 const nonTitleMetaData = computed(() => {
-  if (!recipe.value) return [];
-  const entries: Array<{ key: string; value: string; isLink?: boolean }> = [];
+  if (!recipe.value) return [] as MetadataEntry[];
+  const entries: MetadataEntry[] = [];
   const metadata = recipe.value.metadata;
 
   for (const [key, value] of Object.entries(metadata)) {
@@ -157,10 +176,37 @@ const nonTitleMetaData = computed(() => {
       continue;
     }
 
-    const displayValue = Array.isArray(value)
-      ? value.join(", ")
-      : String(value);
-    entries.push({ key, value: displayValue });
+    if (Array.isArray(value)) {
+      const hasObjects = value.some(
+        (item) => typeof item === "object" && item !== null,
+      );
+      if (hasObjects) {
+        const subEntries = value.map((item) => {
+          if (typeof item === "object" && item !== null) {
+            const obj = item as MetadataObject;
+            return Object.entries(obj).map(([k, v]) => ({
+              key: k,
+              value: formatMetadataValue(v),
+            }));
+          }
+          return [{ key: "", value: String(item) }];
+        });
+        entries.push({ key, subEntries });
+      } else {
+        entries.push({ key, value: value.join(", ") });
+      }
+    } else if (typeof value === "object" && value !== null) {
+      const obj = value as MetadataObject;
+      const subEntries = [
+        Object.entries(obj).map(([k, v]) => ({
+          key: k,
+          value: formatMetadataValue(v),
+        })),
+      ];
+      entries.push({ key, subEntries });
+    } else {
+      entries.push({ key, value: String(value) });
+    }
   }
 
   return entries;
@@ -593,14 +639,32 @@ onBeforeRouteLeave(() => {
           <li v-for="entry in nonTitleMetaData" :key="entry.key">
             <b>{{ entry.key }}: </b>
             <ULink
-              v-if="entry.isLink"
+              v-if="entry.isLink && entry.value"
               :to="entry.value"
               :boolean="true"
               target="_blank"
             >
               {{ entry.value }}
             </ULink>
-            <span v-else>{{ entry.value }}</span>
+            <span v-else-if="entry.value">{{ entry.value }}</span>
+            <template v-if="entry.subEntries">
+              <ul
+                v-for="(obj, oIdx) in entry.subEntries"
+                :key="oIdx"
+                class="ml-4 list-inside"
+              >
+                <li
+                  v-for="(field, fIdx) in obj"
+                  :key="fIdx"
+                  :class="fIdx === 0 ? 'list-disc' : 'ml-5 list-none'"
+                >
+                  <span v-if="field.key" class="font-medium"
+                    >{{ field.key }}:</span
+                  >
+                  {{ field.value }}
+                </li>
+              </ul>
+            </template>
           </li>
         </ul>
       </div>

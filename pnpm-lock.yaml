@@ -18,8 +18,8 @@ importers:
         specifier: 0.11.3
         version: 0.11.3(magicast@0.5.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.31(typescript@5.9.3)))
       '@tmlmt/cooklang-parser':
-        specifier: 3.0.0-alpha.22
-        version: 3.0.0-alpha.22
+        specifier: 3.0.0-alpha.23
+        version: 3.0.0-alpha.23
       c12:
         specifier: 4.0.0-beta.4
         version: 4.0.0-beta.4(chokidar@5.0.0)(dotenv@17.3.1)(giget@3.2.0)(jiti@2.6.1)(magicast@0.5.2)
@@ -2204,8 +2204,8 @@ packages:
       y-protocols: ^1.0.1
       yjs: ^13.5.38
 
-  '@tmlmt/cooklang-parser@3.0.0-alpha.22':
-    resolution: {integrity: sha512-9fwQADviiOFyUA6X0Q9FoC4rhHOty+mHLDMTU3/ipAVdp+rfy0wy6nxvVwt9uIEc6/X/gpQWSBQg8vy3atfD6Q==}
+  '@tmlmt/cooklang-parser@3.0.0-alpha.23':
+    resolution: {integrity: sha512-7z0P+zivpeW21HAL/kGqbRaaJ0A+1YrY3jsYs7T4bqVB1Q9Vs6L29wyqi9G8rpIFNT+o5tT1EssLxjxHU3pA4Q==}
 
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
@@ -7895,7 +7895,7 @@ snapshots:
       y-protocols: 1.0.7(yjs@13.6.30)
       yjs: 13.6.30
 
-  '@tmlmt/cooklang-parser@3.0.0-alpha.22':
+  '@tmlmt/cooklang-parser@3.0.0-alpha.23':
     dependencies:
       big.js: 7.0.1
       smol-toml: 1.6.1
