@@ -33,8 +33,8 @@ const items = computed<BreadcrumbItem[]>(() => [
 
 useSeoMeta({
   author: "Thomas Lamant",
-  title: (route.meta.title as string) || "Cook Lister",
-  ogTitle: (route.meta.title as string) || "Cook Lister",
+  title: (route.meta.title as string) || "Cooklang Shopper",
+  ogTitle: (route.meta.title as string) || "Cooklang Shopper",
   description:
     (route.meta.description as string) ||
     "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",

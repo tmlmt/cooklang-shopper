@@ -3,8 +3,9 @@ import type { TableColumn } from "@nuxt/ui";
 import type { RecipeInfo } from "~~/types";
 
 definePageMeta({
-  title: "Cook Lister - Shopping List",
-  description: "Weekly meal planner, from recipes to shopping cart",
+  title: "Cooklang Shopper - Shopping List",
+  description:
+    "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
 });
 
 const shoppingStore = useShoppingStore();

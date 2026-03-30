@@ -4,7 +4,8 @@ import type { RecipeEssentials } from "~~/types";
 
 definePageMeta({
   title: "Cooklang Shopper",
-  description: "Weekly meal planner, from recipes to shopping cart",
+  description:
+    "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
 });
 
 const toast = useToast();

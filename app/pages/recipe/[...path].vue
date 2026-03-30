@@ -17,7 +17,8 @@ import { FetchError } from "ofetch";
 
 definePageMeta({
   title: "Cooklang Shopper - Recipe detail",
-  description: "Weekly meal planner, from recipes to shopping cart",
+  description:
+    "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
 });
 
 const toast = useToast();
