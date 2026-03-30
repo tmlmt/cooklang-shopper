@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import type { BreadcrumbItem, NavigationMenuItem } from "@nuxt/ui";
+import type {
+  BreadcrumbItem,
+  DropdownMenuItem,
+  NavigationMenuItem,
+} from "@nuxt/ui";
 
 const route = useRoute();
 const { experimental } = usePublicConfig();
@@ -17,7 +21,7 @@ const wrappedHeaderMenuItems = computed(() =>
   })),
 );
 
-const items = computed<BreadcrumbItem[]>(() => [
+const navigationItems = computed<BreadcrumbItem[]>(() => [
   { label: "Recipes", to: "/", active: route.path === "/" },
   {
     label: "Shopping List",
@@ -29,6 +33,12 @@ const items = computed<BreadcrumbItem[]>(() => [
     to: "/cart",
     active: route.path === "/cart",
   },
+]);
+
+const modal = await useModalAbout();
+
+const aboutItems = computed<DropdownMenuItem[]>(() => [
+  { label: "About", onSelect: async () => await modal.open() },
 ]);
 
 useSeoMeta({
@@ -74,7 +84,9 @@ const navLeft = computed(() => {
     <UHeader
       v-model:open="headerOpen"
       class="min-h-16"
-      :ui="{ title: 'items-center gap-3' }"
+      :ui="{
+        title: 'items-center gap-3',
+      }"
     >
       <template #title
         ><Icon name="material-symbols:chef-hat-rounded" size="1.2em" />
@@ -83,13 +95,13 @@ const navLeft = computed(() => {
       <UBreadcrumb
         v-if="experimental"
         :ui="{ root: 'mt-1', link: 'text-md' }"
-        :items="items"
+        :items="navigationItems"
       />
       <template #body>
         <UNavigationMenu
           v-if="experimental"
           :ui="{ root: 'mt-1', link: 'text-md' }"
-          :items="items as NavigationMenuItem[]"
+          :items="navigationItems as NavigationMenuItem[]"
           orientation="vertical"
           class="-mx-2.5"
         />
@@ -104,6 +116,13 @@ const navLeft = computed(() => {
           orientation="vertical"
           class="-mx-2.5"
         />
+        <USeparator v-if="headerMenuItems.length > 0" class="my-2" />
+        <UNavigationMenu
+          :ui="{ root: 'mt-1', link: 'text-md' }"
+          :items="aboutItems as NavigationMenuItem[]"
+          orientation="vertical"
+          class="-mx-2.5"
+        />
       </template>
       <template #right>
         <UButton
@@ -114,6 +133,15 @@ const navLeft = computed(() => {
           to="/auth"
         />
         <UColorModeButton />
+        <UDropdownMenu :items="aboutItems" :content="{ align: 'end' }">
+          <UButton
+            icon="prime:bars"
+            size="xl"
+            color="neutral"
+            variant="ghost"
+            class="hidden md:flex"
+          />
+        </UDropdownMenu>
       </template>
     </UHeader>
     <UContainer
