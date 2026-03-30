@@ -79,11 +79,13 @@ if (route.query.mode === "new") {
 }
 
 const recipe = ref<Recipe>();
+const originalServings = ref<number>();
 watch(
   rawRecipe,
   (newRawRecipe) => {
     if (newRawRecipe) {
       recipe.value = new Recipe(newRawRecipe);
+      originalServings.value = recipe.value.servings;
       const servings = shoppingStore.getServings(path);
       if (servings) recipe.value = recipe.value.scaleTo(servings);
     }
@@ -490,6 +492,21 @@ const servingsSpinner = computed({
   },
 });
 
+const servingsStep = computed(() => {
+  const base = originalServings.value;
+  if (!base) return 1;
+
+  if (Number.isInteger(base)) {
+    return 10 ** (String(base).match(/0+$/) || [""])[0].length;
+  }
+
+  if (base < 1) return base;
+
+  let n = 2;
+  while (base / n >= 1) n++;
+  return base / n;
+});
+
 //--------------------
 // Shopping List
 //--------------------
@@ -599,8 +616,8 @@ onBeforeRouteLeave(() => {
         <div class="mt-1">Scale:</div>
         <UInputNumber
           v-model="servingsSpinner"
-          :step="1"
-          :min="1"
+          :step="servingsStep"
+          :min="servingsStep"
           :ui="{ base: 'w-24' }"
           :focus-on-change="false"
         />
