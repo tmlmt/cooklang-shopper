@@ -15,7 +15,11 @@ export async function initRecipeIndex() {
   for (const key of keys.filter((k) => k.endsWith(".cook"))) {
     const content = await storage.getItem(key);
     if (!content) continue;
-    updateRecipeIndex(key, content.toString());
+    try {
+      updateRecipeIndex(key, content.toString());
+    } catch (err) {
+      console.warn(`Failed to index recipe "${key}":`, err);
+    }
   }
 }
 
