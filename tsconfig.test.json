@@ -1,6 +1,13 @@
 {
   "include": ["test/**/*"],
   "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "allowJs": true,
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
     "paths": {
       "~~/*": ["./*"],
       "@/*": ["./*"]
