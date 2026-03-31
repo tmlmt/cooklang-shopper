@@ -1,7 +1,7 @@
 export default function (...parts: string[]): string {
   const sanitizedParts = parts.filter(Boolean);
   if (sanitizedParts.length === 0) return "";
-  const normalizedParts = parts.map((part) =>
+  const normalizedParts = sanitizedParts.map((part) =>
     part.replace(/^[/\\]+|[/\\]+$/g, ""),
   );
   let result = normalizedParts.join("/");
