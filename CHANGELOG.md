@@ -1,5 +1,35 @@
 # Changelog
 
+## v0.1.16
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.15...v0.1.16)
+
+### 🩹 Fixes
+
+- **About:** Fetching of latest version number ([d82ec4c](https://github.com/tmlmt/cooklang-shopper/commit/d82ec4c))
+- Clear index before rebuilding ([0aabdb6](https://github.com/tmlmt/cooklang-shopper/commit/0aabdb6))
+- **api/catalog:** Return initialized product catalog ([b5be17d](https://github.com/tmlmt/cooklang-shopper/commit/b5be17d))
+- **pathJoin:** Normalize sanitized path parts ([a8a90f7](https://github.com/tmlmt/cooklang-shopper/commit/a8a90f7))
+- **path:** Replace all + by a space and not just the first one ([54487e3](https://github.com/tmlmt/cooklang-shopper/commit/54487e3))
+- **security:** Improve validation of path and dir across the repo ([177a031](https://github.com/tmlmt/cooklang-shopper/commit/177a031))
+- **shoppingCart, shoppingList:** Prevent race conditions when multiple successive updates ([4ba8ed0](https://github.com/tmlmt/cooklang-shopper/commit/4ba8ed0))
+- Prevent server from crashing when indexing malformed .cook files ([31a2005](https://github.com/tmlmt/cooklang-shopper/commit/31a2005))
+
+### 🏡 Chore
+
+- **README:** Fix and improve link to docs ([d06c9f3](https://github.com/tmlmt/cooklang-shopper/commit/d06c9f3))
+- **html:** Add htmlAttr:lang ([2284cb9](https://github.com/tmlmt/cooklang-shopper/commit/2284cb9))
+- **shoppingStore:** Remove console.log statements ([5b4372c](https://github.com/tmlmt/cooklang-shopper/commit/5b4372c))
+- **misMatchReasonToText:** Remove dead code ([1a5ffeb](https://github.com/tmlmt/cooklang-shopper/commit/1a5ffeb))
+- Add vue-tsc for typecheck and fix found issues ([32b889d](https://github.com/tmlmt/cooklang-shopper/commit/32b889d))
+- **types:** Move file to shared/ dir ([814c635](https://github.com/tmlmt/cooklang-shopper/commit/814c635))
+- **recipe:** Add explicit click handler to the Back button ([00a9f9f](https://github.com/tmlmt/cooklang-shopper/commit/00a9f9f))
+- **release:** Add nuxt typecheck to build tests ([e26abd7](https://github.com/tmlmt/cooklang-shopper/commit/e26abd7))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.15
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.14...v0.1.15)
