@@ -3,7 +3,7 @@
 <picture><img src="https://badges.ws/maintenance/yes/2026" /></picture>
 <picture><img src="https://badges.ws/github/release/tmlmt/cooklang-shopper" /></picture>
 
-Self-hosted, Nuxt-powered web app to manage cooklang recipes, create a shopping list, fill a cart with matching products and send it to an online store. Using the [https://cooklang-parser.tmlmt.com/v3](`@tmlmt/cooklang-parser` v3-alpha) Typescript parser.
+Self-hosted, Nuxt-powered web app to manage cooklang recipes, create a shopping list, fill a cart with matching products and send it to an online store. Using the [`@tmlmt/cooklang-parser`](https://cooklang-parser.tmlmt.com/v3) Typescript parser, in its v3 version (alpha stage).
 
 The app is currently in pre-v1 i.e beta version and in active development. Only recipe management (browsing, viewing, creating, editing) is functional at the moment while the rest is partially developed and therefore hidden an `experimental` flag. Feel free to test it out and report issues or feature requests.
 
