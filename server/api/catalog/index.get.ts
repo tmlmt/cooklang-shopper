@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
   // Initiatize the product catalog if it doesn't exist
   if (!content) {
     await storage.setItem(catalogFileName, "");
+    return "";
   }
   return content;
 });
