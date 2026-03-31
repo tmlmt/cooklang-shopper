@@ -4,6 +4,7 @@ import {
   isSystemError,
   isSystemErrorWithCode,
 } from "~~/server/utils/isSystemError";
+import { validateRecipeDir } from "~~/server/utils/validateRecipePath";
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event);
@@ -15,6 +16,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: "No parent directory was provided",
     });
   }
+  validateRecipeDir(body.parentDir.trim());
   if (!body.name || body.name.trim().length === 0) {
     throw createError({
       statusCode: 400,

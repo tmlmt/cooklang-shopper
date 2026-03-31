@@ -75,6 +75,9 @@ importers:
       execa:
         specifier: 9.6.1
         version: 9.6.1
+      human-regex:
+        specifier: ^2.2.0
+        version: 2.2.0
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -3672,6 +3675,9 @@ packages:
 
   httpxy@0.3.1:
     resolution: {integrity: sha512-XjG/CEoofEisMrnFr0D6U6xOZ4mRfnwcYQ9qvvnT4lvnX8BoeA3x3WofB75D+vZwpaobFVkBIHrZzoK40w8XSw==}
+
+  human-regex@2.2.0:
+    resolution: {integrity: sha512-lpDOVu5sVKVylCvnSG4RlhCY+9/iT0OSflkm0t6ApZ4B6wrfmHALwfifZTB7Awdjq7Xb1IR1CXgP/ecxQ7ZwrQ==}
 
   human-signals@5.0.0:
     resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}
@@ -9422,6 +9428,10 @@ snapshots:
       - supports-color
 
   httpxy@0.3.1: {}
+
+  human-regex@2.2.0:
+    dependencies:
+      tslib: 2.8.1
 
   human-signals@5.0.0: {}
 

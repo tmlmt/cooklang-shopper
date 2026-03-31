@@ -5,6 +5,7 @@ import {
   isSystemErrorWithCode,
 } from "~~/server/utils/isSystemError";
 import { updateRecipeIndex } from "~~/server/utils/recipeIndex";
+import { validateRecipeDir } from "~~/server/utils/validateRecipePath";
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event);
@@ -16,6 +17,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: "No target directory was provided",
     });
   }
+  validateRecipeDir(body.dir.trim());
   if (!body.name || body.name.trim().length === 0) {
     throw createError({
       statusCode: 400,

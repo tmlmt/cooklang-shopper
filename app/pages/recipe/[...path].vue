@@ -15,6 +15,7 @@ import {
 import * as v from "valibot";
 import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
 import { FetchError } from "ofetch";
+import { validateRecipePath } from "~~/shared/utils/path";
 
 definePageMeta({
   title: "Cooklang Shopper - Recipe detail",
@@ -51,13 +52,8 @@ const path = pathParams.join("/");
 const recipeDir = path.substring(0, path.lastIndexOf("/"));
 const recipeName = path.substring(path.lastIndexOf("/") + 1);
 
-// Regex-based validation of provided path
-if (!/^(?!\/)(?:[\p{L}\p{N}_ +%.-]+\/)*[\p{L}\p{N}_ +%.-]+$/u.test(path)) {
-  throw createError({
-    statusCode: 400,
-    statusMessage: "Invalid recipe path",
-  });
-}
+// Validate provided path
+validateRecipePath(path);
 
 const shoppingStore = useShoppingStore();
 const recipeStore = useRecipeStore();

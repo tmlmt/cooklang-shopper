@@ -6,21 +6,7 @@ import {
 export default defineEventHandler(async (event) => {
   await requireUserSession(event);
 
-  const path = getRouterParam(event, "path");
-  // Validating incoming value
-  if (!path) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "No recipe path was provided",
-    });
-  }
-  if (!/^(?!\/)(?:[\p{L}\p{N}_ +%.-]+\/)*[\p{L}\p{N}_ +%.-]+$/u.test(path)) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid recipe path",
-    });
-  }
-  const decodedPath = decodeURIComponent(path);
+  const decodedPath = getValidatedRecipePath(event);
 
   // Checking whether a recipe body was provided
   const body = await readBody(event);
@@ -42,6 +28,8 @@ export default defineEventHandler(async (event) => {
       statusMessage: "A recipe filename cannot contain '/'",
     });
   }
+
+  validateRecipeDir(body.dir);
 
   // Saving
   const storage = useStorage("recipes");
