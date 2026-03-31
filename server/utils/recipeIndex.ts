@@ -8,6 +8,7 @@ export function getRecipeIndex() {
 }
 
 export async function initRecipeIndex() {
+  recipeIndex.clear();
   const storage = useStorage("recipes");
   const keys = await storage.getKeys();
 
