@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Allow for urls to be written with "+" sign instead of space
-  const decodedPath = decodeURIComponent(path).replace("+", " ");
+  const decodedPath = decodeURIComponent(path).replace(/\+/g, " ");
 
   const storage = useStorage("recipes");
 
