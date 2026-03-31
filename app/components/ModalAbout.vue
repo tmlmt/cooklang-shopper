@@ -1,5 +1,9 @@
 <script setup lang="ts">
-const { data: versionInfo } = await useFetch("/api/latest-version");
+const versionInfo = await $fetchWithHeaders<{
+  currentVersion: string;
+  latestVersion: string;
+  updateAvailable: boolean;
+}>("/api/latest-version");
 
 defineShortcuts({
   escape: () => emit("close", true),

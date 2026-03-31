@@ -2,10 +2,8 @@ import pkg from "../../package.json";
 
 const GITHUB_REPO = "tmlmt/cooklang-shopper";
 
-export default defineCachedEventHandler(
-  async (event) => {
-    await requireUserSession(event);
-
+const getLatestVersion = defineCachedFunction(
+  async () => {
     const response = await $fetch<{ tag_name: string }>(
       `https://api.github.com/repos/${GITHUB_REPO}/releases/latest`,
       {
@@ -26,5 +24,11 @@ export default defineCachedEventHandler(
   },
   {
     maxAge: 60,
+    name: "latest-version",
   },
 );
+
+export default defineEventHandler(async (event) => {
+  await requireUserSession(event);
+  return getLatestVersion();
+});
