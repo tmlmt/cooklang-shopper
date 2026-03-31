@@ -26,12 +26,23 @@ export default async function () {
     return shoppingCart;
   }
 
-  watchEffect(async () => {
-    const shoppingCart = await getCartObject();
-    cart.value = shoppingCart.cart;
-    match.value = shoppingCart.match;
-    misMatch.value = shoppingCart.misMatch;
-  });
+  // Update cart whenever the shopping list or catalog changes
+  // -- uses a version counter to address race conditions when multiple updates happen in quick succession
+  // -- so that only the latest update is applied to the cart, match, and misMatch refs
+  let version = 0;
+  watch(
+    [() => shoppingList.ingredients, () => catalog.products],
+    async () => {
+      const v = ++version;
+      const shoppingCart = await getCartObject();
+      if (v === version) {
+        cart.value = shoppingCart.cart;
+        match.value = shoppingCart.match;
+        misMatch.value = shoppingCart.misMatch;
+      }
+    },
+    { deep: true, immediate: true },
+  );
 
   return { cart, match, misMatch, getCartObject };
 }

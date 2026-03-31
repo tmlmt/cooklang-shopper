@@ -22,10 +22,21 @@ export default async function () {
     return shoppingList;
   }
 
-  watchEffect(async () => {
-    const shoppingList = await getListObject();
-    ingredients.value = shoppingList.ingredients;
-  });
+  // Update ingredients whenever the recipe selection changes
+  // -- uses a version counter to address race conditions when multiple updates happen in quick succession
+  // -- so that only the latest update is applied to the ingredients list
+  let version = 0;
+  watch(
+    () => shoppingStore.recipeSelection,
+    async () => {
+      const v = ++version;
+      const shoppingList = await getListObject();
+      if (v === version) {
+        ingredients.value = shoppingList.ingredients;
+      }
+    },
+    { deep: true, immediate: true },
+  );
 
   return { ingredients, getListObject };
 }
