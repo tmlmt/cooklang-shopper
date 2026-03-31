@@ -14,6 +14,5 @@ export default function (val: NoProductMatchErrorCode): string {
       return "Ingredient with text value and incompatible units: skipped";
     default:
       return "Unknown error";
-      break;
   }
 }
