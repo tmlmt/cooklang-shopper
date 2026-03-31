@@ -1,5 +1,5 @@
 import { Recipe } from "@tmlmt/cooklang-parser";
-import type { RecipeIndex } from "~~/types";
+import type { RecipeIndex } from "~~/shared/types";
 
 const recipeIndex = new Map<string, RecipeIndex[number]>();
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn, DropdownMenuItem } from "@nuxt/ui";
-import type { RecipeEssentials } from "~~/types";
+import type { RecipeEssentials } from "~~/shared/types";
 
 definePageMeta({
   title: "Cooklang Shopper",

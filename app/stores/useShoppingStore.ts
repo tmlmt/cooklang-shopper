@@ -1,4 +1,4 @@
-import type { RecipeRaw, RecipeInfo } from "~~/types";
+import type { RecipeRaw, RecipeInfo } from "~~/shared/types";
 import type { RecipeChoices } from "@tmlmt/cooklang-parser";
 
 export const useShoppingStore = defineStore("shopping", () => {

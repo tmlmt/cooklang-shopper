@@ -1,5 +1,5 @@
 import { loadConfig } from "c12";
-import type { AppConfig } from "~~/types";
+import type { AppConfig } from "~~/shared/types";
 
 let cachedConfig: AppConfig | null = null;
 

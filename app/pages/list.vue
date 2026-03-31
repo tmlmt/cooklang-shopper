@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from "@nuxt/ui";
-import type { RecipeInfo } from "~~/types";
+import type { RecipeInfo } from "~~/shared/types";
 
 definePageMeta({
   title: "Cooklang Shopper - Shopping List",
