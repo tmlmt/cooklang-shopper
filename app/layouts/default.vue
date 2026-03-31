@@ -96,6 +96,7 @@ const navLeft = computed(() => {
             variant="ghost"
             color="neutral"
             label="Back"
+            @click.stop="navigateTo('/')"
           />
         </div>
         <div v-else class="flex flex-row items-center gap-2">
