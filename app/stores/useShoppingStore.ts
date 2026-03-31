@@ -30,7 +30,6 @@ export const useShoppingStore = defineStore("shopping", () => {
   ): boolean {
     // Checking if a recipe is already in the list
     if (!isRecipeInSelection(path)) {
-      console.log("false", JSON.stringify(recipeSelection.value));
       return false;
     }
     const index = recipeSelection.value.findIndex(
@@ -40,7 +39,6 @@ export const useShoppingStore = defineStore("shopping", () => {
     if (choices !== undefined) {
       recipeSelection.value[index]!.choices = choices;
     }
-    console.log(JSON.stringify(recipeSelection.value));
     return true;
   }
 
