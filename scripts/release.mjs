@@ -96,16 +96,17 @@ async function checkPrerequisites() {
 }
 
 async function buildTest() {
-  log.info("Running lint checks");
+  log.info("Running lint and type checks");
   try {
     await run("pnpm", ["lint"]);
+    await run("pnpm", ["nuxt", "typecheck"]);
   } catch (error) {
-    log.error("Lint checks failed.");
+    log.error("Lint or type checks failed.");
     console.error(error);
     process.exit(1);
   }
 
-  log.success("Lint checks completed successfully.");
+  log.success("Lint and type checks completed successfully.");
 }
 
 // --- Main Script ---
