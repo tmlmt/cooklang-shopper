@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.15
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.14...v0.1.15)
+
+### 🩹 Fixes
+
+- Latest version data fetching ([be8f631](https://github.com/tmlmt/cooklang-shopper/commit/be8f631))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.14
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.13...v0.1.14)
