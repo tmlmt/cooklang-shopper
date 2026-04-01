@@ -16,6 +16,7 @@ import * as v from "valibot";
 import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
 import { FetchError } from "ofetch";
 import { validateRecipePath } from "~~/shared/utils/path";
+import { Patterns } from "human-regex";
 
 definePageMeta({
   title: "Cooklang Shopper - Recipe detail",
@@ -92,20 +93,41 @@ watch(
 );
 interface MetadataEntry {
   key: string;
-  value?: string;
-  isLink?: boolean;
-  subEntries?: Array<Array<{ key: string; value: string }>>;
+  value?: MetadataDisplayValue;
+  subEntries?: Array<Array<{ key: string; value: MetadataDisplayValue }>>;
 }
 
-const formatMetadataValue = (val: unknown): string => {
+interface MetadataDisplayValue {
+  text: string;
+  href?: string;
+}
+
+const formatAsText = (val: unknown): string => {
   if (val === undefined || val === null) return "";
   if (typeof val === "string" || typeof val === "number") return String(val);
-  if (Array.isArray(val)) return val.map(formatMetadataValue).join(", ");
+  if (Array.isArray(val)) return val.map(formatAsText).join(", ");
   if (typeof val === "object")
     return Object.entries(val)
-      .map(([k, v]) => `${k}: ${formatMetadataValue(v)}`)
+      .map(([k, v]) => `${k}: ${formatAsText(v)}`)
       .join(", ");
   return String(val);
+};
+
+const displayValue = (
+  value: unknown,
+  detectUrls = false,
+): MetadataDisplayValue => {
+  const text =
+    typeof value === "object" && value !== null
+      ? formatAsText(value)
+      : String(value);
+  if (detectUrls) {
+    const trimmed = text.trim();
+    if (trimmed && Patterns.url().test(trimmed)) {
+      return { text, href: trimmed };
+    }
+  }
+  return { text };
 };
 
 const nonTitleMetaData = computed(() => {
@@ -121,8 +143,9 @@ const nonTitleMetaData = computed(() => {
       const yieldValue = value as Yield;
       entries.push({
         key: "yield",
-        value:
+        value: displayValue(
           `${yieldValue.textBefore ?? ""} ${formatQuantityWithUnit(yieldValue.quantity, yieldValue.unit)} ${yieldValue.textAfter ?? ""}`.trim(),
+        ),
       });
       continue;
     }
@@ -130,11 +153,14 @@ const nonTitleMetaData = computed(() => {
     if (key === "time") {
       const timeValue = value as MetadataTime;
       if (timeValue.prep)
-        entries.push({ key: "prep time", value: timeValue.prep });
+        entries.push({ key: "prep time", value: displayValue(timeValue.prep) });
       if (timeValue.cook)
-        entries.push({ key: "cook time", value: timeValue.cook });
+        entries.push({ key: "cook time", value: displayValue(timeValue.cook) });
       if (timeValue.total)
-        entries.push({ key: "total time", value: timeValue.total });
+        entries.push({
+          key: "total time",
+          value: displayValue(timeValue.total),
+        });
       continue;
     }
 
@@ -145,34 +171,40 @@ const nonTitleMetaData = computed(() => {
         !Array.isArray(value)
       ) {
         const sourceValue = value as MetadataSource;
-        const parts: string[] = [];
-        if (sourceValue.name) parts.push(sourceValue.name);
-        if (sourceValue.author) parts.push(`by ${sourceValue.author}`);
-        if (sourceValue.url) {
+        const sourceText =
+          sourceValue.name && sourceValue.author
+            ? `${sourceValue.name} (${sourceValue.author})`
+            : sourceValue.name || sourceValue.author || "";
+
+        if (
+          sourceValue.url &&
+          sourceValue.url.trim().length > 0 &&
+          Patterns.url().test(sourceValue.url.trim())
+        ) {
           entries.push({
             key: "source",
-            value:
-              parts.length > 0
-                ? `${parts.join(" ")} (${sourceValue.url})`
-                : sourceValue.url,
-            isLink: true,
+            value: {
+              text: sourceText || sourceValue.url,
+              href: sourceValue.url.trim(),
+            },
           });
         } else {
-          entries.push({ key: "source", value: parts.join(" ") });
+          const fallback =
+            sourceValue.url && sourceValue.url.trim().length > 0
+              ? sourceText
+                ? `${sourceText} (${sourceValue.url})`
+                : sourceValue.url
+              : sourceText;
+          entries.push({ key: "source", value: displayValue(fallback) });
         }
       } else {
-        const strVal = String(value);
-        entries.push({
-          key: "source",
-          value: strVal,
-          isLink: strVal.startsWith("http"),
-        });
+        entries.push({ key: "source", value: displayValue(value, true) });
       }
       continue;
     }
 
     if (key === "servings" || key === "serves") {
-      entries.push({ key, value: String(value) });
+      entries.push({ key, value: displayValue(value) });
       continue;
     }
 
@@ -186,26 +218,26 @@ const nonTitleMetaData = computed(() => {
             const obj = item as MetadataObject;
             return Object.entries(obj).map(([k, v]) => ({
               key: k,
-              value: formatMetadataValue(v),
+              value: displayValue(v, true),
             }));
           }
-          return [{ key: "", value: String(item) }];
+          return [{ key: "", value: displayValue(item, true) }];
         });
         entries.push({ key, subEntries });
       } else {
-        entries.push({ key, value: value.join(", ") });
+        entries.push({ key, value: displayValue(value.join(", "), true) });
       }
     } else if (typeof value === "object" && value !== null) {
       const obj = value as MetadataObject;
       const subEntries = [
         Object.entries(obj).map(([k, v]) => ({
           key: k,
-          value: formatMetadataValue(v),
+          value: displayValue(v, true),
         })),
       ];
       entries.push({ key, subEntries });
     } else {
-      entries.push({ key, value: String(value) });
+      entries.push({ key, value: displayValue(value, true) });
     }
   }
 
@@ -653,14 +685,14 @@ onBeforeRouteLeave(() => {
           <li v-for="entry in nonTitleMetaData" :key="entry.key">
             <b>{{ entry.key }}: </b>
             <ULink
-              v-if="entry.isLink && entry.value"
-              :to="entry.value"
+              v-if="entry.value?.href"
+              :to="entry.value.href"
               :boolean="true"
               target="_blank"
             >
-              {{ entry.value }}
+              {{ entry.value.text }}
             </ULink>
-            <span v-else-if="entry.value">{{ entry.value }}</span>
+            <span v-else-if="entry.value">{{ entry.value.text }}</span>
             <template v-if="entry.subEntries">
               <div
                 v-for="(obj, oIdx) in entry.subEntries"
@@ -675,9 +707,17 @@ onBeforeRouteLeave(() => {
                     class="list-none"
                   >
                     <span v-if="field.key" class="font-medium"
-                      >{{ field.key }}:</span
+                      >{{ field.key }}:
+                    </span>
+                    <ULink
+                      v-if="field.value.href"
+                      :to="field.value.href"
+                      :boolean="true"
+                      target="_blank"
                     >
-                    {{ field.value }}
+                      {{ field.value.text }}
+                    </ULink>
+                    <template v-else>{{ field.value.text }}</template>
                   </li>
                 </ul>
               </div>
