@@ -15,7 +15,7 @@ const toast = useToast();
 //------------------------
 
 const recipeStore = useRecipeStore();
-await recipeStore.fetchIndex();
+await callOnce("recipe-index", () => recipeStore.fetchIndex());
 
 //--------------------
 // Menu
