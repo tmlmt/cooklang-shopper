@@ -254,13 +254,28 @@ onBeforeRouteLeave(() => {
 </script>
 
 <template>
-  <div class="flex w-full flex-col gap-4 md:px-1">
-    <div class="hidden flex-row gap-4 md:flex">
+  <div class="flex w-full flex-col gap-2 md:px-1">
+    <div class="mt-4 flex w-full flex-row items-center px-4 md:mt-0 md:px-0">
+      <div class="flex grow items-center">
+        <div class="mr-1 text-sm font-bold md:text-lg">Cookbook</div>
+        <div class="text-xs md:text-base">
+          ·
+          {{ recipeStore.recipeList.length }} items
+        </div>
+      </div>
       <UButton
         icon="prime:plus"
         color="primary"
         variant="soft"
-        label="New recipe"
+        label="New Recipe"
+        class="hidden md:flex"
+        @click="openNewRecipeModal"
+      />
+      <UButton
+        icon="prime:plus"
+        color="primary"
+        variant="soft"
+        class="flex flex-none md:hidden"
         @click="openNewRecipeModal"
       />
     </div>
