@@ -1,22 +1,31 @@
-export interface HeaderMenuItem {
-  label?: string;
-  icon?: string;
-  onSelect?: (e: Event) => void;
+import type { DropdownMenuItem } from "@nuxt/ui";
+
+interface HeaderMenuItem extends DropdownMenuItem {
+  mobileOnly?: boolean;
 }
 
-const headerMenuItems = ref<HeaderMenuItem[]>([]);
+const mobileHeaderMenuItems = ref<DropdownMenuItem[]>([]);
+const desktopHeaderMenuItems = ref<DropdownMenuItem[]>([]);
 
 export function useHeaderMenu() {
   function setHeaderMenuItems(items: HeaderMenuItem[]) {
-    headerMenuItems.value = items;
+    items.forEach((item) => {
+      const { mobileOnly, ...rest }: { mobileOnly?: boolean } = item;
+      mobileHeaderMenuItems.value.push(rest);
+      if (!mobileOnly) {
+        desktopHeaderMenuItems.value.push(rest);
+      }
+    });
   }
 
   function clearHeaderMenuItems() {
-    headerMenuItems.value = [];
+    mobileHeaderMenuItems.value = [];
+    desktopHeaderMenuItems.value = [];
   }
 
   return {
-    headerMenuItems: readonly(headerMenuItems),
+    mobileHeaderMenuItems: readonly(mobileHeaderMenuItems),
+    desktopHeaderMenuItems: readonly(desktopHeaderMenuItems),
     setHeaderMenuItems,
     clearHeaderMenuItems,
   };

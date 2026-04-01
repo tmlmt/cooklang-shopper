@@ -31,13 +31,6 @@ const reindexRecipes = async () => {
   });
 };
 
-const items = ref<DropdownMenuItem[]>([
-  {
-    label: "Re-index recipes",
-    onSelect: reindexRecipes,
-  },
-]);
-
 //--------------------
 // Selection
 //--------------------
@@ -247,6 +240,7 @@ setHeaderMenuItems([
     label: "New recipe",
     icon: "prime:plus",
     onSelect: openNewRecipeModal,
+    mobileOnly: true,
   },
   {
     label: "Re-index recipes",
@@ -269,9 +263,6 @@ onBeforeRouteLeave(() => {
         label="New recipe"
         @click="openNewRecipeModal"
       />
-      <UDropdownMenu :items="items" :content="{ align: 'start' }">
-        <UButton icon="prime:bars" size="lg" color="secondary" variant="soft" />
-      </UDropdownMenu>
     </div>
     <UTable
       ref="table"

@@ -7,15 +7,21 @@ import type {
 
 const route = useRoute();
 const { experimental } = usePublicConfig();
-const { headerMenuItems } = useHeaderMenu();
+
+//---------------
+// Header menus
+//---------------
+
+const { mobileHeaderMenuItems, desktopHeaderMenuItems } = useHeaderMenu();
 
 const headerOpen = ref(false);
 
-const wrappedHeaderMenuItems = computed(() =>
-  headerMenuItems.value.map((item) => ({
+const wrappedMobileHeaderMenuItems = computed(() =>
+  (mobileHeaderMenuItems.value as DropdownMenuItem[]).map((item) => ({
     ...item,
     onSelect: (e: Event) => {
       item.onSelect?.(e);
+      // Close the header menu after selecting an item
       headerOpen.value = false;
     },
   })),
@@ -41,6 +47,16 @@ const aboutItems = computed<DropdownMenuItem[]>(() => [
   { label: "About", onSelect: async () => await modal.open() },
 ]);
 
+const dropDownMenuItems = computed<DropdownMenuItem[]>(() => [
+  ...(desktopHeaderMenuItems.value as DropdownMenuItem[]),
+  { type: "separator" },
+  ...aboutItems.value,
+]);
+
+//----------------
+// SEO
+//----------------
+
 useSeoMeta({
   author: "Thomas Lamant",
   title: (route.meta.title as string) || "Cooklang Shopper",
@@ -52,6 +68,10 @@ useSeoMeta({
     (route.meta.description as string) ||
     "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
 });
+
+//---------------
+// Footer
+//---------------
 
 const navRight = computed(() => {
   if (!experimental.value) return undefined;
@@ -118,17 +138,17 @@ const navLeft = computed(() => {
           class="-mx-2.5"
         />
         <USeparator
-          v-if="experimental && headerMenuItems.length > 0"
+          v-if="experimental && mobileHeaderMenuItems.length > 0"
           class="my-2"
         />
         <UNavigationMenu
-          v-if="headerMenuItems.length > 0"
+          v-if="mobileHeaderMenuItems.length > 0"
           :ui="{ root: 'mt-1', link: 'text-md' }"
-          :items="wrappedHeaderMenuItems as NavigationMenuItem[]"
+          :items="wrappedMobileHeaderMenuItems as NavigationMenuItem[]"
           orientation="vertical"
           class="-mx-2.5"
         />
-        <USeparator v-if="headerMenuItems.length > 0" class="my-2" />
+        <USeparator v-if="mobileHeaderMenuItems.length > 0" class="my-2" />
         <UNavigationMenu
           :ui="{ root: 'mt-1', link: 'text-md' }"
           :items="aboutItems as NavigationMenuItem[]"
@@ -145,7 +165,7 @@ const navLeft = computed(() => {
           to="/auth"
         />
         <UColorModeButton />
-        <UDropdownMenu :items="aboutItems" :content="{ align: 'end' }">
+        <UDropdownMenu :items="dropDownMenuItems" :content="{ align: 'end' }">
           <UButton
             icon="prime:bars"
             size="xl"
