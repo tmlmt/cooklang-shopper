@@ -98,7 +98,22 @@ const columns = computed<TableColumn<RecipeEssentials>[]>(() => [
   ...(experimental.value ? [selectColumn] : []),
   {
     accessorKey: "title",
-    header: "Title",
+    header: ({ column }) => {
+      const isSorted = column.getIsSorted();
+
+      return h(UButton, {
+        color: "neutral",
+        variant: "ghost",
+        label: "Title",
+        icon: isSorted
+          ? isSorted === "asc"
+            ? "prime:sort-alpha-down"
+            : "prime:sort-alpha-up"
+          : "prime:sort-alt",
+        class: "-mx-2.5",
+        onClick: () => column.toggleSorting(column.getIsSorted() === "asc"),
+      });
+    },
     cell: ({ row }) => {
       return h(
         ULink,
