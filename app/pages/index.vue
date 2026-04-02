@@ -280,8 +280,8 @@ onBeforeRouteLeave(() => {
   <div class="flex w-full flex-col gap-2 md:px-1">
     <div class="mt-4 flex w-full flex-row items-center px-4 md:mt-0 md:px-0">
       <div class="flex grow items-center">
-        <div class="mr-1 text-sm font-bold md:text-lg">Cookbook</div>
-        <div class="text-xs md:text-base">
+        <div class="mr-1 text-base font-bold md:text-lg">Cookbook</div>
+        <div class="text-sm md:text-base">
           ·
           {{ recipeStore.recipeList.length }} items
         </div>
