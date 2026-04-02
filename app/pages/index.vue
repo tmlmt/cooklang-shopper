@@ -72,6 +72,7 @@ const diffRowSelection = (
 const ULink = resolveComponent("ULink");
 const UCheckbox = resolveComponent("UCheckbox");
 const UButton = resolveComponent("UButton");
+const UBadge = resolveComponent("UBadge");
 const { experimental } = usePublicConfig();
 
 const selectColumn: TableColumn<RecipeEssentials> = {
@@ -135,11 +136,18 @@ const columns = computed<TableColumn<RecipeEssentials>[]>(() => [
     accessorKey: "tags",
     header: "Tags",
     cell: ({ row }) => {
-      const tags = (row.getValue("tags") as Array<string>).join(", ");
-      return tags || "-";
+      return h(
+        "div",
+        { class: "flex flex-row gap-1" },
+        (row.getValue("tags") as Array<string>).map((tag) =>
+          h(
+            UBadge,
+            { color: "neutral", variant: "soft", class: "rounded-full" },
+            tag,
+          ),
+        ),
+      );
     },
-    enableColumnFilter: true,
-    filterFn: "arrIncludes",
   },
   {
     id: "action",
