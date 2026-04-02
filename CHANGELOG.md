@@ -1,5 +1,32 @@
 # Changelog
 
+## v0.2.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.16...v0.2.0)
+
+### 🚀 Enhancements
+
+- Display urls as links in metadata values ([99f3376](https://github.com/tmlmt/cooklang-shopper/commit/99f3376))
+- Add cookbook subtitle, number of items and + button on mobile ([2f983be](https://github.com/tmlmt/cooklang-shopper/commit/2f983be))
+- **list:** Alphabetical sorting of titles ([c278834](https://github.com/tmlmt/cooklang-shopper/commit/c278834))
+
+### 🔥 Performance
+
+- Only fetch recipe index once ([688fc38](https://github.com/tmlmt/cooklang-shopper/commit/688fc38))
+
+### 🏡 Chore
+
+- **useCatalogStore:** Do not use useFetch in store ([ceee229](https://github.com/tmlmt/cooklang-shopper/commit/ceee229))
+
+### 🎨 Styles
+
+- **index:** Merge dropdown menu on page into header menu ([a929691](https://github.com/tmlmt/cooklang-shopper/commit/a929691))
+- **list:** Display tags as badges ([4d9f1e7](https://github.com/tmlmt/cooklang-shopper/commit/4d9f1e7))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.1.16
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.15...v0.1.16)
