@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TableColumn, DropdownMenuItem } from "@nuxt/ui";
 import type { RecipeEssentials } from "~~/shared/types";
+import { useStorage } from "@vueuse/core";
 
 definePageMeta({
   title: "Cooklang Shopper",
@@ -64,6 +65,21 @@ const diffRowSelection = (
 
   return { added, removed };
 };
+
+//----------------------
+// View
+//----------------------
+
+type ViewMode = "grid" | "list";
+
+const viewMode = useStorage<ViewMode>("ui:index:view-mode", "list");
+
+// Hardening in case storage is manually edited:
+watchEffect(() => {
+  if (viewMode.value !== "grid" && viewMode.value !== "list") {
+    viewMode.value = "list";
+  }
+});
 
 //----------------------
 // Columns
@@ -286,21 +302,40 @@ onBeforeRouteLeave(() => {
           {{ recipeStore.recipeList.length }} items
         </div>
       </div>
-      <UButton
-        icon="prime:plus"
-        color="primary"
-        variant="soft"
-        label="New Recipe"
-        class="hidden md:flex"
-        @click="openNewRecipeModal"
-      />
-      <UButton
-        icon="prime:plus"
-        color="primary"
-        variant="soft"
-        class="flex flex-none md:hidden"
-        @click="openNewRecipeModal"
-      />
+      <div class="flex flex-row">
+        <UFieldGroup class="mr-2">
+          <UButton
+            icon="material-symbols:grid-view-outline-rounded"
+            :color="viewMode === 'grid' ? 'secondary' : 'neutral'"
+            :variant="viewMode === 'grid' ? 'subtle' : 'outline'"
+            :active="viewMode === 'grid'"
+            disabled
+            @click="viewMode = 'grid'"
+          />
+          <UButton
+            icon="material-symbols:view-list-outline"
+            :color="viewMode === 'list' ? 'secondary' : 'neutral'"
+            :variant="viewMode === 'list' ? 'subtle' : 'outline'"
+            :active="viewMode === 'list'"
+            @click="viewMode = 'list'"
+          />
+        </UFieldGroup>
+        <UButton
+          icon="prime:plus"
+          color="primary"
+          variant="soft"
+          label="New Recipe"
+          class="hidden md:flex"
+          @click="openNewRecipeModal"
+        />
+        <UButton
+          icon="prime:plus"
+          color="primary"
+          variant="soft"
+          class="flex flex-none md:hidden"
+          @click="openNewRecipeModal"
+        />
+      </div>
     </div>
     <UTable
       ref="table"
