@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.2.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.2.0...v0.2.1)
+
+### 🏡 Chore
+
+- **cookbook:** Add grid/list view mode selector for future use ([4db5673](https://github.com/tmlmt/cooklang-shopper/commit/4db5673))
+
+### 🎨 Styles
+
+- **cookbook:** Slightly increase subtitle size ([e9f48bd](https://github.com/tmlmt/cooklang-shopper/commit/e9f48bd))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.2.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.1.16...v0.2.0)
