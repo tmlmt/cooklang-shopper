@@ -29,6 +29,7 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
 4. Edit `config.yaml` — set your hashed password and session secret (see the file for instructions)
 5. Add your `.cook` recipe files to `dist/public/recipes/`
 6. Set up the systemd service:
+
    ```bash
    # Edit the service file to adjust User, WorkingDirectory, and ExecStart paths
    sudo cp /path/to/cooklang-shopper/dist/cooklang-shopper.service /etc/systemd/system/
@@ -37,6 +38,7 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
    ```
 
    Alternatively, start the server manually:
+
    ```bash
    cd /path/to/cooklang-shopper/dist
    node server/index.mjs
@@ -74,7 +76,7 @@ rm -rf dist && mv dist.bak dist
 
 1. Stabilize recipe management
 2. Handle recipe images
-3. Grid view
+3. Internationalization (i18n)
 4. Finalize shopping list features
 5. Finalize shopping cart features
 6. Develop feature to send cart to a pre-configured online store
