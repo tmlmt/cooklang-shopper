@@ -7,6 +7,7 @@ import { execa } from "execa";
 const CHANGELOG_PATH = path.resolve(process.cwd(), "CHANGELOG.md");
 const DRY_RUN = process.argv.includes("--dry-run");
 const SKIP_BUILDTEST = process.argv.includes("--skip-buildtest");
+const MAJOR = process.argv.includes("--major");
 
 // Parse release version from --release or -r argument
 function getReleaseVersion() {
@@ -136,6 +137,10 @@ async function main() {
   if (RELEASE_VERSION) {
     changelogPreviewArgs.push("-r", RELEASE_VERSION);
     changelogBumpArgs.push("-r", RELEASE_VERSION);
+  }
+  if (MAJOR) {
+    changelogPreviewArgs.push("--major");
+    changelogBumpArgs.push("--major");
   }
 
   if (DRY_RUN) {
