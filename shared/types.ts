@@ -24,6 +24,10 @@ export interface RecipeEssentials {
   dir: string;
   servings: number;
   tags: string[];
+  lastModified?: string;
+  times?: Record<string, string>;
+  author?: string;
+  source?: string;
 }
 
 export interface RecipeIndex {

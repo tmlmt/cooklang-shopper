@@ -1,0 +1,64 @@
+<script setup lang="ts">
+import type { RecipeEssentials } from "~~/shared/types";
+
+const props = defineProps<{
+  currentPath: string;
+}>();
+
+const shoppingStore = useShoppingStore();
+const currentPathRef = toRef(props, "currentPath");
+const { folders, recipes } = useDirectoryContents(currentPathRef);
+
+const recipePath = (recipe: RecipeEssentials) =>
+  recipe.dir ? `${recipe.dir}/${recipe.name}` : recipe.name;
+
+const isSelected = (recipe: RecipeEssentials) =>
+  shoppingStore.isRecipeInSelection(recipePath(recipe));
+
+const toggleSelection = (recipe: RecipeEssentials) => {
+  const path = recipePath(recipe);
+  if (shoppingStore.isRecipeInSelection(path)) {
+    shoppingStore.removeRecipe(path);
+    return;
+  }
+
+  shoppingStore.addRecipe(recipe.title, path, recipe.servings);
+};
+</script>
+
+<template>
+  <div class="flex flex-col gap-4">
+    <div
+      v-if="folders.length > 0"
+      class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+    >
+      <RecipeFolderCard
+        v-for="folder in folders"
+        :key="folder.path"
+        :folder="folder"
+        compact
+      />
+    </div>
+
+    <div
+      v-if="recipes.length > 0"
+      class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+    >
+      <RecipeGridCard
+        v-for="recipe in recipes"
+        :key="`${recipe.dir}/${recipe.name}`"
+        :recipe="recipe"
+        :selected="isSelected(recipe)"
+        @toggle="toggleSelection(recipe)"
+      />
+    </div>
+
+    <UAlert
+      v-if="folders.length === 0 && recipes.length === 0"
+      color="neutral"
+      variant="subtle"
+      title="Nothing here yet"
+      description="Create a recipe or add a subfolder to get started."
+    />
+  </div>
+</template>

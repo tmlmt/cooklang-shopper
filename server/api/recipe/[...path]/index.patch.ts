@@ -51,7 +51,7 @@ export default defineEventHandler(async (event) => {
     ":",
   );
   await storage.setItem(newRecipeKey + ".cook", content);
-  updateRecipeIndex(newRecipeKey, content);
+  await updateRecipeIndex(newRecipeKey, content);
 
   return "Recipe saved";
 });

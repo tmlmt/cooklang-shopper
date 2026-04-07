@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const route = useRoute();
+
 definePageMeta({
   title: "Cooklang Shopper",
   description:
@@ -13,7 +15,14 @@ const toast = useToast();
 await callOnce("recipe-index", () => recipeStore.fetchIndex());
 await callOnce("recipe-directories", () => recipeStore.fetchDirectories());
 
-const currentPath = ref("");
+const currentPath = computed(() => {
+  const raw = route.params.path;
+  if (Array.isArray(raw)) {
+    return raw.join("/");
+  }
+  return typeof raw === "string" ? raw : "";
+});
+
 const { folders, recipes } = useDirectoryContents(currentPath);
 
 const itemCount = computed(() => folders.value.length + recipes.value.length);

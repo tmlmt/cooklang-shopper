@@ -84,9 +84,13 @@ const navRight = computed(() => {
   }
 });
 
+const router = useRouter();
+
+const goBack = () => router.back();
+
 const navLeft = computed(() => {
   if (route.path.startsWith("/recipe/")) {
-    return { text: "Back to recipes", to: "/" };
+    return { text: "Back to recipes", action: goBack };
   }
   if (!experimental.value) return undefined;
   if (route.path === "/list") {
@@ -116,7 +120,7 @@ const navLeft = computed(() => {
             variant="ghost"
             color="neutral"
             label="Back"
-            @click.stop="navigateTo('/')"
+            @click.stop="useRouter().back()"
           />
         </div>
         <div v-else class="flex flex-row items-center gap-2">
@@ -189,7 +193,7 @@ const navLeft = computed(() => {
       <template v-if="navLeft" #left>
         <UCard
           class="hover:bg-elevated cursor-pointer"
-          @click="navigateTo(navLeft.to)"
+          @click="navLeft.action ? navLeft.action() : navigateTo(navLeft.to!)"
         >
           <UButton
             class="rounded-full"

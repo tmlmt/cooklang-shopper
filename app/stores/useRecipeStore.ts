@@ -3,8 +3,39 @@ import type { RecipeIndex } from "~~/shared/types";
 
 export const useRecipeStore = defineStore("recipe", () => {
   const recipes = ref<RecipeIndex>({});
+  const directories = ref<string[]>([]);
 
   const recipeList = computed(() => Object.values(recipes.value));
+
+  const normalizeDirectory = (dir: string) => dir.replace(/\/$/, "");
+
+  const getTimeMetadata = (metadata: Record<string, unknown>) => {
+    const times: Record<string, string> = {};
+    for (const [metaKey, value] of Object.entries(metadata)) {
+      if (!metaKey.toLowerCase().includes("time")) {
+        continue;
+      }
+      if (typeof value === "string" && value.trim().length > 0) {
+        times[metaKey] = value;
+      }
+    }
+    return Object.keys(times).length > 0 ? times : undefined;
+  };
+
+  function parseRecipeDetails(name: string, dir: string, content: string) {
+    const parsed = new Recipe(content);
+    const metadata = parsed.metadata as Record<string, unknown>;
+    return {
+      name,
+      title: parsed.metadata.title || name,
+      dir,
+      servings: parsed.servings ?? 1,
+      tags: parsed.metadata.tags || [],
+      times: getTimeMetadata(metadata),
+      author: typeof metadata.author === "string" ? metadata.author : undefined,
+      source: typeof metadata.source === "string" ? metadata.source : undefined,
+    };
+  }
 
   async function fetchIndex() {
     const data = await $fetchWithHeaders<{ recipes: RecipeIndex }>(
@@ -13,6 +44,14 @@ export const useRecipeStore = defineStore("recipe", () => {
     if (data?.recipes) {
       recipes.value = data.recipes;
     }
+  }
+
+  async function fetchDirectories() {
+    const data = await $fetchWithHeaders<string[]>("/api/recipes/directory");
+    directories.value = (data || [])
+      .map((dir) => normalizeDirectory(dir))
+      .filter((dir) => dir.length > 0)
+      .sort((a, b) => a.localeCompare(b));
   }
 
   async function rebuildIndex() {
@@ -26,26 +65,17 @@ export const useRecipeStore = defineStore("recipe", () => {
 
   function addRecipe(name: string, dir: string, content: string) {
     const key = (dir ? `${dir}/${name}` : name).replace(/\//g, ":");
-    const parsed = new Recipe(content);
-    recipes.value[key] = {
-      name,
-      title: parsed.metadata.title || name,
-      dir,
-      servings: parsed.servings ?? 1,
-      tags: parsed.metadata.tags || [],
-    };
+    recipes.value[key] = parseRecipeDetails(name, dir, content);
   }
 
   function updateRecipe(name: string, dir: string, content: string) {
     const key = (dir ? `${dir}/${name}` : name).replace(/\//g, ":");
     const existing = recipes.value[key];
     if (!existing) return;
-    const parsed = new Recipe(content);
+    const parsed = parseRecipeDetails(name, dir, content);
     recipes.value[key] = {
       ...existing,
-      title: parsed.metadata.title || existing.name,
-      servings: parsed.servings ?? 1,
-      tags: parsed.metadata.tags || [],
+      ...parsed,
     };
   }
 
@@ -80,8 +110,10 @@ export const useRecipeStore = defineStore("recipe", () => {
 
   return {
     recipes,
+    directories,
     recipeList,
     fetchIndex,
+    fetchDirectories,
     rebuildIndex,
     addRecipe,
     updateRecipe,

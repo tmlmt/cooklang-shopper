@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
   await storage.setItem(recipeKey + ".cook", body.recipe.trim());
 
   // Update index entry
-  updateRecipeIndex(recipeKey, body.recipe.trim());
+  await updateRecipeIndex(recipeKey, body.recipe.trim());
 
   return "Recipe saved";
 });

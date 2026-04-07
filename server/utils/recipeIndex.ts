@@ -1,4 +1,6 @@
 import { Recipe } from "@tmlmt/cooklang-parser";
+import { stat } from "node:fs/promises";
+import path from "node:path";
 import type { RecipeIndex } from "~~/shared/types";
 
 const recipeIndex = new Map<string, RecipeIndex[number]>();
@@ -16,29 +18,60 @@ export async function initRecipeIndex() {
     const content = await storage.getItem(key);
     if (!content) continue;
     try {
-      updateRecipeIndex(key, content.toString());
+      await updateRecipeIndex(key, content.toString());
     } catch (err) {
       console.warn(`Failed to index recipe "${key}":`, err);
     }
   }
 }
 
-export function updateRecipeIndex(key: string, content: string) {
+function getTimeMetadata(
+  metadata: Record<string, unknown>,
+): Record<string, string> {
+  const times: Record<string, string> = {};
+  for (const [metaKey, value] of Object.entries(metadata)) {
+    if (!metaKey.toLowerCase().includes("time")) {
+      continue;
+    }
+    if (typeof value === "string" && value.trim().length > 0) {
+      times[metaKey] = value;
+    }
+  }
+  return times;
+}
+
+export async function updateRecipeIndex(key: string, content: string) {
   const parsed = new Recipe(content);
-  const keyAsPath = key.replace(":", "/");
+  const normalizedKey = key.endsWith(".cook") ? key : `${key}.cook`;
+  const keyAsPath = normalizedKey.replace(/:/g, "/");
   let name = keyAsPath.split("/").pop()!;
   if (name.endsWith(".cook")) {
     name = name.substring(0, name.length - 5);
   }
-  const recipeKey = key.endsWith(".cook")
-    ? key.substring(0, key.length - 5)
-    : key;
+  const recipeKey = normalizedKey.substring(0, normalizedKey.length - 5);
+
+  let lastModified: string | undefined;
+  try {
+    const recipePath = path.join(process.cwd(), "public", "recipes", keyAsPath);
+    const fileStats = await stat(recipePath);
+    lastModified = fileStats.mtime.toISOString();
+  } catch {
+    // Keep indexing even if file stats are temporarily unavailable.
+  }
+
+  const metadata = parsed.metadata as Record<string, unknown>;
+  const times = getTimeMetadata(metadata);
+
   recipeIndex.set(recipeKey, {
     name,
     title: parsed.metadata.title || name,
     dir: keyAsPath.split("/").slice(0, -1).join("/"),
     servings: parsed.servings ?? 1,
     tags: parsed.metadata.tags || [],
+    lastModified,
+    times: Object.keys(times).length > 0 ? times : undefined,
+    author: typeof metadata.author === "string" ? metadata.author : undefined,
+    source: typeof metadata.source === "string" ? metadata.source : undefined,
   });
 }
 

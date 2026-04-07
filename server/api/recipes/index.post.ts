@@ -89,7 +89,7 @@ export default defineEventHandler(async (event) => {
   )
     .replace(/\//g, ":")
     .replace(".cook", "");
-  updateRecipeIndex(`${recipeKey}.cook`, body.content);
+  await updateRecipeIndex(`${recipeKey}.cook`, body.content);
 
   return { renamed: originalExists, name: recipeName };
 });
