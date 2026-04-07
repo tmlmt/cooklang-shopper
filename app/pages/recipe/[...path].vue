@@ -130,25 +130,46 @@ const displayValue = (
   return { text };
 };
 
+const introductionText = computed(() => {
+  if (!recipe.value) return undefined;
+  const metadata = recipe.value.metadata;
+  const intro =
+    (metadata as Record<string, unknown>).introduction ??
+    (metadata as Record<string, unknown>).description;
+  return intro ? String(intro) : undefined;
+});
+
+const tags = computed<string[]>(() => {
+  if (!recipe.value) return [];
+  const raw = (recipe.value.metadata as Record<string, unknown>).tags;
+  if (Array.isArray(raw)) return raw.map(String);
+  if (typeof raw === "string")
+    return raw
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+  return [];
+});
+
+const hiddenMetadataKeys = new Set([
+  "title",
+  "yield",
+  "servings",
+  "serves",
+  "tags",
+  "variants",
+  "introduction",
+  "description",
+]);
+
 const nonTitleMetaData = computed(() => {
   if (!recipe.value) return [] as MetadataEntry[];
   const entries: MetadataEntry[] = [];
   const metadata = recipe.value.metadata;
 
   for (const [key, value] of Object.entries(metadata)) {
-    if (key === "title") continue;
+    if (hiddenMetadataKeys.has(key)) continue;
     if (value === undefined || value === null) continue;
-
-    if (key === "yield") {
-      const yieldValue = value as Yield;
-      entries.push({
-        key: "yield",
-        value: displayValue(
-          `${yieldValue.textBefore ?? ""} ${formatQuantityWithUnit(yieldValue.quantity, yieldValue.unit)} ${yieldValue.textAfter ?? ""}`.trim(),
-        ),
-      });
-      continue;
-    }
 
     if (key === "time") {
       const timeValue = value as MetadataTime;
@@ -200,11 +221,6 @@ const nonTitleMetaData = computed(() => {
       } else {
         entries.push({ key: "source", value: displayValue(value, true) });
       }
-      continue;
-    }
-
-    if (key === "servings" || key === "serves") {
-      entries.push({ key, value: displayValue(value) });
       continue;
     }
 
@@ -678,7 +694,25 @@ onBeforeRouteLeave(() => {
           ><Icon class="text-lg" name="material-symbols:change-circle-rounded"
         /></UButton>
       </div>
-      <div class="my-4 flex flex-col">
+      <p v-if="introductionText" class="my-2 text-base">
+        {{ introductionText }}
+      </p>
+      <div
+        v-if="tags.length > 0"
+        class="my-2 flex overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        <div class="flex gap-1.5">
+          <UBadge
+            v-for="tag in tags"
+            :key="tag"
+            :label="tag"
+            color="neutral"
+            variant="subtle"
+            size="sm"
+          />
+        </div>
+      </div>
+      <div v-if="nonTitleMetaData.length > 0" class="my-4 flex flex-col">
         <ul
           class="ml-6 list-disc text-sm text-neutral-600 dark:text-neutral-400"
         >
