@@ -189,7 +189,7 @@ const navLeft = computed(() => {
       </main>
     </UContainer>
     <USeparator class="mt-4 h-px" />
-    <UFooter>
+    <UFooter v-if="navLeft || navRight">
       <template v-if="navLeft" #left>
         <UCard
           class="hover:bg-elevated cursor-pointer"
