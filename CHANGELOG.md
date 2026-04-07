@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.3.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.2.1...v0.3.0)
+
+### 🚀 Enhancements
+
+- Grid view with major other related improvements ([8550212](https://github.com/tmlmt/cooklang-shopper/commit/8550212))
+- **recipe/Metadata:** Hide yield/servings/variants, show tags as badges and render introduction/description directly as text ([a288758](https://github.com/tmlmt/cooklang-shopper/commit/a288758))
+
+### 🩹 Fixes
+
+- **layout:** Do not show footer if no navigation choices are shown ([aec4ead](https://github.com/tmlmt/cooklang-shopper/commit/aec4ead))
+
+### 🤖 CI
+
+- **release:** Allow forcing bump to major version ([9a5ed3f](https://github.com/tmlmt/cooklang-shopper/commit/9a5ed3f))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.2.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.2.0...v0.2.1)
