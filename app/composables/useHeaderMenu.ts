@@ -6,6 +6,7 @@ interface HeaderMenuItem extends DropdownMenuItem {
 
 const mobileHeaderMenuItems = ref<DropdownMenuItem[]>([]);
 const desktopHeaderMenuItems = ref<DropdownMenuItem[]>([]);
+const headerActionItems = ref<DropdownMenuItem[]>([]);
 
 export function useHeaderMenu() {
   function setHeaderMenuItems(items: HeaderMenuItem[]) {
@@ -23,10 +24,21 @@ export function useHeaderMenu() {
     desktopHeaderMenuItems.value = [];
   }
 
+  function setHeaderActions(items: DropdownMenuItem[]) {
+    headerActionItems.value = items;
+  }
+
+  function clearHeaderActions() {
+    headerActionItems.value = [];
+  }
+
   return {
-    mobileHeaderMenuItems: readonly(mobileHeaderMenuItems),
-    desktopHeaderMenuItems: readonly(desktopHeaderMenuItems),
+    mobileHeaderMenuItems: mobileHeaderMenuItems,
+    desktopHeaderMenuItems: desktopHeaderMenuItems,
+    headerActionItems: headerActionItems,
     setHeaderMenuItems,
     clearHeaderMenuItems,
+    setHeaderActions,
+    clearHeaderActions,
   };
 }

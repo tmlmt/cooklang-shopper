@@ -66,7 +66,7 @@ const openNewRecipeModal = async () => {
   }
 };
 
-const { setHeaderMenuItems, clearHeaderMenuItems } = useHeaderMenu();
+const { setHeaderMenuItems } = useHeaderMenu();
 
 setHeaderMenuItems([
   {
@@ -80,10 +80,6 @@ setHeaderMenuItems([
     onSelect: reindexRecipes,
   },
 ]);
-
-onBeforeRouteLeave(() => {
-  clearHeaderMenuItems();
-});
 </script>
 
 <template>

@@ -608,28 +608,12 @@ const editServingsInShoppingList = () => {
 };
 
 //---------------------
-// Header menu (mobile)
+// Header actions
 //---------------------
 
-const { setHeaderMenuItems, clearHeaderMenuItems } = useHeaderMenu();
+const { setHeaderActions } = useHeaderMenu();
 
-setHeaderMenuItems(
-  (
-    menuItems.value as {
-      label?: string;
-      icon?: string;
-      onSelect?: (e: Event) => void;
-    }[]
-  ).map((item) => ({
-    label: item.label,
-    icon: item.icon,
-    onSelect: item.onSelect,
-  })),
-);
-
-onBeforeRouteLeave(() => {
-  clearHeaderMenuItems();
-});
+setHeaderActions(menuItems.value as DropdownMenuItem[]);
 </script>
 
 <template>
@@ -639,19 +623,9 @@ onBeforeRouteLeave(() => {
         <div class="mt-5 flex flex-row items-center gap-4 md:mt-0">
           <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
         </div>
-        <div class="hidden flex-row gap-4 md:flex">
-          <h1 class="text-3xl font-bold">
-            {{ recipe.metadata.title ?? "(Untitled)" }}
-          </h1>
-          <UDropdownMenu :items="menuItems" :content="{ align: 'start' }">
-            <UButton
-              icon="prime:bars"
-              size="lg"
-              color="secondary"
-              variant="soft"
-            />
-          </UDropdownMenu>
-        </div>
+        <h1 class="hidden text-3xl font-bold md:block">
+          {{ recipe.metadata.title ?? "(Untitled)" }}
+        </h1>
         <h1 class="text-2xl font-bold md:hidden">
           {{ recipe.metadata.title ?? "(Untitled)" }}
         </h1>

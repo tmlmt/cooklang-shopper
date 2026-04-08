@@ -12,7 +12,26 @@ const { experimental } = usePublicConfig();
 // Header menus
 //---------------
 
-const { mobileHeaderMenuItems, desktopHeaderMenuItems } = useHeaderMenu();
+const permanentMenuItems: DropdownMenuItem[] = [
+  {
+    label: "Authentication",
+    icon: "material-symbols:fingerprint",
+    onSelect: () => navigateTo("/auth"),
+  },
+  {
+    label: "Toggle color mode",
+    icon: "material-symbols:dark-mode",
+    onSelect: () => {
+      colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
+    },
+  },
+];
+
+const { mobileHeaderMenuItems, desktopHeaderMenuItems, headerActionItems } =
+  useHeaderMenu();
+(mobileHeaderMenuItems.value as DropdownMenuItem[]).push(...permanentMenuItems);
+
+const isRecipePage = computed(() => route.path.startsWith("/recipe/"));
 
 const headerOpen = ref(false);
 
@@ -47,11 +66,19 @@ const aboutItems = computed<DropdownMenuItem[]>(() => [
   { label: "About", onSelect: async () => await modal.open() },
 ]);
 
-const dropDownMenuItems = computed<DropdownMenuItem[]>(() => [
-  ...(desktopHeaderMenuItems.value as DropdownMenuItem[]),
-  { type: "separator" },
-  ...aboutItems.value,
-]);
+const colorMode = useColorMode();
+
+const dropDownMenuItems = computed<DropdownMenuItem[]>(() => {
+  const items: DropdownMenuItem[] = [
+    ...(desktopHeaderMenuItems.value as DropdownMenuItem[]),
+  ];
+  if (isRecipePage.value) {
+    items.push(...permanentMenuItems);
+  }
+  if (items.length > 0) items.push({ type: "separator" });
+  items.push(...aboutItems.value);
+  return items;
+});
 
 //----------------
 // SEO
@@ -152,7 +179,10 @@ const navLeft = computed(() => {
           orientation="vertical"
           class="-mx-2.5"
         />
-        <USeparator v-if="mobileHeaderMenuItems.length > 0" class="my-2" />
+        <USeparator
+          v-if="mobileHeaderMenuItems.length > 0 || isRecipePage"
+          class="my-2"
+        />
         <UNavigationMenu
           :ui="{ root: 'mt-1', link: 'text-md' }"
           :items="aboutItems as NavigationMenuItem[]"
@@ -161,14 +191,26 @@ const navLeft = computed(() => {
         />
       </template>
       <template #right>
-        <UButton
-          v-if="route.path !== '/auth'"
-          variant="ghost"
-          color="neutral"
-          icon="material-symbols:fingerprint"
-          to="/auth"
-        />
-        <UColorModeButton />
+        <template v-if="isRecipePage">
+          <UButton
+            v-for="action in headerActionItems"
+            :key="action.label"
+            :icon="action.icon"
+            variant="ghost"
+            :color="(action.color as any) ?? 'neutral'"
+            @click="action.onSelect?.($event)"
+          />
+        </template>
+        <template v-else>
+          <UButton
+            v-if="route.path !== '/auth'"
+            variant="ghost"
+            color="neutral"
+            icon="material-symbols:fingerprint"
+            to="/auth"
+          />
+          <UColorModeButton />
+        </template>
         <UDropdownMenu :items="dropDownMenuItems" :content="{ align: 'end' }">
           <UButton
             icon="prime:bars"
