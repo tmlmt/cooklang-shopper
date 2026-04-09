@@ -448,7 +448,9 @@ setHeaderActions(menuItems.value as DropdownMenuItem[]);
   <div class="flex w-full px-4 md:px-1">
     <div v-if="recipe && !isEditMode" class="flex w-full flex-col">
       <div class="mb-2 flex flex-col gap-4">
-        <div class="mt-5 flex flex-row items-center gap-4 md:mt-0">
+        <div
+          class="mt-5 flex flex-row items-center gap-4 text-sm md:mt-0 md:text-base"
+        >
           <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
         </div>
         <h1 class="hidden text-3xl font-bold md:block">
