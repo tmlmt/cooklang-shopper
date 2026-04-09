@@ -17,7 +17,6 @@ const sourceURL = computed(() => {
   }
   return undefined;
 });
-console.log("Source URL:", sourceURL.value);
 
 const sourceWebsite = computed(() => {
   if (!sourceURL.value) return undefined;
@@ -27,7 +26,6 @@ const sourceWebsite = computed(() => {
   }
   return sourceURL.value;
 });
-console.log("Source Website:", sourceWebsite.value);
 
 const sourceText = computed(() => {
   if (!source) return undefined;
@@ -37,7 +35,6 @@ const sourceText = computed(() => {
   if (source.author && source.name) return `${source.name} (${source.author})`;
   return source.author ?? source.name ?? sourceWebsite.value;
 });
-console.log("Source Text:", sourceText.value);
 </script>
 
 <template>

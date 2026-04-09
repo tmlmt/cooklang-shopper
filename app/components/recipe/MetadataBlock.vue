@@ -37,7 +37,7 @@ const tags = computed<string[]>(() => {
   return [];
 });
 
-const hiddenMetadataKeys = new Set([
+const standardMetadataKeys = new Set([
   "title",
   "yield",
   "servings",
@@ -50,13 +50,13 @@ const hiddenMetadataKeys = new Set([
   "source",
 ]);
 
-const nonTitleMetaData = computed(() => {
+const nonStandardMetaData = computed(() => {
   if (!recipe) return [] as MetadataEntry[];
   const entries: MetadataEntry[] = [];
   const metadata = recipe.metadata;
 
   for (const [key, value] of Object.entries(metadata)) {
-    if (hiddenMetadataKeys.has(key)) continue;
+    if (standardMetadataKeys.has(key)) continue;
     if (value === undefined || value === null) continue;
 
     if (key === "time") {
@@ -143,14 +143,13 @@ const nonTitleMetaData = computed(() => {
         />
       </div>
     </div>
-    <div v-if="nonTitleMetaData.length > 0" class="my-4 flex flex-col">
+    <div v-if="nonStandardMetaData.length > 0" class="my-4 flex flex-col">
       <ul class="ml-6 list-disc text-sm text-neutral-600 dark:text-neutral-400">
-        <li v-for="entry in nonTitleMetaData" :key="entry.key">
+        <li v-for="entry in nonStandardMetaData" :key="entry.key">
           <b>{{ entry.key }}: </b>
           <ULink
             v-if="entry.value?.href"
             :to="entry.value.href"
-            :boolean="true"
             target="_blank"
           >
             {{ entry.value.text }}
@@ -171,7 +170,6 @@ const nonTitleMetaData = computed(() => {
                   <ULink
                     v-if="field.value.href"
                     :to="field.value.href"
-                    :boolean="true"
                     target="_blank"
                   >
                     {{ field.value.text }}
