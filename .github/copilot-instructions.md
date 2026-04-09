@@ -41,3 +41,47 @@ The project is structured as per Nuxt 4 conventions. In particular:
 - Use Pinia for state management.
 - Use Nuxt UI components for consistent styling and UI elements.
 - Avoid long comments; code should be self-explanatory where possible.
+
+## Data Fetching Conventions
+
+This project uses `nuxt-auth-utils` for session authentication. All API routes require a valid session cookie. This creates important constraints on which fetch method to use depending on the execution context.
+
+### During page setup (SSR + hydration)
+
+Use `useFetch` or `useAsyncData` for data needed during initial page render. These composables:
+
+- Execute on the server during SSR and transfer the result to the client via the Nuxt payload (no double-fetch, no hydration flicker)
+- Automatically proxy cookies/headers from the browser request to the server API call during SSR
+- Are SSR-safe and can be used in composables called from `<script setup>`
+
+```ts
+// Single endpoint — use useFetch with a computed URL
+const { data, status } = useFetch(() => `/api/recipe-images/${path.value}`);
+
+// Multiple parallel requests — use useAsyncData
+const headers = useRequestHeaders(["cookie"]); // capture at top level (setup context)
+const { data } = useAsyncData("key", async () => {
+  const results = await Promise.all(
+    paths.map((p) => $fetch(`/api/endpoint/${p}`, { headers })),
+  );
+  return results;
+});
+```
+
+### During user interactions (button clicks, form submits)
+
+Use `$fetchWithHeaders` (defined in fetch.ts). After hydration, `useFetch`/`useAsyncData` lose access to the original SSR request headers. `$fetchWithHeaders` uses `useRequestHeaders` to forward the session cookie on every call.
+
+```ts
+// In an event handler or Pinia action
+await $fetchWithHeaders(`/api/recipe/${path}`, { method: "DELETE" });
+```
+
+### Summary
+
+| Context                       | Use                                       | Why                                                                       |
+| ----------------------------- | ----------------------------------------- | ------------------------------------------------------------------------- |
+| Page setup / composable init  | `useFetch` or `useAsyncData`              | SSR payload transfer, auto cookie proxy, no flicker                       |
+| User-triggered action         | `$fetchWithHeaders`                       | Manual cookie forwarding needed post-hydration                            |
+| Inside `useAsyncData` handler | `$fetch` with `useRequestHeaders` headers | `$fetch` alone doesn't proxy cookies; pass headers captured at setup time |
+| Never in `<script setup>`     | Bare `$fetch` without headers             | Double-fetches (server + client) and no cookie forwarding during SSR      |
