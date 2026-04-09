@@ -458,14 +458,15 @@ setHeaderActions(menuItems.value as DropdownMenuItem[]);
           {{ recipe.metadata.title ?? "(Untitled)" }}
         </h1>
       </div>
-      <div class="mb-4 flex flex-row gap-4">
-        <div class="mt-1">Scale:</div>
+      <div class="mb-4 flex flex-row items-center gap-4">
+        <div class="text-sm">Scale:</div>
         <UInputNumber
           v-model="servingsSpinner"
           :step="servingsStep"
           :min="servingsStep"
-          :ui="{ base: 'w-24' }"
+          :ui="{ base: 'w-20' }"
           :focus-on-change="false"
+          size="sm"
         />
         <UDropdownMenu
           v-if="hasVariants"
