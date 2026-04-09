@@ -137,6 +137,7 @@ const nonStandardMetaData = computed(() => {
           v-for="tag in tags"
           :key="tag"
           :label="tag"
+          class="rounded-full"
           color="neutral"
           variant="subtle"
           size="sm"
