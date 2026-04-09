@@ -194,10 +194,12 @@ const navLeft = computed(() => {
         <template v-if="isRecipePage">
           <UButton
             v-for="action in headerActionItems"
-            :key="action.label"
+            :key="`action-${action.label}`"
+            :label="action.label"
             :icon="action.icon"
             variant="ghost"
             :color="(action.color as any) ?? 'neutral'"
+            :ui="{ label: 'hidden md:flex ' }"
             @click="action.onSelect?.($event)"
           />
         </template>
