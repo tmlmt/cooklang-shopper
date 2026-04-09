@@ -447,7 +447,7 @@ setHeaderActions(menuItems.value as DropdownMenuItem[]);
 <template>
   <div class="flex w-full px-4 md:px-1">
     <div v-if="recipe && !isEditMode" class="flex w-full flex-col">
-      <div class="mb-4 flex flex-col gap-4">
+      <div class="mb-2 flex flex-col gap-4">
         <div class="mt-5 flex flex-row items-center gap-4 md:mt-0">
           <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
         </div>
@@ -458,47 +458,59 @@ setHeaderActions(menuItems.value as DropdownMenuItem[]);
           {{ recipe.metadata.title ?? "(Untitled)" }}
         </h1>
       </div>
-      <div class="mb-4 flex flex-row items-center gap-4">
-        <div class="text-sm">Scale:</div>
-        <UInputNumber
-          v-model="servingsSpinner"
-          :step="servingsStep"
-          :min="servingsStep"
-          :ui="{ base: 'w-20' }"
-          :focus-on-change="false"
-          size="sm"
-        />
-        <UDropdownMenu
-          v-if="hasVariants"
-          :items="variantMenuItems"
-          :content="{ align: 'start' }"
-        >
-          <UButton
-            size="md"
-            color="neutral"
-            variant="soft"
-            :label="selectedVariant ?? 'Default'"
-            icon="i-lucide-git-branch"
-          />
-        </UDropdownMenu>
-        <UButton
-          v-if="experimental && !shoppingStore.isRecipeInSelection(path)"
-          size="md"
-          color="primary"
-          label="Add to shopping list"
-          icon="material-symbols:add-shopping-cart-rounded"
-          @click="addToShoppingList"
-        />
-        <UButton
-          v-else-if="experimental && shoppingStore.isRecipeInSelection(path)"
-          size="sm"
-          color="secondary"
-          @click="editServingsInShoppingList"
-          ><Icon class="text-lg" name="material-symbols:change-circle-rounded"
-        /></UButton>
-      </div>
       <RecipeMetadataBlock :recipe="recipe" />
-      <div class="mt-0 grid grid-cols-1 md:mt-4 md:grid-cols-3">
+      <div class="mt-0 grid grid-cols-1 md:mt-1 md:grid-cols-3">
+        <div class="grid md:mb-4">
+          <USeparator
+            :ui="{ border: 'border-gray-200' }"
+            size="xs"
+            class="mb-4 md:pr-10"
+          />
+          <div class="flex flex-row items-center gap-4">
+            <div class="text-sm">Scale:</div>
+            <UInputNumber
+              v-model="servingsSpinner"
+              :step="servingsStep"
+              :min="servingsStep"
+              :ui="{ base: 'w-20' }"
+              :focus-on-change="false"
+              size="sm"
+            />
+            <UDropdownMenu
+              v-if="hasVariants"
+              :items="variantMenuItems"
+              :content="{ align: 'start' }"
+            >
+              <UButton
+                size="sm"
+                color="neutral"
+                variant="soft"
+                :label="selectedVariant ?? 'Default'"
+                icon="i-lucide-git-branch"
+              />
+            </UDropdownMenu>
+            <UButton
+              v-if="experimental && !shoppingStore.isRecipeInSelection(path)"
+              size="md"
+              color="primary"
+              label="Add to shopping list"
+              icon="material-symbols:add-shopping-cart-rounded"
+              @click="addToShoppingList"
+            />
+            <UButton
+              v-else-if="
+                experimental && shoppingStore.isRecipeInSelection(path)
+              "
+              size="sm"
+              color="secondary"
+              @click="editServingsInShoppingList"
+              ><Icon
+                class="text-lg"
+                name="material-symbols:change-circle-rounded"
+            /></UButton>
+          </div>
+        </div>
+
         <div class="col-start-1">
           <USeparator
             :ui="{ border: 'border-gray-600' }"
