@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.4.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.4.0...v0.4.1)
+
+### 🎨 Styles
+
+- **recipe:** Improve vertical margin distribution between upper blocks ([bb1d93b](https://github.com/tmlmt/cooklang-shopper/commit/bb1d93b))
+- **header:** Add labels to action buttons on desktop ([a63708e](https://github.com/tmlmt/cooklang-shopper/commit/a63708e))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.4.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.3.0...v0.4.0)
