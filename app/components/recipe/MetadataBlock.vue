@@ -122,44 +122,64 @@ const nonStandardMetaData = computed(() => {
       </div>
     </div>
     <RecipeMetadataTime :time="recipe.metadata.time" />
-    <div v-if="nonStandardMetaData.length > 0" class="my-4 flex flex-col">
-      <ul class="ml-6 list-disc text-sm text-neutral-600 dark:text-neutral-400">
-        <li v-for="entry in nonStandardMetaData" :key="entry.key">
-          <b>{{ entry.key }}: </b>
-          <ULink
-            v-if="entry.value?.href"
-            :to="entry.value.href"
-            target="_blank"
-          >
-            {{ entry.value.text }}
-          </ULink>
-          <span v-else-if="entry.value">{{ entry.value.text }}</span>
-          <template v-if="entry.subEntries">
-            <div
-              v-for="(obj, oIdx) in entry.subEntries"
-              :key="oIdx"
-              class="my-0.5 ml-2 flex flex-row gap-2"
+    <UCollapsible v-if="nonStandardMetaData.length > 0" class="my-4">
+      <UButton
+        class="group"
+        label="More info"
+        color="neutral"
+        variant="soft"
+        trailing-icon="i-lucide-chevron-down"
+        size="sm"
+        :ui="{
+          trailingIcon:
+            'group-data-[state=open]:rotate-180 transition-transform duration-200',
+        }"
+      />
+      <template #content>
+        <ul
+          class="mt-2 ml-6 list-disc text-sm text-neutral-600 dark:text-neutral-400"
+        >
+          <li v-for="entry in nonStandardMetaData" :key="entry.key">
+            <b>{{ entry.key }}: </b>
+            <ULink
+              v-if="entry.value?.href"
+              :to="entry.value.href"
+              target="_blank"
             >
-              <div class="text-base">•</div>
-              <ul class="mt-[0.1rem] list-inside">
-                <li v-for="(field, fIdx) in obj" :key="fIdx" class="list-none">
-                  <span v-if="field.key" class="font-medium"
-                    >{{ field.key }}:
-                  </span>
-                  <ULink
-                    v-if="field.value.href"
-                    :to="field.value.href"
-                    target="_blank"
+              {{ entry.value.text }}
+            </ULink>
+            <span v-else-if="entry.value">{{ entry.value.text }}</span>
+            <template v-if="entry.subEntries">
+              <div
+                v-for="(obj, oIdx) in entry.subEntries"
+                :key="oIdx"
+                class="my-0.5 ml-2 flex flex-row gap-2"
+              >
+                <div class="text-base">•</div>
+                <ul class="mt-[0.1rem] list-inside">
+                  <li
+                    v-for="(field, fIdx) in obj"
+                    :key="fIdx"
+                    class="list-none"
                   >
-                    {{ field.value.text }}
-                  </ULink>
-                  <template v-else>{{ field.value.text }}</template>
-                </li>
-              </ul>
-            </div>
-          </template>
-        </li>
-      </ul>
-    </div>
+                    <span v-if="field.key" class="font-medium"
+                      >{{ field.key }}:
+                    </span>
+                    <ULink
+                      v-if="field.value.href"
+                      :to="field.value.href"
+                      target="_blank"
+                    >
+                      {{ field.value.text }}
+                    </ULink>
+                    <template v-else>{{ field.value.text }}</template>
+                  </li>
+                </ul>
+              </div>
+            </template>
+          </li>
+        </ul>
+      </template>
+    </UCollapsible>
   </div>
 </template>
