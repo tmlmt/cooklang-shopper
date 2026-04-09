@@ -461,7 +461,7 @@ setHeaderActions(menuItems.value as DropdownMenuItem[]);
         </h1>
       </div>
       <RecipeMetadataBlock :recipe="recipe" />
-      <div class="mt-0 grid grid-cols-1 md:mt-1 md:grid-cols-3">
+      <div class="mt-4 grid grid-cols-1 md:mt-5 md:grid-cols-3">
         <div class="grid md:mb-4">
           <USeparator
             :ui="{ border: 'border-gray-200' }"

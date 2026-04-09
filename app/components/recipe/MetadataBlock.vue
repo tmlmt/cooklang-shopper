@@ -122,7 +122,7 @@ const nonStandardMetaData = computed(() => {
       </div>
     </div>
     <RecipeMetadataTime :time="recipe.metadata.time" />
-    <UCollapsible v-if="nonStandardMetaData.length > 0" class="my-4">
+    <UCollapsible v-if="nonStandardMetaData.length > 0" class="mt-2">
       <UButton
         class="group"
         label="More info"
