@@ -707,6 +707,9 @@ setHeaderActions(menuItems.value as DropdownMenuItem[]);
             class="w-full"
             :rows="20"
             fluid
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
           />
         </UFormField>
         <div class="mt-4 flex flex-row gap-4">
