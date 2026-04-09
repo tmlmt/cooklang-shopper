@@ -33,6 +33,17 @@ export default defineNuxtConfig({
     },
   },
 
+  runtimeConfig: {
+    session: {
+      name: "nuxt-session",
+      password: process.env.NUXT_SESSION_PASSWORD || "",
+      cookie: {
+        sameSite: "lax",
+      },
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+    },
+  },
+
   vite: {
     optimizeDeps: {
       include: ["@tmlmt/cooklang-parser", "valibot"],
