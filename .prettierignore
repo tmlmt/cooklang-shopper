@@ -5,3 +5,4 @@ node_modules
 playwright-report
 pnpm-lock.yaml
 pnpm-workspace.yaml
+regex.ts

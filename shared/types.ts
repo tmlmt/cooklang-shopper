@@ -34,6 +34,11 @@ export interface RecipeIndex {
   [key: string]: RecipeEssentials;
 }
 
+export interface MetadataDisplayValue {
+  text: string;
+  href?: string;
+}
+
 // https://stackoverflow.com/questions/78945320/how-to-handle-nodejs-errors-in-typescript
 export interface BaseSystemError<Code extends string = string> extends Error {
   /** The string error code */

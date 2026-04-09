@@ -2,10 +2,9 @@
 import type {
   Recipe,
   MetadataTime,
-  MetadataSource,
   MetadataObject,
 } from "@tmlmt/cooklang-parser";
-import { Patterns } from "human-regex";
+import type { MetadataDisplayValue } from "#shared/types";
 
 const { recipe } = defineProps<{
   recipe: Recipe;
@@ -16,39 +15,6 @@ interface MetadataEntry {
   value?: MetadataDisplayValue;
   subEntries?: Array<Array<{ key: string; value: MetadataDisplayValue }>>;
 }
-
-interface MetadataDisplayValue {
-  text: string;
-  href?: string;
-}
-
-const formatAsText = (val: unknown): string => {
-  if (val === undefined || val === null) return "";
-  if (typeof val === "string" || typeof val === "number") return String(val);
-  if (Array.isArray(val)) return val.map(formatAsText).join(", ");
-  if (typeof val === "object")
-    return Object.entries(val)
-      .map(([k, v]) => `${k}: ${formatAsText(v)}`)
-      .join(", ");
-  return String(val);
-};
-
-const displayValue = (
-  value: unknown,
-  detectUrls = false,
-): MetadataDisplayValue => {
-  const text =
-    typeof value === "object" && value !== null
-      ? formatAsText(value)
-      : String(value);
-  if (detectUrls) {
-    const trimmed = text.trim();
-    if (trimmed && Patterns.url().test(trimmed)) {
-      return { text, href: trimmed };
-    }
-  }
-  return { text };
-};
 
 const introductionText = computed(() => {
   if (!recipe) return undefined;
@@ -80,6 +46,8 @@ const hiddenMetadataKeys = new Set([
   "variants",
   "introduction",
   "description",
+  "author",
+  "source",
 ]);
 
 const nonTitleMetaData = computed(() => {
@@ -94,53 +62,20 @@ const nonTitleMetaData = computed(() => {
     if (key === "time") {
       const timeValue = value as MetadataTime;
       if (timeValue.prep)
-        entries.push({ key: "prep time", value: displayValue(timeValue.prep) });
+        entries.push({
+          key: "prep time",
+          value: maybeDetectURLinText(timeValue.prep),
+        });
       if (timeValue.cook)
-        entries.push({ key: "cook time", value: displayValue(timeValue.cook) });
+        entries.push({
+          key: "cook time",
+          value: maybeDetectURLinText(timeValue.cook),
+        });
       if (timeValue.total)
         entries.push({
           key: "total time",
-          value: displayValue(timeValue.total),
+          value: maybeDetectURLinText(timeValue.total),
         });
-      continue;
-    }
-
-    if (key === "source") {
-      if (
-        typeof value === "object" &&
-        value !== null &&
-        !Array.isArray(value)
-      ) {
-        const sourceValue = value as MetadataSource;
-        const sourceText =
-          sourceValue.name && sourceValue.author
-            ? `${sourceValue.name} (${sourceValue.author})`
-            : sourceValue.name || sourceValue.author || "";
-
-        if (
-          sourceValue.url &&
-          sourceValue.url.trim().length > 0 &&
-          Patterns.url().test(sourceValue.url.trim())
-        ) {
-          entries.push({
-            key: "source",
-            value: {
-              text: sourceText || sourceValue.url,
-              href: sourceValue.url.trim(),
-            },
-          });
-        } else {
-          const fallback =
-            sourceValue.url && sourceValue.url.trim().length > 0
-              ? sourceText
-                ? `${sourceText} (${sourceValue.url})`
-                : sourceValue.url
-              : sourceText;
-          entries.push({ key: "source", value: displayValue(fallback) });
-        }
-      } else {
-        entries.push({ key: "source", value: displayValue(value, true) });
-      }
       continue;
     }
 
@@ -154,26 +89,29 @@ const nonTitleMetaData = computed(() => {
             const obj = item as MetadataObject;
             return Object.entries(obj).map(([k, v]) => ({
               key: k,
-              value: displayValue(v, true),
+              value: maybeDetectURLinText(v, true),
             }));
           }
-          return [{ key: "", value: displayValue(item, true) }];
+          return [{ key: "", value: maybeDetectURLinText(item, true) }];
         });
         entries.push({ key, subEntries });
       } else {
-        entries.push({ key, value: displayValue(value.join(", "), true) });
+        entries.push({
+          key,
+          value: maybeDetectURLinText(value.join(", "), true),
+        });
       }
     } else if (typeof value === "object" && value !== null) {
       const obj = value as MetadataObject;
       const subEntries = [
         Object.entries(obj).map(([k, v]) => ({
           key: k,
-          value: displayValue(v, true),
+          value: maybeDetectURLinText(v, true),
         })),
       ];
       entries.push({ key, subEntries });
     } else {
-      entries.push({ key, value: displayValue(value, true) });
+      entries.push({ key, value: maybeDetectURLinText(value, true) });
     }
   }
 
@@ -183,6 +121,10 @@ const nonTitleMetaData = computed(() => {
 
 <template>
   <div>
+    <RecipeMetadataAuthorSource
+      :author="recipe.metadata.author"
+      :source="recipe.metadata.source"
+    />
     <p v-if="introductionText" class="my-2 text-base">
       {{ introductionText }}
     </p>
