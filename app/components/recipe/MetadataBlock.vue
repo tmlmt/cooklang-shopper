@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import type {
-  Recipe,
-  MetadataTime,
-  MetadataObject,
-} from "@tmlmt/cooklang-parser";
+import type { Recipe, MetadataObject } from "@tmlmt/cooklang-parser";
 import type { MetadataDisplayValue } from "#shared/types";
 
 const { recipe } = defineProps<{
@@ -48,6 +44,7 @@ const standardMetadataKeys = new Set([
   "description",
   "author",
   "source",
+  "time",
 ]);
 
 const nonStandardMetaData = computed(() => {
@@ -58,26 +55,6 @@ const nonStandardMetaData = computed(() => {
   for (const [key, value] of Object.entries(metadata)) {
     if (standardMetadataKeys.has(key)) continue;
     if (value === undefined || value === null) continue;
-
-    if (key === "time") {
-      const timeValue = value as MetadataTime;
-      if (timeValue.prep)
-        entries.push({
-          key: "prep time",
-          value: maybeDetectURLinText(timeValue.prep),
-        });
-      if (timeValue.cook)
-        entries.push({
-          key: "cook time",
-          value: maybeDetectURLinText(timeValue.cook),
-        });
-      if (timeValue.total)
-        entries.push({
-          key: "total time",
-          value: maybeDetectURLinText(timeValue.total),
-        });
-      continue;
-    }
 
     if (Array.isArray(value)) {
       const hasObjects = value.some(
@@ -144,6 +121,7 @@ const nonStandardMetaData = computed(() => {
         />
       </div>
     </div>
+    <RecipeMetadataTime :time="recipe.metadata.time" />
     <div v-if="nonStandardMetaData.length > 0" class="my-4 flex flex-col">
       <ul class="ml-6 list-disc text-sm text-neutral-600 dark:text-neutral-400">
         <li v-for="entry in nonStandardMetaData" :key="entry.key">
