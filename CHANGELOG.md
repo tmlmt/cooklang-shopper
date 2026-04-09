@@ -1,5 +1,42 @@
 # Changelog
 
+## v0.4.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.3.0...v0.4.0)
+
+### 🚀 Enhancements
+
+- **auth:** Persist cookie for 1 week ([c5c2796](https://github.com/tmlmt/cooklang-shopper/commit/c5c2796))
+
+### 🩹 Fixes
+
+- **edit:** Prevent autocorrect, autocapitalize and spellcheck when editing cooklang ([c8b46fc](https://github.com/tmlmt/cooklang-shopper/commit/c8b46fc))
+
+### 💅 Refactors
+
+- Move metadata rendering to separate component ([32751d1](https://github.com/tmlmt/cooklang-shopper/commit/32751d1))
+
+### 🏡 Chore
+
+- **README:** Update roadmap ([c0e218c](https://github.com/tmlmt/cooklang-shopper/commit/c0e218c))
+- **metadata:** Rename hidden/nonTitle keys to standard/nonStandard ([f275032](https://github.com/tmlmt/cooklang-shopper/commit/f275032))
+- Update tsbuildinfo file ([1151b0f](https://github.com/tmlmt/cooklang-shopper/commit/1151b0f))
+
+### 🎨 Styles
+
+- Move recipe actions to header on recipe details page ([93a9bcc](https://github.com/tmlmt/cooklang-shopper/commit/93a9bcc))
+- **recipe:** Improve rendering of author and source ([697f64e](https://github.com/tmlmt/cooklang-shopper/commit/697f64e))
+- **metadata:** Make tags badges fully rounded to be consistent across the app ([540d05e](https://github.com/tmlmt/cooklang-shopper/commit/540d05e))
+- **recipe:** Decrease size of scale spinner ([d88678f](https://github.com/tmlmt/cooklang-shopper/commit/d88678f))
+- **metadata:** Display time in separate grid ([0b49b19](https://github.com/tmlmt/cooklang-shopper/commit/0b49b19))
+- **metadata:** Move all non standard metadata to a collapsible ([788fd81](https://github.com/tmlmt/cooklang-shopper/commit/788fd81))
+- **recipe:** Move author/source up and scale/variants down ([8072917](https://github.com/tmlmt/cooklang-shopper/commit/8072917))
+- **recipe:** Decrease text size of breadcrumb on mobile ([6bd1458](https://github.com/tmlmt/cooklang-shopper/commit/6bd1458))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.3.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.2.1...v0.3.0)
