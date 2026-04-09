@@ -46,7 +46,7 @@ export default defineNuxtConfig({
 
   vite: {
     optimizeDeps: {
-      include: ["@tmlmt/cooklang-parser", "valibot"],
+      include: ["@tmlmt/cooklang-parser", "valibot", "human-regex"],
     },
   },
 });
