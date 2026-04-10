@@ -20,6 +20,14 @@ export default defineNuxtConfig({
     serverBundle: "remote",
   },
 
+  image: {
+    ipx: {
+      sharpOptions: {
+        autoOrient: true,
+      },
+    },
+  },
+
   nitro: {
     storage: {
       recipes: {

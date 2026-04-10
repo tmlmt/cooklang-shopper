@@ -49,6 +49,7 @@ const pathItems = computed(() =>
 const reindexRecipes = async () => {
   await recipeStore.rebuildIndex();
   await recipeStore.fetchDirectories();
+  clearRecipeCoverImageCache();
   toast.add({
     title: "Success",
     description: "Recipes reindexed",

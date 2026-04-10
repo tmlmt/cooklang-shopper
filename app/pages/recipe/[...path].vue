@@ -48,6 +48,7 @@ const dir = [
 const path = pathParams.join("/");
 const recipeDir = path.substring(0, path.lastIndexOf("/"));
 const recipeName = path.substring(path.lastIndexOf("/") + 1);
+const recipePathRef = computed(() => path);
 
 // Validate provided path
 validateRecipePath(path);
@@ -55,6 +56,12 @@ validateRecipePath(path);
 const shoppingStore = useShoppingStore();
 const recipeStore = useRecipeStore();
 const { experimental } = usePublicConfig();
+const {
+  heroImages,
+  stepImagesByNumber,
+  status: imageManifestStatus,
+  refresh: refreshImageManifest,
+} = useRecipeImageManifest(recipePathRef);
 
 const rawRecipe = ref<string>();
 
@@ -149,9 +156,13 @@ const sectionsWithStepNumbers = computed(() => {
         const stepIsActive =
           sectionIsActive && isStepActive(item, activeVariant);
         const stepNumber = stepIsActive ? ++stepCounter : null;
+        const stepImage = stepNumber
+          ? stepImagesByNumber.value[String(stepNumber)]
+          : undefined;
         return {
           ...item,
           stepNumber,
+          stepImage,
           active: stepIsActive,
           optional: item.optional,
         };
@@ -159,6 +170,7 @@ const sectionsWithStepNumbers = computed(() => {
       return {
         ...item,
         stepNumber: null,
+        stepImage: undefined,
         active: sectionIsActive,
         optional: false,
       };
@@ -184,6 +196,101 @@ const isManualEdit = ref(false);
 const modalFile = await useModalFile();
 const modalConf = await useModalConfirmation();
 const modalChoices = await useModalChoices();
+const modalImageUpload = await useModalImageUpload();
+
+// Image management
+const uploadingImage = ref(false);
+const heroOverlayVisible = ref(false);
+const visibleStepOverlay = ref<string | null>(null);
+
+const availableUploadRoles = computed(() => {
+  const roles: { label: string; value: string }[] = [
+    { label: "Cover", value: "cover" },
+  ];
+  let maxStep = 0;
+  for (const section of sectionsWithStepNumbers.value) {
+    for (const item of section.content) {
+      if (item.type === "step" && item.stepNumber) {
+        maxStep = Math.max(maxStep, item.stepNumber);
+      }
+    }
+  }
+  for (let i = 1; i <= maxStep; i++) {
+    roles.push({ label: `Step ${i}`, value: `step-${i}` });
+  }
+  return roles;
+});
+
+async function openUploadModal() {
+  const result = await modalImageUpload.open(availableUploadRoles.value);
+  if (!result) return;
+
+  uploadingImage.value = true;
+  try {
+    const formData = new FormData();
+    formData.append("file", result.file);
+    formData.append("role", result.role);
+
+    await $fetchWithHeaders(`/api/recipe-images/${path}`, {
+      method: "POST",
+      body: formData,
+    });
+
+    await refreshImageManifest();
+    clearRecipeCoverImageCache();
+
+    toast.add({
+      title: "Success",
+      description: "Image uploaded",
+      color: "success",
+    });
+  } catch (error: unknown) {
+    if (error instanceof FetchError) {
+      toast.add({
+        color: "error",
+        title: "Error",
+        description: error.message,
+        duration: 3000,
+      });
+    }
+  } finally {
+    uploadingImage.value = false;
+  }
+}
+
+async function deleteImage(imagePath: string) {
+  const result = await modalConf.open(
+    "Are you sure you want to delete this image?",
+    "Delete",
+    "Cancel",
+  );
+  if (!result) return;
+
+  try {
+    await $fetchWithHeaders(`/api/recipe-images/${path}`, {
+      method: "DELETE",
+      body: { imagePath },
+    });
+
+    await refreshImageManifest();
+    clearRecipeCoverImageCache();
+
+    toast.add({
+      title: "Success",
+      description: "Image deleted",
+      color: "success",
+    });
+  } catch (error: unknown) {
+    if (error instanceof FetchError) {
+      toast.add({
+        color: "error",
+        title: "Error",
+        description: error.message,
+        duration: 3000,
+      });
+    }
+  }
+}
 
 const menuItems = ref<DropdownMenuItem[]>([
   {
@@ -447,6 +554,74 @@ setHeaderActions(menuItems.value as DropdownMenuItem[]);
 <template>
   <div class="flex w-full px-4 md:px-1">
     <div v-if="recipe && !isEditMode" class="flex w-full flex-col">
+      <div v-if="imageManifestStatus === 'pending'" class="mb-4 md:mb-6">
+        <USkeleton class="h-64 w-full rounded-sm" />
+      </div>
+      <div v-else-if="heroImages.length > 0" class="md:mb-6">
+        <UCarousel
+          v-slot="{ item, index }"
+          :items="heroImages"
+          :arrows="heroImages.length > 1"
+          :dots="heroImages.length > 1"
+          :ui="{
+            dots: 'bottom-4 md:-bottom-8',
+            prev: 'sm:inset-s-8 cursor-pointer',
+            next: 'sm:inset-e-8 cursor-pointer',
+          }"
+          loop
+          class="w-full"
+        >
+          <div class="group relative">
+            <NuxtImg
+              :src="item"
+              :alt="`${recipe.metadata.title ?? recipeName}${heroImages.length > 1 ? ` image ${index + 1}` : ''}`"
+              sizes="640px md:768px lg:1024px xl:1280px 2xl:1536px"
+              class="max-h-112 w-full rounded-sm object-cover"
+              @click="heroOverlayVisible = !heroOverlayVisible"
+            />
+            <div
+              class="absolute top-3 right-3 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100 md:top-6 md:right-6 md:gap-3"
+              :class="{ 'opacity-100!': heroOverlayVisible }"
+            >
+              <UButton
+                icon="i-lucide-upload"
+                color="neutral"
+                variant="soft"
+                size="md"
+                class="hidden md:inline-flex"
+                @click="openUploadModal()"
+              />
+              <UButton
+                v-if="item.startsWith('/recipes/')"
+                icon="i-lucide-trash-2"
+                color="error"
+                variant="solid"
+                size="md"
+                class="hidden md:inline-flex"
+                @click="deleteImage(item)"
+              />
+              <UButton
+                icon="i-lucide-upload"
+                color="neutral"
+                variant="soft"
+                size="sm"
+                class="flex md:hidden"
+                @click="openUploadModal()"
+              />
+              <UButton
+                v-if="item.startsWith('/recipes/')"
+                icon="i-lucide-trash-2"
+                color="error"
+                variant="solid"
+                size="sm"
+                class="flex md:hidden"
+                @click="deleteImage(item)"
+              />
+            </div>
+          </div>
+        </UCarousel>
+      </div>
+
       <div class="mb-2 flex flex-col gap-4">
         <div
           class="mt-5 flex flex-row items-center gap-4 text-sm md:mt-0 md:text-base"
@@ -637,6 +812,34 @@ setHeaderActions(menuItems.value as DropdownMenuItem[]);
                           >
                           <template v-else>Step (inactive)</template>
                         </h3>
+                        <div v-if="item.stepImage" class="group/step relative">
+                          <NuxtImg
+                            :src="item.stepImage"
+                            :alt="`Step ${item.stepNumber} illustration`"
+                            sizes="640px md:512px lg:683px xl:853px 2xl:1024px"
+                            loading="lazy"
+                            class="my-2 max-h-72 w-full rounded-lg object-cover"
+                            @click="
+                              visibleStepOverlay =
+                                visibleStepOverlay === item.stepImage
+                                  ? null
+                                  : item.stepImage
+                            "
+                          />
+                          <UButton
+                            v-if="item.stepImage.startsWith('/recipes/')"
+                            icon="i-lucide-trash-2"
+                            color="error"
+                            variant="solid"
+                            size="xs"
+                            class="absolute top-3 right-3 opacity-0 transition-opacity group-hover/step:opacity-100"
+                            :class="{
+                              'opacity-100!':
+                                visibleStepOverlay === item.stepImage,
+                            }"
+                            @click="deleteImage(item.stepImage)"
+                          />
+                        </div>
                         <PreparationItem
                           :step="item"
                           :recipe="recipe!"
@@ -679,6 +882,33 @@ setHeaderActions(menuItems.value as DropdownMenuItem[]);
                     >
                     <template v-else>Step (inactive)</template>
                   </h3>
+                  <div v-if="item.stepImage" class="group/step relative">
+                    <NuxtImg
+                      :src="item.stepImage"
+                      :alt="`Step ${item.stepNumber} illustration`"
+                      sizes="640px md:512px lg:683px xl:853px 2xl:1024px"
+                      loading="lazy"
+                      class="my-2 max-h-72 w-full rounded-lg object-cover"
+                      @click="
+                        visibleStepOverlay =
+                          visibleStepOverlay === item.stepImage
+                            ? null
+                            : item.stepImage
+                      "
+                    />
+                    <UButton
+                      v-if="item.stepImage.startsWith('/recipes/')"
+                      icon="i-lucide-trash-2"
+                      color="error"
+                      variant="solid"
+                      size="xs"
+                      class="absolute top-3 right-3 opacity-0 transition-opacity group-hover/step:opacity-100"
+                      :class="{
+                        'opacity-100!': visibleStepOverlay === item.stepImage,
+                      }"
+                      @click="deleteImage(item.stepImage)"
+                    />
+                  </div>
                   <PreparationItem
                     :step="item"
                     :recipe="recipe!"

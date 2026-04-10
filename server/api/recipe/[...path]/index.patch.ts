@@ -1,7 +1,13 @@
+import { copyFile, rename, unlink } from "node:fs/promises";
+import * as nodePath from "node:path";
 import {
   deleteFromRecipeIndex,
   updateRecipeIndex,
 } from "~~/server/utils/recipeIndex";
+import {
+  discoverRecipeImages,
+  recipesRoot,
+} from "~~/server/utils/recipeImages";
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event);
@@ -52,6 +58,48 @@ export default defineEventHandler(async (event) => {
   );
   await storage.setItem(newRecipeKey + ".cook", content);
   await updateRecipeIndex(newRecipeKey, content);
+
+  // Move associated images
+  const oldRecipeName = nodePath.basename(decodedPath);
+  const oldRecipeDirFsPath = nodePath.join(
+    recipesRoot,
+    nodePath.dirname(decodedPath),
+  );
+  const newRecipeDirFsPath = dir
+    ? nodePath.join(recipesRoot, dir)
+    : recipesRoot;
+
+  try {
+    const discovered = await discoverRecipeImages(
+      oldRecipeDirFsPath,
+      oldRecipeName,
+    );
+
+    for (const oldFsPath of discovered.all) {
+      const oldBasename = nodePath.basename(oldFsPath);
+      // Replace old recipe name prefix with new recipe name
+      const newBasename = fileName + oldBasename.slice(oldRecipeName.length);
+      const newFsPath = nodePath.join(newRecipeDirFsPath, newBasename);
+
+      // Security: ensure target stays within recipesRoot
+      if (
+        !newFsPath.startsWith(recipesRoot + nodePath.sep) &&
+        newFsPath !== recipesRoot
+      ) {
+        continue;
+      }
+
+      try {
+        await rename(oldFsPath, newFsPath);
+      } catch {
+        // Cross-device move: copy + delete
+        await copyFile(oldFsPath, newFsPath);
+        await unlink(oldFsPath);
+      }
+    }
+  } catch {
+    // Image move is best-effort — don't fail the recipe move
+  }
 
   return "Recipe saved";
 });

@@ -12,6 +12,15 @@ const { folders, recipes } = useDirectoryContents(currentPathRef);
 const recipePath = (recipe: RecipeEssentials) =>
   recipe.dir ? `${recipe.dir}/${recipe.name}` : recipe.name;
 
+const visibleRecipePaths = computed(() =>
+  recipes.value.map((recipe) => recipePath(recipe)),
+);
+
+const { covers, status: coversStatus } =
+  useRecipeCoverImages(visibleRecipePaths);
+
+const isCoversLoading = computed(() => coversStatus.value === "pending");
+
 const isSelected = (recipe: RecipeEssentials) =>
   shoppingStore.isRecipeInSelection(recipePath(recipe));
 
@@ -49,6 +58,8 @@ const toggleSelection = (recipe: RecipeEssentials) => {
         :key="`${recipe.dir}/${recipe.name}`"
         :recipe="recipe"
         :selected="isSelected(recipe)"
+        :cover-image="covers[recipePath(recipe)]"
+        :loading="isCoversLoading"
         @toggle="toggleSelection(recipe)"
       />
     </div>

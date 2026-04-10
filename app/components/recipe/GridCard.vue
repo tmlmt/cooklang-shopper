@@ -5,6 +5,8 @@ import RecipeTagOverflow from "~~/app/components/recipe/TagOverflow.vue";
 const props = defineProps<{
   recipe: RecipeEssentials;
   selected: boolean;
+  coverImage?: string;
+  loading?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -118,20 +120,33 @@ const formattedModified = computed(() => {
       @mouseleave="setImageHoverState(false)"
     >
       <NuxtLink :to="recipePath" class="block" @click="handleImageTap">
-        <div
-          class="h-28 rounded-xl bg-linear-to-br transition-transform duration-300 ease-out transform-3d"
-          :class="[
-            gradientClass,
-            isImageActive ? 'transform-[rotateY(180deg)]' : '',
-          ]"
-        >
+        <div class="h-28 overflow-hidden rounded-xl">
+          <NuxtImg
+            v-if="coverImage"
+            :src="coverImage"
+            :alt="recipe.title"
+            sizes="320px md:256px lg:341px xl:427px 2xl:512px"
+            loading="lazy"
+            class="h-full w-full object-cover transition-transform duration-300 ease-out transform-3d"
+            :class="isImageActive ? 'transform-[rotateY(180deg)]' : ''"
+          />
+          <USkeleton v-else-if="loading" class="h-28 w-full rounded-xl" />
           <div
-            class="bg-default/25 flex h-full items-center justify-center rounded-xl"
+            v-else
+            class="h-28 rounded-xl bg-linear-to-br transition-transform duration-300 ease-out transform-3d"
+            :class="[
+              gradientClass,
+              isImageActive ? 'transform-[rotateY(180deg)]' : '',
+            ]"
           >
             <div
-              class="bg-default/80 text-primary flex h-10 w-10 items-center justify-center rounded-md backdrop-blur-sm"
+              class="bg-default/25 flex h-full items-center justify-center rounded-xl"
             >
-              <Icon name="material-symbols:hand-meal" size="1.4em" />
+              <div
+                class="bg-default/80 text-primary flex h-10 w-10 items-center justify-center rounded-md backdrop-blur-sm"
+              >
+                <Icon name="material-symbols:hand-meal" size="1.4em" />
+              </div>
             </div>
           </div>
         </div>

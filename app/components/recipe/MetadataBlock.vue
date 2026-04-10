@@ -45,6 +45,10 @@ const standardMetadataKeys = new Set([
   "author",
   "source",
   "time",
+  "image",
+  "images",
+  "picture",
+  "pictures",
 ]);
 
 const nonStandardMetaData = computed(() => {
