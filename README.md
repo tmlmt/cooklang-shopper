@@ -81,6 +81,8 @@ rm -rf dist && mv dist.bak dist
 5. Develop feature to send cart to a pre-configured online store
 6. Add customization possibilities
 
-## Screenshot
+## Screenshots
 
-![Screenshot](screenshot.png)
+![Screenshot 01](screenshot-01.png)
+
+![Screenshot 02](screenshot-02.png)
