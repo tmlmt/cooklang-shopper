@@ -45,7 +45,6 @@ const reindexRecipes = async () => {
     title: "Success",
     description: "Recipes reindexed",
     color: "success",
-    duration: 3000,
   });
 };
 

@@ -55,7 +55,6 @@ const columns: TableColumn<RecipeInfo>[] = [
             color: "success",
             title: "Success",
             description: "Recipe successfully removed from shopping list",
-            duration: 3000,
           });
         },
       });

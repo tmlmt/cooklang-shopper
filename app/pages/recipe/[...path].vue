@@ -250,7 +250,6 @@ async function openUploadModal() {
         color: "error",
         title: "Error",
         description: error.message,
-        duration: 3000,
       });
     }
   } finally {
@@ -286,7 +285,6 @@ async function deleteImage(imagePath: string) {
         color: "error",
         title: "Error",
         description: error.message,
-        duration: 3000,
       });
     }
   }
@@ -402,7 +400,6 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
         color: "success",
         title: "Success",
         description: "Recipe successfully saved",
-        duration: 3000,
       });
       isEditMode.value = false;
       rawRecipe.value = event.data.recipe;
@@ -413,7 +410,6 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
           color: "error",
           title: "Error",
           description: error.message,
-          duration: 3000,
         });
       }
     }
@@ -431,7 +427,6 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
         color: "success",
         title: "Success",
         description: "Recipe successfully saved",
-        duration: 3000,
       });
       isEditMode.value = false;
       rawRecipe.value = event.data.recipe;
@@ -442,7 +437,6 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
           color: "error",
           title: "Error",
           description: error.data,
-          duration: 3000,
         });
       }
     }
@@ -526,7 +520,6 @@ const addToShoppingList = async () => {
     color: "success",
     title: "Success",
     description: "Recipe successfully added to shopping list",
-    duration: 3000,
   });
 };
 
@@ -537,7 +530,6 @@ const editServingsInShoppingList = () => {
       color: "success",
       title: "Success",
       description: "Servings successfully modified in shopping list",
-      duration: 3000,
     });
   }
 };
