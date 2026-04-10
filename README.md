@@ -75,12 +75,11 @@ rm -rf dist && mv dist.bak dist
 ## Roadmap
 
 1. Stabilize recipe management
-2. Handle recipe images
-3. Internationalization (i18n)
-4. Finalize shopping list features
-5. Finalize shopping cart features
-6. Develop feature to send cart to a pre-configured online store
-7. Add customization possibilities
+2. Internationalization (i18n)
+3. Finalize shopping list features
+4. Finalize shopping cart features
+5. Develop feature to send cart to a pre-configured online store
+6. Add customization possibilities
 
 ## Screenshot
 
