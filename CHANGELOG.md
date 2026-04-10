@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.5.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.5.0...v0.5.1)
+
+### 🩹 Fixes
+
+- Correct remember long-term the user's view preference ([abce510](https://github.com/tmlmt/cooklang-shopper/commit/abce510))
+- **recipe:** Prevent Back button from navigating to homepage and clean structure of left slot of Header ([d5c70cf](https://github.com/tmlmt/cooklang-shopper/commit/d5c70cf))
+
+### 🏡 Chore
+
+- **README:** Update screenshots ([bc4725b](https://github.com/tmlmt/cooklang-shopper/commit/bc4725b))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.5.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.4.1...v0.5.0)
