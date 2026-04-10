@@ -139,21 +139,24 @@ const navLeft = computed(() => {
         title: 'items-center gap-3',
       }"
     >
-      <template #title>
-        <div v-if="route.path.startsWith('/recipe/')">
-          <UButton
-            icon="material-symbols:undo"
-            size="lg"
-            variant="ghost"
-            color="neutral"
-            label="Back"
-            @click.stop="useRouter().back()"
-          />
-        </div>
-        <div v-else class="flex flex-row items-center gap-2">
+      <template #left>
+        <UButton
+          v-if="route.path.startsWith('/recipe/')"
+          icon="material-symbols:undo"
+          size="lg"
+          variant="ghost"
+          color="neutral"
+          label="Back"
+          @click.stop="goBack"
+        />
+        <ULink
+          v-else
+          to="/"
+          class="focus-visible:outline-primary hover:text-default text-highlighted flex shrink-0 flex-row items-center gap-2 text-xl font-bold transition-colors"
+        >
           <Icon name="material-symbols:chef-hat-rounded" size="1.2em" />
           Cooklang Shopper
-        </div>
+        </ULink>
       </template>
       <UBreadcrumb
         v-if="experimental"
