@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.5.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.4.1...v0.5.0)
+
+### 🚀 Enhancements
+
+- Display and manage images ([4c54f73](https://github.com/tmlmt/cooklang-shopper/commit/4c54f73))
+- Change default view mode to grid ([68769e1](https://github.com/tmlmt/cooklang-shopper/commit/68769e1))
+
+### 💅 Refactors
+
+- **toaster:** Centralize duration to default value of 1600ms ([8bf9868](https://github.com/tmlmt/cooklang-shopper/commit/8bf9868))
+
+### 🏡 Chore
+
+- **vite:** Prebundle human-regex to avoid page reloads ([0ec43af](https://github.com/tmlmt/cooklang-shopper/commit/0ec43af))
+- **ai:** Add reminder about proper use of fetch methods ([af4feb3](https://github.com/tmlmt/cooklang-shopper/commit/af4feb3))
+- **security:** Protect static assets behind auth middleware ([7fb7eb3](https://github.com/tmlmt/cooklang-shopper/commit/7fb7eb3))
+- **README:** Update roadmap ([5d5613e](https://github.com/tmlmt/cooklang-shopper/commit/5d5613e))
+
+### 🎨 Styles
+
+- **source:** Tiny adjustment in top margin ([fed8726](https://github.com/tmlmt/cooklang-shopper/commit/fed8726))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.4.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.4.0...v0.4.1)
