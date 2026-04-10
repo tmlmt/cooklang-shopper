@@ -28,12 +28,12 @@ const { folders, recipes } = useDirectoryContents(currentPath);
 const itemCount = computed(() => folders.value.length + recipes.value.length);
 
 const viewMode = useCookie<ViewMode>("ui:recipes:view-mode", {
-  default: () => "list",
+  default: () => "grid",
   watch: true,
 });
 watchEffect(() => {
   if (viewMode.value !== "grid" && viewMode.value !== "list") {
-    viewMode.value = "list";
+    viewMode.value = "grid";
   }
 });
 
