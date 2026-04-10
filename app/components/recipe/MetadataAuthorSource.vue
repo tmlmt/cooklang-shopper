@@ -56,7 +56,7 @@ const sourceText = computed(() => {
           color="secondary"
           variant="soft"
           size="sm"
-          class="ml-1 rounded-full"
+          class="mt-0.5 ml-1 rounded-full"
           >{{ sourceWebsite }}</UBadge
         ></ULink
       >
