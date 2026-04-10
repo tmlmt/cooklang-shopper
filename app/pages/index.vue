@@ -19,12 +19,13 @@ const { folders, recipes } = useDirectoryContents(currentPath);
 const itemCount = computed(() => folders.value.length + recipes.value.length);
 
 const viewMode = useCookie<ViewMode>("ui:recipes:view-mode", {
-  default: () => "list",
+  default: () => "grid",
   watch: true,
+  maxAge: 60 * 60 * 24 * 365, // 1 year
 });
 watchEffect(() => {
   if (viewMode.value !== "grid" && viewMode.value !== "list") {
-    viewMode.value = "list";
+    viewMode.value = "grid";
   }
 });
 
