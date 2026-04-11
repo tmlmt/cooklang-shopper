@@ -7,7 +7,7 @@ import {
 } from "@tmlmt/cooklang-parser";
 
 definePageMeta({
-  title: "Cooklang Shopper - Shopping List",
+  title: "Shopping Cart",
   description:
     "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
 });

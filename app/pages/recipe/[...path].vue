@@ -15,7 +15,7 @@ import { FetchError } from "ofetch";
 import { validateRecipePath } from "~~/shared/utils/path";
 
 definePageMeta({
-  title: "Cooklang Shopper - Recipe detail",
+  title: "Recipe detail",
   description:
     "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
 });

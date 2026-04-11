@@ -10,11 +10,13 @@ defineShortcuts({
 });
 
 const emit = defineEmits<{ close: [boolean] }>();
+
+const { title: appTitle } = usePublicConfig();
 </script>
 
 <template>
   <UModal
-    title="About Cooklang Shopper"
+    :title="`About ${appTitle}`"
     :close="false"
     :ui="{ content: 'max-w-sm' }"
   >

@@ -4,6 +4,7 @@ export function usePublicConfig() {
   });
 
   const experimental = computed(() => data.value?.experimental ?? false);
+  const title = computed(() => useRuntimeConfig().public.title as string);
 
-  return { experimental };
+  return { experimental, title };
 }

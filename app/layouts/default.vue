@@ -6,7 +6,7 @@ import type {
 } from "@nuxt/ui";
 
 const route = useRoute();
-const { experimental } = usePublicConfig();
+const { experimental, title: appTitle } = usePublicConfig();
 
 //---------------
 // Header menus
@@ -86,8 +86,12 @@ const dropDownMenuItems = computed<DropdownMenuItem[]>(() => {
 
 useSeoMeta({
   author: "Thomas Lamant",
-  title: (route.meta.title as string) || "Cooklang Shopper",
-  ogTitle: (route.meta.title as string) || "Cooklang Shopper",
+  title: (route.meta.title as string)
+    ? `${appTitle.value} - ${route.meta.title}`
+    : appTitle.value,
+  ogTitle: (route.meta.title as string)
+    ? `${appTitle.value} - ${route.meta.title}`
+    : appTitle.value,
   description:
     (route.meta.description as string) ||
     "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
@@ -137,6 +141,8 @@ const navLeft = computed(() => {
       class="min-h-16"
       :ui="{
         title: 'items-center gap-3',
+        left: 'min-w-0',
+        right: 'shrink-0',
       }"
     >
       <template #left>
@@ -152,10 +158,14 @@ const navLeft = computed(() => {
         <ULink
           v-else
           to="/"
-          class="focus-visible:outline-primary hover:text-default text-highlighted flex shrink-0 flex-row items-center gap-2 text-xl font-bold transition-colors"
+          class="focus-visible:outline-primary hover:text-default text-highlighted flex min-w-0 flex-row items-center gap-2 text-xl font-bold transition-colors"
         >
-          <Icon name="material-symbols:chef-hat-rounded" size="1.2em" />
-          Cooklang Shopper
+          <Icon
+            name="material-symbols:chef-hat-rounded"
+            size="1.2em"
+            class="shrink-0"
+          />
+          <span class="truncate">{{ appTitle }}</span>
         </ULink>
       </template>
       <UBreadcrumb

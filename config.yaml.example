@@ -7,3 +7,6 @@ sessionSecret: "<session-secret>"
 
 # Enable experimental features (shopping list, shopping cart)
 experimental: false
+
+# Custom application title (default: "Cooklang Shopper")
+# title: "My Cookbook"

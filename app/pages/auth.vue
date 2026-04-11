@@ -3,6 +3,7 @@ definePageMeta({
   layout: "naked",
 });
 const { loggedIn, clear, fetch: fetchSession } = useUserSession();
+const appTitle = useRuntimeConfig().public.title;
 const toast = useToast();
 const profiles = ref(["Chef"]);
 const selectedProfile = ref(profiles.value[0]);
@@ -36,14 +37,13 @@ async function logout() {
     title: "Logged out",
     description: "You have been successfully logged out",
     color: "success",
-    duration: 1000,
   });
 }
 </script>
 
 <template>
   <UCard class="max-w-2xl">
-    <template #header>Cooklang Shopper - Authentication</template>
+    <template #header>{{ appTitle }} - Authentication</template>
     <div v-if="loggedIn" class="flex flex-col items-center gap-4">
       <p>You are logged in.</p>
       <UButton

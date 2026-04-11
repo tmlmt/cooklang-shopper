@@ -4,6 +4,7 @@ export interface AppConfig {
   password: string;
   sessionSecret: string;
   experimental?: boolean;
+  title?: string;
 }
 
 export interface RecipeInfo {

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 definePageMeta({
-  title: "Cooklang Shopper",
   description:
     "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
 });

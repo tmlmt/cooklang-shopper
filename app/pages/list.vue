@@ -3,7 +3,7 @@ import type { TableColumn } from "@nuxt/ui";
 import type { RecipeInfo } from "~~/shared/types";
 
 definePageMeta({
-  title: "Cooklang Shopper - Shopping List",
+  title: "Shopping List",
   description:
     "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
 });
