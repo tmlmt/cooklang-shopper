@@ -21,12 +21,12 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
    mkdir -p /path/to/cooklang-shopper
    tar -xzf cooklang-shopper-v*.tar.gz -C /path/to/cooklang-shopper
    ```
-3. Create your configuration file from the provided example:
+3. Create your configuration file by copying the provided example:
    ```bash
    cd /path/to/cooklang-shopper/dist
    cp config.yaml.example config.yaml
    ```
-4. Edit `config.yaml` — set your hashed password and session secret (see the file for instructions)
+4. Edit `config.yaml` — set the different parameters (see the file for instructions)
 5. Add your `.cook` recipe files to `dist/public/recipes/`
 6. Set up the systemd service:
 
