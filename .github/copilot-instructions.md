@@ -16,6 +16,10 @@ The project uses `pnpm` as the package manager. Therefore, all package managemen
 - To lint the code: `pnpm lint`
 - To run test with coverage: `pnpm test:coverage`
 
+Similarly, all binaries exposed by packages and that you want to run without installing it is as a dependency should be run using `pnpx <binary-name>` instead of `npx` or `yarn dlx`. For example:
+
+- `pnpx prisma <command>` to run Prisma CLI commands
+
 ## Architecture
 
 The project is structured as per Nuxt 4 conventions. In particular:
