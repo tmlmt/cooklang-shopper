@@ -11,10 +11,12 @@ const {
   mode,
   currentPath = "",
   title = "Untitled",
+  excludePaths = [],
 } = defineProps<{
-  mode: "new" | "move";
+  mode: "new" | "move" | "move-folder";
   currentPath?: string;
   title?: string;
+  excludePaths?: string[];
 }>();
 const emit = defineEmits<{ close: [{ dir: string; name: string } | false] }>();
 defineShortcuts({
@@ -30,13 +32,22 @@ const { data: directoriesFromApi } = await useFetch<string[]>(
   "/api/recipes/directory",
 );
 
-function buildTree(paths: string[] | undefined): TreeItem[] {
+function buildTree(
+  paths: string[] | undefined,
+  exclude: string[] = [],
+): TreeItem[] {
   const tree: TreeItem[] = [];
   if (!paths) {
     return [];
   }
 
-  for (const path of paths) {
+  const filtered = exclude.length
+    ? paths.filter(
+        (p) => !exclude.some((ex) => p === ex || p.startsWith(ex + "/")),
+      )
+    : paths;
+
+  for (const path of filtered) {
     const parts = path.split("/");
     let level = tree;
     for (const part of parts) {
@@ -53,7 +64,9 @@ function buildTree(paths: string[] | undefined): TreeItem[] {
   return [{ label: "/", children: tree, defaultExpanded: true, path: "" }];
 }
 
-const items = ref<TreeItem[]>(buildTree(directoriesFromApi.value));
+const items = ref<TreeItem[]>(
+  buildTree(directoriesFromApi.value, excludePaths),
+);
 
 //--------------------
 // Strings
@@ -79,7 +92,14 @@ const findRecursive = (
 
 const baseDir = currentPath?.split("/").slice(0, -1).join("/");
 
-const modalTitle = mode === "move" ? "Move recipe" : "New recipe";
+const modalTitle =
+  mode === "move"
+    ? "Move recipe"
+    : mode === "move-folder"
+      ? "Move folder"
+      : "New recipe";
+
+const isMoveFolderMode = mode === "move-folder";
 
 //--------------------
 // Form validation
@@ -87,12 +107,14 @@ const modalTitle = mode === "move" ? "Move recipe" : "New recipe";
 
 const mainSchema = v.object({
   dir: v.nonOptional(v.unknown(), "Please select a directory"),
-  fileName: v.pipe(
-    v.string(),
-    v.trim(),
-    v.nonEmpty("Please enter a filename"),
-    v.excludes("/", "The filename must not contain  '/'"),
-  ),
+  fileName: isMoveFolderMode
+    ? v.optional(v.string())
+    : v.pipe(
+        v.string(),
+        v.trim(),
+        v.nonEmpty("Please enter a filename"),
+        v.excludes("/", "The filename must not contain  '/'"),
+      ),
 });
 
 interface MainState {
@@ -102,8 +124,11 @@ interface MainState {
 
 const mainState = ref<MainState>({
   dir: findRecursive(items.value as TreeItem[], baseDir),
-  fileName:
-    currentPath !== undefined ? currentPath.split("/").pop() : "Untitled",
+  fileName: isMoveFolderMode
+    ? ""
+    : currentPath !== undefined
+      ? currentPath.split("/").pop()
+      : "Untitled",
 });
 
 const isNotAlreadyExisting = (value: string): boolean => {
@@ -209,10 +234,13 @@ const createSubDir = async () => {
 
 const save = async () => {
   try {
-    await mainForm.value?.validate({ name: ["dir", "fileName"] });
+    const fieldsToValidate = isMoveFolderMode
+      ? (["dir"] as const)
+      : (["dir", "fileName"] as const);
+    await mainForm.value?.validate({ name: [...fieldsToValidate] });
     emit("close", {
       dir: mainState.value.dir!.path,
-      name: mainState.value.fileName!,
+      name: mainState.value.fileName || "",
     });
   } catch {
     return;
@@ -224,7 +252,15 @@ const save = async () => {
   <UModal
     :close="{ onClick: () => emit('close', false) }"
     :title="modalTitle"
-    :description="currentPath ? `Move recipe '${title}'` : undefined"
+    :description="
+      mode === 'move'
+        ? currentPath
+          ? `Move recipe '${title}'`
+          : undefined
+        : mode === 'move-folder'
+          ? `Move folder '${title}'`
+          : undefined
+    "
     :state="mainState"
     :ui="{ footer: 'justify-end' }"
   >
@@ -262,17 +298,19 @@ const save = async () => {
             />
           </UForm>
         </div>
-        <USeparator class="my-2 h-px" />
-        <UFormField label="Name" name="fileName" :required="true">
-          <div class="flex flex-row">
-            <UInput
-              v-model="mainState.fileName"
-              :ui="{ root: 'grow' }"
-              placeholder="Untitled"
-            />
-            <div class="mt-2 ml-1">.cook</div>
-          </div>
-        </UFormField>
+        <template v-if="!isMoveFolderMode">
+          <USeparator class="my-2 h-px" />
+          <UFormField label="Name" name="fileName" :required="true">
+            <div class="flex flex-row">
+              <UInput
+                v-model="mainState.fileName"
+                :ui="{ root: 'grow' }"
+                placeholder="Untitled"
+              />
+              <div class="mt-2 ml-1">.cook</div>
+            </div>
+          </UFormField>
+        </template>
       </UForm>
     </template>
     <template #footer>

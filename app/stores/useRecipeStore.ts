@@ -108,6 +108,47 @@ export const useRecipeStore = defineStore("recipe", () => {
     recipes.value = rest;
   }
 
+  function removeFolderRecipes(folderPath: string): string[] {
+    const removedPaths: string[] = [];
+    const remaining: RecipeIndex = {};
+    for (const [key, recipe] of Object.entries(recipes.value)) {
+      if (
+        recipe.dir === folderPath ||
+        recipe.dir.startsWith(`${folderPath}/`)
+      ) {
+        removedPaths.push(
+          recipe.dir ? `${recipe.dir}/${recipe.name}` : recipe.name,
+        );
+      } else {
+        remaining[key] = recipe;
+      }
+    }
+    recipes.value = remaining;
+    return removedPaths;
+  }
+
+  function moveFolderRecipes(oldFolderPath: string, newFolderPath: string) {
+    const updated: RecipeIndex = {};
+    for (const [key, recipe] of Object.entries(recipes.value)) {
+      if (
+        recipe.dir === oldFolderPath ||
+        recipe.dir.startsWith(`${oldFolderPath}/`)
+      ) {
+        const newDir =
+          recipe.dir === oldFolderPath
+            ? newFolderPath
+            : newFolderPath + recipe.dir.slice(oldFolderPath.length);
+        const newKey = (
+          newDir ? `${newDir}/${recipe.name}` : recipe.name
+        ).replace(/\//g, ":");
+        updated[newKey] = { ...recipe, dir: newDir };
+      } else {
+        updated[key] = recipe;
+      }
+    }
+    recipes.value = updated;
+  }
+
   return {
     recipes,
     directories,
@@ -119,5 +160,7 @@ export const useRecipeStore = defineStore("recipe", () => {
     updateRecipe,
     moveRecipe,
     removeRecipe,
+    removeFolderRecipes,
+    moveFolderRecipes,
   };
 });

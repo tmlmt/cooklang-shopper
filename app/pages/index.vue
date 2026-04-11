@@ -50,11 +50,48 @@ const reindexRecipes = async () => {
 };
 
 const modalFile = await useModalFile();
+const modalInput = await useModalInput();
 
 const openNewRecipeModal = async () => {
   const result = await modalFile.open("new");
   if (result) {
     await navigateTo(`/recipe/${pathJoin(result.dir, result.name)}?mode=new`);
+  }
+};
+
+const createNewFolder = async () => {
+  const name = await modalInput.open(
+    "New folder",
+    "Folder name",
+    "My folder",
+    "Create",
+  );
+  if (!name) return;
+
+  try {
+    const data = await $fetchWithHeaders<{ renamed: boolean; name: string }>(
+      "/api/recipes/directory/subdir",
+      {
+        method: "POST",
+        body: { parentDir: "", name },
+      },
+    );
+    await recipeStore.fetchDirectories();
+    if (!data.renamed) {
+      toast.add({ title: "Folder created", color: "success" });
+    } else {
+      toast.add({
+        title: `A folder called '${name}' already exists`,
+        description: `Folder created as '${data.name}'`,
+        color: "warning",
+      });
+    }
+  } catch (e) {
+    toast.add({
+      title: "Error creating folder",
+      description: (e as { statusMessage?: string }).statusMessage,
+      color: "error",
+    });
   }
 };
 
@@ -66,6 +103,11 @@ setHeaderMenuItems([
     icon: "prime:plus",
     onSelect: openNewRecipeModal,
     mobileOnly: true,
+  },
+  {
+    label: "New folder",
+    icon: "prime:folder-plus",
+    onSelect: createNewFolder,
   },
   {
     label: "Re-index recipes",

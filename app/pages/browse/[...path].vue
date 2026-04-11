@@ -59,11 +59,174 @@ const reindexRecipes = async () => {
 };
 
 const modalFile = await useModalFile();
+const modalInput = await useModalInput();
+const modalConfirmation = await useModalConfirmation();
+const shoppingStore = useShoppingStore();
 
 const openNewRecipeModal = async () => {
   const result = await modalFile.open("new");
   if (result) {
     await navigateTo(`/recipe/${pathJoin(result.dir, result.name)}?mode=new`);
+  }
+};
+
+const folderName = computed(() => currentPath.value.split("/").pop() || "");
+
+const folderRecipeCount = computed(() => {
+  const path = currentPath.value;
+  return recipeStore.recipeList.filter(
+    (r) => r.dir === path || r.dir.startsWith(`${path}/`),
+  ).length;
+});
+
+const createNewFolder = async () => {
+  const name = await modalInput.open(
+    "New folder",
+    "Folder name",
+    "My folder",
+    "Create",
+  );
+  if (!name) return;
+
+  try {
+    const data = await $fetchWithHeaders<{ renamed: boolean; name: string }>(
+      "/api/recipes/directory/subdir",
+      {
+        method: "POST",
+        body: { parentDir: currentPath.value, name },
+      },
+    );
+    await recipeStore.fetchDirectories();
+    if (!data.renamed) {
+      toast.add({ title: "Folder created", color: "success" });
+    } else {
+      toast.add({
+        title: `A folder called '${name}' already exists`,
+        description: `Folder created as '${data.name}'`,
+        color: "warning",
+      });
+    }
+  } catch (e) {
+    toast.add({
+      title: "Error creating folder",
+      description: (e as { statusMessage?: string }).statusMessage,
+      color: "error",
+    });
+  }
+};
+
+const moveFolder = async () => {
+  const result = await modalFile.open(
+    "move-folder",
+    currentPath.value,
+    folderName.value,
+    [currentPath.value],
+  );
+  if (!result) return;
+
+  try {
+    const data = await $fetchWithHeaders<{ newPath: string }>(
+      `/api/recipes/directory/${currentPath.value}`,
+      {
+        method: "PATCH",
+        body: { destination: result.dir },
+      },
+    );
+    // Clean up shopping store before updating recipe paths
+    const affectedPaths = recipeStore.recipeList
+      .filter(
+        (r) =>
+          r.dir === currentPath.value ||
+          r.dir.startsWith(`${currentPath.value}/`),
+      )
+      .map((r) => (r.dir ? `${r.dir}/${r.name}` : r.name));
+    affectedPaths.forEach((p) => shoppingStore.removeRecipe(p));
+    // Update stores
+    recipeStore.moveFolderRecipes(currentPath.value, data.newPath);
+    // Refresh directories: it's a single glob call so a cheap operation
+    await recipeStore.fetchDirectories();
+    toast.add({ title: "Folder moved", color: "success" });
+    await navigateTo(`/browse/${data.newPath}`);
+  } catch (e) {
+    toast.add({
+      title: "Error moving folder",
+      description: (e as { statusMessage?: string }).statusMessage,
+      color: "error",
+    });
+  }
+};
+
+const renameFolder = async () => {
+  const newName = await modalInput.open(
+    "Rename folder",
+    "New name",
+    folderName.value,
+    "Rename",
+    folderName.value,
+  );
+  if (!newName || newName === folderName.value) return;
+
+  try {
+    const data = await $fetchWithHeaders<{ newPath: string }>(
+      `/api/recipes/directory/${currentPath.value}`,
+      {
+        method: "PUT",
+        body: { name: newName },
+      },
+    );
+    // Clean up shopping store before updating recipe paths
+    const affectedPaths = recipeStore.recipeList
+      .filter(
+        (r) =>
+          r.dir === currentPath.value ||
+          r.dir.startsWith(`${currentPath.value}/`),
+      )
+      .map((r) => (r.dir ? `${r.dir}/${r.name}` : r.name));
+    affectedPaths.forEach((p) => shoppingStore.removeRecipe(p));
+    // Update stores
+    recipeStore.moveFolderRecipes(currentPath.value, data.newPath);
+    // Refresh directories: it's a single glob call so a cheap operation
+    await recipeStore.fetchDirectories();
+    toast.add({ title: "Folder renamed", color: "success" });
+    await navigateTo(`/browse/${data.newPath}`);
+  } catch (e) {
+    toast.add({
+      title: "Error renaming folder",
+      description: (e as { statusMessage?: string }).statusMessage,
+      color: "error",
+    });
+  }
+};
+
+const deleteFolder = async () => {
+  const count = folderRecipeCount.value;
+  const confirmed = await modalConfirmation.open(
+    `Delete folder "${folderName.value}" and its ${count} recipe(s) and corresponding images?`,
+    "Delete",
+    "Cancel",
+  );
+  if (!confirmed) return;
+
+  try {
+    await $fetchWithHeaders(`/api/recipes/directory/${currentPath.value}`, {
+      method: "DELETE",
+    });
+    // Update stores
+    const removedPaths = recipeStore.removeFolderRecipes(currentPath.value);
+    removedPaths.forEach((p) => shoppingStore.removeRecipe(p));
+    // Refresh directories: it's a single glob call so a cheap operation
+    await recipeStore.fetchDirectories();
+    toast.add({ title: "Folder deleted", color: "success" });
+
+    // Navigate to parent folder or home
+    const parentPath = currentPath.value.split("/").slice(0, -1).join("/");
+    await navigateTo(parentPath ? `/browse/${parentPath}` : "/");
+  } catch (e) {
+    toast.add({
+      title: "Error deleting folder",
+      description: (e as { statusMessage?: string }).statusMessage,
+      color: "error",
+    });
   }
 };
 
@@ -75,6 +238,26 @@ setHeaderMenuItems([
     icon: "prime:plus",
     onSelect: openNewRecipeModal,
     mobileOnly: true,
+  },
+  {
+    label: "New folder",
+    icon: "prime:folder-plus",
+    onSelect: createNewFolder,
+  },
+  {
+    label: "Rename folder",
+    icon: "prime:pencil",
+    onSelect: renameFolder,
+  },
+  {
+    label: "Move folder",
+    icon: "prime:arrow-right-arrow-left",
+    onSelect: moveFolder,
+  },
+  {
+    label: "Delete folder",
+    icon: "prime:trash",
+    onSelect: deleteFolder,
   },
   {
     label: "Re-index recipes",

@@ -81,3 +81,14 @@ export function deleteFromRecipeIndex(key: string) {
     : key;
   recipeIndex.delete(recipeKey);
 }
+
+export function moveInRecipeIndex(
+  oldKey: string,
+  newKey: string,
+  newDir: string,
+) {
+  const entry = recipeIndex.get(oldKey);
+  if (!entry) return;
+  recipeIndex.delete(oldKey);
+  recipeIndex.set(newKey, { ...entry, dir: newDir });
+}
