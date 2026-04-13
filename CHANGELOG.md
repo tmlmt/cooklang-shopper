@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.6.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.5.1...v0.6.0)
+
+### 🚀 Enhancements
+
+- Add, move, rename and delete folders ([626e09c](https://github.com/tmlmt/cooklang-shopper/commit/626e09c))
+- Customize app title ([5b18fb8](https://github.com/tmlmt/cooklang-shopper/commit/5b18fb8))
+- Multi sharing functionalities (share link, public/private recipes, Atom feed for federation) ([e922462](https://github.com/tmlmt/cooklang-shopper/commit/e922462))
+
+### 🏡 Chore
+
+- **README:** Minor clarification for creating config file ([a2b4e90](https://github.com/tmlmt/cooklang-shopper/commit/a2b4e90))
+- **ai:** Use pnpx instead of npx ([7be0545](https://github.com/tmlmt/cooklang-shopper/commit/7be0545))
+- **build:** Update tsbuildinfo ([5a16645](https://github.com/tmlmt/cooklang-shopper/commit/5a16645))
+- **package:** Add typecheck script ([b4fadce](https://github.com/tmlmt/cooklang-shopper/commit/b4fadce))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.5.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.5.0...v0.5.1)
