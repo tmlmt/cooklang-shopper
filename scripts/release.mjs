@@ -273,8 +273,11 @@ async function main() {
     "s|^scripts/hash-password.mjs|dist/hash-password.mjs|",
     "--transform",
     "s|^cooklang-shopper.service|dist/cooklang-shopper.service|",
+    "--transform",
+    "s|^prisma/migrations|dist/prisma/migrations|",
     // List of dirs/files to archive
     ".output",
+    "prisma/migrations",
     "scripts/upgrade.sh",
     "config.yaml.example",
     "scripts/hash-password.mjs",
