@@ -9,6 +9,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "format": "prettier --loglevel warn --config .prettierrc --write \"{app,server,shared,test}/**/*.{ts,vue,mjs}\"",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "lint": "eslint .",

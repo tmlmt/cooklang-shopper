@@ -1,43 +1,44 @@
 import { getAppConfig } from "#server/utils/appConfig";
 
-export default defineCachedEventHandler(async (event) => {
-  const config = await getAppConfig();
-  const federation = config.sharing?.federation;
+export default defineCachedEventHandler(
+  async (event) => {
+    const config = await getAppConfig();
+    const federation = config.sharing?.federation;
 
-  if (!federation?.enabled) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: "Atom feed not enabled",
-    });
-  }
+    if (!federation?.enabled) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: "Atom feed not enabled",
+      });
+    }
 
-  const baseUrl = federation.baseUrl.replace(/\/$/, "");
+    const baseUrl = federation.baseUrl.replace(/\/$/, "");
 
-  // Get all public recipe paths
-  const publicPaths = await getPublicRecipePaths();
-  const { getRecipeIndex } = await import("~~/server/utils/recipeIndex");
-  const index = getRecipeIndex();
+    // Get all public recipe paths
+    const publicPaths = await getPublicRecipePaths();
+    const { getRecipeIndex } = await import("~~/server/utils/recipeIndex");
+    const index = getRecipeIndex();
 
-  // Build entries from public recipes
-  const entries: string[] = [];
-  let latestUpdated = "";
+    // Build entries from public recipes
+    const entries: string[] = [];
+    let latestUpdated = "";
 
-  for (const recipePath of publicPaths) {
-    const recipe = index.get(recipePath);
-    if (!recipe) continue;
+    for (const recipePath of publicPaths) {
+      const recipe = index.get(recipePath);
+      if (!recipe) continue;
 
-    const filePath = recipePath.replace(/:/g, "/");
-    const recipeUrl = `${baseUrl}/recipe/${filePath}`;
-    const rawUrl = `${baseUrl}/api/public/recipe/${filePath}`;
-    const updated = recipe.lastModified || new Date().toISOString();
+      const filePath = recipePath.replace(/:/g, "/");
+      const recipeUrl = `${baseUrl}/recipe/${filePath}`;
+      const rawUrl = `${baseUrl}/api/public/recipe/${filePath}`;
+      const updated = recipe.lastModified || new Date().toISOString();
 
-    if (updated > latestUpdated) latestUpdated = updated;
+      if (updated > latestUpdated) latestUpdated = updated;
 
-    const summary =
-      recipe.description ||
-      `A ${escapeXml(recipe.title || recipe.name)} recipe.`;
+      const summary =
+        recipe.description ||
+        `A ${escapeXml(recipe.title || recipe.name)} recipe.`;
 
-    let entryContent = `    <entry>
+      let entryContent = `    <entry>
       <title>${escapeXml(recipe.title || recipe.name)}</title>
       <id>${escapeXml(recipeUrl)}</id>
       <link rel="alternate" href="${escapeXml(recipeUrl)}" />
@@ -45,69 +46,69 @@ export default defineCachedEventHandler(async (event) => {
       <updated>${escapeXml(updated)}</updated>
       <summary>${escapeXml(summary)}</summary>`;
 
-    if (recipe.author) {
-      entryContent += `
+      if (recipe.author) {
+        entryContent += `
       <author><name>${escapeXml(recipe.author)}</name></author>`;
-    }
+      }
 
-    // Cooklang namespace extension elements
-    const cooklangParts: string[] = [];
+      // Cooklang namespace extension elements
+      const cooklangParts: string[] = [];
 
-    if (recipe.servings) {
-      cooklangParts.push(
-        `        <cooklang:servings>${recipe.servings}</cooklang:servings>`,
+      if (recipe.servings) {
+        cooklangParts.push(
+          `        <cooklang:servings>${recipe.servings}</cooklang:servings>`,
+        );
+      }
+
+      if (recipe.tags && recipe.tags.length > 0) {
+        const tagElements = recipe.tags
+          .map((t) => `          <cooklang:tag>${escapeXml(t)}</cooklang:tag>`)
+          .join("\n");
+        cooklangParts.push(
+          `        <cooklang:tags>\n${tagElements}\n        </cooklang:tags>`,
+        );
+      }
+
+      if (
+        recipe.difficulty &&
+        ["easy", "medium", "hard"].includes(recipe.difficulty)
+      ) {
+        cooklangParts.push(
+          `        <cooklang:difficulty>${escapeXml(recipe.difficulty)}</cooklang:difficulty>`,
+        );
+      }
+
+      if (typeof recipe.times?.total === "number") {
+        cooklangParts.push(
+          `        <cooklang:time total="${recipe.times.total}" units="minutes"/>`,
+        );
+      }
+
+      // Add cover image if available (metadata-based images are not available
+      // here, but filesystem-based implicit cover images are discovered)
+      const imageManifest = await buildImageManifest(
+        recipePath.replace(/:/g, "/"),
+        {},
       );
-    }
+      if (imageManifest.coverImage) {
+        cooklangParts.push(
+          `        <cooklang:image>${escapeXml(`${baseUrl}${imageManifest.coverImage}`)}</cooklang:image>`,
+        );
+      }
 
-    if (recipe.tags && recipe.tags.length > 0) {
-      const tagElements = recipe.tags
-        .map((t) => `          <cooklang:tag>${escapeXml(t)}</cooklang:tag>`)
-        .join("\n");
-      cooklangParts.push(
-        `        <cooklang:tags>\n${tagElements}\n        </cooklang:tags>`,
-      );
-    }
-
-    if (
-      recipe.difficulty &&
-      ["easy", "medium", "hard"].includes(recipe.difficulty)
-    ) {
-      cooklangParts.push(
-        `        <cooklang:difficulty>${escapeXml(recipe.difficulty)}</cooklang:difficulty>`,
-      );
-    }
-
-    if (typeof recipe.times?.total === "number") {
-      cooklangParts.push(
-        `        <cooklang:time total="${recipe.times.total}" units="minutes"/>`,
-      );
-    }
-
-    // Add cover image if available (metadata-based images are not available
-    // here, but filesystem-based implicit cover images are discovered)
-    const imageManifest = await buildImageManifest(
-      recipePath.replace(/:/g, "/"),
-      {},
-    );
-    if (imageManifest.coverImage) {
-      cooklangParts.push(
-        `        <cooklang:image>${escapeXml(`${baseUrl}${imageManifest.coverImage}`)}</cooklang:image>`,
-      );
-    }
-
-    if (cooklangParts.length > 0) {
-      entryContent += `
+      if (cooklangParts.length > 0) {
+        entryContent += `
       <cooklang:recipe>\n${cooklangParts.join("\n")}\n      </cooklang:recipe>`;
+      }
+
+      entryContent += `
+    </entry>`;
+      entries.push(entryContent);
     }
 
-    entryContent += `
-    </entry>`;
-    entries.push(entryContent);
-  }
+    if (!latestUpdated) latestUpdated = new Date().toISOString();
 
-  if (!latestUpdated) latestUpdated = new Date().toISOString();
-
-  const xml = `<?xml version="1.0" encoding="utf-8"?>
+    const xml = `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xmlns:cooklang="https://cooklang.org/feeds/1.0">
   <title>${escapeXml(federation.feedTitle)}</title>${
     federation.description
@@ -125,13 +126,15 @@ export default defineCachedEventHandler(async (event) => {
 ${entries.join("\n")}
 </feed>`;
 
-  setResponseHeader(
-    event,
-    "content-type",
-    "application/atom+xml; charset=utf-8",
-  );
-  return xml;
-}, { maxAge: 60, name: "feed-xml" });
+    setResponseHeader(
+      event,
+      "content-type",
+      "application/atom+xml; charset=utf-8",
+    );
+    return xml;
+  },
+  { maxAge: 60, name: "feed-xml" },
+);
 
 function escapeXml(str: string): string {
   return str
