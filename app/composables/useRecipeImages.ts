@@ -34,7 +34,7 @@ async function mapWithConcurrency<T, R>(
   return results;
 }
 
-export function useRecipeImageManifest(
+export async function useRecipeImageManifest(
   recipePath: Ref<string> | ComputedRef<string>,
 ) {
   const cache = useState<Record<string, string | null>>(
@@ -57,7 +57,7 @@ export function useRecipeImageManifest(
     status,
     error,
     refresh,
-  } = useFetch<RecipeImageManifest>(url as ComputedRef<string>, {
+  } = await useFetch<RecipeImageManifest>(url as ComputedRef<string>, {
     key: computed(() => `recipe-images-${recipePath.value.trim()}`).value,
     default: () =>
       cachedCover.value

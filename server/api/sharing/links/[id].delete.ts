@@ -1,0 +1,28 @@
+export default defineEventHandler(async (event) => {
+  await requireUserSession(event);
+
+  const id = getRouterParam(event, "id");
+  if (!id || isNaN(Number(id))) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Valid link ID is required",
+    });
+  }
+
+  const db = getDb();
+  try {
+    await db.shareLink.delete({
+      where: { id: Number(id) },
+    });
+  } catch (e: unknown) {
+    if (e instanceof Error && "code" in e && e.code === "P2025") {
+      throw createError({
+        statusCode: 404,
+        statusMessage: "Share link not found",
+      });
+    }
+    throw e;
+  }
+
+  return { success: true };
+});

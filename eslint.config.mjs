@@ -5,7 +5,7 @@ import eslintConfigPrettier from "eslint-config-prettier/flat";
 export default withNuxt(
   eslintConfigPrettier,
   {
-    ignores: ["eslint.config.mjs"],
+    ignores: ["eslint.config.mjs", "prisma.config.ts"],
     languageOptions: {
       parserOptions: {
         projectService: true,

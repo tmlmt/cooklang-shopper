@@ -153,6 +153,13 @@ if [[ -d "$BACKUP_DIR" ]]; then
     info "Restored config.yaml."
   fi
 
+  # Restore database
+  if [[ -d "$BACKUP_DIR/data" ]]; then
+    mkdir -p "$DIST_DIR/data"
+    cp -a "$BACKUP_DIR/data/." "$DIST_DIR/data/"
+    info "Restored database."
+  fi
+
   success "User data restored."
 fi
 

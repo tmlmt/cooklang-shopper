@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { MetadataTime } from "@tmlmt/cooklang-parser";
+import { formatTime } from "~~/shared/utils/formatTime";
 
 const { time } = defineProps<{
   time: MetadataTime | undefined;
@@ -29,17 +30,17 @@ const hasAnyTime = computed(
       Total
     </div>
     <div class="px-4 py-1 text-center text-sm font-bold">
-      {{ time?.prep ?? "-" }}
+      {{ formatTime(time?.prep) }}
     </div>
     <div
       class="border-l border-neutral-400 px-4 py-1 text-center text-sm font-bold dark:border-neutral-600"
     >
-      {{ time?.cook ?? "-" }}
+      {{ formatTime(time?.cook) }}
     </div>
     <div
       class="border-l border-neutral-400 px-4 py-1 text-center text-sm font-bold text-orange-600 dark:border-neutral-600 dark:text-orange-400"
     >
-      {{ time?.total ?? "-" }}
+      {{ formatTime(time?.total) }}
     </div>
   </div>
 </template>

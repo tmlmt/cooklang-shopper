@@ -1,5 +1,10 @@
 import { loadConfig } from "c12";
-import type { AppConfig } from "~~/shared/types";
+import type { AppConfig, SharingConfig } from "~~/shared/types";
+
+const defaultSharing: SharingConfig = {
+  defaultVisibility: "private",
+  allowPublicBrowsing: false,
+};
 
 let cachedConfig: AppConfig | null = null;
 
@@ -26,6 +31,8 @@ export async function getAppConfig(): Promise<AppConfig> {
       message: "Missing sessionSecret in config.yaml",
     });
   }
+
+  config.sharing = { ...defaultSharing, ...config.sharing };
 
   cachedConfig = config as AppConfig;
   return cachedConfig;

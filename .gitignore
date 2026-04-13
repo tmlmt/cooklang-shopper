@@ -29,6 +29,13 @@ logs
 # App config (contains hashed password)
 config.yaml
 
+# Database
+data/
+
+# Generated Prisma client
+generated/
+
 # Personal files
 public/config/*.toml
 public/recipes/*
+/generated/prisma

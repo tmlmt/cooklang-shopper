@@ -6,7 +6,9 @@ import type {
 } from "@nuxt/ui";
 
 const route = useRoute();
-const { experimental, title: appTitle } = usePublicConfig();
+const { experimental, title: appTitle, sharing } = await usePublicConfig();
+const { hasInAppHistory } = usePreviousRoute();
+const { loggedIn } = useUserSession();
 
 //---------------
 // Header menus
@@ -46,19 +48,26 @@ const wrappedMobileHeaderMenuItems = computed(() =>
   })),
 );
 
-const navigationItems = computed<BreadcrumbItem[]>(() => [
-  { label: "Recipes", to: "/", active: route.path === "/" },
-  {
-    label: "Shopping List",
-    to: "/list",
-    active: route.path === "/list",
-  },
-  {
-    label: "Shopping Cart",
-    to: "/cart",
-    active: route.path === "/cart",
-  },
-]);
+const navigationItems = computed<BreadcrumbItem[]>(() => {
+  const items: BreadcrumbItem[] = [
+    { label: "Recipes", to: "/", active: route.path === "/" },
+  ];
+  if (loggedIn.value) {
+    items.push(
+      {
+        label: "Shopping List",
+        to: "/list",
+        active: route.path === "/list",
+      },
+      {
+        label: "Shopping Cart",
+        to: "/cart",
+        active: route.path === "/cart",
+      },
+    );
+  }
+  return items;
+});
 
 const modal = await useModalAbout();
 
@@ -105,7 +114,7 @@ useSeoMeta({
 //---------------
 
 const navRight = computed(() => {
-  if (!experimental.value) return undefined;
+  if (!experimental.value || !loggedIn.value) return undefined;
   if (route.path === "/") {
     return { text: "Continue to shopping list", to: "/list" };
   } else if (route.path === "/list") {
@@ -120,10 +129,16 @@ const router = useRouter();
 const goBack = () => router.back();
 
 const navLeft = computed(() => {
-  if (route.path.startsWith("/recipe/")) {
-    return { text: "Back to recipes", action: goBack };
+  if (isRecipePage.value) {
+    if (hasInAppHistory.value) {
+      return { text: "Back to folder", action: goBack };
+    }
+    if (loggedIn.value || sharing.value.allowPublicBrowsing) {
+      return { text: "Browse recipes", to: "/" };
+    }
+    return undefined;
   }
-  if (!experimental.value) return undefined;
+  if (!experimental.value || !loggedIn.value) return undefined;
   if (route.path === "/list") {
     return { text: "Back to recipes", to: "/" };
   } else if (route.path === "/cart") {
@@ -147,7 +162,7 @@ const navLeft = computed(() => {
     >
       <template #left>
         <UButton
-          v-if="route.path.startsWith('/recipe/')"
+          v-if="isRecipePage && hasInAppHistory"
           icon="material-symbols:undo"
           size="lg"
           variant="ghost"
@@ -155,8 +170,17 @@ const navLeft = computed(() => {
           label="Back"
           @click.stop="goBack"
         />
+        <UButton
+          v-else-if="isRecipePage && (loggedIn || sharing.allowPublicBrowsing)"
+          icon="material-symbols:grid-view-rounded"
+          size="lg"
+          variant="ghost"
+          color="neutral"
+          label="Browse"
+          to="/"
+        />
         <ULink
-          v-else
+          v-else-if="!isRecipePage"
           to="/"
           class="focus-visible:outline-primary hover:text-default text-highlighted flex min-w-0 flex-row items-center gap-2 text-xl font-bold transition-colors"
         >
@@ -167,6 +191,17 @@ const navLeft = computed(() => {
           />
           <span class="truncate">{{ appTitle }}</span>
         </ULink>
+        <span
+          v-else
+          class="text-highlighted flex min-w-0 flex-row items-center gap-2 text-xl font-bold"
+        >
+          <Icon
+            name="material-symbols:chef-hat-rounded"
+            size="1.2em"
+            class="shrink-0"
+          />
+          <span class="truncate">{{ appTitle }}</span>
+        </span>
       </template>
       <UBreadcrumb
         v-if="experimental"

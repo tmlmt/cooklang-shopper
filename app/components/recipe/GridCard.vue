@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RecipeEssentials } from "~~/shared/types";
+import { formatTime } from "~~/shared/utils/formatTime";
 import RecipeTagOverflow from "~~/app/components/recipe/TagOverflow.vue";
 
 const props = defineProps<{
@@ -13,7 +14,7 @@ const emit = defineEmits<{
   toggle: [];
 }>();
 
-const { experimental } = usePublicConfig();
+const { experimental } = await usePublicConfig();
 
 const isTouchDevice = ref(false);
 const isImageActive = ref(false);
@@ -80,13 +81,9 @@ const gradientClass = computed(() => {
 const preferredTime = computed(() => {
   const times = props.recipe.times;
   if (!times) return undefined;
-  return (
-    times.total_time ||
-    times.time ||
-    times.cook_time ||
-    times.prep_time ||
-    Object.values(times)[0]
-  );
+  const value = times.total ?? times.cook ?? times.prep;
+  if (value === undefined) return undefined;
+  return formatTime(value);
 });
 
 const formattedModified = computed(() => {

@@ -10,3 +10,17 @@ experimental: false
 
 # Custom application title (default: "Cooklang Shopper")
 # title: "My Cookbook"
+
+# Recipe sharing & privacy settings
+# sharing:
+#   defaultVisibility: "private"    # "public" or "private" — default for recipes without an explicit override
+#   allowPublicBrowsing: false      # whether unauthenticated visitors can browse public recipes
+#   about:                           # information shown in the About modal for public visitors
+#     author: "Jane Doe"
+#     description: "Welcome to my family cookbook!"
+#     contact: "jane@example.com"
+#   federation:
+#     enabled: false
+#     feedTitle: "My Recipe Collection"
+#     feedAuthor: "Anonymous"
+#     baseUrl: "https://my-instance.example.com"  # required — used for absolute URLs in the Atom feed

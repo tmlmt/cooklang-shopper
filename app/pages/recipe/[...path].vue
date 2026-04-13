@@ -1,14 +1,5 @@
 <script setup lang="ts">
-import {
-  Recipe,
-  formatQuantity,
-  formatQuantityWithUnit,
-  isSectionActive,
-  isStepActive,
-  getEffectiveChoices,
-  type RecipeChoices,
-  type Yield,
-} from "@tmlmt/cooklang-parser";
+import { Recipe, type RecipeChoices } from "@tmlmt/cooklang-parser";
 import * as v from "valibot";
 import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
 import { FetchError } from "ofetch";
@@ -55,13 +46,14 @@ validateRecipePath(path);
 
 const shoppingStore = useShoppingStore();
 const recipeStore = useRecipeStore();
-const { experimental } = usePublicConfig();
+const { experimental } = await usePublicConfig();
+const { loggedIn } = useUserSession();
 const {
   heroImages,
   stepImagesByNumber,
   status: imageManifestStatus,
   refresh: refreshImageManifest,
-} = useRecipeImageManifest(recipePathRef);
+} = await useRecipeImageManifest(recipePathRef);
 
 const rawRecipe = ref<string>();
 
@@ -71,6 +63,9 @@ if (route.query.mode === "new") {
   const res = await useFetch(`/api/recipe/${path}`);
 
   if (res.error.value) {
+    if (res.error.value.statusCode === 401) {
+      await navigateTo("/auth", { replace: true });
+    }
     throw createError({
       statusCode: 404,
       statusMessage: "Recipe not found",
@@ -80,110 +75,18 @@ if (route.query.mode === "new") {
   rawRecipe.value = String(res.data.value);
 }
 
-const recipe = ref<Recipe>();
-const originalServings = ref<number>();
+const recipe = shallowRef<Recipe>();
 watch(
   rawRecipe,
   (newRawRecipe) => {
     if (newRawRecipe) {
       recipe.value = new Recipe(newRawRecipe);
-      originalServings.value = recipe.value.servings;
       const servings = shoppingStore.getServings(path);
       if (servings) recipe.value = recipe.value.scaleTo(servings);
     }
   },
   { immediate: true },
 );
-
-//---------------------
-// Variant & Choices
-//---------------------
-
-const selectedVariant = ref<string | undefined>(undefined);
-const choices = ref<RecipeChoices>({});
-
-const hasVariants = computed(
-  () => (recipe.value?.choices.variants.length ?? 0) > 0,
-);
-
-const variantMenuItems = computed<DropdownMenuItem[]>(() => {
-  if (!recipe.value) return [];
-  const items: DropdownMenuItem[] = [
-    {
-      label: "Default",
-      onSelect: () => {
-        selectedVariant.value = undefined;
-        choices.value = getEffectiveChoices(recipe.value!, undefined);
-      },
-    },
-  ];
-  for (const variant of recipe.value.choices.variants) {
-    if (variant === "*") continue;
-    items.push({
-      label: variant,
-      onSelect: () => {
-        selectedVariant.value = variant;
-        choices.value = getEffectiveChoices(recipe.value!, variant);
-      },
-    });
-  }
-  return items;
-});
-
-const filteredIngredients = computed(() => {
-  if (!recipe.value) return [];
-  const ingredients = recipe.value.getIngredientQuantities({
-    choices: choices.value,
-  });
-  return ingredients.filter(
-    (ing) => !ing.flags?.includes("hidden") && ing.usedAsPrimary,
-  );
-});
-
-const filteredCookware = computed(() => {
-  if (!recipe.value) return [];
-  return recipe.value.getCookwareForVariant({ choices: choices.value });
-});
-
-const sectionsWithStepNumbers = computed(() => {
-  if (!recipe.value) return [];
-  let stepCounter = 0;
-  const activeVariant = choices.value?.variant;
-  return recipe.value.sections.map((section) => {
-    const sectionIsActive = isSectionActive(section, activeVariant);
-    const contentWithNumbers = section.content.map((item) => {
-      if (item.type === "step") {
-        const stepIsActive =
-          sectionIsActive && isStepActive(item, activeVariant);
-        const stepNumber = stepIsActive ? ++stepCounter : null;
-        const stepImage = stepNumber
-          ? stepImagesByNumber.value[String(stepNumber)]
-          : undefined;
-        return {
-          ...item,
-          stepNumber,
-          stepImage,
-          active: stepIsActive,
-          optional: item.optional,
-        };
-      }
-      return {
-        ...item,
-        stepNumber: null,
-        stepImage: undefined,
-        active: sectionIsActive,
-        optional: false,
-      };
-    });
-    return {
-      name: section.name,
-      active: sectionIsActive,
-      variants: section.variants,
-      optional: section.optional,
-      content: contentWithNumbers,
-    };
-  });
-});
 
 //---------------------------
 // Edit, Move, Delete recipe
@@ -197,25 +100,24 @@ const modalFile = await useModalFile();
 const modalConf = await useModalConfirmation();
 const modalChoices = await useModalChoices();
 const modalImageUpload = await useModalImageUpload();
+const modalShare = await useModalShare();
 
 // Image management
 const uploadingImage = ref(false);
 const heroOverlayVisible = ref(false);
-const visibleStepOverlay = ref<string | null>(null);
 
 const availableUploadRoles = computed(() => {
   const roles: { label: string; value: string }[] = [
     { label: "Cover", value: "cover" },
   ];
-  let maxStep = 0;
-  for (const section of sectionsWithStepNumbers.value) {
+  if (!recipe.value) return roles;
+  let stepCount = 0;
+  for (const section of recipe.value.sections) {
     for (const item of section.content) {
-      if (item.type === "step" && item.stepNumber) {
-        maxStep = Math.max(maxStep, item.stepNumber);
-      }
+      if (item.type === "step") stepCount++;
     }
   }
-  for (let i = 1; i <= maxStep; i++) {
+  for (let i = 1; i <= stepCount; i++) {
     roles.push({ label: `Step ${i}`, value: `step-${i}` });
   }
   return roles;
@@ -290,7 +192,16 @@ async function deleteImage(imagePath: string) {
   }
 }
 
+const recipeKey = path.replace(/\//g, ":");
+
 const menuItems = ref<DropdownMenuItem[]>([
+  {
+    label: "Share",
+    icon: "i-lucide-share-2",
+    onSelect: () => {
+      modalShare.open(recipeKey);
+    },
+  },
   {
     label: "Edit",
     icon: "prime:file-edit",
@@ -460,34 +371,6 @@ defineShortcuts({
 });
 
 //--------------------
-// Scaling
-//--------------------
-
-const servingsSpinner = computed({
-  get: () => recipe.value?.servings,
-  set: (value) => {
-    if (value && recipe.value) {
-      recipe.value = recipe.value.scaleTo(value);
-    }
-  },
-});
-
-const servingsStep = computed(() => {
-  const base = originalServings.value;
-  if (!base) return 1;
-
-  if (Number.isInteger(base)) {
-    return 10 ** (String(base).match(/0+$/) || [""])[0].length;
-  }
-
-  if (base < 1) return base;
-
-  let n = 2;
-  while (base / n >= 1) n++;
-  return base / n;
-});
-
-//--------------------
 // Shopping List
 //--------------------
 
@@ -499,21 +382,26 @@ const hasIngredientChoices = computed(() => {
   );
 });
 
-const addToShoppingList = async () => {
-  if (!recipe.value?.metadata.title || !servingsSpinner.value) return;
+const addToShoppingList = async (
+  scaledRecipe: Recipe,
+  servings: number | undefined,
+  currentChoices: RecipeChoices,
+  currentVariant: string | undefined,
+) => {
+  if (!scaledRecipe.metadata.title || !servings) return;
 
-  let choicesToStore: RecipeChoices | undefined = choices.value;
+  let choicesToStore: RecipeChoices | undefined = currentChoices;
 
   if (hasIngredientChoices.value) {
-    const result = await modalChoices.open(recipe.value, selectedVariant.value);
+    const result = await modalChoices.open(scaledRecipe, currentVariant);
     if (!result) return; // User cancelled
     choicesToStore = result;
   }
 
   shoppingStore.addRecipe(
-    recipe.value.metadata.title,
+    scaledRecipe.metadata.title,
     path,
-    servingsSpinner.value,
+    servings,
     choicesToStore,
   );
   toast.add({
@@ -523,9 +411,12 @@ const addToShoppingList = async () => {
   });
 };
 
-const editServingsInShoppingList = () => {
-  if (recipe.value?.metadata.title && servingsSpinner.value) {
-    shoppingStore.editServings(path, servingsSpinner.value, choices.value);
+const editServingsInShoppingList = (
+  servings: number | undefined,
+  currentChoices: RecipeChoices,
+) => {
+  if (recipe.value?.metadata.title && servings) {
+    shoppingStore.editServings(path, servings, currentChoices);
     toast.add({
       color: "success",
       title: "Success",
@@ -540,7 +431,9 @@ const editServingsInShoppingList = () => {
 
 const { setHeaderActions } = useHeaderMenu();
 
-setHeaderActions(menuItems.value as DropdownMenuItem[]);
+if (loggedIn.value) {
+  setHeaderActions(menuItems.value as DropdownMenuItem[]);
+}
 </script>
 
 <template>
@@ -572,6 +465,7 @@ setHeaderActions(menuItems.value as DropdownMenuItem[]);
               @click="heroOverlayVisible = !heroOverlayVisible"
             />
             <div
+              v-if="loggedIn"
               class="absolute top-3 right-3 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100 md:top-6 md:right-6 md:gap-3"
               :class="{ 'opacity-100!': heroOverlayVisible }"
             >
@@ -628,290 +522,47 @@ setHeaderActions(menuItems.value as DropdownMenuItem[]);
         </h1>
       </div>
       <RecipeMetadataBlock :recipe="recipe" />
-      <div class="mt-4 grid grid-cols-1 md:mt-5 md:grid-cols-3">
-        <div class="grid md:mb-4">
-          <USeparator
-            :ui="{ border: 'border-gray-200' }"
-            size="xs"
-            class="mb-4 md:pr-10"
+      <RecipeContent
+        :recipe="recipe"
+        :step-images-by-number="stepImagesByNumber"
+        :editable="loggedIn"
+        @delete-image="deleteImage"
+      >
+        <template
+          #scale-actions="{
+            servings,
+            choices,
+            selectedVariant,
+            scaledRecipe: sr,
+          }"
+        >
+          <UButton
+            v-if="
+              loggedIn &&
+              experimental &&
+              !shoppingStore.isRecipeInSelection(path)
+            "
+            size="md"
+            color="primary"
+            label="Add to shopping list"
+            icon="material-symbols:add-shopping-cart-rounded"
+            @click="addToShoppingList(sr, servings, choices, selectedVariant)"
           />
-          <div class="flex flex-row items-center gap-4">
-            <div class="text-sm">Scale:</div>
-            <UInputNumber
-              v-model="servingsSpinner"
-              :step="servingsStep"
-              :min="servingsStep"
-              :ui="{ base: 'w-20' }"
-              :focus-on-change="false"
-              size="sm"
-            />
-            <UDropdownMenu
-              v-if="hasVariants"
-              :items="variantMenuItems"
-              :content="{ align: 'start' }"
-            >
-              <UButton
-                size="sm"
-                color="neutral"
-                variant="soft"
-                :label="selectedVariant ?? 'Default'"
-                icon="i-lucide-git-branch"
-              />
-            </UDropdownMenu>
-            <UButton
-              v-if="experimental && !shoppingStore.isRecipeInSelection(path)"
-              size="md"
-              color="primary"
-              label="Add to shopping list"
-              icon="material-symbols:add-shopping-cart-rounded"
-              @click="addToShoppingList"
-            />
-            <UButton
-              v-else-if="
-                experimental && shoppingStore.isRecipeInSelection(path)
-              "
-              size="sm"
-              color="secondary"
-              @click="editServingsInShoppingList"
-              ><Icon
-                class="text-lg"
-                name="material-symbols:change-circle-rounded"
-            /></UButton>
-          </div>
-        </div>
-
-        <div class="col-start-1">
-          <USeparator
-            :ui="{ border: 'border-gray-600' }"
+          <UButton
+            v-else-if="
+              loggedIn &&
+              experimental &&
+              shoppingStore.isRecipeInSelection(path)
+            "
             size="sm"
-            class="mt-4 h-px md:mt-0 md:pr-10"
-          />
-          <h2 class="mt-1 mb-2 text-2xl font-bold">Ingredients</h2>
-          <p v-if="recipe.metadata.yield" class="mb-4 text-sm">
-            <b>Yield:</b>
-            {{ (recipe.metadata.yield as Yield).textBefore ?? "" }}
-            {{
-              formatQuantityWithUnit(
-                (recipe.metadata.yield as Yield).quantity,
-                (recipe.metadata.yield as Yield).unit,
-              )
-            }}
-            {{ (recipe.metadata.yield as Yield).textAfter ?? "" }}
-          </p>
-          <p v-else-if="recipe.servings" class="mb-4 text-sm">
-            <b>Yield:</b> {{ recipe.servings }} servings
-          </p>
-          <IngredientList
-            :ingredients="filteredIngredients"
-            :all-ingredients="recipe.ingredients"
-          />
-          <template v-if="filteredCookware.length > 0">
-            <!-- Desktop: always visible -->
-            <div class="mt-6 hidden md:block">
-              <h2 class="mb-2 text-2xl font-bold">Cookware</h2>
-              <ul class="ml-6 list-disc">
-                <li v-for="item in filteredCookware" :key="item.name">
-                  {{ item.name }}
-                  <span v-if="item.quantity" class="text-neutral-500">
-                    ({{ formatQuantity(item.quantity) }})
-                  </span>
-                </li>
-              </ul>
-            </div>
-            <!-- Mobile: collapsible, collapsed by default -->
-            <div class="mt-6 md:hidden">
-              <UCollapsible>
-                <UButton
-                  class="group"
-                  label="Cookware"
-                  color="neutral"
-                  variant="soft"
-                  trailing-icon="i-lucide-chevron-down"
-                  size="sm"
-                  :ui="{
-                    trailingIcon:
-                      'group-data-[state=open]:rotate-180 transition-transform duration-200',
-                  }"
-                />
-                <template #content>
-                  <ul class="mt-2 ml-6 list-disc">
-                    <li v-for="item in filteredCookware" :key="item.name">
-                      {{ item.name }}
-                      <span v-if="item.quantity" class="text-neutral-500">
-                        ({{ formatQuantity(item.quantity) }})
-                      </span>
-                    </li>
-                  </ul>
-                </template>
-              </UCollapsible>
-            </div>
-          </template>
-        </div>
-        <div class="col-span-2">
-          <USeparator
-            :ui="{ border: 'border-gray-600' }"
-            size="sm"
-            class="mt-10 h-px md:mt-0 md:pr-0"
-          />
-          <h2 class="mt-1 mb-4 text-2xl font-bold">Preparation</h2>
-          <div v-for="(section, sIdx) in sectionsWithStepNumbers" :key="sIdx">
-            <!-- Optional/inactive sections behind collapsible -->
-            <template v-if="section.optional || !section.active">
-              <UCollapsible class="mb-4">
-                <UButton
-                  class="group"
-                  :label="section.name || 'Optional section'"
-                  color="neutral"
-                  variant="soft"
-                  trailing-icon="i-lucide-chevron-down"
-                  size="sm"
-                  :ui="{
-                    trailingIcon:
-                      'group-data-[state=open]:rotate-180 transition-transform duration-200',
-                  }"
-                >
-                  <template #leading>
-                    <span
-                      v-if="!section.active"
-                      class="text-xs text-neutral-500"
-                      >(inactive)</span
-                    >
-                    <span
-                      v-else-if="section.optional"
-                      class="text-xs text-neutral-500"
-                      >(optional)</span
-                    >
-                  </template>
-                </UButton>
-                <template #content>
-                  <div class="mt-2 ml-2 opacity-70">
-                    <div
-                      v-for="(item, cIdx) in section.content"
-                      :key="cIdx"
-                      class="mb-4"
-                    >
-                      <div v-if="item.type === 'note'" class="italic">
-                        Note:
-                        <RecipeNoteContent :note="item" :recipe="recipe!" />
-                      </div>
-                      <div v-if="item.type === 'step'">
-                        <h3 class="text-lg font-semibold">
-                          <span v-if="item.optional" class="font-normal"
-                            >(Optional)
-                          </span>
-                          <template v-if="item.active"
-                            >Step {{ item.stepNumber }}</template
-                          >
-                          <template v-else>Step (inactive)</template>
-                        </h3>
-                        <div v-if="item.stepImage" class="group/step relative">
-                          <NuxtImg
-                            :src="item.stepImage"
-                            :alt="`Step ${item.stepNumber} illustration`"
-                            sizes="640px md:512px lg:683px xl:853px 2xl:1024px"
-                            loading="lazy"
-                            class="my-2 max-h-72 w-full rounded-lg object-cover"
-                            @click="
-                              visibleStepOverlay =
-                                visibleStepOverlay === item.stepImage
-                                  ? null
-                                  : item.stepImage
-                            "
-                          />
-                          <UButton
-                            v-if="item.stepImage.startsWith('/recipes/')"
-                            icon="i-lucide-trash-2"
-                            color="error"
-                            variant="solid"
-                            size="xs"
-                            class="absolute top-3 right-3 opacity-0 transition-opacity group-hover/step:opacity-100"
-                            :class="{
-                              'opacity-100!':
-                                visibleStepOverlay === item.stepImage,
-                            }"
-                            @click="deleteImage(item.stepImage)"
-                          />
-                        </div>
-                        <PreparationItem
-                          :step="item"
-                          :recipe="recipe!"
-                          :choices="choices"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </template>
-              </UCollapsible>
-            </template>
-            <!-- Active, non-optional sections rendered normally -->
-            <template v-else>
-              <h3 v-if="section.name" class="mb-6 text-2xl">
-                {{ section.name }}
-                <span
-                  v-if="section.variants"
-                  class="text-sm font-normal text-neutral-400"
-                >
-                  [{{ section.variants.join(", ") }}]
-                </span>
-              </h3>
-              <div
-                v-for="(item, cIdx) in section.content"
-                :key="cIdx"
-                class="mb-4"
-                :class="{ 'opacity-30': !item.active }"
-              >
-                <div v-if="item.type === 'note'" class="italic">
-                  Note:
-                  <RecipeNoteContent :note="item" :recipe="recipe!" />
-                </div>
-                <div v-if="item.type === 'step'">
-                  <h3 class="text-lg font-semibold">
-                    <span v-if="item.optional" class="font-normal"
-                      >(Optional)
-                    </span>
-                    <template v-if="item.active"
-                      >Step {{ item.stepNumber }}</template
-                    >
-                    <template v-else>Step (inactive)</template>
-                  </h3>
-                  <div v-if="item.stepImage" class="group/step relative">
-                    <NuxtImg
-                      :src="item.stepImage"
-                      :alt="`Step ${item.stepNumber} illustration`"
-                      sizes="640px md:512px lg:683px xl:853px 2xl:1024px"
-                      loading="lazy"
-                      class="my-2 max-h-72 w-full rounded-lg object-cover"
-                      @click="
-                        visibleStepOverlay =
-                          visibleStepOverlay === item.stepImage
-                            ? null
-                            : item.stepImage
-                      "
-                    />
-                    <UButton
-                      v-if="item.stepImage.startsWith('/recipes/')"
-                      icon="i-lucide-trash-2"
-                      color="error"
-                      variant="solid"
-                      size="xs"
-                      class="absolute top-3 right-3 opacity-0 transition-opacity group-hover/step:opacity-100"
-                      :class="{
-                        'opacity-100!': visibleStepOverlay === item.stepImage,
-                      }"
-                      @click="deleteImage(item.stepImage)"
-                    />
-                  </div>
-                  <PreparationItem
-                    :step="item"
-                    :recipe="recipe!"
-                    :choices="choices"
-                  />
-                </div>
-              </div>
-            </template>
-          </div>
-        </div>
-      </div>
+            color="secondary"
+            @click="editServingsInShoppingList(servings, choices)"
+            ><Icon
+              class="text-lg"
+              name="material-symbols:change-circle-rounded"
+          /></UButton>
+        </template>
+      </RecipeContent>
     </div>
     <div v-else class="mt-4 flex w-full flex-col gap-4 md:mt-0">
       <div class="flex flex-row gap-4">

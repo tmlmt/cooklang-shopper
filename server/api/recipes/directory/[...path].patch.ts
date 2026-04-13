@@ -3,6 +3,7 @@ import * as nodePath from "node:path";
 import { glob } from "glob";
 import { moveInRecipeIndex } from "~~/server/utils/recipeIndex";
 import { validateRecipeDir } from "~~/server/utils/validateRecipePath";
+import { moveVisibilityAndLinksForDirectory } from "~~/server/utils/recipeVisibility";
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event);
@@ -77,6 +78,11 @@ export default defineEventHandler(async (event) => {
     const fileDir = nodePath.dirname(nodePath.join(newRelativePath, file));
     moveInRecipeIndex(oldKey, newKey, fileDir === "." ? "" : fileDir);
   }
+
+  // Update visibility overrides and share links for moved directory
+  const oldDirPrefix = oldRelativePath.replace(/\//g, ":");
+  const newDirPrefix = newRelativePath.replace(/\//g, ":");
+  await moveVisibilityAndLinksForDirectory(oldDirPrefix, newDirPrefix);
 
   return { newPath: newRelativePath };
 });

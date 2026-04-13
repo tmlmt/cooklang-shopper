@@ -27,17 +27,26 @@ export async function initRecipeIndex() {
 
 function getTimeMetadata(
   metadata: Record<string, unknown>,
-): Record<string, string> {
-  const times: Record<string, string> = {};
-  for (const [metaKey, value] of Object.entries(metadata)) {
-    if (!metaKey.toLowerCase().includes("time")) {
-      continue;
-    }
-    if (typeof value === "string" && value.trim().length > 0) {
-      times[metaKey] = value;
-    }
-  }
-  return times;
+):
+  | { prep?: number | string; cook?: number | string; total?: number | string }
+  | undefined {
+  const time = metadata.time as
+    | {
+        prep?: number | string;
+        cook?: number | string;
+        total?: number | string;
+      }
+    | undefined;
+  if (!time) return undefined;
+  const result: {
+    prep?: number | string;
+    cook?: number | string;
+    total?: number | string;
+  } = {};
+  if (time.prep !== undefined) result.prep = time.prep;
+  if (time.cook !== undefined) result.cook = time.cook;
+  if (time.total !== undefined) result.total = time.total;
+  return Object.keys(result).length > 0 ? result : undefined;
 }
 
 export async function updateRecipeIndex(key: string, content: string) {
@@ -60,7 +69,6 @@ export async function updateRecipeIndex(key: string, content: string) {
   }
 
   const metadata = parsed.metadata as Record<string, unknown>;
-  const times = getTimeMetadata(metadata);
 
   recipeIndex.set(recipeKey, {
     name,
@@ -69,9 +77,17 @@ export async function updateRecipeIndex(key: string, content: string) {
     servings: parsed.servings ?? 1,
     tags: parsed.metadata.tags || [],
     lastModified,
-    times: Object.keys(times).length > 0 ? times : undefined,
+    times: getTimeMetadata(metadata),
     author: typeof metadata.author === "string" ? metadata.author : undefined,
     source: typeof metadata.source === "string" ? metadata.source : undefined,
+    description:
+      typeof metadata.description === "string"
+        ? metadata.description
+        : typeof metadata.introduction === "string"
+          ? metadata.introduction
+          : undefined,
+    difficulty:
+      typeof metadata.difficulty === "string" ? metadata.difficulty : undefined,
   });
 }
 

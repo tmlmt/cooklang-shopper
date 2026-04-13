@@ -2,6 +2,7 @@
 import type { DropdownMenuItem, TableColumn } from "@nuxt/ui";
 import type { RecipeEssentials } from "~~/shared/types";
 import type { FolderInfo } from "~~/app/composables/useDirectoryContents";
+import { formatTime } from "~~/shared/utils/formatTime";
 import RecipeTagOverflow from "~~/app/components/recipe/TagOverflow.vue";
 
 type RowSelectionState = Record<string, boolean>;
@@ -13,7 +14,7 @@ const props = defineProps<{
 const recipeStore = useRecipeStore();
 const shoppingStore = useShoppingStore();
 const toast = useToast();
-const { experimental } = usePublicConfig();
+const { experimental } = await usePublicConfig();
 
 const currentPathRef = toRef(props, "currentPath");
 const { folders, recipes } = useDirectoryContents(currentPathRef);
@@ -30,14 +31,9 @@ const recipePath = (recipe: RecipeEssentials) =>
 const preferredTime = (recipe: RecipeEssentials) => {
   const times = recipe.times;
   if (!times) return "-";
-  return (
-    times.total_time ||
-    times.time ||
-    times.cook_time ||
-    times.prep_time ||
-    Object.values(times)[0] ||
-    "-"
-  );
+  const value = times.total ?? times.cook ?? times.prep;
+  if (value === undefined) return "-";
+  return formatTime(value);
 };
 
 const formatModified = (recipe: RecipeEssentials) => {

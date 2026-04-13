@@ -8,6 +8,7 @@ import {
   discoverRecipeImages,
   recipesRoot,
 } from "~~/server/utils/recipeImages";
+import { moveRecipeVisibilityAndLinks } from "~~/server/utils/recipeVisibility";
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event);
@@ -58,6 +59,9 @@ export default defineEventHandler(async (event) => {
   );
   await storage.setItem(newRecipeKey + ".cook", content);
   await updateRecipeIndex(newRecipeKey, content);
+
+  // Update visibility overrides and share links to new path
+  await moveRecipeVisibilityAndLinks(oldRecipeKey, newRecipeKey);
 
   // Move associated images
   const oldRecipeName = nodePath.basename(decodedPath);

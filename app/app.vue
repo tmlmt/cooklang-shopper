@@ -1,8 +1,22 @@
 <script setup lang="ts">
+const { sharing } = await usePublicConfig();
+
 useHead({
   htmlAttrs: {
     lang: "en",
   },
+  link: computed(() =>
+    sharing.value.federationEnabled
+      ? [
+          {
+            rel: "alternate",
+            type: "application/atom+xml",
+            title: "Recipe Feed",
+            href: "/feed.xml",
+          },
+        ]
+      : [],
+  ),
 });
 </script>
 

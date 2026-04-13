@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model RecipeVisibility {
+  id         Int      @id @default(autoincrement())
+  recipePath String   @unique
+  visibility String   // "public" or "private"
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ShareLink {
+  id         Int       @id @default(autoincrement())
+  token      String    @unique
+  recipePath String
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([recipePath])
+}

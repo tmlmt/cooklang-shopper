@@ -5,3 +5,6 @@ onlyBuiltDependencies:
   - sharp
   - unrs-resolver
   - vue-demi
+  - '@prisma/engines'
+  - better-sqlite3
+  - prisma

@@ -1,9 +1,25 @@
 import { getRecipeIndex } from "~~/server/utils/recipeIndex";
+import { getPublicRecipePaths } from "~~/server/utils/recipeVisibility";
 
 export default defineEventHandler(async (event) => {
-  await requireUserSession(event);
+  const authenticated = await isAuthenticated(event);
 
   const recipeIndex = getRecipeIndex();
-  const recipes = Object.fromEntries(recipeIndex.entries());
+
+  if (authenticated) {
+    const recipes = Object.fromEntries(recipeIndex.entries());
+    return { recipes };
+  }
+
+  // Unauthenticated: return only public recipes
+  const publicPaths = await getPublicRecipePaths();
+  const recipes: Record<
+    string,
+    typeof recipeIndex extends Map<string, infer V> ? V : never
+  > = {};
+  for (const key of publicPaths) {
+    const entry = recipeIndex.get(key);
+    if (entry) recipes[key] = entry;
+  }
   return { recipes };
 });

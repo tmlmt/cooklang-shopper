@@ -5,6 +5,7 @@ import {
   getRecipeIndex,
 } from "~~/server/utils/recipeIndex";
 import { discoverRecipeImages } from "~~/server/utils/recipeImages";
+import { deleteRecipeVisibilityAndLinks } from "~~/server/utils/recipeVisibility";
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event);
@@ -36,6 +37,9 @@ export default defineEventHandler(async (event) => {
 
   // Remove the recipe from the index
   deleteFromRecipeIndex(recipeKey);
+
+  // Clean up visibility overrides and share links
+  await deleteRecipeVisibilityAndLinks(recipeKey);
 
   const recipeIndex = getRecipeIndex();
   const recipes = Object.fromEntries(recipeIndex.entries());

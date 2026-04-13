@@ -28,7 +28,8 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
    ```
 4. Edit `config.yaml` — set the different parameters (see the file for instructions)
 5. Add your `.cook` recipe files to `dist/public/recipes/`
-6. Set up the systemd service:
+6. Start the server once to initialize the database (created automatically at `dist/data/cooklang-shopper.db`)
+7. Set up the systemd service:
 
    ```bash
    # Edit the service file to adjust User, WorkingDirectory, and ExecStart paths
@@ -63,6 +64,8 @@ The previous version is kept in `dist.bak/` for easy rollback:
 ```bash
 rm -rf dist && mv dist.bak dist
 ```
+
+Rollback preserves all user data including the database. If a newer version added schema changes, the older version safely ignores them.
 
 > **Note:** Stop the server before upgrading and restart it afterward.
 >

@@ -5,6 +5,7 @@ import {
   deleteFromRecipeIndex,
   getRecipeIndex,
 } from "~~/server/utils/recipeIndex";
+import { deleteVisibilityAndLinksForDirectory } from "~~/server/utils/recipeVisibility";
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event);
@@ -35,6 +36,10 @@ export default defineEventHandler(async (event) => {
     deleteFromRecipeIndex(recipeKey);
     deletedRecipes.push(recipeKey);
   }
+
+  // Clean up visibility overrides and share links for all recipes in this directory
+  const dirPrefix = decodedPath.replace(/\//g, ":");
+  await deleteVisibilityAndLinksForDirectory(dirPrefix);
 
   // Remove the entire directory recursively (recipes, images, subdirectories)
   await rm(targetDir, { recursive: true });

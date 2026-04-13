@@ -10,6 +10,7 @@ type ViewMode = "grid" | "list";
 
 const recipeStore = useRecipeStore();
 const toast = useToast();
+const { loggedIn } = useUserSession();
 
 await callOnce("recipe-index", () => recipeStore.fetchIndex());
 await callOnce("recipe-directories", () => recipeStore.fetchDirectories());
@@ -231,38 +232,40 @@ const deleteFolder = async () => {
 
 const { setHeaderMenuItems } = useHeaderMenu();
 
-setHeaderMenuItems([
-  {
-    label: "New recipe",
-    icon: "prime:plus",
-    onSelect: openNewRecipeModal,
-    mobileOnly: true,
-  },
-  {
-    label: "New folder",
-    icon: "prime:folder-plus",
-    onSelect: createNewFolder,
-  },
-  {
-    label: "Rename folder",
-    icon: "prime:pencil",
-    onSelect: renameFolder,
-  },
-  {
-    label: "Move folder",
-    icon: "prime:arrow-right-arrow-left",
-    onSelect: moveFolder,
-  },
-  {
-    label: "Delete folder",
-    icon: "prime:trash",
-    onSelect: deleteFolder,
-  },
-  {
-    label: "Re-index recipes",
-    onSelect: reindexRecipes,
-  },
-]);
+if (loggedIn.value) {
+  setHeaderMenuItems([
+    {
+      label: "New recipe",
+      icon: "prime:plus",
+      onSelect: openNewRecipeModal,
+      mobileOnly: true,
+    },
+    {
+      label: "New folder",
+      icon: "prime:folder-plus",
+      onSelect: createNewFolder,
+    },
+    {
+      label: "Rename folder",
+      icon: "prime:pencil",
+      onSelect: renameFolder,
+    },
+    {
+      label: "Move folder",
+      icon: "prime:arrow-right-arrow-left",
+      onSelect: moveFolder,
+    },
+    {
+      label: "Delete folder",
+      icon: "prime:trash",
+      onSelect: deleteFolder,
+    },
+    {
+      label: "Re-index recipes",
+      onSelect: reindexRecipes,
+    },
+  ]);
+}
 </script>
 
 <template>
@@ -321,6 +324,7 @@ setHeaderMenuItems([
         </UFieldGroup>
 
         <UButton
+          v-if="loggedIn"
           icon="prime:plus"
           color="primary"
           variant="soft"
@@ -329,6 +333,7 @@ setHeaderMenuItems([
           @click="openNewRecipeModal"
         />
         <UButton
+          v-if="loggedIn"
           icon="prime:plus"
           color="primary"
           variant="soft"

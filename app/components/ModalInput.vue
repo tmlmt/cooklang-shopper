@@ -34,7 +34,7 @@ const form = useTemplateRef("form");
 
 const save = async () => {
   try {
-    await form.value?.validate();
+    await form.value?.validate({});
     emit("close", state.value.trim());
   } catch {
     return;
