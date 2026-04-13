@@ -1,1 +1,1 @@
-{"root":["./test/unit/regex.test.ts","./test/unit/validateRecipeDir.test.ts","./test/unit/validateRecipePath.test.ts"],"version":"5.9.3"}
+{"root":["./test/unit/migrations.test.ts","./test/unit/regex.test.ts","./test/unit/validateRecipeDir.test.ts","./test/unit/validateRecipePath.test.ts"],"version":"5.9.3"}
