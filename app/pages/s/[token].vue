@@ -36,6 +36,20 @@ const heroImages = computed(() => data.value?.imageManifest?.heroImages ?? []);
 const stepImagesByNumber = computed(
   () => data.value?.imageManifest?.stepImagesByNumber ?? {},
 );
+
+const { setHeaderMenuItems } = useHeaderMenu();
+
+setHeaderMenuItems([
+  {
+    label: "Download .cook",
+    icon: "i-lucide-download",
+    onSelect: () => {
+      if (data.value?.raw) {
+        downloadCook(data.value.raw, recipeName.value!);
+      }
+    },
+  },
+]);
 </script>
 
 <template>

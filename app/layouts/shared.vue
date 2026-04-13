@@ -3,6 +3,7 @@ import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui";
 
 const { title: appTitle } = await usePublicConfig();
 const modal = await useModalAbout();
+const { mobileHeaderMenuItems, desktopHeaderMenuItems } = useHeaderMenu();
 
 const headerOpen = ref(false);
 
@@ -10,8 +11,20 @@ const aboutItems = computed<DropdownMenuItem[]>(() => [
   { label: "About", onSelect: async () => await modal.open() },
 ]);
 
+const dropdownItems = computed<DropdownMenuItem[]>(() => {
+  const items: DropdownMenuItem[] = [
+    ...(desktopHeaderMenuItems.value as DropdownMenuItem[]),
+  ];
+  if (items.length > 0) items.push({ type: "separator" });
+  items.push(...aboutItems.value);
+  return items;
+});
+
 const mobileItems = computed(() =>
-  aboutItems.value.map((item) => ({
+  [
+    ...(mobileHeaderMenuItems.value as DropdownMenuItem[]),
+    ...(aboutItems.value as DropdownMenuItem[]),
+  ].map((item) => ({
     ...item,
     onSelect: (e: Event) => {
       if ("onSelect" in item && item.onSelect) item.onSelect(e);
@@ -54,7 +67,7 @@ const mobileItems = computed(() =>
       </template>
       <template #right>
         <UColorModeButton />
-        <UDropdownMenu :items="aboutItems" :content="{ align: 'end' }">
+        <UDropdownMenu :items="dropdownItems" :content="{ align: 'end' }">
           <UButton
             icon="prime:bars"
             size="xl"

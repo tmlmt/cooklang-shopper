@@ -194,6 +194,16 @@ async function deleteImage(imagePath: string) {
 
 const recipeKey = path.replace(/\//g, ":");
 
+const downloadItem: DropdownMenuItem = {
+  label: "Download .cook",
+  icon: "i-lucide-download",
+  onSelect: () => {
+    if (rawRecipe.value !== undefined) {
+      downloadCook(rawRecipe.value, recipeName);
+    }
+  },
+};
+
 const menuItems = ref<DropdownMenuItem[]>([
   {
     label: "Share",
@@ -429,11 +439,12 @@ const editServingsInShoppingList = (
 // Header actions
 //---------------------
 
-const { setHeaderActions } = useHeaderMenu();
+const { setHeaderActions, setHeaderMenuItems } = useHeaderMenu();
 
 if (loggedIn.value) {
   setHeaderActions(menuItems.value as DropdownMenuItem[]);
 }
+setHeaderMenuItems([downloadItem]);
 </script>
 
 <template>

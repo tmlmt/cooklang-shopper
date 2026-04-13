@@ -81,6 +81,7 @@ const dropDownMenuItems = computed<DropdownMenuItem[]>(() => {
   const items: DropdownMenuItem[] = [
     ...(desktopHeaderMenuItems.value as DropdownMenuItem[]),
   ];
+  if (items.length > 0) items.push({ type: "separator" });
   if (isRecipePage.value) {
     items.push(...permanentMenuItems);
   }
