@@ -1,6 +1,6 @@
 import { getAppConfig } from "#server/utils/appConfig";
 
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
   const config = await getAppConfig();
   const federation = config.sharing?.federation;
 
@@ -131,7 +131,7 @@ ${entries.join("\n")}
     "application/atom+xml; charset=utf-8",
   );
   return xml;
-});
+}, { maxAge: 60, name: "feed-xml" });
 
 function escapeXml(str: string): string {
   return str
