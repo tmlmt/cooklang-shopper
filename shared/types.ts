@@ -4,6 +4,7 @@ export interface FederationConfig {
   enabled: boolean;
   feedTitle: string;
   feedAuthor: string;
+  description?: string;
   baseUrl: string;
 }
 

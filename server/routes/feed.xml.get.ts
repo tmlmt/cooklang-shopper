@@ -109,7 +109,12 @@ export default defineEventHandler(async (event) => {
 
   const xml = `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xmlns:cooklang="https://cooklang.org/feeds/1.0">
-  <title>${escapeXml(federation.feedTitle)}</title>
+  <title>${escapeXml(federation.feedTitle)}</title>${
+    federation.description
+      ? `
+  <subtitle>${escapeXml(federation.description)}</subtitle>`
+      : ""
+  }
   <link href="${escapeXml(baseUrl)}" />
   <link rel="self" href="${escapeXml(baseUrl)}/feed.xml" />
   <id>${escapeXml(baseUrl)}/</id>

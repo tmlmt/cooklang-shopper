@@ -23,4 +23,5 @@ experimental: false
 #     enabled: false
 #     feedTitle: "My Recipe Collection"
 #     feedAuthor: "Anonymous"
+#     description: "A collection of my favourite recipes"
 #     baseUrl: "https://my-instance.example.com"  # required — used for absolute URLs in the Atom feed
