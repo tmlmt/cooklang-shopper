@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.6.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.6.0...v0.6.1)
+
+### 🩹 Fixes
+
+- **package:** Include db migrations in the release tarball ([e27a9b8](https://github.com/tmlmt/cooklang-shopper/commit/e27a9b8))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.6.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.5.1...v0.6.0)
