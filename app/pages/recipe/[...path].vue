@@ -207,7 +207,7 @@ const downloadItem: DropdownMenuItem = {
 const menuItems = ref<DropdownMenuItem[]>([
   {
     label: "Share",
-    icon: "i-lucide-share-2",
+    icon: "prime:share-alt",
     onSelect: () => {
       modalShare.open(recipeKey);
     },
