@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.7.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.7.0...v0.7.1)
+
+### 🩹 Fixes
+
+- **header:** Do not duplicate colormode and auth menu items on mobile ([9182ced](https://github.com/tmlmt/cooklang-shopper/commit/9182ced))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.7.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.6.2...v0.7.0)
