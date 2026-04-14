@@ -67,7 +67,11 @@ const mobileItems = computed(() =>
       </template>
       <template #right>
         <UColorModeButton />
-        <UDropdownMenu :items="dropdownItems" :content="{ align: 'end' }">
+        <UDropdownMenu
+          :items="dropdownItems"
+          :content="{ align: 'end' }"
+          :modal="false"
+        >
           <UButton
             icon="prime:bars"
             size="xl"

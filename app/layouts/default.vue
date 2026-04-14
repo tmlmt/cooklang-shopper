@@ -279,7 +279,11 @@ const navLeft = computed(() => {
           />
           <UColorModeButton />
         </template>
-        <UDropdownMenu :items="dropDownMenuItems" :content="{ align: 'end' }">
+        <UDropdownMenu
+          :items="dropDownMenuItems"
+          :content="{ align: 'end' }"
+          :modal="false"
+        >
           <UButton
             icon="prime:bars"
             size="xl"
