@@ -39,7 +39,7 @@ importers:
         specifier: 13.0.6
         version: 13.0.6
       h3:
-        specifier: ^1.15.10
+        specifier: 1.15.10
         version: 1.15.10
       nuxt:
         specifier: 4.4.2
@@ -94,7 +94,7 @@ importers:
         specifier: 9.6.1
         version: 9.6.1
       human-regex:
-        specifier: ^2.2.0
+        specifier: 2.2.0
         version: 2.2.0
       prettier:
         specifier: 3.8.1
