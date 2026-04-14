@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.7.2
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.7.1...v0.7.2)
+
+### 🩹 Fixes
+
+- **menus:** Remove modal property of dropdown menu to prevent layout shift ([88c1284](https://github.com/tmlmt/cooklang-shopper/commit/88c1284))
+- **recipe:** Add upload image item to menu ([c85a6c1](https://github.com/tmlmt/cooklang-shopper/commit/c85a6c1))
+
+### 🎨 Styles
+
+- **share:** Harmonize icon with rest of header actions ([ad0b62e](https://github.com/tmlmt/cooklang-shopper/commit/ad0b62e))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.7.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.7.0...v0.7.1)
