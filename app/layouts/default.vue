@@ -70,6 +70,11 @@ const navigationItems = computed<BreadcrumbItem[]>(() => {
 });
 
 const modal = await useModalAbout();
+const searchModal = await useModalRecipeSearch();
+
+defineShortcuts({
+  meta_k: () => searchModal.open(),
+});
 
 const aboutItems = computed<DropdownMenuItem[]>(() => [
   { label: "About", onSelect: async () => await modal.open() },
@@ -240,6 +245,13 @@ const navLeft = computed(() => {
         />
       </template>
       <template #right>
+        <UButton
+          v-if="!isRecipePage"
+          variant="ghost"
+          color="neutral"
+          icon="material-symbols:search"
+          @click="searchModal.open()"
+        />
         <template v-if="isRecipePage">
           <UButton
             v-for="action in headerActionItems"
