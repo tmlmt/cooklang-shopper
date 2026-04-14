@@ -194,6 +194,12 @@ async function deleteImage(imagePath: string) {
 
 const recipeKey = path.replace(/\//g, ":");
 
+const uploadImageItem: DropdownMenuItem = {
+  label: "Upload image",
+  icon: "i-lucide-upload",
+  onSelect: openUploadModal,
+};
+
 const downloadItem: DropdownMenuItem = {
   label: "Download .cook",
   icon: "i-lucide-download",
@@ -443,8 +449,10 @@ const { setHeaderActions, setHeaderMenuItems } = useHeaderMenu();
 
 if (loggedIn.value) {
   setHeaderActions(menuItems.value as DropdownMenuItem[]);
+  setHeaderMenuItems([uploadImageItem, downloadItem]);
+} else {
+  setHeaderMenuItems([downloadItem]);
 }
-setHeaderMenuItems([downloadItem]);
 </script>
 
 <template>
