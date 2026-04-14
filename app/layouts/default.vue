@@ -31,22 +31,27 @@ const permanentMenuItems: DropdownMenuItem[] = [
 
 const { mobileHeaderMenuItems, desktopHeaderMenuItems, headerActionItems } =
   useHeaderMenu();
-(mobileHeaderMenuItems.value as DropdownMenuItem[]).push(...permanentMenuItems);
 
 const isRecipePage = computed(() => route.path.startsWith("/recipe/"));
 
 const headerOpen = ref(false);
 
-const wrappedMobileHeaderMenuItems = computed(() =>
-  (mobileHeaderMenuItems.value as DropdownMenuItem[]).map((item) => ({
+const wrappedMobileHeaderMenuItems = computed(() => {
+  const items = [...(mobileHeaderMenuItems.value as DropdownMenuItem[])];
+  if (isRecipePage.value) {
+    if (items.length > 0 && permanentMenuItems.length > 0)
+      items.push({ type: "separator" });
+    items.push(...permanentMenuItems);
+  }
+  return items.map((item) => ({
     ...item,
     onSelect: (e: Event) => {
       item.onSelect?.(e);
       // Close the header menu after selecting an item
       headerOpen.value = false;
     },
-  })),
-);
+  }));
+});
 
 const navigationItems = computed<BreadcrumbItem[]>(() => {
   const items: BreadcrumbItem[] = [
@@ -86,8 +91,8 @@ const dropDownMenuItems = computed<DropdownMenuItem[]>(() => {
   const items: DropdownMenuItem[] = [
     ...(desktopHeaderMenuItems.value as DropdownMenuItem[]),
   ];
-  if (items.length > 0) items.push({ type: "separator" });
   if (isRecipePage.value) {
+    if (items.length > 0) items.push({ type: "separator" });
     items.push(...permanentMenuItems);
   }
   if (items.length > 0) items.push({ type: "separator" });
@@ -223,18 +228,18 @@ const navLeft = computed(() => {
           class="-mx-2.5"
         />
         <USeparator
-          v-if="experimental && mobileHeaderMenuItems.length > 0"
+          v-if="experimental && wrappedMobileHeaderMenuItems.length > 0"
           class="my-2"
         />
         <UNavigationMenu
-          v-if="mobileHeaderMenuItems.length > 0"
+          v-if="wrappedMobileHeaderMenuItems.length > 0"
           :ui="{ root: 'mt-1', link: 'text-md' }"
           :items="wrappedMobileHeaderMenuItems as NavigationMenuItem[]"
           orientation="vertical"
           class="-mx-2.5"
         />
         <USeparator
-          v-if="mobileHeaderMenuItems.length > 0 || isRecipePage"
+          v-if="wrappedMobileHeaderMenuItems.length > 0"
           class="my-2"
         />
         <UNavigationMenu
