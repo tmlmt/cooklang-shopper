@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.7.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.6.2...v0.7.0)
+
+### 🚀 Enhancements
+
+- **feed:** Cache xml file for 60 s ([e4a020b](https://github.com/tmlmt/cooklang-shopper/commit/e4a020b))
+- Download .cook file of individual recipes ([d817c72](https://github.com/tmlmt/cooklang-shopper/commit/d817c72))
+- Search recipes ([1d45525](https://github.com/tmlmt/cooklang-shopper/commit/1d45525))
+
+### 🏡 Chore
+
+- **package:** Add format script and run prettier ([ba1e856](https://github.com/tmlmt/cooklang-shopper/commit/ba1e856))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.6.2
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.6.1...v0.6.2)
