@@ -23,6 +23,7 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
 - **Servings scaling** — dynamically adjust ingredient quantities by changing the serving count
 - **Recipe search** — fuzzy command-palette search across titles, tags, author, and description (<kbd>⌘/CTRL</kbd><kbd>K</kbd>)
 - **Download `.cook` files** — export any recipe as a Cooklang file
+- **Cook mode** — full-screen step-by-step walkthrough with swipe navigation, progress bar, per-step ingredients/cookware, and built-in countdown timers with browser notifications
 
 ### 🔗 Sharing & privacy
 
@@ -38,6 +39,7 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
 - **🌗 Dark / light mode** — toggle between color themes
 - **📱 Responsive design** — optimized for both desktop and mobile
 - **Custom app title** — configurable application name shown in the header and SEO tags
+- **🛡️ Security hardening** — built-in HTTP security headers (CSP with nonce, HSTS, X-Frame-Options), request size limiting, rate limiting, and SRI via [nuxt-security](https://nuxt-security.vercel.app/)
 
 ### ⚠️ Experimental (not stable and not recommended for use)
 
