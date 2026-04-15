@@ -127,6 +127,11 @@ const modalConf = await useModalConfirmation();
 const modalChoices = await useModalChoices();
 const modalImageUpload = await useModalImageUpload();
 const modalShare = await useModalShare();
+const modalCookMode = await useModalCookMode();
+
+// Cook mode state — captured from Content.vue's scale-actions slot
+const currentScaledRecipe = shallowRef<Recipe | undefined>(undefined);
+const currentChoices = ref<RecipeChoices>({});
 
 // Image management
 const uploadingImage = ref(false);
@@ -473,10 +478,25 @@ const editServingsInShoppingList = (
 
 const { setHeaderActions, setHeaderMenuItems } = useHeaderMenu();
 
+const openCookMode = () => {
+  const r = currentScaledRecipe.value ?? recipe.value;
+  if (!r) return;
+  modalCookMode.open(r, currentChoices.value, stepImagesByNumber.value);
+};
+
+const cookItem: DropdownMenuItem = {
+  label: "Cook",
+  icon: "i-lucide-cooking-pot",
+  color: "secondary",
+  variant: "soft",
+  onSelect: openCookMode,
+};
+
 if (loggedIn.value) {
-  setHeaderActions(menuItems.value as DropdownMenuItem[]);
+  setHeaderActions([cookItem, ...(menuItems.value as DropdownMenuItem[])]);
   setHeaderMenuItems([uploadImageItem, downloadItem]);
 } else {
+  setHeaderActions([cookItem]);
   setHeaderMenuItems([downloadItem]);
 }
 </script>
@@ -577,6 +597,8 @@ if (loggedIn.value) {
         :step-images-by-number="stepImagesByNumber"
         :editable="loggedIn"
         @delete-image="deleteImage"
+        @update:scaled-recipe="(r) => (currentScaledRecipe = r)"
+        @update:choices="(c) => (currentChoices = c)"
       >
         <template
           #scale-actions="{

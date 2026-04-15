@@ -18,6 +18,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   deleteImage: [imagePath: string];
+  "update:scaledRecipe": [recipe: Recipe];
+  "update:choices": [choices: RecipeChoices];
 }>();
 
 // Internal scaled recipe — shallowRef preserves the Recipe class prototype
@@ -33,6 +35,9 @@ watch(
 // Variant & Choices
 const selectedVariant = ref<string | undefined>(undefined);
 const choices = ref<RecipeChoices>({});
+
+watch(scaledRecipe, (r) => emit("update:scaledRecipe", r));
+watch(choices, (c) => emit("update:choices", c), { deep: true });
 
 const hasVariants = computed(
   () => (scaledRecipe.value.choices.variants.length ?? 0) > 0,

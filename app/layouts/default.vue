@@ -248,7 +248,7 @@ const navLeft = computed(() => {
             :key="`action-${action.label}`"
             :label="action.label"
             :icon="action.icon"
-            variant="ghost"
+            :variant="action.variant ?? 'ghost'"
             :color="(action.color as any) ?? 'neutral'"
             :ui="{ label: 'hidden md:flex ' }"
             @click="action.onSelect?.($event)"
