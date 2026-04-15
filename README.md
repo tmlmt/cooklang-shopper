@@ -77,7 +77,7 @@ Rollback preserves all user data including the database. If a newer version adde
 
 ## Roadmap
 
-1. Stabilize recipe management
+1. Multi-role (admin, editor, viewer) authorization incl. support for OIDC
 2. Internationalization (i18n)
 3. Finalize shopping list features
 4. Finalize shopping cart features
