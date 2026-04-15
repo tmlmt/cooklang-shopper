@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.7.3
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.7.2...v0.7.3)
+
+### 💅 Refactors
+
+- **header:** Improve handling of mobile vs desktop menus with separators ([91d88df](https://github.com/tmlmt/cooklang-shopper/commit/91d88df))
+
+### 🎨 Styles
+
+- **metadata:** Display author and source as inline text with natural word wrapping ([e2d5485](https://github.com/tmlmt/cooklang-shopper/commit/e2d5485))
+- **breadcrumb:** Display inline and truncate start to try to limit to 1 line ([ae7f86f](https://github.com/tmlmt/cooklang-shopper/commit/ae7f86f))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.7.2
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.7.1...v0.7.2)
