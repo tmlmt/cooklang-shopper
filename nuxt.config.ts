@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   modules: [
+    "nuxt-security",
     "@nuxt/hints",
     "@nuxt/eslint",
     "@nuxt/image",
@@ -52,6 +53,28 @@ export default defineNuxtConfig({
         sameSite: "lax",
       },
       maxAge: 60 * 60 * 24 * 7, // 1 week
+    },
+  },
+
+  security: {
+    headers: {
+      contentSecurityPolicy: {
+        "img-src": ["'self'", "data:", "https:"],
+      },
+    },
+    requestSizeLimiter: {
+      maxUploadFileRequestInBytes: 11000000,
+    },
+  },
+
+  routeRules: {
+    "/api/public/**": {
+      security: {
+        corsHandler: {
+          origin: "*",
+          methods: ["GET", "HEAD"],
+        },
+      },
     },
   },
 
