@@ -148,8 +148,8 @@ const visibleStepOverlay = ref<string | null>(null);
         size="xs"
         class="mb-4 md:pr-10"
       />
-      <div class="flex flex-row items-center gap-4">
-        <div class="text-sm">Scale:</div>
+      <div class="flex flex-row items-center">
+        <div class="mr-2 text-sm">Scale:</div>
         <UInputNumber
           v-model="servingsSpinner"
           :step="servingsStep"
@@ -158,10 +158,19 @@ const visibleStepOverlay = ref<string | null>(null);
           :focus-on-change="false"
           size="sm"
         />
+        <UButton
+          v-if="servingsSpinner !== originalServings"
+          icon="i-lucide-rotate-ccw"
+          color="neutral"
+          variant="ghost"
+          size="sm"
+          @click="servingsSpinner = originalServings"
+        />
         <UDropdownMenu
           v-if="hasVariants"
           :items="variantMenuItems"
           :content="{ align: 'start' }"
+          class="ml-4"
         >
           <UButton
             size="sm"
