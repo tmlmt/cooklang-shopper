@@ -36,21 +36,25 @@ const isRecipePage = computed(() => route.path.startsWith("/recipe/"));
 
 const headerOpen = ref(false);
 
-const wrappedMobileHeaderMenuItems = computed(() => {
-  const items = [...(mobileHeaderMenuItems.value as DropdownMenuItem[])];
-  if (isRecipePage.value) {
-    if (items.length > 0 && permanentMenuItems.length > 0)
-      items.push({ type: "separator" });
-    items.push(...permanentMenuItems);
-  }
-  return items.map((item) => ({
+const wrapForMobile = (items: DropdownMenuItem[]) =>
+  items.map((item) => ({
     ...item,
     onSelect: (e: Event) => {
       item.onSelect?.(e);
-      // Close the header menu after selecting an item
       headerOpen.value = false;
     },
   }));
+
+const mobileMenuGroups = computed<DropdownMenuItem[][]>(() => {
+  const pageGroups = mobileHeaderMenuItems.value as DropdownMenuItem[][];
+  return [
+    ...(experimental.value
+      ? [navigationItems.value as DropdownMenuItem[]]
+      : []),
+    ...pageGroups,
+    ...(isRecipePage.value ? [permanentMenuItems] : []),
+    aboutItems.value,
+  ].filter((g) => g.length > 0);
 });
 
 const navigationItems = computed<BreadcrumbItem[]>(() => {
@@ -87,18 +91,18 @@ const aboutItems = computed<DropdownMenuItem[]>(() => [
 
 const colorMode = useColorMode();
 
-const dropDownMenuItems = computed<DropdownMenuItem[]>(() => {
-  const items: DropdownMenuItem[] = [
-    ...(desktopHeaderMenuItems.value as DropdownMenuItem[]),
-  ];
-  if (isRecipePage.value) {
-    if (items.length > 0) items.push({ type: "separator" });
-    items.push(...permanentMenuItems);
-  }
-  if (items.length > 0) items.push({ type: "separator" });
-  items.push(...aboutItems.value);
-  return items;
+const desktopMenuGroups = computed<DropdownMenuItem[][]>(() => {
+  const pageGroups = desktopHeaderMenuItems.value as DropdownMenuItem[][];
+  return [
+    ...pageGroups,
+    ...(isRecipePage.value ? [permanentMenuItems] : []),
+    aboutItems.value,
+  ].filter((g) => g.length > 0);
 });
+
+const dropDownMenuItems = computed<DropdownMenuItem[]>(() =>
+  flattenMenuGroups(desktopMenuGroups.value),
+);
 
 //----------------
 // SEO
@@ -220,34 +224,15 @@ const navLeft = computed(() => {
         :items="navigationItems"
       />
       <template #body>
-        <UNavigationMenu
-          v-if="experimental"
-          :ui="{ root: 'mt-1', link: 'text-md' }"
-          :items="navigationItems as NavigationMenuItem[]"
-          orientation="vertical"
-          class="-mx-2.5"
-        />
-        <USeparator
-          v-if="experimental && wrappedMobileHeaderMenuItems.length > 0"
-          class="my-2"
-        />
-        <UNavigationMenu
-          v-if="wrappedMobileHeaderMenuItems.length > 0"
-          :ui="{ root: 'mt-1', link: 'text-md' }"
-          :items="wrappedMobileHeaderMenuItems as NavigationMenuItem[]"
-          orientation="vertical"
-          class="-mx-2.5"
-        />
-        <USeparator
-          v-if="wrappedMobileHeaderMenuItems.length > 0"
-          class="my-2"
-        />
-        <UNavigationMenu
-          :ui="{ root: 'mt-1', link: 'text-md' }"
-          :items="aboutItems as NavigationMenuItem[]"
-          orientation="vertical"
-          class="-mx-2.5"
-        />
+        <template v-for="(group, i) in mobileMenuGroups" :key="i">
+          <USeparator v-if="i > 0" class="my-2" />
+          <UNavigationMenu
+            :ui="{ root: 'mt-1', link: 'text-md' }"
+            :items="wrapForMobile(group) as NavigationMenuItem[]"
+            orientation="vertical"
+            class="-mx-2.5"
+          />
+        </template>
       </template>
       <template #right>
         <UButton

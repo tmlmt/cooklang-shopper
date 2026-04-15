@@ -11,27 +11,28 @@ const aboutItems = computed<DropdownMenuItem[]>(() => [
   { label: "About", onSelect: async () => await modal.open() },
 ]);
 
-const dropdownItems = computed<DropdownMenuItem[]>(() => {
-  const items: DropdownMenuItem[] = [
-    ...(desktopHeaderMenuItems.value as DropdownMenuItem[]),
-  ];
-  if (items.length > 0) items.push({ type: "separator" });
-  items.push(...aboutItems.value);
-  return items;
-});
+const dropdownItems = computed<DropdownMenuItem[]>(() =>
+  flattenMenuGroups([
+    ...(desktopHeaderMenuItems.value as DropdownMenuItem[][]),
+    aboutItems.value,
+  ]),
+);
 
-const mobileItems = computed(() =>
+const mobileMenuGroups = computed<DropdownMenuItem[][]>(() =>
   [
-    ...(mobileHeaderMenuItems.value as DropdownMenuItem[]),
-    ...(aboutItems.value as DropdownMenuItem[]),
-  ].map((item) => ({
+    ...(mobileHeaderMenuItems.value as DropdownMenuItem[][]),
+    aboutItems.value,
+  ].filter((g) => g.length > 0),
+);
+
+const wrapForMobile = (items: DropdownMenuItem[]) =>
+  items.map((item) => ({
     ...item,
     onSelect: (e: Event) => {
-      if ("onSelect" in item && item.onSelect) item.onSelect(e);
+      item.onSelect?.(e);
       headerOpen.value = false;
     },
-  })),
-);
+  }));
 </script>
 
 <template>
@@ -58,12 +59,15 @@ const mobileItems = computed(() =>
         </span>
       </template>
       <template #body>
-        <UNavigationMenu
-          :ui="{ root: 'mt-1', link: 'text-md' }"
-          :items="mobileItems as NavigationMenuItem[]"
-          orientation="vertical"
-          class="-mx-2.5"
-        />
+        <template v-for="(group, i) in mobileMenuGroups" :key="i">
+          <USeparator v-if="i > 0" class="my-2" />
+          <UNavigationMenu
+            :ui="{ root: 'mt-1', link: 'text-md' }"
+            :items="wrapForMobile(group) as NavigationMenuItem[]"
+            orientation="vertical"
+            class="-mx-2.5"
+          />
+        </template>
       </template>
       <template #right>
         <UColorModeButton />
