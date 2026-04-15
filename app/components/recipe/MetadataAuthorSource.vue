@@ -38,14 +38,14 @@ const sourceText = computed(() => {
 </script>
 
 <template>
-  <div v-if="source || author" class="flex flex-row items-center gap-1 text-sm">
-    <div v-if="author">
+  <p v-if="source || author" class="text-sm">
+    <template v-if="author">
       by <b>{{ author }}</b>
-    </div>
-    <div v-if="source && author">•</div>
-    <div v-if="source" class="flex flex-row items-center gap-1">
+    </template>
+    <template v-if="source && author"> • </template>
+    <template v-if="source">
       from
-      <p v-if="sourceText" class="font-bold">{{ sourceText }}</p>
+      <b v-if="sourceText">{{ sourceText }}</b>
       <ULink
         v-if="sourceWebsite"
         :to="sourceURL?.trim()"
@@ -56,10 +56,10 @@ const sourceText = computed(() => {
           color="secondary"
           variant="soft"
           size="sm"
-          class="mt-0.5 ml-1 rounded-full"
+          class="ml-1 translate-y-px rounded-full"
           >{{ sourceWebsite }}</UBadge
         ></ULink
       >
-    </div>
-  </div>
+    </template>
+  </p>
 </template>
