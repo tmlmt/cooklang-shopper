@@ -27,14 +27,40 @@ const pathParams =
     ? [route.params.path]
     : route.params.path;
 
-const dir = [
+const dirSegments = [
   "Recipes",
   ...pathParams.reduce((acc, item) => {
-    acc.push("/");
+    acc.push(" / ");
     acc.push(item);
     return acc;
   }, [] as string[]),
 ];
+
+const maxBreadcrumbLengthMobile = 60;
+const maxBreadcrumbLengthDesktop = 180;
+
+function truncateDir(maxLength: number) {
+  const full = dirSegments.join("");
+  if (full.length <= maxLength) return dirSegments;
+
+  let length = 1; // for "\u2026"
+  let startIndex = dirSegments.length;
+  for (let i = dirSegments.length - 1; i >= 0; i--) {
+    const seg = dirSegments[i]!;
+    if (length + seg.length > maxLength) break;
+    length += seg.length;
+    startIndex = i;
+  }
+  if (startIndex >= dirSegments.length) startIndex = dirSegments.length - 1;
+  const kept = dirSegments.slice(startIndex);
+  if (kept[0] === " / ") kept.shift();
+  return ["\u2026", " / ", ...kept];
+}
+
+const displayDirMobile = computed(() => truncateDir(maxBreadcrumbLengthMobile));
+const displayDirDesktop = computed(() =>
+  truncateDir(maxBreadcrumbLengthDesktop),
+);
 
 const path = pathParams.join("/");
 const recipeDir = path.substring(0, path.lastIndexOf("/"));
@@ -528,11 +554,16 @@ if (loggedIn.value) {
       </div>
 
       <div class="mb-2 flex flex-col gap-4">
-        <div
-          class="mt-5 flex flex-row items-center gap-4 text-sm md:mt-0 md:text-base"
-        >
-          <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
-        </div>
+        <p class="mt-5 text-sm md:hidden">
+          <span v-for="(segment, i) in displayDirMobile" :key="i">{{
+            segment
+          }}</span>
+        </p>
+        <p class="hidden text-base md:block">
+          <span v-for="(segment, i) in displayDirDesktop" :key="i">{{
+            segment
+          }}</span>
+        </p>
         <h1 class="hidden text-3xl font-bold md:block">
           {{ recipe.metadata.title ?? "(Untitled)" }}
         </h1>
@@ -584,9 +615,16 @@ if (loggedIn.value) {
       </RecipeContent>
     </div>
     <div v-else class="mt-4 flex w-full flex-col gap-4 md:mt-0">
-      <div class="flex flex-row gap-4">
-        <span v-for="subdir in dir" :key="subdir">{{ subdir }}</span>
-      </div>
+      <p class="text-sm md:hidden">
+        <span v-for="(segment, i) in displayDirMobile" :key="i">{{
+          segment
+        }}</span>
+      </p>
+      <p class="hidden text-base md:block">
+        <span v-for="(segment, i) in displayDirDesktop" :key="i">{{
+          segment
+        }}</span>
+      </p>
       <UForm
         :state="formState"
         :schema="schema"
