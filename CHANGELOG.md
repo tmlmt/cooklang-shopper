@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.8.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.7.3...v0.8.0)
+
+### 🚀 Enhancements
+
+- **recipe:** Add reset button to revert to original servings ([5d22df2](https://github.com/tmlmt/cooklang-shopper/commit/5d22df2))
+- **recipe:** Cook mode ([55011bd](https://github.com/tmlmt/cooklang-shopper/commit/55011bd))
+- Add nuxt-security module ([c6be05f](https://github.com/tmlmt/cooklang-shopper/commit/c6be05f))
+
+### 🏡 Chore
+
+- **README:** Update roadmap ([fc4bbba](https://github.com/tmlmt/cooklang-shopper/commit/fc4bbba))
+- **README:** Add features section ([0be71b7](https://github.com/tmlmt/cooklang-shopper/commit/0be71b7))
+- Update .nuxtrc ([4055797](https://github.com/tmlmt/cooklang-shopper/commit/4055797))
+- **README:** Add latest features ([775c42a](https://github.com/tmlmt/cooklang-shopper/commit/775c42a))
+
+### 🎨 Styles
+
+- Change secondary color to cooklang orange ([89cc268](https://github.com/tmlmt/cooklang-shopper/commit/89cc268))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.7.3
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.7.2...v0.7.3)
