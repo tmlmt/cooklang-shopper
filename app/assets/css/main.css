@@ -19,6 +19,8 @@
   --color-royal-800: #2846cc;
   --color-royal-900: #2541bb;
   --color-royal-950: #223baa;
+
+  --color-secondary: oklch(0.6461 0.1943 41.12);
 }
 
 :root {
