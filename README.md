@@ -7,6 +7,45 @@ Self-hosted, Nuxt-powered web app to manage cooklang recipes, create a shopping 
 
 The app is currently in pre-v1 i.e beta version and in active development. Only recipe management (browsing, viewing, creating, editing) is functional at the moment while the rest is partially developed and therefore hidden an `experimental` flag. Feel free to test it out and report issues or feature requests.
 
+## Features
+
+### 🍳 Cooklang-native
+
+- **File & folder based** — recipes live as plain `.cook` text files in regular directories — easy migration from/to other Cooklang-compatible tools
+- **Full spec compatibility** — powered by [`@tmlmt/cooklang-parser`](https://cooklang-parser.tmlmt.com/v3), with support for many useful [extensions](https://cooklang-parser.tmlmt.com/v3/guide/extensions) such as references, recipe variants, alternative ingredients, etc.
+
+### 📖 Recipe management
+
+- **Browse recipes** — navigate your Cooklang recipe collection in a folder structure with grid or list view
+- **View recipes** — read recipes with ingredients, cookware, preparation steps, metadata (tags, author, source, time), and variant support
+- **Create, edit, move & delete recipes** — full CRUD with in-app Cooklang editor and syntax validation
+- **Recipe images** — upload cover and per-step images, displayed in a carousel; powered by Nuxt Image with on-the-fly optimization
+- **Servings scaling** — dynamically adjust ingredient quantities by changing the serving count
+- **Recipe search** — fuzzy command-palette search across titles, tags, author, and description (<kbd>⌘/CTRL</kbd><kbd>K</kbd>)
+- **Download `.cook` files** — export any recipe as a Cooklang file
+
+### 🔗 Sharing & privacy
+
+- **Per-recipe visibility** — mark individual recipes as public or private (configurable default)
+- **Share links** — generate time-limited tokens that let anyone view a recipe without logging in
+- **Public browsing** — optionally allow unauthenticated visitors to browse all public recipes
+- **Atom feed** — expose public recipes via an Atom/XML feed for RSS readers and [federation](https://recipes.cooklang.org/about) (opt-in)
+
+### ⚙️ General
+
+- **🏠 Self-hosted** — runs on your own server with a single Node.js process and SQLite database
+- **🔒 Password authentication** — scrypt-hashed password with secure session cookies
+- **🌗 Dark / light mode** — toggle between color themes
+- **📱 Responsive design** — optimized for both desktop and mobile
+- **Custom app title** — configurable application name shown in the header and SEO tags
+
+### ⚠️ Experimental (not stable and not recommended for use)
+
+> Requires `experimental: true` in `config.yaml`.
+
+- **🛒 Shopping list** — select recipes from the browse view, adjust servings, resolve ingredient choices, and generate a consolidated ingredient list
+- **Shopping cart** — match aggregated ingredients against a product catalog (TOML-based) and identify unmatched items
+
 ## Getting started
 
 ### Prerequisites
