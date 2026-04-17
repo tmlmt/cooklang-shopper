@@ -8,7 +8,7 @@ import { updateRecipeIndex } from "~~/server/utils/recipeIndex";
 import { validateRecipeDir } from "~~/server/utils/validateRecipePath";
 
 export default defineEventHandler(async (event) => {
-  await requireUserSession(event);
+  await requireEditorRole(event);
 
   const body = await readBody(event);
   if (body.dir === undefined) {

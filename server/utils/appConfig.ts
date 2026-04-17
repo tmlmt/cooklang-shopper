@@ -4,6 +4,7 @@ import type { AppConfig, SharingConfig } from "~~/shared/types";
 const defaultSharing: SharingConfig = {
   defaultVisibility: "private",
   allowPublicBrowsing: false,
+  viewerCanShare: false,
 };
 
 let cachedConfig: AppConfig | null = null;
@@ -18,11 +19,21 @@ export async function getAppConfig(): Promise<AppConfig> {
     dotenv: false,
   });
 
-  if (!config.password) {
+  if (!config.auth?.provider) {
     throw createError({
       statusCode: 500,
-      message: "Missing password in config.yaml",
+      message: "Missing auth.provider in config.yaml",
     });
+  }
+
+  if (config.auth.provider === "password") {
+    if (!config.auth.password?.editor || !config.auth.password?.viewer) {
+      throw createError({
+        statusCode: 500,
+        message:
+          "Missing auth.password.editor and/or auth.password.viewer in config.yaml",
+      });
+    }
   }
 
   if (!config.sessionSecret) {

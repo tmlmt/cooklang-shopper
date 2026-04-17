@@ -72,8 +72,9 @@ validateRecipePath(path);
 
 const shoppingStore = useShoppingStore();
 const recipeStore = useRecipeStore();
-const { experimental } = await usePublicConfig();
+const { experimental, viewerCanShare } = await usePublicConfig();
 const { loggedIn } = useUserSession();
+const { isEditor } = useRole();
 const {
   heroImages,
   stepImagesByNumber,
@@ -241,83 +242,94 @@ const downloadItem: DropdownMenuItem = {
   },
 };
 
-const menuItems = ref<DropdownMenuItem[]>([
-  {
-    label: "Share",
-    icon: "prime:share-alt",
-    onSelect: () => {
-      modalShare.open(recipeKey);
-    },
-  },
-  {
-    label: "Edit",
-    icon: "prime:file-edit",
-    onSelect: () => {
-      isEditMode.value = true;
-      isManualEdit.value = true;
-    },
-  },
-  {
-    label: "Move",
-    icon: "prime:arrow-right",
-    onSelect: async () => {
-      const result = await modalFile.open(
-        "move",
-        path,
-        recipe.value?.metadata.title,
-      );
-      if (result) {
-        await $fetchWithHeaders(`/api/recipe/${path}`, {
-          method: "PATCH",
-          body: {
-            dir: result.dir,
-            fileName: result.name,
-          },
-        });
-        recipeStore.moveRecipe(recipeName, recipeDir, result.name, result.dir);
-        toast.add({
-          title: "Success",
-          description: `Recipe moved to ${result.dir}/${result.name}`,
-          color: "success",
-        });
-        await navigateTo(
-          `/recipe/${result.dir ? result.dir + "/" : ""}${result.name}`,
-        );
-      }
-    },
-  },
-  {
-    label: "Delete",
-    icon: "prime:trash",
-    color: "error",
-    onSelect: async () => {
-      const result = await modalConf.open(
-        "Are you sure you want to delete this recipe?",
-      );
-      if (result) {
-        // Delete recipe
-        await $fetchWithHeaders(`/api/recipe/${path}`, {
-          method: "DELETE",
-        });
+const menuItems = computed<DropdownMenuItem[]>(() => {
+  const items: DropdownMenuItem[] = [];
 
-        // Remove from store index
-        recipeStore.removeRecipe(recipeName, recipeDir);
+  if (isEditor.value || viewerCanShare.value) {
+    items.push({
+      label: "Share",
+      icon: "prime:share-alt",
+      onSelect: () => {
+        modalShare.open(recipeKey);
+      },
+    });
+  }
 
-        // Remove from selected list (if present)
-        shoppingStore.removeRecipe(path);
+  if (isEditor.value) {
+    items.push(
+      {
+        label: "Edit",
+        icon: "prime:file-edit",
+        onSelect: () => {
+          isEditMode.value = true;
+          isManualEdit.value = true;
+        },
+      },
+      {
+        label: "Move",
+        icon: "prime:arrow-right",
+        onSelect: async () => {
+          const result = await modalFile.open(
+            "move",
+            path,
+            recipe.value?.metadata.title,
+          );
+          if (result) {
+            await $fetchWithHeaders(`/api/recipe/${path}`, {
+              method: "PATCH",
+              body: {
+                dir: result.dir,
+                fileName: result.name,
+              },
+            });
+            recipeStore.moveRecipe(
+              recipeName,
+              recipeDir,
+              result.name,
+              result.dir,
+            );
+            toast.add({
+              title: "Success",
+              description: `Recipe moved to ${result.dir}/${result.name}`,
+              color: "success",
+            });
+            await navigateTo(
+              `/recipe/${result.dir ? result.dir + "/" : ""}${result.name}`,
+            );
+          }
+        },
+      },
+      {
+        label: "Delete",
+        icon: "prime:trash",
+        color: "error",
+        onSelect: async () => {
+          const result = await modalConf.open(
+            "Are you sure you want to delete this recipe?",
+          );
+          if (result) {
+            await $fetchWithHeaders(`/api/recipe/${path}`, {
+              method: "DELETE",
+            });
 
-        // Show success toast
-        toast.add({
-          title: "Success",
-          description: "Recipe deleted",
-          color: "success",
-        });
+            recipeStore.removeRecipe(recipeName, recipeDir);
+            shoppingStore.removeRecipe(path);
 
-        await navigateTo("/");
-      }
-    },
-  },
-]);
+            toast.add({
+              title: "Success",
+              description: "Recipe deleted",
+              color: "success",
+            });
+
+            await navigateTo("/");
+          }
+        },
+      },
+    );
+  }
+
+  return items;
+});
 
 //---------------------
 // View / Edit Recipe
@@ -494,7 +506,10 @@ const cookItem: DropdownMenuItem = {
 
 if (loggedIn.value) {
   setHeaderActions([cookItem, ...(menuItems.value as DropdownMenuItem[])]);
-  setHeaderMenuItems([uploadImageItem, downloadItem]);
+  setHeaderMenuItems([
+    ...(isEditor.value ? [uploadImageItem] : []),
+    downloadItem,
+  ]);
 } else {
   setHeaderActions([cookItem]);
   setHeaderMenuItems([downloadItem]);
@@ -530,7 +545,7 @@ if (loggedIn.value) {
               @click="heroOverlayVisible = !heroOverlayVisible"
             />
             <div
-              v-if="loggedIn"
+              v-if="isEditor"
               class="absolute top-3 right-3 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100 md:top-6 md:right-6 md:gap-3"
               :class="{ 'opacity-100!': heroOverlayVisible }"
             >
@@ -595,7 +610,7 @@ if (loggedIn.value) {
       <RecipeContent
         :recipe="recipe"
         :step-images-by-number="stepImagesByNumber"
-        :editable="loggedIn"
+        :editable="isEditor"
         @delete-image="deleteImage"
         @update:scaled-recipe="(r) => (currentScaledRecipe = r)"
         @update:choices="(c) => (currentChoices = c)"

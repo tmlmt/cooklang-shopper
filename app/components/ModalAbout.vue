@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const emit = defineEmits<{ close: [boolean] }>();
 
-const { loggedIn } = useUserSession();
+const { isEditor } = useRole();
 
-const versionInfo = loggedIn.value
+const versionInfo = isEditor.value
   ? await $fetchWithHeaders<{
       currentVersion: string;
       latestVersion: string;
@@ -28,7 +28,7 @@ const about = computed(() => sharing.value.about);
   >
     <template #body>
       <!-- Authenticated: developer / admin info -->
-      <div v-if="loggedIn" class="grid grid-cols-3 items-center gap-2 p-2">
+      <div v-if="isEditor" class="grid grid-cols-3 items-center gap-2 p-2">
         <div class="text-right font-bold">Author:</div>
         <p class="col-span-2">Thomas Lamant</p>
         <template v-if="versionInfo">

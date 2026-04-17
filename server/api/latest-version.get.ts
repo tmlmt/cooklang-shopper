@@ -29,6 +29,6 @@ const getLatestVersion = defineCachedFunction(
 );
 
 export default defineEventHandler(async (event) => {
-  await requireUserSession(event);
+  await requireEditorRole(event);
   return getLatestVersion();
 });

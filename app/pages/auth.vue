@@ -1,12 +1,17 @@
 <script setup lang="ts">
+import type { Role } from "~~/shared/types";
+
 definePageMeta({
   layout: "naked",
 });
-const { loggedIn, clear, fetch: fetchSession } = useUserSession();
+const { loggedIn, user, clear, fetch: fetchSession } = useUserSession();
 const appTitle = useRuntimeConfig().public.title;
 const toast = useToast();
-const profiles = ref(["Chef"]);
-const selectedProfile = ref(profiles.value[0]);
+const roles: { label: string; value: Role }[] = [
+  { label: "Viewer", value: "viewer" },
+  { label: "Editor", value: "editor" },
+];
+const selectedRole = ref<Role>("viewer");
 const password = ref("");
 const loading = ref(false);
 
@@ -15,10 +20,10 @@ async function login() {
   try {
     await $fetch("/api/auth/login", {
       method: "POST",
-      body: { password: password.value },
+      body: { role: selectedRole.value, password: password.value },
     });
     await fetchSession();
-    await navigateTo("/");
+    await navigateTo("/", { external: true });
   } catch {
     toast.add({
       title: "Login failed",
@@ -45,7 +50,14 @@ async function logout() {
   <UCard class="max-w-2xl">
     <template #header>{{ appTitle }} - Authentication</template>
     <div v-if="loggedIn" class="flex flex-col items-center gap-4">
-      <p>You are logged in.</p>
+      <p>
+        You are logged in as
+        {{
+          user?.role
+            ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+            : ""
+        }}.
+      </p>
       <UButton
         color="neutral"
         variant="outline"
@@ -56,12 +68,12 @@ async function logout() {
     </div>
     <div v-else class="flex flex-col items-center gap-4">
       <UForm class="flex flex-col gap-4" @submit.prevent="login">
-        <UFormField label="Profile" name="profile">
+        <UFormField label="Role" name="role">
           <URadioGroup
-            v-model="selectedProfile"
+            v-model="selectedRole"
             orientation="horizontal"
             variant="list"
-            :items="profiles"
+            :items="roles"
           />
         </UFormField>
         <UFormField label="Password" name="password">

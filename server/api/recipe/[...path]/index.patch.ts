@@ -11,7 +11,7 @@ import {
 import { moveRecipeVisibilityAndLinks } from "~~/server/utils/recipeVisibility";
 
 export default defineEventHandler(async (event) => {
-  await requireUserSession(event);
+  await requireEditorRole(event);
 
   const decodedPath = getValidatedRecipePath(event);
 

@@ -8,7 +8,7 @@ type ViewMode = "grid" | "list";
 
 const recipeStore = useRecipeStore();
 const toast = useToast();
-const { loggedIn } = useUserSession();
+const { isEditor } = useRole();
 
 await callOnce("recipe-index", () => recipeStore.fetchIndex());
 await callOnce("recipe-directories", () => recipeStore.fetchDirectories());
@@ -97,7 +97,7 @@ const createNewFolder = async () => {
 
 const { setHeaderMenuItems } = useHeaderMenu();
 
-if (loggedIn.value) {
+if (isEditor.value) {
   setHeaderMenuItems([
     {
       label: "New recipe",
@@ -174,7 +174,7 @@ if (loggedIn.value) {
         </UFieldGroup>
 
         <UButton
-          v-if="loggedIn"
+          v-if="isEditor"
           icon="prime:plus"
           color="primary"
           variant="soft"
@@ -183,7 +183,7 @@ if (loggedIn.value) {
           @click="openNewRecipeModal"
         />
         <UButton
-          v-if="loggedIn"
+          v-if="isEditor"
           icon="prime:plus"
           color="primary"
           variant="soft"

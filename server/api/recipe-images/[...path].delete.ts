@@ -10,7 +10,7 @@ import {
 
 export default defineEventHandler(
   async (event): Promise<RecipeImageManifest> => {
-    await requireUserSession(event);
+    await requireEditorRole(event);
 
     const decodedPath = getValidatedRecipePath(event);
 

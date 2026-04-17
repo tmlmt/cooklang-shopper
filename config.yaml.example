@@ -1,5 +1,10 @@
-# Generate a hashed password with: node hash-password.mjs <password>
-password: "<scrypt-hashed-password>"
+# Authentication configuration
+auth:
+  provider: "password"
+  password:
+    # Generate hashed passwords with: node hash-password.mjs <password>
+    editor: "<scrypt-hashed-password>"   # Full access: create, edit, delete recipes
+    viewer: "<scrypt-hashed-password>"   # Read-only: browse and view all recipes
 
 # Secret used to encrypt session cookies (minimum 32 characters)
 # Generate one with: openssl rand -base64 32
@@ -15,6 +20,7 @@ experimental: false
 # sharing:
 #   defaultVisibility: "private"    # "public" or "private" — default for recipes without an explicit override
 #   allowPublicBrowsing: false      # whether unauthenticated visitors can browse public recipes
+#   viewerCanShare: false            # whether viewers can create/manage share links and toggle recipe visibility
 #   about:                           # information shown in the About modal for public visitors
 #     author: "Jane Doe"
 #     description: "Welcome to my family cookbook!"

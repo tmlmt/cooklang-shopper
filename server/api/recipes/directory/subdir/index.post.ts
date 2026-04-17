@@ -7,7 +7,7 @@ import {
 import { validateRecipeDir } from "~~/server/utils/validateRecipePath";
 
 export default defineEventHandler(async (event) => {
-  await requireUserSession(event);
+  await requireEditorRole(event);
 
   const body = await readBody(event);
   if (body.parentDir === undefined) {

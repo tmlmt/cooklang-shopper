@@ -17,6 +17,7 @@ export interface SharingAboutConfig {
 export interface SharingConfig {
   defaultVisibility: "public" | "private";
   allowPublicBrowsing: boolean;
+  viewerCanShare?: boolean;
   federation?: FederationConfig;
   about?: SharingAboutConfig;
 }
@@ -24,12 +25,27 @@ export interface SharingConfig {
 export interface PublicSharingConfig {
   defaultVisibility: "public" | "private";
   allowPublicBrowsing: boolean;
+  viewerCanShare: boolean;
   federationEnabled: boolean;
   about?: SharingAboutConfig;
 }
 
+export type Role = "viewer" | "editor";
+
+export type AuthProvider = "password";
+
+export interface PasswordAuthConfig {
+  editor: string;
+  viewer: string;
+}
+
+export interface AuthConfig {
+  provider: AuthProvider;
+  password?: PasswordAuthConfig;
+}
+
 export interface AppConfig {
-  password: string;
+  auth: AuthConfig;
   sessionSecret: string;
   experimental?: boolean;
   title?: string;

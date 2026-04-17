@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  await requireUserSession(event);
+  await requireEditorRole(event);
 
   const id = getRouterParam(event, "id");
   if (!id || isNaN(Number(id))) {

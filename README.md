@@ -35,7 +35,7 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
 ### ⚙️ General
 
 - **🏠 Self-hosted** — runs on your own server with a single Node.js process and SQLite database
-- **🔒 Password authentication** — scrypt-hashed password with secure session cookies
+- **🔒 Role-based password authentication** — two roles (editor and viewer) with scrypt-hashed passwords and secure session cookies
 - **🌗 Dark / light mode** — toggle between color themes
 - **📱 Responsive design** — optimized for both desktop and mobile
 - **Custom app title** — configurable application name shown in the header and SEO tags
@@ -67,7 +67,11 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
    cd /path/to/cooklang-shopper/dist
    cp config.yaml.example config.yaml
    ```
-4. Edit `config.yaml` — set the different parameters (see the file for instructions)
+4. Edit `config.yaml` — set the different parameters (see the file for instructions). Generate hashed passwords for the editor and viewer roles:
+   ```bash
+   node hash-password.mjs <editor-password>
+   node hash-password.mjs <viewer-password>
+   ```
 5. Add your `.cook` recipe files to `dist/public/recipes/`
 6. Start the server once to initialize the database (created automatically at `dist/data/cooklang-shopper.db`)
 7. Set up the systemd service:

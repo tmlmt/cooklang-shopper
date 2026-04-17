@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  await requireUserSession(event);
+  await requireSharePermission(event);
 
   const recipePath = getRouterParam(event, "path");
   if (!recipePath) {

@@ -9,12 +9,14 @@ export default defineEventHandler(async (event) => {
   const sharing: PublicSharingConfig = {
     defaultVisibility: config.sharing?.defaultVisibility ?? "private",
     allowPublicBrowsing: config.sharing?.allowPublicBrowsing ?? false,
+    viewerCanShare: config.sharing?.viewerCanShare ?? false,
     federationEnabled: config.sharing?.federation?.enabled ?? false,
     about: config.sharing?.about,
   };
 
   return {
     experimental: config.experimental ?? false,
+    authProvider: config.auth.provider,
     sharing,
   };
 });

@@ -7,6 +7,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{ close: [] }>();
 const toast = useToast();
+const { isEditor } = useRole();
 
 // Visibility
 const visibility = ref<"public" | "private">("private");
@@ -229,6 +230,7 @@ defineShortcuts({
                   @click="copyLink(link.token)"
                 />
                 <UButton
+                  v-if="isEditor"
                   icon="i-lucide-trash-2"
                   size="xs"
                   variant="ghost"
