@@ -3,3 +3,5 @@ declare module "#auth-utils" {
     profile: string;
   }
 }
+
+export {};
