@@ -14,12 +14,22 @@ const { loggedIn } = useUserSession();
 // Header menus
 //---------------
 
-const permanentMenuItems: DropdownMenuItem[] = [
-  {
-    label: "Authentication",
-    icon: "material-symbols:fingerprint",
-    onSelect: () => navigateTo("/auth"),
-  },
+const authMenuItem = computed<DropdownMenuItem>(() =>
+  loggedIn.value
+    ? {
+        label: "Authentication",
+        icon: "mdi:user",
+        onSelect: () => navigateTo("/auth"),
+      }
+    : {
+        label: "Log in",
+        icon: "material-symbols:login",
+        onSelect: () => navigateTo("/auth"),
+      },
+);
+
+const permanentMenuItems = computed<DropdownMenuItem[]>(() => [
+  authMenuItem.value,
   {
     label: "Toggle color mode",
     icon: "material-symbols:dark-mode",
@@ -27,7 +37,7 @@ const permanentMenuItems: DropdownMenuItem[] = [
       colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
     },
   },
-];
+]);
 
 const { mobileHeaderMenuItems, desktopHeaderMenuItems, headerActionItems } =
   useHeaderMenu();
@@ -52,7 +62,7 @@ const mobileMenuGroups = computed<DropdownMenuItem[][]>(() => {
       ? [navigationItems.value as DropdownMenuItem[]]
       : []),
     ...pageGroups,
-    ...(isRecipePage.value ? [permanentMenuItems] : []),
+    permanentMenuItems.value,
     aboutItems.value,
   ].filter((g) => g.length > 0);
 });
@@ -93,11 +103,9 @@ const colorMode = useColorMode();
 
 const desktopMenuGroups = computed<DropdownMenuItem[][]>(() => {
   const pageGroups = desktopHeaderMenuItems.value as DropdownMenuItem[][];
-  return [
-    ...pageGroups,
-    ...(isRecipePage.value ? [permanentMenuItems] : []),
-    aboutItems.value,
-  ].filter((g) => g.length > 0);
+  return [...pageGroups, permanentMenuItems.value, aboutItems.value].filter(
+    (g) => g.length > 0,
+  );
 });
 
 const dropDownMenuItems = computed<DropdownMenuItem[]>(() =>
@@ -255,13 +263,6 @@ const navLeft = computed(() => {
           />
         </template>
         <template v-else>
-          <UButton
-            v-if="route.path !== '/auth'"
-            variant="ghost"
-            color="neutral"
-            icon="material-symbols:fingerprint"
-            to="/auth"
-          />
           <UColorModeButton />
         </template>
         <UDropdownMenu
