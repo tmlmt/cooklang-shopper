@@ -93,12 +93,12 @@ async function logout() {
     <div v-if="loggedIn" class="flex flex-col items-center gap-4">
       <p>
         You are logged in as
-        {{ user?.profile ?? "" }}
+        <b>{{ user?.profile ?? "" }}</b>
         ({{
           user?.role
             ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
             : ""
-        }}).
+        }})
       </p>
       <UButton
         color="neutral"
