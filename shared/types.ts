@@ -5,7 +5,6 @@ export interface FederationConfig {
   feedTitle: string;
   feedAuthor: string;
   description?: string;
-  baseUrl: string;
 }
 
 export interface SharingAboutConfig {
@@ -32,16 +31,50 @@ export interface PublicSharingConfig {
 
 export type Role = "viewer" | "editor";
 
-export type AuthProvider = "password";
+export type AuthProviderType = "password" | "oidc";
 
-export interface PasswordAuthConfig {
-  editor: string;
-  viewer: string;
+export interface PasswordProviderConfig {
+  password_editor: string;
+  password_viewer: string;
+}
+
+export interface OidcRoleMapping {
+  claim: string;
+  value: string;
+}
+
+export interface OidcProviderConfig {
+  clientId: string;
+  clientSecret: string;
+  issuerUrl: string;
+  scope?: string[];
+  roleMapping: {
+    editor: OidcRoleMapping;
+    viewer?: OidcRoleMapping;
+  };
+}
+
+export interface PasswordAuthProvider {
+  type: "password";
+  name: string;
+  config: PasswordProviderConfig;
+}
+
+export interface OidcAuthProvider {
+  type: "oidc";
+  name: string;
+  config: OidcProviderConfig;
+}
+
+export type AuthProviderEntry = PasswordAuthProvider | OidcAuthProvider;
+
+export interface PublicAuthProvider {
+  type: AuthProviderType;
+  name: string;
 }
 
 export interface AuthConfig {
-  provider: AuthProvider;
-  password?: PasswordAuthConfig;
+  providers: AuthProviderEntry[];
 }
 
 export interface AppConfig {
@@ -49,6 +82,7 @@ export interface AppConfig {
   sessionSecret: string;
   experimental?: boolean;
   title?: string;
+  baseUrl?: string;
   sharing?: SharingConfig;
 }
 

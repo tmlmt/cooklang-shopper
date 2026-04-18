@@ -35,7 +35,7 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
 ### ⚙️ General
 
 - **🏠 Self-hosted** — runs on your own server with a single Node.js process and SQLite database
-- **🔒 Role-based password authentication** — two roles (editor and viewer) with scrypt-hashed passwords and secure session cookies
+- **🔒 Role-based authentication** — two roles (editor and viewer) with password auth (scrypt-hashed) and/or OIDC single sign-on
 - **🌗 Dark / light mode** — toggle between color themes
 - **📱 Responsive design** — optimized for both desktop and mobile
 - **Custom app title** — configurable application name shown in the header and SEO tags
@@ -67,11 +67,12 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
    cd /path/to/cooklang-shopper/dist
    cp config.yaml.example config.yaml
    ```
-4. Edit `config.yaml` — set the different parameters (see the file for instructions). Generate hashed passwords for the editor and viewer roles:
+4. Edit `config.yaml` — set the different parameters (see the file for instructions). For **password** authentication, generate hashed passwords for the editor and viewer roles:
    ```bash
    node hash-password.mjs <editor-password>
    node hash-password.mjs <viewer-password>
    ```
+   For **OIDC** authentication, configure the `oidc` block with your identity provider's client credentials, issuer URL, and role mapping. Roles are assigned based on an OIDC claim in the token — either via scopes granted by the IdP or via group membership. See `config.yaml.example` for detailed examples of both strategies. Multiple OIDC providers can be configured, and password + OIDC can be enabled simultaneously.
 5. Add your `.cook` recipe files to `dist/public/recipes/`
 6. Start the server once to initialize the database (created automatically at `dist/data/cooklang-shopper.db`)
 7. Set up the systemd service:
@@ -122,7 +123,7 @@ Rollback preserves all user data including the database. If a newer version adde
 
 ## Roadmap
 
-1. Multi-role (admin, editor, viewer) authorization incl. support for OIDC
+1. ~~Multi-role (admin, editor, viewer) authorization incl. support for OIDC~~ (done — editor/viewer roles with password & OIDC support)
 2. Internationalization (i18n)
 3. Finalize shopping list features
 4. Finalize shopping cart features

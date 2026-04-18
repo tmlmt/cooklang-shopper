@@ -8,3 +8,5 @@ onlyBuiltDependencies:
   - '@prisma/engines'
   - better-sqlite3
   - prisma
+patchedDependencies:
+  nuxt-auth-utils: patches/nuxt-auth-utils.patch

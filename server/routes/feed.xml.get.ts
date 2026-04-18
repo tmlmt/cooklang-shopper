@@ -12,7 +12,7 @@ export default defineCachedEventHandler(
       });
     }
 
-    const baseUrl = federation.baseUrl.replace(/\/$/, "");
+    const baseUrl = (config.baseUrl || "").replace(/\/$/, "");
 
     // Get all public recipe paths
     const publicPaths = await getPublicRecipePaths();

@@ -1,4 +1,8 @@
-import type { PublicSharingConfig } from "~~/shared/types";
+import type {
+  AuthProviderType,
+  PublicAuthProvider,
+  PublicSharingConfig,
+} from "~~/shared/types";
 
 const defaultSharing: PublicSharingConfig = {
   defaultVisibility: "private",
@@ -10,7 +14,13 @@ const defaultSharing: PublicSharingConfig = {
 export async function usePublicConfig() {
   const { data } = await useFetch("/api/config", {
     key: "public-config",
-    default: () => ({ experimental: false, sharing: defaultSharing }),
+    default: () => ({
+      experimental: false,
+      authProviders: [
+        { type: "password", name: "local" },
+      ] as PublicAuthProvider[],
+      sharing: defaultSharing,
+    }),
   });
 
   const experimental = computed(() => data.value?.experimental ?? false);
@@ -19,6 +29,25 @@ export async function usePublicConfig() {
   const viewerCanShare = computed(
     () => data.value?.sharing?.viewerCanShare ?? false,
   );
+  const authProviders = computed(
+    () => data.value?.authProviders ?? ([] as PublicAuthProvider[]),
+  );
 
-  return { experimental, title, sharing, viewerCanShare };
+  function hasAuth(type: AuthProviderType): boolean {
+    return authProviders.value.some((p) => p.type === type);
+  }
+
+  function getAuthProviders(type: AuthProviderType): PublicAuthProvider[] {
+    return authProviders.value.filter((p) => p.type === type);
+  }
+
+  return {
+    experimental,
+    title,
+    sharing,
+    viewerCanShare,
+    authProviders,
+    hasAuth,
+    getAuthProviders,
+  };
 }

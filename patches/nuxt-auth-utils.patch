@@ -1,0 +1,18 @@
+diff --git a/dist/runtime/server/lib/oauth/oidc.js b/dist/runtime/server/lib/oauth/oidc.js
+index f40937985ecda920b7679b1c22dc63c714f5661f..16ac7f5e2557513c6c6f20c63df18015810f9c5e 100644
+--- a/dist/runtime/server/lib/oauth/oidc.js
++++ b/dist/runtime/server/lib/oauth/oidc.js
+@@ -5,9 +5,10 @@ import { withQuery } from "ufo";
+ import { getOAuthRedirectURL, handleAccessTokenErrorResponse, handleInvalidState, handleMissingConfiguration, handlePkceVerifier, handleState, requestAccessToken, handleNonce, parseJwt } from "../utils.js";
+ export function defineOAuthOidcEventHandler({ config, onSuccess, onError }) {
+   return eventHandler(async (event) => {
+-    config = defu(config, useRuntimeConfig(event).oauth.oidc, {
+-      scope: ["openid"]
+-    });
++    config = defu(config, useRuntimeConfig(event).oauth.oidc)
++    if (!config.scope?.includes('openid')) {
++      config.scope = [...(config.scope || []), 'openid']
++    }
+     const query = getQuery(event);
+     if (query.error) {
+       const error = createError({

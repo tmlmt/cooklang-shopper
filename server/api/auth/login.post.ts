@@ -1,5 +1,5 @@
 import * as v from "valibot";
-import { getAppConfig } from "#server/utils/appConfig";
+import { getPasswordProvider } from "#server/utils/appConfig";
 import type { Role } from "~~/shared/types";
 
 const LoginSchema = v.object({
@@ -8,12 +8,23 @@ const LoginSchema = v.object({
 });
 
 export default defineEventHandler(async (event) => {
+  const config = await getAppConfig();
+  const pwProvider = getPasswordProvider(config);
+  if (!pwProvider) {
+    throw createError({
+      statusCode: 403,
+      message: "Password authentication is not enabled",
+    });
+  }
+
   const { role, password } = await readValidatedBody(event, (body) =>
     v.parse(LoginSchema, body),
   );
 
-  const config = await getAppConfig();
-  const hashedPassword = config.auth.password![role];
+  const hashedPassword =
+    role === "editor"
+      ? pwProvider.config.password_editor
+      : pwProvider.config.password_viewer;
   const valid = await verifyPassword(hashedPassword, password);
 
   if (!valid) {

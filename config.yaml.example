@@ -1,10 +1,58 @@
 # Authentication configuration
+# providers is an array of authentication providers, each with a type, name, and config
 auth:
-  provider: "password"
-  password:
-    # Generate hashed passwords with: node hash-password.mjs <password>
-    editor: "<scrypt-hashed-password>"   # Full access: create, edit, delete recipes
-    viewer: "<scrypt-hashed-password>"   # Read-only: browse and view all recipes
+  providers:
+    - type: password
+      name: local
+      config:
+        # Generate hashed passwords with: node hash-password.mjs <password>
+        password_editor: "<scrypt-hashed-password>"   # Full access: create, edit, delete recipes
+        password_viewer: "<scrypt-hashed-password>"   # Read-only: browse and view all recipes
+    # - type: oidc
+    #   name: my-idp                                    # Displayed on the login button: "Sign in with my-idp"
+    #   config:
+    #     clientId: "cooklang-shopper"
+    #     clientSecret: "<client-secret>"
+    #     issuerUrl: "https://auth.example.com/oauth2/openid/cooklang-shopper/.well-known/openid-configuration"
+    #     scope: ["openid", "profile", "groups_name"]         # Optional, defaults to ["openid"]. 
+    #     roleMapping:
+    #       editor:
+    #         claim: "groups"       # OIDC claim to check (supports arrays and strings)
+    #         value: "cookbook-editors"  # Value that grants editor role
+    #       # viewer:               # Optional — everyone not matching editor defaults to viewer
+    #       #   claim: "groups"
+    #       #   value: "cookbook-viewers"
+    #
+    # Role mapping — how OIDC claims are used to assign editor vs viewer roles.
+    # The approach depends on how your identity provider exposes role/group information.
+    # Two common strategies:
+    #
+    # Strategy 1: Scope-based mapping
+    #   If your IdP adds custom scopes to the token based on group membership (e.g. kanidm and if configured accordingly)
+    #   - On the IdP side: create scope maps that grant scopes (e.g. "edit", "view")
+    #     to the appropriate user groups.
+    #   - In config.yaml: do NOT request those scopes in the "scope" parameter —
+    #     they are added automatically by the IdP based on user group membership.
+    #     Adding them would actually fail authentication for lower tier users
+    #   - Set roleMapping to match the scope claim:
+    #       roleMapping:
+    #         editor:
+    #           claim: "scopes"       # or whatever claim your IdP uses for granted scopes
+    #           value: "edit"         # scope value that grants editor role
+    #
+    # Strategy 2: Group-based mapping
+    #   If your IdP includes group names directly in a claim (e.g. "groups").
+    #   - On the IdP side: assign users to groups (e.g. "cookbook-editors", "cookbook-viewers").
+    #   - In config.yaml: you may need to add a scope to request group info
+    #     (e.g. Kanidm requires "groups_name" in the scope list).
+    #   - Set roleMapping to match the groups claim:
+    #       scope: ["openid", "profile", "groups_name"]  # request group info
+    #       roleMapping:
+    #         editor:
+    #           claim: "groups"
+    #           value: "cookbook-editors"
+    #
+    # Check your IdP's documentation to see which claims are available in the token.
 
 # Secret used to encrypt session cookies (minimum 32 characters)
 # Generate one with: openssl rand -base64 32
@@ -12,6 +60,9 @@ sessionSecret: "<session-secret>"
 
 # Enable experimental features (shopping list, shopping cart)
 experimental: false
+
+# Base URL of this instance (required for OIDC and federation)
+# baseUrl: "https://cookbook.example.com"
 
 # Custom application title (default: "Cooklang Shopper")
 # title: "My Cookbook"
@@ -30,4 +81,3 @@ experimental: false
 #     feedTitle: "My Recipe Collection"
 #     feedAuthor: "Anonymous"
 #     description: "A collection of my favourite recipes"
-#     baseUrl: "https://my-instance.example.com"  # required — used for absolute URLs in the Atom feed

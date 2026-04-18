@@ -1,5 +1,5 @@
 import { getAppConfig } from "#server/utils/appConfig";
-import type { PublicSharingConfig } from "~~/shared/types";
+import type { PublicAuthProvider, PublicSharingConfig } from "~~/shared/types";
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event).catch(() => null);
@@ -14,9 +14,16 @@ export default defineEventHandler(async (event) => {
     about: config.sharing?.about,
   };
 
+  const authProviders: PublicAuthProvider[] = config.auth.providers.map(
+    (p) => ({
+      type: p.type,
+      name: p.name,
+    }),
+  );
+
   return {
     experimental: config.experimental ?? false,
-    authProvider: config.auth.provider,
+    authProviders,
     sharing,
   };
 });

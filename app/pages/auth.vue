@@ -5,8 +5,30 @@ definePageMeta({
   layout: "naked",
 });
 const { loggedIn, user, clear, fetch: fetchSession } = useUserSession();
-const appTitle = useRuntimeConfig().public.title;
 const toast = useToast();
+const route = useRoute();
+
+// Show OIDC error if redirected back with error — before async calls so it fires immediately
+if (import.meta.client) {
+  if (route.query.error === "oidc") {
+    toast.add({
+      title: "Login failed",
+      description: "OIDC authentication failed. Please try again.",
+      color: "error",
+    });
+  } else if (route.query.error === "oidc-unreachable") {
+    toast.add({
+      title: "Provider unreachable",
+      description:
+        "The authentication provider could not be reached. Please try again later.",
+      color: "error",
+    });
+  }
+}
+
+const { hasAuth, getAuthProviders } = await usePublicConfig();
+const appTitle = useRuntimeConfig().public.title;
+const oidcProviders = computed(() => getAuthProviders("oidc"));
 const roles: { label: string; value: Role }[] = [
   { label: "Viewer", value: "viewer" },
   { label: "Editor", value: "editor" },
@@ -14,6 +36,24 @@ const roles: { label: string; value: Role }[] = [
 const selectedRole = ref<Role>("viewer");
 const password = ref("");
 const loading = ref(false);
+const oidcLoading = ref<string | null>(null);
+
+async function loginWithOidc(providerName: string) {
+  oidcLoading.value = providerName;
+  try {
+    await $fetch(`/api/auth/oidc/${providerName}/check`);
+    await navigateTo(`/auth/oidc/${providerName}`, { external: true });
+  } catch {
+    toast.add({
+      title: "Provider unreachable",
+      description:
+        "The authentication provider could not be reached. Check your network connection.",
+      color: "error",
+    });
+  } finally {
+    oidcLoading.value = null;
+  }
+}
 
 async function login() {
   loading.value = true;
@@ -52,11 +92,12 @@ async function logout() {
     <div v-if="loggedIn" class="flex flex-col items-center gap-4">
       <p>
         You are logged in as
-        {{
+        {{ user?.profile ?? "" }}
+        ({{
           user?.role
             ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
             : ""
-        }}.
+        }}).
       </p>
       <UButton
         color="neutral"
@@ -64,10 +105,35 @@ async function logout() {
         label="Go to Cookbook"
         @click="navigateTo('/')"
       />
-      <UButton color="primary" @click="logout">Logout</UButton>
+      <UButton color="primary" @click="logout">Sign out</UButton>
     </div>
     <div v-else class="flex flex-col items-center gap-4">
-      <UForm class="flex flex-col gap-4" @submit.prevent="login">
+      <UButton
+        v-for="provider in oidcProviders"
+        :key="provider.name"
+        icon="i-mdi-shield-key-outline"
+        :label="`Sign in with ${provider.name}`"
+        color="primary"
+        size="lg"
+        block
+        :loading="oidcLoading === provider.name"
+        @click="loginWithOidc(provider.name)"
+      />
+
+      <div
+        v-if="oidcProviders.length > 0 && hasAuth('password')"
+        class="flex w-full items-center gap-4"
+      >
+        <USeparator class="flex-1" />
+        <span class="text-sm text-gray-500">or</span>
+        <USeparator class="flex-1" />
+      </div>
+
+      <UForm
+        v-if="hasAuth('password')"
+        class="flex w-full flex-col gap-4"
+        @submit.prevent="login"
+      >
         <UFormField label="Role" name="role">
           <URadioGroup
             v-model="selectedRole"

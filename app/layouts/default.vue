@@ -22,7 +22,7 @@ const authMenuItem = computed<DropdownMenuItem>(() =>
         onSelect: () => navigateTo("/auth"),
       }
     : {
-        label: "Log in",
+        label: "Sign in",
         icon: "material-symbols:login",
         onSelect: () => navigateTo("/auth"),
       },
