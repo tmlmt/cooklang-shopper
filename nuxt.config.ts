@@ -56,7 +56,7 @@ export default defineNuxtConfig({
   security: {
     headers: {
       contentSecurityPolicy: {
-        "img-src": ["'self'", "data:", "https:"],
+        "img-src": ["'self'", "data:", "blob:", "https:"],
       },
     },
     requestSizeLimiter: {
