@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.9.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.9.0...v0.9.1)
+
+### 🩹 Fixes
+
+- **security:** Allow display of images selected for upload ([45da2e6](https://github.com/tmlmt/cooklang-shopper/commit/45da2e6))
+- **header:** Remove duplicate color mode item ([17db161](https://github.com/tmlmt/cooklang-shopper/commit/17db161))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.9.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.8.0...v0.9.0)
