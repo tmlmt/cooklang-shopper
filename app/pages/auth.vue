@@ -3,6 +3,8 @@ import type { Role } from "~~/shared/types";
 
 definePageMeta({
   layout: "naked",
+  title: "Authentication",
+  description: "Sign in to access your cookbook",
 });
 const { loggedIn, user, clear, fetch: fetchSession } = useUserSession();
 const toast = useToast();
@@ -26,8 +28,7 @@ if (import.meta.client) {
   }
 }
 
-const { hasAuth, getAuthProviders } = await usePublicConfig();
-const appTitle = useRuntimeConfig().public.title;
+const { hasAuth, getAuthProviders, title: appTitle } = await usePublicConfig();
 const oidcProviders = computed(() => getAuthProviders("oidc"));
 const roles: { label: string; value: Role }[] = [
   { label: "Viewer", value: "viewer" },

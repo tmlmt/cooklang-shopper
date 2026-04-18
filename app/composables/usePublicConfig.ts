@@ -15,6 +15,7 @@ export async function usePublicConfig() {
   const { data } = await useFetch("/api/config", {
     key: "public-config",
     default: () => ({
+      title: "",
       experimental: false,
       authProviders: [
         { type: "password", name: "local" },
@@ -23,8 +24,8 @@ export async function usePublicConfig() {
     }),
   });
 
+  const title = computed(() => data.value?.title || "");
   const experimental = computed(() => data.value?.experimental ?? false);
-  const title = computed(() => useRuntimeConfig().public.title as string);
   const sharing = computed(() => data.value?.sharing ?? defaultSharing);
   const viewerCanShare = computed(
     () => data.value?.sharing?.viewerCanShare ?? false,
@@ -42,8 +43,8 @@ export async function usePublicConfig() {
   }
 
   return {
-    experimental,
     title,
+    experimental,
     sharing,
     viewerCanShare,
     authProviders,

@@ -4,6 +4,7 @@ import { Recipe } from "@tmlmt/cooklang-parser";
 definePageMeta({
   layout: "shared",
   title: "Shared Recipe",
+  description: "A recipe shared from Cooklang Shopper",
 });
 
 const route = useRoute();

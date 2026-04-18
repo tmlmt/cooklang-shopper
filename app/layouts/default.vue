@@ -112,26 +112,6 @@ const dropDownMenuItems = computed<DropdownMenuItem[]>(() =>
   flattenMenuGroups(desktopMenuGroups.value),
 );
 
-//----------------
-// SEO
-//----------------
-
-useSeoMeta({
-  author: "Thomas Lamant",
-  title: (route.meta.title as string)
-    ? `${appTitle.value} - ${route.meta.title}`
-    : appTitle.value,
-  ogTitle: (route.meta.title as string)
-    ? `${appTitle.value} - ${route.meta.title}`
-    : appTitle.value,
-  description:
-    (route.meta.description as string) ||
-    "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
-  ogDescription:
-    (route.meta.description as string) ||
-    "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
-});
-
 //---------------
 // Footer
 //---------------
