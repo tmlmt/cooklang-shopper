@@ -242,9 +242,6 @@ const navLeft = computed(() => {
             @click="action.onSelect?.($event)"
           />
         </template>
-        <template v-else>
-          <UColorModeButton />
-        </template>
         <UDropdownMenu
           :items="dropDownMenuItems"
           :content="{ align: 'end' }"
