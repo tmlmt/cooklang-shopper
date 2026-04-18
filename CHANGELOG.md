@@ -1,5 +1,68 @@
 # Changelog
 
+## v0.9.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.8.0...v0.9.0)
+
+### ⚠️ BREAKING CHANGES
+
+- **Config file restructured for multi-provider auth and roles.** The `password` field at the root of `config.yaml` has been replaced by an `auth.providers` array that supports multiple authentication providers (password and OIDC). Password authentication now requires **two** hashed passwords — one per role.
+
+  Before:
+
+  ```yaml
+  password: "<scrypt-hashed-password>"
+  ```
+
+  After:
+
+  ```yaml
+  auth:
+    providers:
+      - type: password
+        name: local
+        config:
+          password_editor: "<scrypt-hashed-password>"
+          password_viewer: "<scrypt-hashed-password>"
+  ```
+
+- **Federation `baseUrl` moved to root level.** If you use federation, `sharing.federation.baseUrl` must be moved to the top-level `baseUrl` field (also required for OIDC).
+
+  Before:
+
+  ```yaml
+  sharing:
+    federation:
+      baseUrl: "https://cookbook.example.com"
+  ```
+
+  After:
+
+  ```yaml
+  baseUrl: "https://cookbook.example.com"
+  ```
+
+- **Login API now requires a `role` field.** The `POST /api/auth/login` endpoint now expects `{ role, password }` instead of just `{ password }`. This only affects custom API clients — the built-in UI handles it automatically.
+
+### 🚀 Enhancements
+
+- ⚠️ Editor and viewer roles ([2a3eefd](https://github.com/tmlmt/cooklang-shopper/commit/2a3eefd))
+- ⚠️ OIDC role-based authentication ([6ec170e](https://github.com/tmlmt/cooklang-shopper/commit/6ec170e))
+- **seo:** Add global SEO meta and serve title via API ([1f43999](https://github.com/tmlmt/cooklang-shopper/commit/1f43999))
+
+### 🩹 Fixes
+
+- **type:** Correct location for definition of user session type ([25a75ea](https://github.com/tmlmt/cooklang-shopper/commit/25a75ea))
+
+### 🎨 Styles
+
+- **header:** Dynamic auth menu item always in burger menu ([c8aef15](https://github.com/tmlmt/cooklang-shopper/commit/c8aef15))
+- **auth:** Remove dot and write profile name in bold ([37b5c7e](https://github.com/tmlmt/cooklang-shopper/commit/37b5c7e))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.8.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.7.3...v0.8.0)
