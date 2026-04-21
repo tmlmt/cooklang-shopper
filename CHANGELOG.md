@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.10.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.10.0...v0.10.1)
+
+### 🩹 Fixes
+
+- **CookMode:** Restore passive list of ingredients over one or two columns ([23ff101](https://github.com/tmlmt/cooklang-shopper/commit/23ff101))
+
+### 🏡 Chore
+
+- **config:** Improve text ([ef05995](https://github.com/tmlmt/cooklang-shopper/commit/ef05995))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.10.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.9.1...v0.10.0)
