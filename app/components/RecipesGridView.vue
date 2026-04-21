@@ -7,6 +7,7 @@ const props = defineProps<{
 }>();
 
 const shoppingStore = useShoppingStore();
+await shoppingStore.init();
 const modalChoices = await useModalChoices();
 const currentPathRef = toRef(props, "currentPath");
 const { folders, recipes } = useDirectoryContents(currentPathRef);

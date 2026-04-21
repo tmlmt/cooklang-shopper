@@ -14,6 +14,7 @@ const props = defineProps<{
 
 const recipeStore = useRecipeStore();
 const shoppingStore = useShoppingStore();
+await shoppingStore.init();
 const modalChoices = await useModalChoices();
 const toast = useToast();
 const { shoppingEnabled } = await useShoppingEnabled();
