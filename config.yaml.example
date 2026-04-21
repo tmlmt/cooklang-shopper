@@ -58,11 +58,12 @@ auth:
 # Generate one with: openssl rand -base64 32
 sessionSecret: "<session-secret>"
 
-# Shopping list & cart
-# shopping:
-#   enabled: false              # false (disabled), true (all users), or "editor-only"
+# Shopping List feature
+# shopping:              
+#   enabled: false        # false (disabled), true (all users), or "editor-only"
 
-# experimental: false              # Enable experimental features (shopping cart)
+# Experimental Features (Shopping Cart)
+# experimental: false     # disable (false), enable (true)
 
 # Base URL of this instance (required for OIDC and federation)
 # baseUrl: "https://cookbook.example.com"
