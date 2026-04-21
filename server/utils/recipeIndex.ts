@@ -2,6 +2,7 @@ import { Recipe } from "@tmlmt/cooklang-parser";
 import { stat } from "node:fs/promises";
 import path from "node:path";
 import type { RecipeIndex } from "~~/shared/types";
+import { useStorage } from "nitropack/runtime";
 
 const recipeIndex = new Map<string, RecipeIndex[number]>();
 

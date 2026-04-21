@@ -2,8 +2,7 @@ import { readdirSync } from "node:fs";
 import path from "node:path";
 import Database from "better-sqlite3";
 import { afterEach, describe, expect, it } from "vitest";
-import { runMigrations } from "~~/server/utils/migrationRunner";
-import { migrations } from "~~/server/utils/migrations";
+import { migrations, runMigrations } from "~~/server/utils/migrations";
 
 // --- Validation: auto-discovered migrations match Prisma directory ---
 
