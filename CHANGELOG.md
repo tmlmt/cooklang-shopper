@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.10.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.9.1...v0.10.0)
+
+### ⚠️ Breaking Changes
+
+- shopping list access now depends on shopping.enabled (false, true, or editor-only); experimental no longer controls /list availability.
+- session user payload now requires provider and userId fields; legacy sessions without them are cleared.
+
+### 🚀 Enhancements
+
+- **shopping:** ⚠️ Add API-backed, file-based, per-user shopping list and variant-aware choices ([aa359d7](https://github.com/tmlmt/cooklang-shopper/commit/aa359d7))
+
+### 🏡 Chore
+
+- Update tsbuildinfo file ([77a0b71](https://github.com/tmlmt/cooklang-shopper/commit/77a0b71))
+- Typecheck ([8874f88](https://github.com/tmlmt/cooklang-shopper/commit/8874f88))
+
+### 🎨 Styles
+
+- **InputNumber:** Make slightly wider to accomodate X.X ([0cb9191](https://github.com/tmlmt/cooklang-shopper/commit/0cb9191))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.9.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.9.0...v0.9.1)
