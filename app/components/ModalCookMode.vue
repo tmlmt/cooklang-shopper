@@ -473,6 +473,8 @@ watch(currentSlideIndex, () => {
                   <IngredientList
                     :ingredients="allIngredients"
                     :all-ingredients="recipe.ingredients"
+                    :desktop-columns="1"
+                    :interactive="false"
                   />
                 </div>
                 <template v-if="allCookware.length > 0">
