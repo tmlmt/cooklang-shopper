@@ -159,7 +159,7 @@ const visibleStepOverlay = ref<string | null>(null);
           v-model="servingsSpinner"
           :step="servingsStep"
           :min="servingsStep"
-          :ui="{ base: 'w-20' }"
+          :ui="{ base: 'w-22' }"
           :focus-on-change="false"
           size="sm"
         />

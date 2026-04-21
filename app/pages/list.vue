@@ -122,7 +122,7 @@ const columns: TableColumn<RecipeInfo>[] = [
         modelValue: currentValue,
         step,
         min: step,
-        ui: { base: "w-20" },
+        ui: { base: "w-22" },
         size: "sm",
         disabled: pendingServings.value[path],
         "onUpdate:modelValue": (v: number | null) => {
