@@ -1,5 +1,9 @@
 import { getAppConfig } from "#server/utils/appConfig";
-import type { PublicAuthProvider, PublicSharingConfig } from "~~/shared/types";
+import type {
+  PublicAuthProvider,
+  PublicSharingConfig,
+  ShoppingEnabled,
+} from "~~/shared/types";
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event).catch(() => null);
@@ -21,8 +25,11 @@ export default defineEventHandler(async (event) => {
     }),
   );
 
+  const shopping: ShoppingEnabled = config.shopping?.enabled ?? false;
+
   return {
     title: config.title || "Cooklang Shopper",
+    shopping,
     experimental: config.experimental ?? false,
     authProviders,
     sharing,

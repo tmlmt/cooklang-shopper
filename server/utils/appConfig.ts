@@ -3,8 +3,13 @@ import type {
   AppConfig,
   OidcAuthProvider,
   PasswordAuthProvider,
+  ShoppingConfig,
   SharingConfig,
 } from "~~/shared/types";
+
+const defaultShopping: ShoppingConfig = {
+  enabled: false,
+};
 
 const defaultSharing: SharingConfig = {
   defaultVisibility: "private",
@@ -111,6 +116,7 @@ export async function getAppConfig(): Promise<AppConfig> {
   }
 
   config.sharing = { ...defaultSharing, ...config.sharing };
+  config.shopping = { ...defaultShopping, ...config.shopping };
 
   cachedConfig = config as AppConfig;
   return cachedConfig;

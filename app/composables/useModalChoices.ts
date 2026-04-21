@@ -8,8 +8,9 @@ export default async function () {
   async function open(
     recipe: Recipe,
     initialVariant?: string,
+    initialChoices?: RecipeChoices,
   ): Promise<RecipeChoices | undefined> {
-    const instance = modal.open({ recipe, initialVariant });
+    const instance = modal.open({ recipe, initialVariant, initialChoices });
     return await instance.result;
   }
 

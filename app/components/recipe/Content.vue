@@ -219,6 +219,8 @@ const visibleStepOverlay = ref<string | null>(null);
       <IngredientList
         :ingredients="filteredIngredients"
         :all-ingredients="scaledRecipe.ingredients"
+        :interactive="false"
+        :desktop-columns="1"
       />
       <template v-if="filteredCookware.length > 0">
         <!-- Desktop: always visible -->

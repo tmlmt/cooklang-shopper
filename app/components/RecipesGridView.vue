@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Recipe } from "@tmlmt/cooklang-parser";
 import type { RecipeEssentials } from "~~/shared/types";
 
 const props = defineProps<{
@@ -6,6 +7,7 @@ const props = defineProps<{
 }>();
 
 const shoppingStore = useShoppingStore();
+const modalChoices = await useModalChoices();
 const currentPathRef = toRef(props, "currentPath");
 const { folders, recipes } = useDirectoryContents(currentPathRef);
 
@@ -24,14 +26,27 @@ const isCoversLoading = computed(() => coversStatus.value === "pending");
 const isSelected = (recipe: RecipeEssentials) =>
   shoppingStore.isRecipeInSelection(recipePath(recipe));
 
-const toggleSelection = (recipe: RecipeEssentials) => {
+const toggleSelection = async (recipe: RecipeEssentials) => {
   const path = recipePath(recipe);
   if (shoppingStore.isRecipeInSelection(path)) {
     shoppingStore.removeRecipe(path);
     return;
   }
 
-  shoppingStore.addRecipe(recipe.title, path, recipe.servings);
+  const raw = await $fetchWithHeaders<string>(`/api/recipe/${path}`);
+  const recipeObj = new Recipe(raw);
+  const choicesForDefaultVariant = recipeObj.getChoicesForVariant();
+  const hasChoices =
+    choicesForDefaultVariant.ingredientItems.size > 0 ||
+    choicesForDefaultVariant.ingredientGroups.size > 0;
+
+  let choices;
+  if (hasChoices) {
+    choices = await modalChoices.open(recipeObj);
+    if (!choices) return; // user cancelled
+  }
+
+  await shoppingStore.addRecipe(recipe.title, path, recipe.servings, choices);
 };
 </script>
 

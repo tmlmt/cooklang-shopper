@@ -1,6 +1,6 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   const { loggedIn } = useUserSession();
-  const { experimental, sharing } = await usePublicConfig();
+  const { shopping, sharing, experimental } = await usePublicConfig();
 
   if (!loggedIn.value) {
     // Always allow auth page, share links, and direct recipe pages
@@ -22,7 +22,18 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return navigateTo("/auth");
   }
 
-  if (!experimental.value && (to.path === "/list" || to.path === "/cart")) {
+  if (to.path === "/list" && !shopping.value) {
+    return navigateTo("/");
+  }
+
+  if (to.path === "/list" && shopping.value === "editor-only") {
+    const { user } = useUserSession();
+    if (user.value?.role !== "editor") {
+      return navigateTo("/");
+    }
+  }
+
+  if (to.path === "/cart" && !experimental.value) {
     return navigateTo("/");
   }
 });

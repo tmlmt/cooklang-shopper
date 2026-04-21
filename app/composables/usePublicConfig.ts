@@ -2,6 +2,7 @@ import type {
   AuthProviderType,
   PublicAuthProvider,
   PublicSharingConfig,
+  ShoppingEnabled,
 } from "~~/shared/types";
 
 const defaultSharing: PublicSharingConfig = {
@@ -16,6 +17,7 @@ export async function usePublicConfig() {
     key: "public-config",
     default: () => ({
       title: "",
+      shopping: false as ShoppingEnabled,
       experimental: false,
       authProviders: [
         { type: "password", name: "local" },
@@ -25,6 +27,7 @@ export async function usePublicConfig() {
   });
 
   const title = computed(() => data.value?.title || "");
+  const shopping = computed(() => data.value?.shopping ?? false);
   const experimental = computed(() => data.value?.experimental ?? false);
   const sharing = computed(() => data.value?.sharing ?? defaultSharing);
   const viewerCanShare = computed(
@@ -44,6 +47,7 @@ export async function usePublicConfig() {
 
   return {
     title,
+    shopping,
     experimental,
     sharing,
     viewerCanShare,

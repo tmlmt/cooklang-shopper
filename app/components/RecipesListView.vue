@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { DropdownMenuItem, TableColumn } from "@nuxt/ui";
+import { Recipe } from "@tmlmt/cooklang-parser";
 import type { RecipeEssentials } from "~~/shared/types";
 import type { FolderInfo } from "~~/app/composables/useDirectoryContents";
 import { formatTime } from "~~/shared/utils/formatTime";
@@ -13,8 +14,9 @@ const props = defineProps<{
 
 const recipeStore = useRecipeStore();
 const shoppingStore = useShoppingStore();
+const modalChoices = await useModalChoices();
 const toast = useToast();
-const { experimental } = await usePublicConfig();
+const { shoppingEnabled } = await useShoppingEnabled();
 
 const currentPathRef = toRef(props, "currentPath");
 const { folders, recipes } = useDirectoryContents(currentPathRef);
@@ -79,16 +81,32 @@ const diffRowSelection = (
   };
 };
 
-watch(selectedRows, (newSelected, oldSelected) => {
+watch(selectedRows, async (newSelected, oldSelected) => {
   const changed = diffRowSelection(oldSelected, newSelected);
 
   for (const index of changed.added) {
     const recipe = recipes.value[Number.parseInt(index, 10)];
     if (!recipe) continue;
     const path = recipePath(recipe);
-    if (!shoppingStore.isRecipeInSelection(path)) {
-      shoppingStore.addRecipe(recipe.title, path, recipe.servings);
+    if (shoppingStore.isRecipeInSelection(path)) continue;
+
+    const raw = await $fetchWithHeaders<string>(`/api/recipe/${path}`);
+    const recipeObj = new Recipe(raw);
+    const choicesForDefaultVariant = recipeObj.getChoicesForVariant();
+    const hasChoices =
+      choicesForDefaultVariant.ingredientItems.size > 0 ||
+      choicesForDefaultVariant.ingredientGroups.size > 0;
+
+    let choices;
+    if (hasChoices) {
+      choices = await modalChoices.open(recipeObj);
+      if (!choices) {
+        selectedRows.value = { ...selectedRows.value, [index]: false };
+        continue;
+      }
     }
+
+    await shoppingStore.addRecipe(recipe.title, path, recipe.servings, choices);
   }
 
   for (const index of changed.removed) {
@@ -160,7 +178,7 @@ const selectColumn: TableColumn<RecipeEssentials> = {
 };
 
 const recipeColumns = computed<TableColumn<RecipeEssentials>[]>(() => [
-  ...(experimental.value ? [selectColumn] : []),
+  ...(shoppingEnabled.value ? [selectColumn] : []),
   {
     accessorKey: "title",
     header: ({ column }) => {

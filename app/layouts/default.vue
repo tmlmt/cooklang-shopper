@@ -6,7 +6,8 @@ import type {
 } from "@nuxt/ui";
 
 const route = useRoute();
-const { experimental, title: appTitle, sharing } = await usePublicConfig();
+const { title: appTitle, sharing, experimental } = await usePublicConfig();
+const { shoppingEnabled } = await useShoppingEnabled();
 const { hasInAppHistory } = usePreviousRoute();
 const { loggedIn } = useUserSession();
 
@@ -58,7 +59,7 @@ const wrapForMobile = (items: DropdownMenuItem[]) =>
 const mobileMenuGroups = computed<DropdownMenuItem[][]>(() => {
   const pageGroups = mobileHeaderMenuItems.value as DropdownMenuItem[][];
   return [
-    ...(experimental.value
+    ...(shoppingEnabled.value || experimental.value
       ? [navigationItems.value as DropdownMenuItem[]]
       : []),
     ...pageGroups,
@@ -72,18 +73,20 @@ const navigationItems = computed<BreadcrumbItem[]>(() => {
     { label: "Recipes", to: "/", active: route.path === "/" },
   ];
   if (loggedIn.value) {
-    items.push(
-      {
+    if (shoppingEnabled.value) {
+      items.push({
         label: "Shopping List",
         to: "/list",
         active: route.path === "/list",
-      },
-      {
+      });
+    }
+    if (experimental.value) {
+      items.push({
         label: "Shopping Cart",
         to: "/cart",
         active: route.path === "/cart",
-      },
-    );
+      });
+    }
   }
   return items;
 });
@@ -117,10 +120,10 @@ const dropDownMenuItems = computed<DropdownMenuItem[]>(() =>
 //---------------
 
 const navRight = computed(() => {
-  if (!experimental.value || !loggedIn.value) return undefined;
-  if (route.path === "/") {
+  if (!loggedIn.value) return undefined;
+  if (route.path === "/" && shoppingEnabled.value) {
     return { text: "Continue to shopping list", to: "/list" };
-  } else if (route.path === "/list") {
+  } else if (route.path === "/list" && experimental.value) {
     return { text: "Continue to shopping cart", to: "/cart" };
   } else {
     return undefined;
@@ -141,7 +144,7 @@ const navLeft = computed(() => {
     }
     return undefined;
   }
-  if (!experimental.value || !loggedIn.value) return undefined;
+  if (!loggedIn.value) return undefined;
   if (route.path === "/list") {
     return { text: "Back to recipes", to: "/" };
   } else if (route.path === "/cart") {
@@ -207,7 +210,7 @@ const navLeft = computed(() => {
         </span>
       </template>
       <UBreadcrumb
-        v-if="experimental"
+        v-if="shoppingEnabled || experimental"
         :ui="{ root: 'mt-1', link: 'text-md' }"
         :items="navigationItems"
       />

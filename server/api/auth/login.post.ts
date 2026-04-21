@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
   }
 
   await setUserSession(event, {
-    user: { profile: "Chef", role },
+    user: { profile: "Chef", role, provider: "password", userId: role },
   });
 
   return { loggedIn: true };

@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync } from "node:fs";
 import path from "node:path";
-import { runMigrations } from "../utils/migrationRunner";
+import { runMigrations } from "../utils/migrations";
 
 export default defineNitroPlugin(async () => {
   const dataDir = path.resolve(process.cwd(), "data");

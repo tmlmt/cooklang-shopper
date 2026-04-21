@@ -1,112 +1,209 @@
-import type { RecipeRaw, RecipeInfo } from "~~/shared/types";
-import type { RecipeChoices } from "@tmlmt/cooklang-parser";
+import type { RecipeInfo, RecipeChoicesWire } from "~~/shared/types";
+import type { RecipeChoices, AddedIngredient } from "@tmlmt/cooklang-parser";
+import { toRecipeChoices } from "~~/shared/utils/recipeChoices";
+
+interface ShoppingListResponse {
+  recipes: Array<Omit<RecipeInfo, "choices"> & { choices?: RecipeChoicesWire }>;
+  ingredients: AddedIngredient[];
+  checkedItems: string[];
+}
+
+function serializeRecipeChoices(
+  choices?: RecipeChoices,
+): RecipeChoicesWire | undefined {
+  if (!choices) return undefined;
+  return {
+    ingredientItems: [
+      ...(choices.ingredientItems ?? new Map<string, number>()).entries(),
+    ],
+    ingredientGroups: [
+      ...(choices.ingredientGroups ?? new Map<string, number>()).entries(),
+    ],
+    variant: choices.variant,
+  };
+}
 
 export const useShoppingStore = defineStore("shopping", () => {
   const recipeSelection = ref<RecipeInfo[]>([]);
-  const recipeList = ref<RecipeRaw[]>([]);
+  const ingredients = ref<AddedIngredient[]>([]);
+  const checkedItems = ref<Set<string>>(new Set());
 
-  //------------------------------
-  // recipeSelection methods
-  //------------------------------
+  let _loaded = false;
 
-  function addRecipe(
+  // ---------------------------------------------------------------------------
+  // Data fetching
+  // ---------------------------------------------------------------------------
+
+  function applyResponse(data: ShoppingListResponse): void {
+    recipeSelection.value = data.recipes.map((recipe) => ({
+      ...recipe,
+      choices: recipe.choices ? toRecipeChoices(recipe.choices) : undefined,
+    }));
+    ingredients.value = data.ingredients;
+    checkedItems.value = new Set(data.checkedItems);
+    _loaded = true;
+  }
+
+  async function fetchList(): Promise<void> {
+    const data =
+      await $fetchWithHeaders<ShoppingListResponse>("/api/shopping-list");
+    applyResponse(data);
+  }
+
+  async function init(): Promise<void> {
+    if (_loaded) return;
+    try {
+      await fetchList();
+    } catch {
+      // Shopping may be disabled or user not authenticated
+      _loaded = true;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Mutations (API-backed)
+  // ---------------------------------------------------------------------------
+
+  async function addRecipe(
     title: string,
     path: string,
     servings: number,
     choices?: RecipeChoices,
-  ): boolean {
-    // Checking if a recipe is already in the list
-    if (isRecipeInSelection(path)) {
-      return false;
-    }
+  ): Promise<boolean> {
+    if (isRecipeInSelection(path)) return false;
+    // Optimistic add for instant UI feedback
     recipeSelection.value.push({ title, path, servings, choices });
+    try {
+      const data = await $fetchWithHeaders<ShoppingListResponse>(
+        "/api/shopping-list/recipes",
+        {
+          method: "POST",
+          body: {
+            path,
+            servings,
+            choices: serializeRecipeChoices(choices),
+          },
+        },
+      );
+      applyResponse(data);
+    } catch (e) {
+      // Rollback optimistic add
+      const idx = recipeSelection.value.findIndex((r) => r.path === path);
+      if (idx > -1) recipeSelection.value.splice(idx, 1);
+      throw e;
+    }
     return true;
   }
 
-  function editServings(
+  async function editServings(
     path: string,
     servings: number,
     choices?: RecipeChoices,
-  ): boolean {
-    // Checking if a recipe is already in the list
-    if (!isRecipeInSelection(path)) {
-      return false;
-    }
-    const index = recipeSelection.value.findIndex(
-      (recipe) => recipe.path === path,
-    );
-    recipeSelection.value[index]!.servings = servings;
-    if (choices !== undefined) {
-      recipeSelection.value[index]!.choices = choices;
+  ): Promise<boolean> {
+    if (!isRecipeInSelection(path)) return false;
+    // Optimistic update
+    const recipe = recipeSelection.value.find((r) => r.path === path);
+    const oldServings = recipe!.servings;
+    const oldChoices = recipe!.choices;
+    recipe!.servings = servings;
+    if (choices !== undefined) recipe!.choices = choices;
+    try {
+      const data = await $fetchWithHeaders<ShoppingListResponse>(
+        "/api/shopping-list/recipes",
+        {
+          method: "PATCH",
+          body: {
+            path,
+            servings,
+            choices: serializeRecipeChoices(choices),
+          },
+        },
+      );
+      applyResponse(data);
+    } catch (e) {
+      // Rollback optimistic update
+      recipe!.servings = oldServings;
+      recipe!.choices = oldChoices;
+      throw e;
     }
     return true;
   }
 
-  function removeRecipe(path: string): boolean {
-    const index = recipeSelection.value.findIndex(
-      (recipe) => recipe.path === path,
+  async function removeRecipe(path: string): Promise<boolean> {
+    const idx = recipeSelection.value.findIndex((r) => r.path === path);
+    if (idx === -1) return false;
+    // Optimistic removal for immediate UI feedback
+    recipeSelection.value.splice(idx, 1);
+    const data = await $fetchWithHeaders<ShoppingListResponse>(
+      "/api/shopping-list/recipes",
+      { method: "DELETE", body: { path } },
     );
-    if (index > -1) {
-      recipeSelection.value.splice(index, 1);
-      return true;
-    }
-    return false;
+    applyResponse(data);
+    return true;
   }
+
+  async function clearList(): Promise<void> {
+    const data = await $fetchWithHeaders<ShoppingListResponse>(
+      "/api/shopping-list",
+      { method: "DELETE" },
+    );
+    applyResponse(data);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Checked items
+  // ---------------------------------------------------------------------------
+
+  async function checkIngredient(
+    name: string,
+    checked: boolean,
+  ): Promise<void> {
+    const data = await $fetchWithHeaders<ShoppingListResponse>(
+      "/api/shopping-list/checks",
+      { method: "POST", body: { ingredientName: name, checked } },
+    );
+    applyResponse(data);
+  }
+
+  function isChecked(name: string): boolean {
+    return checkedItems.value.has(name);
+  }
+
+  async function uncheckAll(): Promise<void> {
+    const data = await $fetchWithHeaders<ShoppingListResponse>(
+      "/api/shopping-list/checks",
+      { method: "DELETE" },
+    );
+    applyResponse(data);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Synchronous lookups
+  // ---------------------------------------------------------------------------
 
   function isRecipeInSelection(path: string): boolean {
     return recipeSelection.value.some((recipe) => recipe.path === path);
   }
 
-  function getRecipeInSelection(path: string): RecipeInfo | undefined {
-    return recipeSelection.value.find((recipe) => recipe.path === path);
-  }
-
   function getServings(path: string): number | undefined {
-    const recipe = getRecipeInSelection(path);
-    if (!recipe) return undefined;
-    return recipe.servings;
-  }
-
-  //------------------------
-  // recipeList methods
-  //------------------------
-
-  async function fetchAllRecipes() {
-    for (const recipe of recipeList.value) {
-      await fetchRecipe(recipe.path);
-    }
-  }
-
-  async function fetchRecipe(path: string): Promise<string> {
-    if (!isRecipeInList(path)) {
-      const res = await $fetchWithHeaders<string>(`/api/recipe/${path}`);
-      recipeList.value.push({ path, rawRecipe: res });
-      return res;
-    }
-
-    return getRecipeInList(path)!;
-  }
-
-  function isRecipeInList(path: string): boolean {
-    return recipeList.value.some((recipe) => recipe.path === path);
-  }
-
-  function getRecipeInList(path: string): string | undefined {
-    const recipe = recipeList.value.find((recipe) => recipe.path === path);
-    return recipe?.rawRecipe;
+    return recipeSelection.value.find((recipe) => recipe.path === path)
+      ?.servings;
   }
 
   return {
     recipeSelection,
-    recipeList,
+    ingredients,
+    checkedItems,
+    init,
+    fetchList,
     addRecipe,
     editServings,
     removeRecipe,
+    clearList,
+    checkIngredient,
+    isChecked,
+    uncheckAll,
     isRecipeInSelection,
-    getRecipeInSelection,
     getServings,
-    fetchAllRecipes,
-    fetchRecipe,
-    getRecipeInList,
   };
 });

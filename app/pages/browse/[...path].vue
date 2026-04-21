@@ -62,6 +62,7 @@ const modalFile = await useModalFile();
 const modalInput = await useModalInput();
 const modalConfirmation = await useModalConfirmation();
 const shoppingStore = useShoppingStore();
+await shoppingStore.init();
 
 const openNewRecipeModal = async () => {
   const result = await modalFile.open("new");

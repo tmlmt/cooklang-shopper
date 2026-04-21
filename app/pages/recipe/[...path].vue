@@ -72,7 +72,11 @@ validateRecipePath(path);
 
 const shoppingStore = useShoppingStore();
 const recipeStore = useRecipeStore();
-const { experimental, viewerCanShare } = await usePublicConfig();
+const { viewerCanShare } = await usePublicConfig();
+const { shoppingEnabled } = await useShoppingEnabled();
+if (shoppingEnabled.value) {
+  await shoppingStore.init();
+}
 const { loggedIn } = useUserSession();
 const { isEditor } = useRole();
 const {
@@ -313,7 +317,7 @@ const menuItems = computed<DropdownMenuItem[]>(() => {
             });
 
             recipeStore.removeRecipe(recipeName, recipeDir);
-            shoppingStore.removeRecipe(path);
+            await shoppingStore.removeRecipe(path);
 
             toast.add({
               title: "Success",
@@ -433,13 +437,13 @@ defineShortcuts({
 // Shopping List
 //--------------------
 
-const hasIngredientChoices = computed(() => {
-  if (!recipe.value) return false;
-  return (
-    recipe.value.choices.ingredientItems.size > 0 ||
-    recipe.value.choices.ingredientGroups.size > 0
-  );
-});
+function hasIngredientChoicesForVariant(
+  currentRecipe: Recipe,
+  variant?: string,
+): boolean {
+  const choices = currentRecipe.getChoicesForVariant(variant);
+  return choices.ingredientItems.size > 0 || choices.ingredientGroups.size > 0;
+}
 
 const addToShoppingList = async (
   scaledRecipe: Recipe,
@@ -451,13 +455,13 @@ const addToShoppingList = async (
 
   let choicesToStore: RecipeChoices | undefined = currentChoices;
 
-  if (hasIngredientChoices.value) {
+  if (hasIngredientChoicesForVariant(scaledRecipe, currentVariant)) {
     const result = await modalChoices.open(scaledRecipe, currentVariant);
     if (!result) return; // User cancelled
     choicesToStore = result;
   }
 
-  shoppingStore.addRecipe(
+  await shoppingStore.addRecipe(
     scaledRecipe.metadata.title,
     path,
     servings,
@@ -470,12 +474,31 @@ const addToShoppingList = async (
   });
 };
 
-const editServingsInShoppingList = (
+const editServingsInShoppingList = async (
+  scaledRecipe: Recipe,
   servings: number | undefined,
   currentChoices: RecipeChoices,
+  selectedVariant: string | undefined,
 ) => {
   if (recipe.value?.metadata.title && servings) {
-    shoppingStore.editServings(path, servings, currentChoices);
+    let choicesToStore = currentChoices;
+
+    const existingChoices = shoppingStore.recipeSelection.find(
+      (r) => r.path === path,
+    )?.choices;
+    const modalVariant = existingChoices?.variant ?? selectedVariant;
+    if (hasIngredientChoicesForVariant(scaledRecipe, modalVariant)) {
+      const confirmedChoices = await modalChoices.open(
+        scaledRecipe,
+        modalVariant,
+        existingChoices,
+      );
+
+      if (!confirmedChoices) return;
+      choicesToStore = confirmedChoices;
+    }
+
+    await shoppingStore.editServings(path, servings, choicesToStore);
     toast.add({
       color: "success",
       title: "Success",
@@ -626,24 +649,28 @@ if (loggedIn.value) {
           <UButton
             v-if="
               loggedIn &&
-              experimental &&
+              shoppingEnabled &&
               !shoppingStore.isRecipeInSelection(path)
             "
-            size="md"
+            size="sm"
             color="primary"
-            label="Add to shopping list"
+            label="Add to list"
             icon="material-symbols:add-shopping-cart-rounded"
+            class="ml-2"
             @click="addToShoppingList(sr, servings, choices, selectedVariant)"
           />
           <UButton
             v-else-if="
               loggedIn &&
-              experimental &&
+              shoppingEnabled &&
               shoppingStore.isRecipeInSelection(path)
             "
             size="sm"
+            class="ml-2"
             color="secondary"
-            @click="editServingsInShoppingList(servings, choices)"
+            @click="
+              editServingsInShoppingList(sr, servings, choices, selectedVariant)
+            "
             ><Icon
               class="text-lg"
               name="material-symbols:change-circle-rounded"

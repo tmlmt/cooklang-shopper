@@ -1,0 +1,470 @@
+import { ShoppingList, Recipe } from "@tmlmt/cooklang-parser";
+import type {
+  RecipeChoices,
+  ShoppingListRecipeRef,
+  AddedIngredient,
+} from "@tmlmt/cooklang-parser";
+import type { RecipeChoicesWire } from "~~/shared/types";
+import {
+  readFile,
+  writeFile,
+  readdir,
+  unlink,
+  appendFile,
+} from "node:fs/promises";
+import nodePath from "node:path";
+
+const recipesDir = nodePath.resolve(process.cwd(), "public", "recipes");
+
+// Index: userKey → listName → ShoppingList
+// listName "" = default list
+const index = new Map<string, Map<string, ShoppingList>>();
+
+type ShoppingFileType = "list" | "checked";
+
+// ---------------------------------------------------------------------------
+// Filename helpers
+// ---------------------------------------------------------------------------
+
+function buildFilename(
+  type: ShoppingFileType,
+  userKey: string,
+  listName: string = "",
+): string {
+  const base = type === "list" ? ".shopping-list" : ".shopping-checked";
+  return listName ? `${base}.${userKey}.${listName}` : `${base}.${userKey}`;
+}
+
+export function parseFilename(
+  filename: string,
+): { type: ShoppingFileType; userKey: string; listName: string } | null {
+  let type: ShoppingFileType;
+  let rest: string;
+
+  if (filename.startsWith(".shopping-list.")) {
+    type = "list";
+    rest = filename.substring(".shopping-list.".length);
+  } else if (filename.startsWith(".shopping-checked.")) {
+    type = "checked";
+    rest = filename.substring(".shopping-checked.".length);
+  } else {
+    return null;
+  }
+
+  if (!rest) return null;
+
+  // userKey has no dots (sanitized in getUserKey), so first dot separates
+  // userKey from listName
+  const dotIndex = rest.indexOf(".");
+  if (dotIndex === -1) {
+    return { type, userKey: rest, listName: "" };
+  }
+  return {
+    type,
+    userKey: rest.substring(0, dotIndex),
+    listName: rest.substring(dotIndex + 1),
+  };
+}
+
+function resolvedPath(
+  type: ShoppingFileType,
+  userKey: string,
+  listName: string = "",
+): string {
+  return nodePath.join(recipesDir, buildFilename(type, userKey, listName));
+}
+
+// ---------------------------------------------------------------------------
+// Index access
+// ---------------------------------------------------------------------------
+
+function getOrCreateUserLists(userKey: string): Map<string, ShoppingList> {
+  let userLists = index.get(userKey);
+  if (!userLists) {
+    userLists = new Map();
+    index.set(userKey, userLists);
+  }
+  return userLists;
+}
+
+export function getShoppingList(
+  userKey: string,
+  listName: string = "",
+): ShoppingList | undefined {
+  return index.get(userKey)?.get(listName);
+}
+
+function getOrCreateShoppingList(
+  userKey: string,
+  listName: string = "",
+): ShoppingList {
+  const userLists = getOrCreateUserLists(userKey);
+  let sl = userLists.get(listName);
+  if (!sl) {
+    sl = new ShoppingList();
+    userLists.set(listName, sl);
+  }
+  return sl;
+}
+
+export function getUserListNames(userKey: string): string[] {
+  const userLists = index.get(userKey);
+  if (!userLists) return [];
+  return Array.from(userLists.keys());
+}
+
+// ---------------------------------------------------------------------------
+// File I/O helpers
+// ---------------------------------------------------------------------------
+
+async function writeListFile(
+  userKey: string,
+  listName: string = "",
+): Promise<void> {
+  const sl = getShoppingList(userKey, listName);
+  if (!sl) return;
+  await writeFile(
+    resolvedPath("list", userKey, listName),
+    sl.serializeFile(),
+    "utf-8",
+  );
+}
+
+async function deleteFiles(
+  userKey: string,
+  listName: string = "",
+): Promise<void> {
+  for (const type of ["list", "checked"] as ShoppingFileType[]) {
+    try {
+      await unlink(resolvedPath(type, userKey, listName));
+    } catch {
+      // File may not exist
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Hydration: resolve recipe refs by loading .cook files
+// ---------------------------------------------------------------------------
+
+async function hydrateRef(
+  sl: ShoppingList,
+  ref: ShoppingListRecipeRef,
+): Promise<void> {
+  // Parser paths use ./ prefix, storage uses raw path + .cook extension
+  const storagePath = ref.path.startsWith("./")
+    ? ref.path.substring(2)
+    : ref.path;
+  const storage = useStorage("recipes");
+  const content = await storage.getItem(storagePath + ".cook");
+
+  if (!content) {
+    console.warn(
+      `Shopping index: recipe "${ref.path}" not found, skipping hydration`,
+    );
+    return;
+  }
+
+  sl.hydrateRecipe(ref.path, new Recipe(content.toString()));
+}
+
+// ---------------------------------------------------------------------------
+// Initialization (called at startup)
+// ---------------------------------------------------------------------------
+
+export async function initShoppingIndex(): Promise<void> {
+  console.log("Starting shopping lists indexation");
+  index.clear();
+
+  let entries: string[];
+  try {
+    entries = await readdir(recipesDir);
+  } catch {
+    console.warn("Shopping index: recipes directory not found");
+    return;
+  }
+
+  // First pass: load all .shopping-list.* files
+  for (const filename of entries) {
+    const parsed = parseFilename(filename);
+    if (!parsed || parsed.type !== "list") continue;
+
+    try {
+      const content = await readFile(
+        nodePath.join(recipesDir, filename),
+        "utf-8",
+      );
+      const sl = getOrCreateShoppingList(parsed.userKey, parsed.listName);
+      const refs = sl.loadFile(content);
+
+      for (const ref of refs) {
+        await hydrateRef(sl, ref);
+      }
+    } catch (err) {
+      console.warn(`Shopping index: failed to load "${filename}":`, err);
+    }
+  }
+
+  // Second pass: load all .shopping-checked.* files
+  for (const filename of entries) {
+    const parsed = parseFilename(filename);
+    if (!parsed || parsed.type !== "checked") continue;
+
+    const sl = getShoppingList(parsed.userKey, parsed.listName);
+    if (!sl) continue; // Orphaned checked file
+
+    try {
+      const content = await readFile(
+        nodePath.join(recipesDir, filename),
+        "utf-8",
+      );
+      sl.loadCheckedFile(content);
+    } catch (err) {
+      console.warn(
+        `Shopping index: failed to load checked file "${filename}":`,
+        err,
+      );
+    }
+  }
+  console.log("Completed shopping lists indexation");
+}
+
+// ---------------------------------------------------------------------------
+// Public API return type
+// ---------------------------------------------------------------------------
+
+export interface ShoppingListData {
+  recipes: Array<{
+    path: string;
+    title: string;
+    servings: number;
+    choices?: RecipeChoicesWire;
+  }>;
+  ingredients: AddedIngredient[];
+  checkedItems: string[];
+}
+
+export function getShoppingListData(
+  userKey: string,
+  listName: string = "",
+): ShoppingListData {
+  const sl = getShoppingList(userKey, listName);
+  if (!sl) {
+    return { recipes: [], ingredients: [], checkedItems: [] };
+  }
+
+  const recipeIndex = getRecipeIndex();
+
+  const recipes = sl.recipes.map((r) => {
+    // Strip ./ prefix to get the recipe key for index lookup
+    const recipePath = r.path?.startsWith("./")
+      ? r.path.substring(2)
+      : (r.path ?? "");
+    const indexEntry = recipeIndex.get(recipePath);
+    const servings =
+      "servings" in r ? r.servings : (r.recipe.servings ?? 1) * r.factor;
+
+    return {
+      path: recipePath,
+      title: indexEntry?.title ?? recipePath.split("/").pop() ?? recipePath,
+      servings,
+      choices: r.choices
+        ? {
+            ingredientItems: [
+              ...(
+                r.choices.ingredientItems ?? new Map<string, number>()
+              ).entries(),
+            ],
+            ingredientGroups: [
+              ...(
+                r.choices.ingredientGroups ?? new Map<string, number>()
+              ).entries(),
+            ],
+            variant: r.choices.variant,
+          }
+        : undefined,
+    };
+  });
+
+  return {
+    recipes,
+    ingredients: sl.ingredients,
+    checkedItems: Array.from(sl.checkedItems),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Mutations
+// ---------------------------------------------------------------------------
+
+export async function addRecipeToList(
+  userKey: string,
+  recipePath: string,
+  servings: number,
+  choices?: RecipeChoices,
+  listName: string = "",
+): Promise<void> {
+  const sl = getOrCreateShoppingList(userKey, listName);
+
+  // Check if recipe is already in the list
+  const parserPath = `./${recipePath}`;
+  if (sl.recipes.some((r) => r.path === parserPath)) {
+    throw createError({
+      statusCode: 409,
+      statusMessage: "Recipe already in shopping list",
+    });
+  }
+
+  // Load recipe content
+  const storage = useStorage("recipes");
+  const content = await storage.getItem(recipePath + ".cook");
+  if (!content) {
+    throw createError({ statusCode: 404, statusMessage: "Recipe not found" });
+  }
+
+  const recipe = new Recipe(content.toString());
+  sl.addRecipe(recipe, {
+    path: parserPath,
+    scaling: { servings },
+    choices,
+  });
+
+  await writeListFile(userKey, listName);
+}
+
+export async function updateRecipeInList(
+  userKey: string,
+  recipePath: string,
+  servings: number,
+  choices?: RecipeChoices,
+  listName: string = "",
+): Promise<void> {
+  const sl = getShoppingList(userKey, listName);
+  if (!sl) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Shopping list not found",
+    });
+  }
+
+  const parserPath = `./${recipePath}`;
+
+  // Remove then re-add with new options
+  const recipeIndex = sl.recipes.findIndex((r) => r.path === parserPath);
+  if (recipeIndex === -1) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Recipe not found in shopping list",
+    });
+  }
+  sl.removeRecipe(recipeIndex);
+
+  const storage = useStorage("recipes");
+  const content = await storage.getItem(recipePath + ".cook");
+  if (!content) {
+    throw createError({ statusCode: 404, statusMessage: "Recipe not found" });
+  }
+
+  sl.addRecipe(new Recipe(content.toString()), {
+    path: parserPath,
+    scaling: { servings },
+    choices,
+  });
+
+  await writeListFile(userKey, listName);
+}
+
+export async function removeRecipeFromList(
+  userKey: string,
+  recipePath: string,
+  listName: string = "",
+): Promise<void> {
+  const sl = getShoppingList(userKey, listName);
+  if (!sl) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Shopping list not found",
+    });
+  }
+
+  const parserPath = `./${recipePath}`;
+  const recipeIdx = sl.recipes.findIndex((r) => r.path === parserPath);
+  if (recipeIdx === -1) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Recipe not found in shopping list",
+    });
+  }
+  sl.removeRecipe(recipeIdx);
+
+  if (sl.recipes.length === 0 && sl.manualItems.length === 0) {
+    // Clean up empty list
+    const userLists = index.get(userKey);
+    if (userLists) {
+      userLists.delete(listName);
+      if (userLists.size === 0) index.delete(userKey);
+    }
+    await deleteFiles(userKey, listName);
+  } else {
+    await writeListFile(userKey, listName);
+  }
+}
+
+export async function clearList(
+  userKey: string,
+  listName: string = "",
+): Promise<void> {
+  const userLists = index.get(userKey);
+  if (userLists) {
+    userLists.delete(listName);
+    if (userLists.size === 0) index.delete(userKey);
+  }
+  await deleteFiles(userKey, listName);
+}
+
+export async function checkIngredient(
+  userKey: string,
+  ingredientName: string,
+  checked: boolean,
+  listName: string = "",
+): Promise<void> {
+  const sl = getShoppingList(userKey, listName);
+  if (!sl) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Shopping list not found",
+    });
+  }
+
+  if (checked) {
+    sl.check(ingredientName);
+  } else {
+    sl.uncheck(ingredientName);
+  }
+
+  // Append to checked file (fast, no full rewrite)
+  const line = ShoppingList.checkedAppendLine(ingredientName, checked);
+  await appendFile(resolvedPath("checked", userKey, listName), line, "utf-8");
+}
+
+export async function uncheckAll(
+  userKey: string,
+  listName: string = "",
+): Promise<void> {
+  const sl = getShoppingList(userKey, listName);
+  if (!sl) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Shopping list not found",
+    });
+  }
+
+  sl.uncheckAll();
+
+  // Delete the checked file
+  try {
+    await unlink(resolvedPath("checked", userKey, listName));
+  } catch {
+    // File may not exist
+  }
+}

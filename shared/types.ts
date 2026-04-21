@@ -77,13 +77,26 @@ export interface AuthConfig {
   providers: AuthProviderEntry[];
 }
 
+export type ShoppingEnabled = boolean | "editor-only";
+
+export interface ShoppingConfig {
+  enabled: ShoppingEnabled;
+}
+
 export interface AppConfig {
   auth: AuthConfig;
   sessionSecret: string;
+  shopping?: ShoppingConfig;
   experimental?: boolean;
   title?: string;
   baseUrl?: string;
   sharing?: SharingConfig;
+}
+
+export interface RecipeChoicesWire {
+  ingredientItems: Array<[string, number]>;
+  ingredientGroups: Array<[string, number]>;
+  variant?: string;
 }
 
 export interface RecipeInfo {
@@ -91,11 +104,6 @@ export interface RecipeInfo {
   path: string;
   servings: number;
   choices?: RecipeChoices;
-}
-
-export interface RecipeRaw {
-  path: string;
-  rawRecipe: string;
 }
 
 export interface RecipeEssentials {

@@ -3,7 +3,7 @@ export default defineNuxtPlugin({
   dependsOn: ["session-fetch-plugin"],
   async setup() {
     const { user, clear } = useUserSession();
-    if (user.value && !user.value.role) {
+    if (user.value && (!user.value.role || !user.value.provider)) {
       await clear();
     }
   },

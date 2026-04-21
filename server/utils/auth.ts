@@ -1,4 +1,5 @@
 import type { H3Event } from "h3";
+import type { UserSession } from "#auth-utils";
 
 /**
  * Check if the request has a valid user session without throwing an error.
@@ -11,4 +12,16 @@ export async function isAuthenticated(event: H3Event): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+/** Sanitize a string for use in dotfile names: replace dots with underscores */
+function sanitize(s: string): string {
+  return s.replace(/\./g, "_");
+}
+
+export function getUserKey(session: UserSession): string {
+  if (!session.user) {
+    throw createError({ statusCode: 401, statusMessage: "Not authenticated" });
+  }
+  return `${sanitize(session.user.provider)}-${sanitize(session.user.userId)}`;
 }

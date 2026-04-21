@@ -62,9 +62,10 @@ export default defineEventHandler(async (event) => {
       const claims = user as unknown as Record<string, unknown>;
       const role = resolveRole(claims, oidc.roleMapping);
       const profile = resolveProfile(claims);
+      const userId = String(claims.sub ?? "unknown");
 
       await setUserSession(event, {
-        user: { profile, role },
+        user: { profile, role, provider: name!, userId },
       });
 
       return sendRedirect(event, "/");

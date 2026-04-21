@@ -14,7 +14,7 @@ const emit = defineEmits<{
   toggle: [];
 }>();
 
-const { experimental } = await usePublicConfig();
+const { shoppingEnabled } = await useShoppingEnabled();
 
 const isTouchDevice = ref(false);
 const isImageActive = ref(false);
@@ -46,12 +46,12 @@ onBeforeUnmount(() => {
 });
 
 const setImageHoverState = (active: boolean) => {
-  if (isTouchDevice.value || !experimental.value) return;
+  if (isTouchDevice.value || !shoppingEnabled.value) return;
   isImageActive.value = active;
 };
 
 const handleImageTap = (event: Event) => {
-  if (!isTouchDevice.value || !experimental.value) return;
+  if (!isTouchDevice.value || !shoppingEnabled.value) return;
   event.preventDefault();
   event.stopPropagation();
   isImageActive.value = !isImageActive.value;
