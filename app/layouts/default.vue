@@ -239,6 +239,7 @@ const navLeft = computed(() => {
             :key="`action-${action.label}`"
             :label="action.label"
             :icon="action.icon"
+            class="hover:cursor-pointer"
             :variant="action.variant ?? 'ghost'"
             :color="(action.color as any) ?? 'neutral'"
             :ui="{ label: 'hidden md:flex ' }"
@@ -248,6 +249,8 @@ const navLeft = computed(() => {
         <UDropdownMenu
           :items="dropDownMenuItems"
           :content="{ align: 'end' }"
+          class="hover:cursor-pointer"
+          :ui="{ item: 'hover:cursor-pointer' }"
           :modal="false"
         >
           <UButton
