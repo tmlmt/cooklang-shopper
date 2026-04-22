@@ -42,6 +42,12 @@ const pendingServings = ref<Record<string, boolean>>({});
 const draftServings = ref<Record<string, number>>({});
 const saveTimers = ref<Record<string, ReturnType<typeof setTimeout>>>({});
 
+const initialServings = ref<Record<string, number>>(
+  Object.fromEntries(
+    shoppingStore.recipeSelection.map((r) => [r.path, r.servings]),
+  ),
+);
+
 function clearSaveTimer(path: string): void {
   const timer = saveTimers.value[path];
   if (!timer) return;
@@ -155,38 +161,55 @@ const columns: TableColumn<RecipeInfo>[] = [
   {
     accessorKey: "servings",
     header: "Servings",
-    meta: { class: { td: "w-32" } },
+    meta: { class: { td: "w-36" } },
     cell: ({ row }) => {
       const path = row.original.path;
       const choices = row.original.choices;
       const step = servingsStepFrom(row.original.servings);
       const currentValue = draftServings.value[path] ?? row.original.servings;
-      return h(UInputNumber, {
-        modelValue: currentValue,
-        step,
-        min: step,
-        ui: { base: "w-22" },
-        size: "sm",
-        disabled: pendingServings.value[path],
-        "onUpdate:modelValue": (v: number | null) => {
-          if (typeof v === "number") {
-            draftServings.value[path] = v;
-            scheduleServingsSave(path, v, choices);
-          }
-        },
-        onBlur: () => {
-          clearSaveTimer(path);
-          const value = draftServings.value[path] ?? row.original.servings;
-          void saveServings(path, value, choices);
-        },
-        onKeydown: (e: KeyboardEvent) => {
-          if (e.key === "Enter") {
+      const originalValue = initialServings.value[path];
+      return h("div", { class: "flex items-center gap-1" }, [
+        h(UInputNumber, {
+          modelValue: currentValue,
+          step,
+          min: step,
+          ui: { base: "w-22" },
+          size: "sm",
+          disabled: pendingServings.value[path],
+          "onUpdate:modelValue": (v: number | null) => {
+            if (typeof v === "number") {
+              draftServings.value[path] = v;
+              scheduleServingsSave(path, v, choices);
+            }
+          },
+          onBlur: () => {
             clearSaveTimer(path);
             const value = draftServings.value[path] ?? row.original.servings;
             void saveServings(path, value, choices);
-          }
-        },
-      });
+          },
+          onKeydown: (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+              clearSaveTimer(path);
+              const value = draftServings.value[path] ?? row.original.servings;
+              void saveServings(path, value, choices);
+            }
+          },
+        }),
+        originalValue !== undefined && currentValue !== originalValue
+          ? h(UButton, {
+              icon: "i-lucide-rotate-ccw",
+              color: "neutral",
+              variant: "ghost",
+              size: "sm",
+              onClick: () => {
+                clearSaveTimer(path);
+                const { [path]: _removed, ...rest } = draftServings.value;
+                draftServings.value = rest;
+                void saveServings(path, originalValue, choices);
+              },
+            })
+          : null,
+      ]);
     },
   },
   {
