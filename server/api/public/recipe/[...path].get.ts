@@ -1,9 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const path = getRouterParam(event, "path");
-  if (!path) {
-    throw createError({ statusCode: 400, statusMessage: "Path is required" });
-  }
-
+  const path = getValidatedRecipePath(event);
   const recipeKey = path.replace(/\//g, ":");
   const isPublic = await isRecipePublic(recipeKey);
 
