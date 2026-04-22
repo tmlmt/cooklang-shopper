@@ -4,7 +4,7 @@ import type { Role } from "~~/shared/types";
 
 const LoginSchema = v.object({
   role: v.picklist(["viewer", "editor"] satisfies Role[]),
-  password: v.pipe(v.string(), v.nonEmpty()),
+  password: v.pipe(v.string(), v.nonEmpty(), v.maxLength(1024)),
 });
 
 export default defineEventHandler(async (event) => {
