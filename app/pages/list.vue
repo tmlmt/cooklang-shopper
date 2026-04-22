@@ -2,6 +2,8 @@
 import type { TableColumn } from "@nuxt/ui";
 import type { RecipeInfo } from "~~/shared/types";
 import type { RecipeChoices } from "@tmlmt/cooklang-parser";
+import * as v from "valibot";
+import ManualItemsList from "~/components/ManualItemsList.vue";
 
 definePageMeta({
   title: "Shopping List",
@@ -10,9 +12,25 @@ definePageMeta({
 });
 
 const shoppingStore = useShoppingStore();
-const shoppingList = await useShoppingList();
-const ingredients = shoppingList.ingredients;
+await useAsyncData("shopping-list", async () => {
+  await shoppingStore.fetchList();
+  return null;
+});
 const toast = useToast();
+
+const addItemSchema = v.object({
+  name: v.pipe(v.string(), v.trim(), v.nonEmpty("Ingredient name is required")),
+  quantity: v.pipe(v.string(), v.trim()),
+  unit: v.pipe(v.string(), v.trim()),
+});
+
+type AddItemSchema = v.InferOutput<typeof addItemSchema>;
+
+const addItemState = reactive<AddItemSchema>({
+  name: "",
+  quantity: "",
+  unit: "",
+});
 
 const UButton = resolveComponent("UButton");
 const ULink = resolveComponent("ULink");
@@ -92,6 +110,31 @@ onBeforeUnmount(() => {
   Object.values(saveTimers.value).forEach((timer) => clearTimeout(timer));
   saveTimers.value = {};
 });
+
+async function addManualIngredient(): Promise<void> {
+  try {
+    await shoppingStore.addManualItem(
+      addItemState.name,
+      addItemState.quantity || undefined,
+      addItemState.unit || undefined,
+    );
+    addItemState.name = "";
+    addItemState.quantity = "";
+    addItemState.unit = "";
+
+    toast.add({
+      color: "success",
+      title: "Success",
+      description: "Ingredient added",
+    });
+  } catch {
+    toast.add({
+      color: "error",
+      title: "Error",
+      description: "Failed to add ingredient",
+    });
+  }
+}
 
 const columns: TableColumn<RecipeInfo>[] = [
   {
@@ -193,9 +236,49 @@ const columns: TableColumn<RecipeInfo>[] = [
       :columns="columns"
       :ui="{ td: 'px-4 py-2 md:py-4' }"
     />
-    <div v-if="ingredients && ingredients.length > 0">
+    <div
+      v-if="shoppingStore.ingredients && shoppingStore.ingredients.length > 0"
+    >
       <h2 class="text-base font-bold md:text-lg">Ingredients</h2>
-      <IngredientList class="mt-4" :ingredients="ingredients" />
+      <IngredientList class="mt-4" :ingredients="shoppingStore.ingredients" />
+    </div>
+
+    <UForm
+      :schema="addItemSchema"
+      :state="addItemState"
+      class="mt-4 space-y-3"
+      @submit="addManualIngredient"
+    >
+      <h2 class="text-base font-bold md:text-lg">Add free-hand item</h2>
+      <div class="grid grid-cols-5 items-end gap-3 md:flex md:flex-row">
+        <UFormField
+          name="name"
+          label="Ingredient"
+          class="col-span-2"
+          :required="true"
+        >
+          <UInput v-model="addItemState.name" />
+        </UFormField>
+        <UFormField name="quantity" label="Quantity">
+          <UInput
+            v-model="addItemState.quantity"
+            class="md:w-16"
+            :ui="{ root: 'w-full' }"
+          />
+        </UFormField>
+        <UFormField name="unit" label="Unit">
+          <UInput v-model="addItemState.unit" class="md:w-16" />
+        </UFormField>
+        <UButton type="submit" class="h-8 justify-center" label="Add" />
+      </div>
+    </UForm>
+
+    <div
+      v-if="shoppingStore.manualItems && shoppingStore.manualItems.length > 0"
+    >
+      <USeparator class="my-4" />
+      <h2 class="text-base font-bold md:text-lg">Free-hand items</h2>
+      <ManualItemsList class="mt-4" :items="shoppingStore.manualItems" />
     </div>
   </div>
 </template>

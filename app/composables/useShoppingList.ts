@@ -5,8 +5,6 @@ export default async function () {
 
   await shoppingStore.init();
 
-  const ingredients = computed(() => shoppingStore.ingredients);
-
   // Build a ShoppingList object from server data (needed by useShoppingCart)
   async function getListObject() {
     const shoppingList = new ShoppingList();
@@ -22,5 +20,5 @@ export default async function () {
     return shoppingList;
   }
 
-  return { ingredients, getListObject };
+  return { getListObject };
 }

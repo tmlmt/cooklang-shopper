@@ -11,6 +11,7 @@ export default async function () {
   const misMatch = ref<CartMisMatch>();
 
   const catalog = await useCatalog();
+  const shoppingStore = useShoppingStore();
   const shoppingList = await useShoppingList();
 
   async function getCartObject() {
@@ -31,7 +32,7 @@ export default async function () {
   // -- so that only the latest update is applied to the cart, match, and misMatch refs
   let version = 0;
   watch(
-    [() => shoppingList.ingredients, () => catalog.products],
+    [() => shoppingStore.ingredients, () => catalog.products],
     async () => {
       const v = ++version;
       const shoppingCart = await getCartObject();

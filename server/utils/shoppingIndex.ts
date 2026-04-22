@@ -16,6 +16,7 @@ import nodePath from "node:path";
 import { createError } from "h3";
 import { getRecipeIndex } from "./recipeIndex";
 import { useStorage } from "nitropack/runtime";
+import { parseQuantityValue } from "~~/shared/utils/quantity";
 
 const recipesDir = nodePath.resolve(process.cwd(), "public", "recipes");
 
@@ -244,6 +245,7 @@ export interface ShoppingListData {
     choices?: RecipeChoicesWire;
   }>;
   ingredients: AddedIngredient[];
+  manualItems: AddedIngredient[];
   checkedItems: string[];
 }
 
@@ -253,7 +255,7 @@ export function getShoppingListData(
 ): ShoppingListData {
   const sl = getShoppingList(userKey, listName);
   if (!sl) {
-    return { recipes: [], ingredients: [], checkedItems: [] };
+    return { recipes: [], ingredients: [], manualItems: [], checkedItems: [] };
   }
 
   const recipeIndex = getRecipeIndex();
@@ -292,6 +294,7 @@ export function getShoppingListData(
   return {
     recipes,
     ingredients: sl.ingredients,
+    manualItems: sl.manualItems,
     checkedItems: Array.from(sl.checkedItems),
   };
 }
@@ -470,4 +473,48 @@ export async function uncheckAll(
   } catch {
     // File may not exist
   }
+}
+
+export async function removeManualItem(
+  userKey: string,
+  itemIndex: number,
+  listName: string = "",
+): Promise<void> {
+  const sl = getShoppingList(userKey, listName);
+  if (!sl) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Shopping list not found",
+    });
+  }
+  sl.removeManualItem(itemIndex);
+
+  if (sl.recipes.length === 0 && sl.manualItems.length === 0) {
+    const userLists = index.get(userKey);
+    if (userLists) {
+      userLists.delete(listName);
+      if (userLists.size === 0) index.delete(userKey);
+    }
+    await deleteFiles(userKey, listName);
+  } else {
+    await writeListFile(userKey, listName);
+  }
+}
+
+export async function addManualItem(
+  userKey: string,
+  name: string,
+  quantity?: string,
+  unit?: string,
+  listName: string = "",
+): Promise<void> {
+  const sl = getOrCreateShoppingList(userKey, listName);
+  const newItem: AddedIngredient = { name };
+  if (quantity) {
+    newItem.quantities = [
+      { quantity: parseQuantityValue(quantity), ...(unit ? { unit } : {}) },
+    ];
+  }
+  sl.addManualItem(newItem);
+  await writeListFile(userKey, listName);
 }

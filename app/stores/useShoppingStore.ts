@@ -5,6 +5,7 @@ import { toRecipeChoices } from "~~/shared/utils/recipeChoices";
 interface ShoppingListResponse {
   recipes: Array<Omit<RecipeInfo, "choices"> & { choices?: RecipeChoicesWire }>;
   ingredients: AddedIngredient[];
+  manualItems: AddedIngredient[];
   checkedItems: string[];
 }
 
@@ -26,6 +27,7 @@ function serializeRecipeChoices(
 export const useShoppingStore = defineStore("shopping", () => {
   const recipeSelection = ref<RecipeInfo[]>([]);
   const ingredients = ref<AddedIngredient[]>([]);
+  const manualItems = ref<AddedIngredient[]>([]);
   const checkedItems = ref<Set<string>>(new Set());
 
   let _loaded = false;
@@ -40,6 +42,7 @@ export const useShoppingStore = defineStore("shopping", () => {
       choices: recipe.choices ? toRecipeChoices(recipe.choices) : undefined,
     }));
     ingredients.value = data.ingredients;
+    manualItems.value = data.manualItems;
     checkedItems.value = new Set(data.checkedItems);
     _loaded = true;
   }
@@ -177,6 +180,26 @@ export const useShoppingStore = defineStore("shopping", () => {
     applyResponse(data);
   }
 
+  async function removeManualItem(index: number): Promise<void> {
+    const data = await $fetchWithHeaders<ShoppingListResponse>(
+      "/api/shopping-list/manual-items",
+      { method: "DELETE", body: { index } },
+    );
+    applyResponse(data);
+  }
+
+  async function addManualItem(
+    name: string,
+    quantity?: string,
+    unit?: string,
+  ): Promise<void> {
+    const data = await $fetchWithHeaders<ShoppingListResponse>(
+      "/api/shopping-list/manual-items",
+      { method: "POST", body: { name, quantity, unit } },
+    );
+    applyResponse(data);
+  }
+
   // ---------------------------------------------------------------------------
   // Synchronous lookups
   // ---------------------------------------------------------------------------
@@ -193,6 +216,7 @@ export const useShoppingStore = defineStore("shopping", () => {
   return {
     recipeSelection,
     ingredients,
+    manualItems,
     checkedItems,
     init,
     fetchList,
@@ -203,6 +227,8 @@ export const useShoppingStore = defineStore("shopping", () => {
     checkIngredient,
     isChecked,
     uncheckAll,
+    removeManualItem,
+    addManualItem,
     isRecipeInSelection,
     getServings,
   };
