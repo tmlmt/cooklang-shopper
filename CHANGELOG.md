@@ -1,5 +1,32 @@
 # Changelog
 
+## v0.11.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.10.1...v0.11.0)
+
+### 🚀 Enhancements
+
+- **shoppingList:** Add and remove free-hand items ([4b72436](https://github.com/tmlmt/cooklang-shopper/commit/4b72436))
+- **shoppingList:** Button to reset to original servings after temporary changes ([cc07298](https://github.com/tmlmt/cooklang-shopper/commit/cc07298))
+- **shoppingList:** 'Store Run' Mode ([99c581b](https://github.com/tmlmt/cooklang-shopper/commit/99c581b))
+
+### 🩹 Fixes
+
+- Correctly initialize which recipes are in shopping list at page load ([5fbc6cf](https://github.com/tmlmt/cooklang-shopper/commit/5fbc6cf))
+- **GridCard:** Prevent navigation after first tap on image on mobile ([3a7dbea](https://github.com/tmlmt/cooklang-shopper/commit/3a7dbea))
+
+### 🏡 Chore
+
+- Update tsbuildinfo ([c772555](https://github.com/tmlmt/cooklang-shopper/commit/c772555))
+
+### 🎨 Styles
+
+- **Header:** Turn cursor to pointer when hovering menu items ([803cd00](https://github.com/tmlmt/cooklang-shopper/commit/803cd00))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.10.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.10.0...v0.10.1)
