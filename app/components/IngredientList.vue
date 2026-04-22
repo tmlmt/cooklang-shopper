@@ -6,6 +6,7 @@ const props = withDefaults(
     ingredients: Ingredient[];
     allIngredients?: Ingredient[];
     interactive?: boolean;
+    showHeader?: boolean;
     desktopColumns?: 1 | 2;
   }>(),
   {
@@ -17,6 +18,8 @@ const props = withDefaults(
 
 const shoppingStore = useShoppingStore();
 const hideChecked = ref(false);
+
+const headerVisible = computed(() => props.showHeader ?? props.interactive);
 
 const sorted = computed(() =>
   [...props.ingredients].sort((a, b) => a.name.localeCompare(b.name)),
@@ -35,10 +38,7 @@ const checkedCount = computed(
 
 <template>
   <div class="flex flex-col gap-3">
-    <div
-      v-if="props.interactive"
-      class="flex items-center justify-between gap-4"
-    >
+    <div v-if="headerVisible" class="flex items-center justify-between gap-4">
       <span class="text-sm text-neutral-500 dark:text-neutral-400">
         {{ checkedCount }} / {{ sorted.length }} checked
       </span>

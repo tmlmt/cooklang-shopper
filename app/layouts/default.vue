@@ -233,7 +233,7 @@ const navLeft = computed(() => {
           icon="material-symbols:search"
           @click="searchModal.open()"
         />
-        <template v-if="isRecipePage">
+        <template v-if="headerActionItems.length > 0">
           <UButton
             v-for="action in headerActionItems"
             :key="`action-${action.label}`"

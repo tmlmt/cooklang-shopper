@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TableColumn } from "@nuxt/ui";
+import type { TableColumn, DropdownMenuItem } from "@nuxt/ui";
 import type { RecipeInfo } from "~~/shared/types";
 import type { RecipeChoices } from "@tmlmt/cooklang-parser";
 import * as v from "valibot";
@@ -17,6 +17,27 @@ await useAsyncData("shopping-list", async () => {
   return null;
 });
 const toast = useToast();
+
+const { setHeaderActions, clearHeaderActions } = useHeaderMenu();
+const modalStoreRun = await useModalStoreRun();
+const storeRunItem: DropdownMenuItem = {
+  label: "Store Run",
+  icon: "i-lucide-shopping-cart",
+  color: "secondary",
+  variant: "soft",
+  onSelect: () => modalStoreRun.open(),
+};
+watch(
+  () => shoppingStore.ingredients.length,
+  (length) => {
+    if (length > 0) {
+      setHeaderActions([storeRunItem]);
+    } else {
+      clearHeaderActions();
+    }
+  },
+  { immediate: true },
+);
 
 const addItemSchema = v.object({
   name: v.pipe(v.string(), v.trim(), v.nonEmpty("Ingredient name is required")),
