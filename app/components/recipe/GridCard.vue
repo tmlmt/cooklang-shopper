@@ -50,11 +50,13 @@ const setImageHoverState = (active: boolean) => {
   isImageActive.value = active;
 };
 
-const handleImageTap = (event: Event) => {
+const handleImageTap = (event: MouseEvent) => {
   if (!isTouchDevice.value || !shoppingEnabled.value) return;
-  event.preventDefault();
-  event.stopPropagation();
-  isImageActive.value = !isImageActive.value;
+  if (!isImageActive.value) {
+    event.preventDefault();
+    isImageActive.value = true;
+  }
+  // When already flipped, let the NuxtLink navigate naturally
 };
 
 const recipePath = computed(() =>
@@ -116,7 +118,11 @@ const formattedModified = computed(() => {
       @mouseenter="setImageHoverState(true)"
       @mouseleave="setImageHoverState(false)"
     >
-      <NuxtLink :to="recipePath" class="block" @click="handleImageTap">
+      <NuxtLink
+        :to="recipePath"
+        class="block"
+        @click.stop="handleImageTap"
+      >
         <div class="h-28 overflow-hidden rounded-xl">
           <NuxtImg
             v-if="coverImage"
