@@ -341,7 +341,7 @@ const menuItems = computed<DropdownMenuItem[]>(() => {
 
 const newRecipePlaceholder = `---
 title: ${recipeName}
-servings: 
+servings:
 ---
 `;
 
@@ -534,11 +534,13 @@ const cookItem: DropdownMenuItem = {
 };
 
 if (loggedIn.value) {
-  setHeaderActions([cookItem, ...(menuItems.value as DropdownMenuItem[])]);
-  setHeaderMenuItems([
-    ...(isEditor.value ? [uploadImageItem] : []),
-    downloadItem,
-  ]);
+  if (route.query.mode !== "new") {
+    setHeaderActions([cookItem, ...(menuItems.value as DropdownMenuItem[])]);
+    setHeaderMenuItems([
+      ...(isEditor.value ? [uploadImageItem] : []),
+      downloadItem,
+    ]);
+  }
 } else {
   setHeaderActions([cookItem]);
   setHeaderMenuItems([downloadItem]);
