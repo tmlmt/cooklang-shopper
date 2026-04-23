@@ -65,7 +65,7 @@ const displayDirDesktop = computed(() =>
 const path = pathParams.join("/");
 const recipeDir = path.substring(0, path.lastIndexOf("/"));
 const recipeName = path.substring(path.lastIndexOf("/") + 1);
-const recipePathRef = computed(() => path);
+const recipePathRef = computed(() => (route.query.mode === "new" ? "" : path));
 
 // Validate provided path
 validateRecipePath(path);

@@ -42,11 +42,6 @@ export async function useRecipeImageManifest(
     () => ({}),
   );
 
-  const url = computed(() => {
-    const p = recipePath.value.trim();
-    return p ? `/api/recipe-images/${p}` : undefined;
-  });
-
   const cachedCover = computed(() => {
     const p = recipePath.value.trim();
     return p ? cache.value[p] : undefined;
@@ -57,19 +52,26 @@ export async function useRecipeImageManifest(
     status,
     error,
     refresh,
-  } = await useFetch<RecipeImageManifest>(url as ComputedRef<string>, {
-    key: computed(() => `recipe-images-${recipePath.value.trim()}`).value,
-    default: () =>
-      cachedCover.value
-        ? {
-            coverImage: cachedCover.value,
-            heroImages: [cachedCover.value],
-            stepImagesByNumber: {},
-            hasImages: true,
-          }
-        : undefined!,
-    watch: [url],
-  });
+  } = await useAsyncData<RecipeImageManifest>(
+    computed(() => `recipe-images-${recipePath.value.trim()}`).value,
+    async () => {
+      const p = recipePath.value.trim();
+      if (!p) return undefined!;
+      return $fetch<RecipeImageManifest>(`/api/recipe-images/${p}`);
+    },
+    {
+      default: () =>
+        cachedCover.value
+          ? {
+              coverImage: cachedCover.value,
+              heroImages: [cachedCover.value],
+              stepImagesByNumber: {},
+              hasImages: true,
+            }
+          : undefined!,
+      watch: [recipePath],
+    },
+  );
 
   return {
     manifest,
