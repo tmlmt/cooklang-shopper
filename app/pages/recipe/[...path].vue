@@ -339,8 +339,14 @@ const menuItems = computed<DropdownMenuItem[]>(() => {
 // View / Edit Recipe
 //---------------------
 
+const newRecipePlaceholder = `---
+title: ${recipeName}
+servings: 
+---
+`;
+
 const formState = ref({
-  recipe: rawRecipe.value ?? "",
+  recipe: rawRecipe.value || newRecipePlaceholder,
 });
 
 const isParsableRecipe = (value: string): boolean => {
