@@ -23,6 +23,7 @@ export async function usePublicConfig() {
         { type: "password", name: "local" },
       ] as PublicAuthProvider[],
       sharing: defaultSharing,
+      baseUrl: "",
     }),
   });
 
@@ -30,6 +31,7 @@ export async function usePublicConfig() {
   const shopping = computed(() => data.value?.shopping ?? false);
   const experimental = computed(() => data.value?.experimental ?? false);
   const sharing = computed(() => data.value?.sharing ?? defaultSharing);
+  const baseUrl = computed(() => data.value?.baseUrl ?? "");
   const viewerCanShare = computed(
     () => data.value?.sharing?.viewerCanShare ?? false,
   );
@@ -50,6 +52,7 @@ export async function usePublicConfig() {
     shopping,
     experimental,
     sharing,
+    baseUrl,
     viewerCanShare,
     authProviders,
     hasAuth,

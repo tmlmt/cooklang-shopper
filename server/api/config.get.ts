@@ -33,5 +33,6 @@ export default defineEventHandler(async (event) => {
     experimental: config.experimental ?? false,
     authProviders,
     sharing,
+    baseUrl: config.baseUrl,
   };
 });

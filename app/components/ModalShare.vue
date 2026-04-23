@@ -8,6 +8,7 @@ const props = defineProps<{
 const emit = defineEmits<{ close: [] }>();
 const toast = useToast();
 const { isEditor } = useRole();
+const { baseUrl } = await usePublicConfig();
 
 // Visibility
 const visibility = ref<"public" | "private">("private");
@@ -116,7 +117,7 @@ async function revokeLink(id: number) {
 }
 
 function getShareUrl(token: string): string {
-  return `${window.location.origin}/s/${token}`;
+  return `${baseUrl}/s/${token}`;
 }
 
 async function copyLink(token: string) {
