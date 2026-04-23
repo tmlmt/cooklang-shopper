@@ -56,7 +56,7 @@ export async function useRecipeImageManifest(
     computed(() => `recipe-images-${recipePath.value.trim()}`).value,
     async () => {
       const p = recipePath.value.trim();
-      if (!p) return undefined!;
+      if (!p) return null!;
       return $fetch<RecipeImageManifest>(`/api/recipe-images/${p}`);
     },
     {
