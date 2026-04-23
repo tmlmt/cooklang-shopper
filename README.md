@@ -5,7 +5,7 @@
 
 Self-hosted, Nuxt-powered web app to manage cooklang recipes, create a shopping list, fill a cart with matching products and send it to an online store. Using the [`@tmlmt/cooklang-parser`](https://cooklang-parser.tmlmt.com/v3) Typescript parser, in its v3 version (alpha stage).
 
-The app is currently in pre-v1 i.e beta version and in active development. Only recipe management (browsing, viewing, creating, editing) is functional at the moment while the rest is partially developed and therefore hidden an `experimental` flag. Feel free to test it out and report issues or feature requests.
+The app is currently in pre-v1 i.e beta version and in active development. Only recipe management (browsing, viewing, creating, editing) and shopping lists are functional at the moment while the rest is partially developed and therefore hidden an `experimental` flag. Feel free to test it out and report issues or feature requests.
 
 ## Features
 
@@ -41,12 +41,18 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
 - **Custom app title** — configurable application name shown in the header and SEO tags
 - **🛡️ Security hardening** — built-in HTTP security headers (CSP with nonce, HSTS, X-Frame-Options), request size limiting, rate limiting, and SRI via [nuxt-security](https://nuxt-security.vercel.app/)
 
+### 🛒 Shopping list
+
+> Opt-in: requires `shopping.enabled: true` (or `"editor-only"`) in `config.yaml`.
+
+- **User-specific list** — add recipes from the browse view with per-recipe serving adjustments; add or remove free-hand items not tied to any recipe
+- **Store Run mode** — fullscreen checklist with a progress bar to tick off ingredients while shopping
+
 ### ⚠️ Experimental (not stable and not recommended for use)
 
 > Requires `experimental: true` in `config.yaml`.
 
-- **🛒 Shopping list** — select recipes from the browse view, adjust servings, resolve ingredient choices, and generate a consolidated ingredient list
-- **Shopping cart** — match aggregated ingredients against a product catalog (TOML-based) and identify unmatched items
+- **🛒 Shopping cart** — match aggregated ingredients against a product catalog (TOML-based) and identify unmatched items
 
 ## Getting started
 
