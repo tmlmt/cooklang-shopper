@@ -1,5 +1,4 @@
 import { Recipe } from "@tmlmt/cooklang-parser";
-import { buildImageManifest } from "~~/server/utils/recipeImages";
 
 export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, "token");

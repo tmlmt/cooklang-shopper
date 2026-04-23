@@ -1,8 +1,6 @@
 import { rename, cp, rm } from "node:fs/promises";
 import * as nodePath from "node:path";
 import { glob } from "glob";
-import { moveInRecipeIndex } from "~~/server/utils/recipeIndex";
-import { moveVisibilityAndLinksForDirectory } from "~~/server/utils/recipeVisibility";
 
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);

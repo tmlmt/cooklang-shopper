@@ -1,9 +1,3 @@
-import { getUserKey } from "~~/server/utils/auth";
-import {
-  addManualItem,
-  getShoppingListData,
-} from "~~/server/utils/shoppingIndex";
-
 interface AddManualItemBody {
   name: string;
   quantity?: string;

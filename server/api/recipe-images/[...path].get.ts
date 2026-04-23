@@ -1,6 +1,5 @@
 import { Recipe } from "@tmlmt/cooklang-parser";
 import type { RecipeImageManifest } from "~~/shared/types";
-import { buildImageManifest } from "~~/server/utils/recipeImages";
 
 export default defineEventHandler(
   async (event): Promise<RecipeImageManifest> => {

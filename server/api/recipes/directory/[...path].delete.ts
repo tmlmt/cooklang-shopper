@@ -1,11 +1,6 @@
 import { rm } from "node:fs/promises";
 import * as nodePath from "node:path";
 import { glob } from "glob";
-import {
-  deleteFromRecipeIndex,
-  getRecipeIndex,
-} from "~~/server/utils/recipeIndex";
-import { deleteVisibilityAndLinksForDirectory } from "~~/server/utils/recipeVisibility";
 
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);

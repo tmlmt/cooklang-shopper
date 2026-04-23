@@ -16,7 +16,6 @@ import nodePath from "node:path";
 import { createError } from "h3";
 import { getRecipeIndex } from "./recipeIndex";
 import { useStorage } from "nitropack/runtime";
-import { parseQuantityValue } from "~~/shared/utils/quantity";
 
 const recipesDir = nodePath.resolve(process.cwd(), "public", "recipes");
 

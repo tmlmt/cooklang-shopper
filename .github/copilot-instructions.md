@@ -89,3 +89,7 @@ await $fetchWithHeaders(`/api/recipe/${path}`, { method: "DELETE" });
 | User-triggered action         | `$fetchWithHeaders`                       | Manual cookie forwarding needed post-hydration                            |
 | Inside `useAsyncData` handler | `$fetch` with `useRequestHeaders` headers | `$fetch` alone doesn't proxy cookies; pass headers captured at setup time |
 | Never in `<script setup>`     | Bare `$fetch` without headers             | Double-fetches (server + client) and no cookie forwarding during SSR      |
+
+## Imports
+
+Elements exported in `server/utils`, `app/utils` and `shared/utils` are auto-imported, so do not import them in any file within `server/` and `app/`.

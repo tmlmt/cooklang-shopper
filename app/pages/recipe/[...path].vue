@@ -3,7 +3,6 @@ import { Recipe, type RecipeChoices } from "@tmlmt/cooklang-parser";
 import * as v from "valibot";
 import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
 import { FetchError } from "ofetch";
-import { validateRecipePath } from "~~/shared/utils/path";
 
 definePageMeta({
   title: "Recipe detail",

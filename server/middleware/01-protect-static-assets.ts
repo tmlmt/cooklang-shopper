@@ -1,5 +1,4 @@
 import { getRequestURL } from "h3";
-import { isRecipePublic } from "~~/server/utils/recipeVisibility";
 
 // Extract the recipe key (colon-separated) from a static asset path.
 // e.g. "/recipes/mains/gratin.jpg" → "mains:gratin"

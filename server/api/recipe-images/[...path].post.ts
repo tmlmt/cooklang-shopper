@@ -1,13 +1,6 @@
 import { unlink, writeFile } from "node:fs/promises";
 import * as nodePath from "node:path";
 import type { RecipeImageManifest } from "~~/shared/types";
-import {
-  IMAGE_EXTENSIONS,
-  recipesRoot,
-  findExistingImagesForRole,
-  toWebPathFromFsPath,
-  discoverRecipeImages,
-} from "~~/server/utils/recipeImages";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 

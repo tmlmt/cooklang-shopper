@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { RecipeEssentials } from "~~/shared/types";
-import { formatTime } from "~~/shared/utils/formatTime";
 import RecipeTagOverflow from "~~/app/components/recipe/TagOverflow.vue";
 
 const props = defineProps<{
@@ -118,11 +117,7 @@ const formattedModified = computed(() => {
       @mouseenter="setImageHoverState(true)"
       @mouseleave="setImageHoverState(false)"
     >
-      <NuxtLink
-        :to="recipePath"
-        class="block"
-        @click.stop="handleImageTap"
-      >
+      <NuxtLink :to="recipePath" class="block" @click.stop="handleImageTap">
         <div class="h-28 overflow-hidden rounded-xl">
           <NuxtImg
             v-if="coverImage"

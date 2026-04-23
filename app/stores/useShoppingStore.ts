@@ -1,27 +1,11 @@
 import type { RecipeInfo, RecipeChoicesWire } from "~~/shared/types";
 import type { RecipeChoices, AddedIngredient } from "@tmlmt/cooklang-parser";
-import { toRecipeChoices } from "~~/shared/utils/recipeChoices";
 
 interface ShoppingListResponse {
   recipes: Array<Omit<RecipeInfo, "choices"> & { choices?: RecipeChoicesWire }>;
   ingredients: AddedIngredient[];
   manualItems: AddedIngredient[];
   checkedItems: string[];
-}
-
-function serializeRecipeChoices(
-  choices?: RecipeChoices,
-): RecipeChoicesWire | undefined {
-  if (!choices) return undefined;
-  return {
-    ingredientItems: [
-      ...(choices.ingredientItems ?? new Map<string, number>()).entries(),
-    ],
-    ingredientGroups: [
-      ...(choices.ingredientGroups ?? new Map<string, number>()).entries(),
-    ],
-    variant: choices.variant,
-  };
 }
 
 export const useShoppingStore = defineStore("shopping", () => {

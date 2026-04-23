@@ -1,9 +1,3 @@
-import { getUserKey } from "~~/server/utils/auth";
-import {
-  removeManualItem,
-  getShoppingListData,
-} from "~~/server/utils/shoppingIndex";
-
 interface RemoveManualItemBody {
   index: number;
 }

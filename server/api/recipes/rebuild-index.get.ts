@@ -1,5 +1,3 @@
-import { initRecipeIndex } from "~~/server/utils/recipeIndex";
-
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);
 

@@ -1,6 +1,3 @@
-import { getRecipeIndex } from "~~/server/utils/recipeIndex";
-import { getPublicRecipePaths } from "~~/server/utils/recipeVisibility";
-
 export default defineEventHandler(async (event) => {
   const authenticated = await isAuthenticated(event);
 

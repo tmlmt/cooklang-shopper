@@ -1,10 +1,3 @@
-import { getUserKey } from "~~/server/utils/auth";
-import {
-  removeRecipeFromList,
-  getShoppingListData,
-} from "~~/server/utils/shoppingIndex";
-import { validateRecipePath } from "~~/shared/utils/path";
-
 interface RemoveRecipeBody {
   path: string;
 }

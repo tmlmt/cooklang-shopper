@@ -1,14 +1,5 @@
 import { copyFile, rename, unlink } from "node:fs/promises";
 import * as nodePath from "node:path";
-import {
-  deleteFromRecipeIndex,
-  updateRecipeIndex,
-} from "~~/server/utils/recipeIndex";
-import {
-  discoverRecipeImages,
-  recipesRoot,
-} from "~~/server/utils/recipeImages";
-import { moveRecipeVisibilityAndLinks } from "~~/server/utils/recipeVisibility";
 
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);

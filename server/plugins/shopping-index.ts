@@ -1,5 +1,3 @@
-import { initShoppingIndex } from "~~/server/utils/shoppingIndex";
-
 export default defineNitroPlugin(async () => {
   try {
     await initShoppingIndex();

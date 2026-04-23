@@ -2,8 +2,6 @@
 import type { DropdownMenuItem, TableColumn } from "@nuxt/ui";
 import { Recipe } from "@tmlmt/cooklang-parser";
 import type { RecipeEssentials } from "~~/shared/types";
-import type { FolderInfo } from "~~/app/composables/useDirectoryContents";
-import { formatTime } from "~~/shared/utils/formatTime";
 import RecipeTagOverflow from "~~/app/components/recipe/TagOverflow.vue";
 
 type RowSelectionState = Record<string, boolean>;

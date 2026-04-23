@@ -1,12 +1,6 @@
 import { stat, unlink } from "node:fs/promises";
 import * as nodePath from "node:path";
 import type { RecipeImageManifest } from "~~/shared/types";
-import {
-  IMAGE_EXTENSIONS,
-  recipesRoot,
-  discoverRecipeImages,
-  toWebPathFromFsPath,
-} from "~~/server/utils/recipeImages";
 
 export default defineEventHandler(
   async (event): Promise<RecipeImageManifest> => {

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { MetadataTime } from "@tmlmt/cooklang-parser";
-import { formatTime } from "~~/shared/utils/formatTime";
 
 const { time } = defineProps<{
   time: MetadataTime | undefined;

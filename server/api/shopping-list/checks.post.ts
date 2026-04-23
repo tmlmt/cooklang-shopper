@@ -1,9 +1,3 @@
-import { getUserKey } from "~~/server/utils/auth";
-import {
-  checkIngredient,
-  getShoppingListData,
-} from "~~/server/utils/shoppingIndex";
-
 interface CheckBody {
   ingredientName: string;
   checked: boolean;

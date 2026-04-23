@@ -1,5 +1,3 @@
-import { isRecipePublic } from "~~/server/utils/recipeVisibility";
-
 export default defineEventHandler(async (event) => {
   const authenticated = await isAuthenticated(event);
   const decodedPath = getValidatedRecipePath(event);
