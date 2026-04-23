@@ -118,10 +118,10 @@ const sectionsWithStepNumbers = computed(() => {
 });
 
 // Scaling
-const originalServings = computed(() => props.recipe.servings);
+const originalServings = computed(() => props.recipe.servings ?? 1);
 
 const servingsSpinner = computed({
-  get: () => scaledRecipe.value.servings,
+  get: () => scaledRecipe.value.servings ?? 1,
   set: (value) => {
     if (value) {
       scaledRecipe.value = props.recipe.scaleTo(value);
