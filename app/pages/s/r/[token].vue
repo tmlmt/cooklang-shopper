@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Recipe } from "@tmlmt/cooklang-parser";
+import { Recipe, type RecipeChoices } from "@tmlmt/cooklang-parser";
 
 definePageMeta({
   layout: "shared",
@@ -38,7 +38,26 @@ const stepImagesByNumber = computed(
   () => data.value?.imageManifest?.stepImagesByNumber ?? {},
 );
 
-const { setHeaderMenuItems } = useHeaderMenu();
+const currentScaledRecipe = shallowRef<Recipe | undefined>(undefined);
+const currentChoices = ref<RecipeChoices>({});
+
+const modalCookMode = await useModalCookMode();
+
+const { setHeaderActions, setHeaderMenuItems } = useHeaderMenu();
+
+setHeaderActions([
+  {
+    label: "Cook",
+    icon: "i-lucide-cooking-pot",
+    color: "secondary",
+    variant: "soft",
+    onSelect: () => {
+      const r = currentScaledRecipe.value ?? recipe.value;
+      if (!r) return;
+      modalCookMode.open(r, currentChoices.value, stepImagesByNumber.value);
+    },
+  },
+]);
 
 setHeaderMenuItems([
   {
@@ -94,6 +113,8 @@ setHeaderMenuItems([
     <RecipeContent
       :recipe="recipe"
       :step-images-by-number="stepImagesByNumber"
+      @update:scaled-recipe="(r) => (currentScaledRecipe = r)"
+      @update:choices="(c) => (currentChoices = c)"
     />
   </UContainer>
 </template>
