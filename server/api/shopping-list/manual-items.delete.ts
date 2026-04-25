@@ -3,8 +3,20 @@ interface RemoveManualItemBody {
 }
 
 export default defineEventHandler(async (event) => {
-  const session = await requireShoppingAccess(event);
-  const userKey = getUserKey(session);
+  const token = getQuery(event).token as string | undefined;
+  let userKey: string;
+  let listName: string;
+
+  if (token) {
+    await requireUserSession(event);
+    const ctx = await resolveShoppingShareToken(token);
+    userKey = ctx.userKey;
+    listName = ctx.listName;
+  } else {
+    const session = await requireShoppingAccess(event);
+    userKey = getUserKey(session);
+    listName = "";
+  }
 
   const body = await readBody<RemoveManualItemBody>(event);
 
@@ -15,6 +27,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  await removeManualItem(userKey, body.index);
-  return getShoppingListData(userKey);
+  await removeManualItem(userKey, body.index, listName);
+  return getShoppingListData(userKey, listName);
 });

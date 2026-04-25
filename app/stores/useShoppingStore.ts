@@ -1,40 +1,21 @@
-import type { RecipeInfo, RecipeChoicesWire } from "~~/shared/types";
-import type { RecipeChoices, AddedIngredient } from "@tmlmt/cooklang-parser";
-
-interface ShoppingListResponse {
-  recipes: Array<Omit<RecipeInfo, "choices"> & { choices?: RecipeChoicesWire }>;
-  ingredients: AddedIngredient[];
-  manualItems: AddedIngredient[];
-  checkedItems: string[];
-}
+import type { RecipeChoices } from "@tmlmt/cooklang-parser";
 
 export const useShoppingStore = defineStore("shopping", () => {
-  const recipeSelection = ref<RecipeInfo[]>([]);
-  const ingredients = ref<AddedIngredient[]>([]);
-  const manualItems = ref<AddedIngredient[]>([]);
-  const checkedItems = ref<Set<string>>(new Set());
-
+  const actions = useShoppingListActions({ mode: "shared" });
+  const sharedListStore = useSharedListStore();
   let _loaded = false;
 
-  // ---------------------------------------------------------------------------
-  // Data fetching
-  // ---------------------------------------------------------------------------
-
-  function applyResponse(data: ShoppingListResponse): void {
-    recipeSelection.value = data.recipes.map((recipe) => ({
-      ...recipe,
-      choices: recipe.choices ? toRecipeChoices(recipe.choices) : undefined,
-    }));
-    ingredients.value = data.ingredients;
-    manualItems.value = data.manualItems;
-    checkedItems.value = new Set(data.checkedItems);
-    _loaded = true;
-  }
-
   async function fetchList(): Promise<void> {
-    const data =
-      await $fetchWithHeaders<ShoppingListResponse>("/api/shopping-list");
-    applyResponse(data);
+    if (sharedListStore.token) {
+      const data = await $fetchWithHeaders<
+        ShoppingListResponse & { ownerName: string; expiresAt: string | null }
+      >(`/api/sharing/list/resolve/${sharedListStore.token}`);
+      actions.applyResponse(data);
+    } else {
+      const data =
+        await $fetchWithHeaders<ShoppingListResponse>("/api/shopping-list");
+      actions.applyResponse(data);
+    }
   }
 
   async function init(): Promise<void> {
@@ -43,13 +24,9 @@ export const useShoppingStore = defineStore("shopping", () => {
       await fetchList();
     } catch {
       // Shopping may be disabled or user not authenticated
-      _loaded = true;
     }
+    _loaded = true;
   }
-
-  // ---------------------------------------------------------------------------
-  // Mutations (API-backed)
-  // ---------------------------------------------------------------------------
 
   async function addRecipe(
     title: string,
@@ -57,76 +34,7 @@ export const useShoppingStore = defineStore("shopping", () => {
     servings: number,
     choices?: RecipeChoices,
   ): Promise<boolean> {
-    if (isRecipeInSelection(path)) return false;
-    // Optimistic add for instant UI feedback
-    recipeSelection.value.push({ title, path, servings, choices });
-    try {
-      const data = await $fetchWithHeaders<ShoppingListResponse>(
-        "/api/shopping-list/recipes",
-        {
-          method: "POST",
-          body: {
-            path,
-            servings,
-            choices: serializeRecipeChoices(choices),
-          },
-        },
-      );
-      applyResponse(data);
-    } catch (e) {
-      // Rollback optimistic add
-      const idx = recipeSelection.value.findIndex((r) => r.path === path);
-      if (idx > -1) recipeSelection.value.splice(idx, 1);
-      throw e;
-    }
-    return true;
-  }
-
-  async function editServings(
-    path: string,
-    servings: number,
-    choices?: RecipeChoices,
-  ): Promise<boolean> {
-    if (!isRecipeInSelection(path)) return false;
-    // Optimistic update
-    const recipe = recipeSelection.value.find((r) => r.path === path);
-    const oldServings = recipe!.servings;
-    const oldChoices = recipe!.choices;
-    recipe!.servings = servings;
-    if (choices !== undefined) recipe!.choices = choices;
-    try {
-      const data = await $fetchWithHeaders<ShoppingListResponse>(
-        "/api/shopping-list/recipes",
-        {
-          method: "PATCH",
-          body: {
-            path,
-            servings,
-            choices: serializeRecipeChoices(choices),
-          },
-        },
-      );
-      applyResponse(data);
-    } catch (e) {
-      // Rollback optimistic update
-      recipe!.servings = oldServings;
-      recipe!.choices = oldChoices;
-      throw e;
-    }
-    return true;
-  }
-
-  async function removeRecipe(path: string): Promise<boolean> {
-    const idx = recipeSelection.value.findIndex((r) => r.path === path);
-    if (idx === -1) return false;
-    // Optimistic removal for immediate UI feedback
-    recipeSelection.value.splice(idx, 1);
-    const data = await $fetchWithHeaders<ShoppingListResponse>(
-      "/api/shopping-list/recipes",
-      { method: "DELETE", body: { path } },
-    );
-    applyResponse(data);
-    return true;
+    return actions.addRecipe(title, path, servings, choices);
   }
 
   async function clearList(): Promise<void> {
@@ -134,85 +42,42 @@ export const useShoppingStore = defineStore("shopping", () => {
       "/api/shopping-list",
       { method: "DELETE" },
     );
-    applyResponse(data);
+    actions.applyResponse(data);
   }
 
-  // ---------------------------------------------------------------------------
-  // Checked items
-  // ---------------------------------------------------------------------------
-
-  async function checkIngredient(
-    name: string,
-    checked: boolean,
-  ): Promise<void> {
-    const data = await $fetchWithHeaders<ShoppingListResponse>(
-      "/api/shopping-list/checks",
-      { method: "POST", body: { ingredientName: name, checked } },
-    );
-    applyResponse(data);
+  async function switchToOwnList(): Promise<void> {
+    sharedListStore.clearSharedList();
+    await fetchList();
   }
-
-  function isChecked(name: string): boolean {
-    return checkedItems.value.has(name);
-  }
-
-  async function uncheckAll(): Promise<void> {
-    const data = await $fetchWithHeaders<ShoppingListResponse>(
-      "/api/shopping-list/checks",
-      { method: "DELETE" },
-    );
-    applyResponse(data);
-  }
-
-  async function removeManualItem(index: number): Promise<void> {
-    const data = await $fetchWithHeaders<ShoppingListResponse>(
-      "/api/shopping-list/manual-items",
-      { method: "DELETE", body: { index } },
-    );
-    applyResponse(data);
-  }
-
-  async function addManualItem(
-    name: string,
-    quantity?: string,
-    unit?: string,
-  ): Promise<void> {
-    const data = await $fetchWithHeaders<ShoppingListResponse>(
-      "/api/shopping-list/manual-items",
-      { method: "POST", body: { name, quantity, unit } },
-    );
-    applyResponse(data);
-  }
-
-  // ---------------------------------------------------------------------------
-  // Synchronous lookups
-  // ---------------------------------------------------------------------------
 
   function isRecipeInSelection(path: string): boolean {
-    return recipeSelection.value.some((recipe) => recipe.path === path);
+    return actions.recipeSelection.value.some((r) => r.path === path);
   }
 
   function getServings(path: string): number | undefined {
-    return recipeSelection.value.find((recipe) => recipe.path === path)
-      ?.servings;
+    return actions.recipeSelection.value.find((r) => r.path === path)?.servings;
   }
 
   return {
-    recipeSelection,
-    ingredients,
-    manualItems,
-    checkedItems,
+    recipeSelection: actions.recipeSelection,
+    ingredients: actions.ingredients,
+    manualItems: actions.manualItems,
+    checkedItems: actions.checkedItems,
+    sharedToken: sharedListStore.token,
+    sharedOwnerName: sharedListStore.ownerName,
+    sharedExpiresAt: sharedListStore.expiresAt,
     init,
     fetchList,
     addRecipe,
-    editServings,
-    removeRecipe,
+    editServings: actions.editServings,
+    removeRecipe: actions.removeRecipe,
     clearList,
-    checkIngredient,
-    isChecked,
-    uncheckAll,
-    removeManualItem,
-    addManualItem,
+    switchToOwnList,
+    checkIngredient: actions.checkIngredient,
+    isChecked: actions.isChecked,
+    uncheckAll: actions.uncheckAll,
+    removeManualItem: actions.removeManualItem,
+    addManualItem: actions.addManualItem,
     isRecipeInSelection,
     getServings,
   };

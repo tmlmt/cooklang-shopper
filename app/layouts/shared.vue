@@ -3,7 +3,8 @@ import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui";
 
 const { title: appTitle } = await usePublicConfig();
 const modal = await useModalAbout();
-const { mobileHeaderMenuItems, desktopHeaderMenuItems } = useHeaderMenu();
+const { mobileHeaderMenuItems, desktopHeaderMenuItems, headerActionItems } =
+  useHeaderMenu();
 
 const headerOpen = ref(false);
 
@@ -70,6 +71,19 @@ const wrapForMobile = (items: DropdownMenuItem[]) =>
         </template>
       </template>
       <template #right>
+        <template v-if="headerActionItems.length > 0">
+          <UButton
+            v-for="action in headerActionItems"
+            :key="`action-${action.label}`"
+            :label="action.label"
+            :icon="action.icon"
+            class="hover:cursor-pointer"
+            :variant="action.variant ?? 'ghost'"
+            :color="(action.color as any) ?? 'neutral'"
+            :ui="{ label: 'hidden md:flex' }"
+            @click="action.onSelect?.($event)"
+          />
+        </template>
         <UColorModeButton />
         <UDropdownMenu
           :items="dropdownItems"

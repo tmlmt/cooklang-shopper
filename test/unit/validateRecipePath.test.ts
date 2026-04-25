@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { validateRecipePath } from "~~/shared/utils/path";
+import { validateRecipePath } from "~~/shared/utils/validateRecipePath";
 
 vi.stubGlobal(
   "createError",

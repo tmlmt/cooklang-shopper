@@ -1,16 +1,49 @@
 <script setup lang="ts">
+import type { AddedIngredient } from "@tmlmt/cooklang-parser";
+
+const props = withDefaults(
+  defineProps<{
+    ingredientsFn?: () => AddedIngredient[];
+    isCheckedFn?: (name: string) => boolean;
+    onCheckFn?: (name: string, checked: boolean) => void | Promise<void>;
+    onUncheckAllFn?: () => void | Promise<void>;
+  }>(),
+  {
+    ingredientsFn: undefined,
+    isCheckedFn: undefined,
+    onCheckFn: undefined,
+    onUncheckAllFn: undefined,
+  },
+);
+
 const emit = defineEmits<{ close: [] }>();
 
 defineShortcuts({ escape: () => emit("close") });
 
 const shoppingStore = useShoppingStore();
 
-const total = computed(() => shoppingStore.ingredients.length);
-const checkedCount = computed(
-  () =>
-    shoppingStore.ingredients.filter((i) => shoppingStore.isChecked(i.name))
-      .length,
+const ingredients = computed(
+  () => props.ingredientsFn?.() ?? shoppingStore.ingredients,
 );
+const isCheckedFn = computed(
+  () => props.isCheckedFn ?? ((name: string) => shoppingStore.isChecked(name)),
+);
+const onCheckFn = computed(
+  () =>
+    props.onCheckFn ??
+    ((name: string, checked: boolean) =>
+      shoppingStore.checkIngredient(name, checked)),
+);
+
+const total = computed(() => ingredients.value.length);
+const checkedCount = computed(
+  () => ingredients.value.filter((i) => isCheckedFn.value(i.name)).length,
+);
+
+function uncheckAll() {
+  if (props.onUncheckAllFn) return props.onUncheckAllFn();
+  return shoppingStore.uncheckAll();
+}
 </script>
 
 <template>
@@ -39,7 +72,9 @@ const checkedCount = computed(
     <template #body>
       <div class="mx-auto w-full max-w-3xl px-4 py-6 sm:px-8">
         <IngredientList
-          :ingredients="shoppingStore.ingredients"
+          :ingredients="ingredients"
+          :is-checked-fn="isCheckedFn"
+          :on-check-fn="onCheckFn"
           :show-header="false"
         />
       </div>
@@ -52,7 +87,7 @@ const checkedCount = computed(
         color="neutral"
         variant="soft"
         :disabled="checkedCount === 0"
-        @click="shoppingStore.uncheckAll()"
+        @click="uncheckAll()"
       />
       <UButton
         label="Done"

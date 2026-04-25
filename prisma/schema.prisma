@@ -24,3 +24,15 @@ model ShareLink {
 
   @@index([recipePath])
 }
+
+model ShoppingListShareLink {
+  id        Int       @id @default(autoincrement())
+  token     String    @unique
+  userKey   String
+  listName  String    @default("")
+  ownerName String
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userKey, listName])
+}

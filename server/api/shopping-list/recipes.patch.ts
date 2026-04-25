@@ -7,8 +7,20 @@ interface UpdateRecipeBody {
 }
 
 export default defineEventHandler(async (event) => {
-  const session = await requireShoppingAccess(event);
-  const userKey = getUserKey(session);
+  const token = getQuery(event).token as string | undefined;
+  let userKey: string;
+  let listName: string;
+
+  if (token) {
+    await requireUserSession(event);
+    const ctx = await resolveShoppingShareToken(token);
+    userKey = ctx.userKey;
+    listName = ctx.listName;
+  } else {
+    const session = await requireShoppingAccess(event);
+    userKey = getUserKey(session);
+    listName = "";
+  }
 
   const body = await readBody<UpdateRecipeBody>(event);
 
@@ -32,6 +44,12 @@ export default defineEventHandler(async (event) => {
 
   const choices = body.choices ? toRecipeChoices(body.choices) : undefined;
 
-  await updateRecipeInList(userKey, body.path, body.servings, choices);
-  return getShoppingListData(userKey);
+  await updateRecipeInList(
+    userKey,
+    body.path,
+    body.servings,
+    choices,
+    listName,
+  );
+  return getShoppingListData(userKey, listName);
 });

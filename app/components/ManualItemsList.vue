@@ -5,13 +5,13 @@ const props = withDefaults(
   defineProps<{
     items: Ingredient[];
     desktopColumns?: 1 | 2;
+    onDeleteFn?: (index: number) => void;
   }>(),
   {
     desktopColumns: 2,
+    onDeleteFn: undefined,
   },
 );
-
-const shoppingStore = useShoppingStore();
 </script>
 
 <template>
@@ -19,20 +19,17 @@ const shoppingStore = useShoppingStore();
     class="grid list-disc gap-x-8 gap-y-1 pl-5"
     :class="{ 'md:grid-cols-2': props.desktopColumns === 2 }"
   >
-    <li
-      v-for="(item, index) in props.items"
-      :key="item.name"
-      class="group"
-    >
+    <li v-for="(item, index) in props.items" :key="item.name" class="group">
       <span class="flex items-center justify-start">
         <IngredientItem :ingredient="item" :all-ingredients="props.items" />
         <UButton
+          v-if="props.onDeleteFn"
           icon="prime:trash"
           color="neutral"
           variant="ghost"
           size="xs"
           class="ml-2 opacity-0 transition-opacity group-hover:opacity-100"
-          @click="shoppingStore.removeManualItem(index)"
+          @click="props.onDeleteFn(index)"
         />
       </span>
     </li>

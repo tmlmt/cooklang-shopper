@@ -54,15 +54,18 @@ export function runMigrations(dbPath: string): void {
         .get() as { name: string } | undefined;
 
       if (existingTable) {
-        for (const m of migrations) {
+        // Only mark migration 1 (init) as applied — its tables already exist.
+        // Any migrations beyond version 1 need to be applied normally.
+        const initMigration = migrations.find((m) => m.version === 1);
+        if (initMigration) {
           db.prepare(
             "INSERT INTO _schema_version (version, name) VALUES (?, ?)",
-          ).run(m.version, m.name);
+          ).run(initMigration.version, initMigration.name);
         }
         console.log(
-          "Detected pre-existing database. Marked all migrations as applied.",
+          "Detected pre-existing database. Marked init migration as applied.",
         );
-        return;
+        // Do NOT return — fall through so pending migrations (v2+) are applied
       }
     }
 

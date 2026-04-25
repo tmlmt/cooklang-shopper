@@ -4,8 +4,19 @@ interface CheckBody {
 }
 
 export default defineEventHandler(async (event) => {
-  const session = await requireShoppingAccess(event);
-  const userKey = getUserKey(session);
+  const token = getQuery(event).token as string | undefined;
+  let userKey: string;
+  let listName: string;
+
+  if (token) {
+    const ctx = await resolveShoppingShareToken(token);
+    userKey = ctx.userKey;
+    listName = ctx.listName;
+  } else {
+    const session = await requireShoppingAccess(event);
+    userKey = getUserKey(session);
+    listName = "";
+  }
 
   const body = await readBody<CheckBody>(event);
 
@@ -22,6 +33,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  await checkIngredient(userKey, body.ingredientName, body.checked);
-  return getShoppingListData(userKey);
+  await checkIngredient(userKey, body.ingredientName, body.checked, listName);
+  return getShoppingListData(userKey, listName);
 });

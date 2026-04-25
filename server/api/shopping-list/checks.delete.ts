@@ -1,7 +1,18 @@
 export default defineEventHandler(async (event) => {
-  const session = await requireShoppingAccess(event);
-  const userKey = getUserKey(session);
+  const token = getQuery(event).token as string | undefined;
+  let userKey: string;
+  let listName: string;
 
-  await uncheckAll(userKey);
-  return getShoppingListData(userKey);
+  if (token) {
+    const ctx = await resolveShoppingShareToken(token);
+    userKey = ctx.userKey;
+    listName = ctx.listName;
+  } else {
+    const session = await requireShoppingAccess(event);
+    userKey = getUserKey(session);
+    listName = "";
+  }
+
+  await uncheckAll(userKey, listName);
+  return getShoppingListData(userKey, listName);
 });

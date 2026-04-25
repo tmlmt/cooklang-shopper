@@ -24,7 +24,7 @@ async function loadData(recipePath: string) {
 
   try {
     const data = await $fetchWithHeaders<{ visibility: "public" | "private" }>(
-      `/api/sharing/visibility/${recipePath}`,
+      `/api/sharing/recipe/visibility/${recipePath}`,
     );
     visibility.value = data.visibility;
   } catch {
@@ -34,9 +34,12 @@ async function loadData(recipePath: string) {
   }
 
   try {
-    const data = await $fetchWithHeaders<ShareLink[]>("/api/sharing/links", {
-      query: { recipePath },
-    });
+    const data = await $fetchWithHeaders<ShareLink[]>(
+      "/api/sharing/recipe/links",
+      {
+        query: { recipePath },
+      },
+    );
     links.value = data;
   } catch {
     // keep default
@@ -50,10 +53,13 @@ watch(() => props.recipePath, loadData, { immediate: true });
 async function toggleVisibility() {
   const newVisibility = visibility.value === "public" ? "private" : "public";
   try {
-    await $fetchWithHeaders(`/api/sharing/visibility/${props.recipePath}`, {
-      method: "PUT",
-      body: { visibility: newVisibility },
-    });
+    await $fetchWithHeaders(
+      `/api/sharing/recipe/visibility/${props.recipePath}`,
+      {
+        method: "PUT",
+        body: { visibility: newVisibility },
+      },
+    );
     visibility.value = newVisibility;
     toast.add({
       title: "Visibility updated",
@@ -75,7 +81,7 @@ async function createLink() {
   creatingLink.value = true;
   try {
     const data = await $fetchWithHeaders<Omit<ShareLink, "expired">>(
-      "/api/sharing/links",
+      "/api/sharing/recipe/links",
       {
         method: "POST",
         body: { recipePath: props.recipePath },
@@ -99,7 +105,7 @@ async function createLink() {
 
 async function revokeLink(id: number) {
   try {
-    await $fetchWithHeaders(`/api/sharing/links/${id}`, {
+    await $fetchWithHeaders(`/api/sharing/recipe/links/${id}`, {
       method: "DELETE",
     });
     links.value = links.value.filter((l) => l.id !== id);
@@ -117,7 +123,7 @@ async function revokeLink(id: number) {
 }
 
 function getShareUrl(token: string): string {
-  return `${baseUrl}/s/${token}`;
+  return `${baseUrl.value}/s/r/${token}`;
 }
 
 async function copyLink(token: string) {

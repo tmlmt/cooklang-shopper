@@ -10,7 +10,7 @@ definePageMeta({
 const route = useRoute();
 const token = route.params.token as string;
 
-const { data, error } = await useFetch(`/api/sharing/resolve/${token}`);
+const { data, error } = await useFetch(`/api/sharing/recipe/resolve/${token}`);
 
 if (error.value) {
   throw createError({

@@ -130,7 +130,7 @@ const modalFile = await useModalFile();
 const modalConf = await useModalConfirmation();
 const modalChoices = await useModalChoices();
 const modalImageUpload = await useModalImageUpload();
-const modalShare = await useModalShare();
+const modalShare = await useModalShareRecipe();
 const modalCookMode = await useModalCookMode();
 
 // Cook mode state — captured from Content.vue's scale-actions slot

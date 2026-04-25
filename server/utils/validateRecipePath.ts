@@ -1,5 +1,6 @@
 import * as nodePath from "node:path";
 import { createError, getRouterParam, type H3Event } from "h3";
+import { validateRecipePath } from "~~/shared/utils/validateRecipePath";
 
 const recipesRoot = nodePath.resolve(process.cwd(), "public", "recipes");
 

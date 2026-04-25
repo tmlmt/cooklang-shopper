@@ -1,11 +1,19 @@
 import { ModalStoreRun } from "#components";
+import type { AddedIngredient } from "@tmlmt/cooklang-parser";
+
+interface StoreRunOptions {
+  ingredientsFn?: () => AddedIngredient[];
+  isCheckedFn?: (name: string) => boolean;
+  onCheckFn?: (name: string, checked: boolean) => void | Promise<void>;
+  onUncheckAllFn?: () => void | Promise<void>;
+}
 
 export default async function () {
   const overlay = useOverlay();
   const modal = overlay.create(ModalStoreRun);
 
-  async function open() {
-    const instance = modal.open({});
+  async function open(options?: StoreRunOptions) {
+    const instance = modal.open(options ?? {});
     return await instance.result;
   }
 

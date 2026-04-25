@@ -149,6 +149,15 @@ export interface ShareLink {
   expired: boolean;
 }
 
+export interface ShoppingListShareLink {
+  id: number;
+  token: string;
+  ownerName: string;
+  expiresAt: string | null;
+  createdAt: string;
+  expired: boolean;
+}
+
 // https://stackoverflow.com/questions/78945320/how-to-handle-nodejs-errors-in-typescript
 export interface BaseSystemError<Code extends string = string> extends Error {
   /** The string error code */
