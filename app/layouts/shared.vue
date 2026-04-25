@@ -5,10 +5,26 @@ const { title: appTitle } = await usePublicConfig();
 const modal = await useModalAbout();
 const { mobileHeaderMenuItems, desktopHeaderMenuItems, headerActionItems } =
   useHeaderMenu();
+const { loggedIn } = useUserSession();
 
 const headerOpen = ref(false);
 
+const authMenuItem = computed<DropdownMenuItem>(() =>
+  loggedIn.value
+    ? {
+        label: "Authentication",
+        icon: "mdi:user",
+        onSelect: () => navigateTo("/auth"),
+      }
+    : {
+        label: "Sign in",
+        icon: "material-symbols:login",
+        onSelect: () => navigateTo("/auth"),
+      },
+);
+
 const aboutItems = computed<DropdownMenuItem[]>(() => [
+  authMenuItem.value,
   { label: "About", onSelect: async () => await modal.open() },
 ]);
 
