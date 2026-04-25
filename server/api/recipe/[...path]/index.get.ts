@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   if (!authenticated) {
     const isPublic = await isRecipePublic(recipeKey);
     if (!isPublic) {
-      throw createError({ statusCode: 401, statusMessage: "Unauthorized" });
+      throw createError({ status: 401, statusText: "Unauthorized" });
     }
   }
 
@@ -15,8 +15,8 @@ export default defineEventHandler(async (event) => {
 
   if (!content) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Recipe not found",
+      status: 404,
+      statusText: "Recipe not found",
     });
   }
 

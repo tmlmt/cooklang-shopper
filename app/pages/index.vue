@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { NuxtError } from "#app";
+
 definePageMeta({
   description:
     "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
@@ -89,7 +91,7 @@ const createNewFolder = async () => {
   } catch (e) {
     toast.add({
       title: "Error creating folder",
-      description: (e as { statusMessage?: string }).statusMessage,
+      description: (e as NuxtError).statusText,
       color: "error",
     });
   }

@@ -26,8 +26,8 @@ export default defineEventHandler(async (event) => {
 
   if (!body.path || typeof body.path !== "string") {
     throw createError({
-      statusCode: 400,
-      statusMessage: "path is required",
+      status: 400,
+      statusText: "path is required",
     });
   }
   validateRecipePath(body.path);
@@ -37,8 +37,8 @@ export default defineEventHandler(async (event) => {
     body.servings < 1
   ) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "servings must be a positive number",
+      status: 400,
+      statusText: "servings must be a positive number",
     });
   }
 

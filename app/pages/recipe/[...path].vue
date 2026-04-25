@@ -16,8 +16,8 @@ const router = useRouter();
 
 if (!route.params.path) {
   throw createError({
-    statusCode: 404,
-    statusMessage: "Recipe not found",
+    status: 404,
+    statusText: "Recipe not found",
   });
 }
 
@@ -93,12 +93,12 @@ if (route.query.mode === "new") {
   const res = await useFetch(`/api/recipe/${path}`);
 
   if (res.error.value) {
-    if (res.error.value.statusCode === 401) {
+    if (res.error.value.status === 401) {
       await navigateTo("/auth", { replace: true });
     }
     throw createError({
-      statusCode: 404,
-      statusMessage: "Recipe not found",
+      status: 404,
+      statusText: "Recipe not found",
     });
   }
 

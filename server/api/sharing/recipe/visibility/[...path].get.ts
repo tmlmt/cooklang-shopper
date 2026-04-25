@@ -4,8 +4,8 @@ export default defineEventHandler(async (event) => {
   const recipePath = getRouterParam(event, "path");
   if (!recipePath) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Recipe path is required",
+      status: 400,
+      statusText: "Recipe path is required",
     });
   }
 

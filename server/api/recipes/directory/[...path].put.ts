@@ -10,14 +10,14 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   if (!body.name || body.name.trim().length === 0) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "No new name was provided",
+      status: 400,
+      statusText: "No new name was provided",
     });
   }
   if (body.name.includes("/") || body.name.includes("\\")) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Folder name must not contain path separators",
+      status: 400,
+      statusText: "Folder name must not contain path separators",
     });
   }
 
@@ -31,8 +31,8 @@ export default defineEventHandler(async (event) => {
   for (const dir of [sourceDir, renamedDir]) {
     if (!dir.startsWith(recipesRoot + nodePath.sep) && dir !== recipesRoot) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "Invalid directory path",
+        status: 400,
+        statusText: "Invalid directory path",
       });
     }
   }

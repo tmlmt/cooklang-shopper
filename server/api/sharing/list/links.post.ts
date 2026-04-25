@@ -13,14 +13,14 @@ export default defineEventHandler(async (event) => {
     expiresAt = new Date(body.expiresAt);
     if (isNaN(expiresAt.getTime())) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "Invalid expiresAt date",
+        status: 400,
+        statusText: "Invalid expiresAt date",
       });
     }
     if (expiresAt <= new Date()) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "expiresAt must be in the future",
+        status: 400,
+        statusText: "expiresAt must be in the future",
       });
     }
   }

@@ -11,8 +11,8 @@ export default defineEventHandler(
     const body = await readBody<{ imagePath?: string }>(event);
     if (!body?.imagePath || typeof body.imagePath !== "string") {
       throw createError({
-        statusCode: 400,
-        statusMessage: "imagePath is required",
+        status: 400,
+        statusText: "imagePath is required",
       });
     }
 
@@ -21,8 +21,8 @@ export default defineEventHandler(
     // Convert web path to filesystem path
     if (!imagePath.startsWith("/recipes/")) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "Invalid image path",
+        status: 400,
+        statusText: "Invalid image path",
       });
     }
 
@@ -35,8 +35,8 @@ export default defineEventHandler(
       fsPath !== recipesRoot
     ) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "Invalid image path",
+        status: 400,
+        statusText: "Invalid image path",
       });
     }
 
@@ -44,8 +44,8 @@ export default defineEventHandler(
     const ext = nodePath.extname(fsPath).slice(1).toLowerCase();
     if (!IMAGE_EXTENSIONS.includes(ext)) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "Not an image file",
+        status: 400,
+        statusText: "Not an image file",
       });
     }
 
@@ -54,16 +54,15 @@ export default defineEventHandler(
       const fileStat = await stat(fsPath);
       if (!fileStat.isFile()) {
         throw createError({
-          statusCode: 404,
-          statusMessage: "Image not found",
+          status: 404,
+          statusText: "Image not found",
         });
       }
     } catch (error: unknown) {
-      if (error && typeof error === "object" && "statusCode" in error)
-        throw error;
+      if (error && typeof error === "object" && "status" in error) throw error;
       throw createError({
-        statusCode: 404,
-        statusMessage: "Image not found",
+        status: 404,
+        statusText: "Image not found",
       });
     }
 

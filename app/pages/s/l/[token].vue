@@ -22,8 +22,8 @@ const { data, error } = await useFetch<ResolveResponse>(
 
 if (error.value) {
   throw createError({
-    statusCode: error.value.statusCode ?? 404,
-    statusMessage: error.value.statusMessage ?? "Share link not found",
+    status: error.value.status ?? 404,
+    statusText: error.value.statusText ?? "Share link not found",
   });
 }
 

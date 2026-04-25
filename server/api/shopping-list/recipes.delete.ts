@@ -22,8 +22,8 @@ export default defineEventHandler(async (event) => {
 
   if (!body.path || typeof body.path !== "string") {
     throw createError({
-      statusCode: 400,
-      statusMessage: "path is required",
+      status: 400,
+      statusText: "path is required",
     });
   }
   validateRecipePath(body.path);

@@ -316,8 +316,8 @@ export async function addRecipeToList(
   const parserPath = `./${recipePath}`;
   if (sl.recipes.some((r) => r.path === parserPath)) {
     throw createError({
-      statusCode: 409,
-      statusMessage: "Recipe already in shopping list",
+      status: 409,
+      statusText: "Recipe already in shopping list",
     });
   }
 
@@ -325,7 +325,7 @@ export async function addRecipeToList(
   const storage = useStorage("recipes");
   const content = await storage.getItem(recipePath + ".cook");
   if (!content) {
-    throw createError({ statusCode: 404, statusMessage: "Recipe not found" });
+    throw createError({ status: 404, statusText: "Recipe not found" });
   }
 
   const recipe = new Recipe(content.toString());
@@ -348,8 +348,8 @@ export async function updateRecipeInList(
   const sl = getShoppingList(userKey, listName);
   if (!sl) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Shopping list not found",
+      status: 404,
+      statusText: "Shopping list not found",
     });
   }
 
@@ -359,8 +359,8 @@ export async function updateRecipeInList(
   const recipeIndex = sl.recipes.findIndex((r) => r.path === parserPath);
   if (recipeIndex === -1) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Recipe not found in shopping list",
+      status: 404,
+      statusText: "Recipe not found in shopping list",
     });
   }
   sl.removeRecipe(recipeIndex);
@@ -368,7 +368,7 @@ export async function updateRecipeInList(
   const storage = useStorage("recipes");
   const content = await storage.getItem(recipePath + ".cook");
   if (!content) {
-    throw createError({ statusCode: 404, statusMessage: "Recipe not found" });
+    throw createError({ status: 404, statusText: "Recipe not found" });
   }
 
   sl.addRecipe(new Recipe(content.toString()), {
@@ -388,8 +388,8 @@ export async function removeRecipeFromList(
   const sl = getShoppingList(userKey, listName);
   if (!sl) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Shopping list not found",
+      status: 404,
+      statusText: "Shopping list not found",
     });
   }
 
@@ -397,8 +397,8 @@ export async function removeRecipeFromList(
   const recipeIdx = sl.recipes.findIndex((r) => r.path === parserPath);
   if (recipeIdx === -1) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Recipe not found in shopping list",
+      status: 404,
+      statusText: "Recipe not found in shopping list",
     });
   }
   sl.removeRecipe(recipeIdx);
@@ -437,8 +437,8 @@ export async function checkIngredient(
   const sl = getShoppingList(userKey, listName);
   if (!sl) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Shopping list not found",
+      status: 404,
+      statusText: "Shopping list not found",
     });
   }
 
@@ -460,8 +460,8 @@ export async function uncheckAll(
   const sl = getShoppingList(userKey, listName);
   if (!sl) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Shopping list not found",
+      status: 404,
+      statusText: "Shopping list not found",
     });
   }
 
@@ -483,8 +483,8 @@ export async function removeManualItem(
   const sl = getShoppingList(userKey, listName);
   if (!sl) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Shopping list not found",
+      status: 404,
+      statusText: "Shopping list not found",
     });
   }
   sl.removeManualItem(itemIndex);

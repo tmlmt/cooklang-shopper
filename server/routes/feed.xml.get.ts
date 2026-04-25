@@ -7,8 +7,8 @@ export default defineCachedEventHandler(
 
     if (!federation?.enabled) {
       throw createError({
-        statusCode: 404,
-        statusMessage: "Atom feed not enabled",
+        status: 404,
+        statusText: "Atom feed not enabled",
       });
     }
 

@@ -35,14 +35,14 @@ function resolveProfile(user: Record<string, unknown>): string {
 export default defineEventHandler(async (event) => {
   const name = getRouterParam(event, "name");
   if (!name) {
-    throw createError({ statusCode: 400, message: "Missing provider name" });
+    throw createError({ status: 400, message: "Missing provider name" });
   }
 
   const config = await getAppConfig();
   const provider = getOidcProviderByName(config, name);
   if (!provider) {
     throw createError({
-      statusCode: 404,
+      status: 404,
       message: `OIDC provider "${name}" not found`,
     });
   }

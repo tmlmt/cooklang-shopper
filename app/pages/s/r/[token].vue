@@ -14,9 +14,9 @@ const { data, error } = await useFetch(`/api/sharing/recipe/resolve/${token}`);
 
 if (error.value) {
   throw createError({
-    statusCode: error.value.statusCode ?? 404,
-    statusMessage:
-      error.value.statusCode === 410
+    status: error.value.status ?? 404,
+    statusText:
+      error.value.status === 410
         ? "This share link has expired"
         : "Share link not found",
   });

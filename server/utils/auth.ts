@@ -21,7 +21,7 @@ function sanitize(s: string): string {
 
 export function getUserKey(session: UserSession): string {
   if (!session.user) {
-    throw createError({ statusCode: 401, statusMessage: "Not authenticated" });
+    throw createError({ status: 401, statusText: "Not authenticated" });
   }
   return `${sanitize(session.user.provider)}-${sanitize(session.user.userId)}`;
 }

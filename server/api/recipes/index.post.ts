@@ -7,28 +7,28 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   if (body.dir === undefined) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "No target directory was provided",
+      status: 400,
+      statusText: "No target directory was provided",
     });
   }
   validateRecipeDir(body.dir.trim());
   if (!body.name || body.name.trim().length === 0) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "No filename was provided",
+      status: 400,
+      statusText: "No filename was provided",
     });
   }
   // Also ensure the filename doesn't contain path separators
   if (body.name.includes("/") || body.name.includes("\\")) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "The filename must not contain path separators.",
+      status: 400,
+      statusText: "The filename must not contain path separators.",
     });
   }
   if (!body.content || body.content.trim().length === 0) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "No recipe content was provided",
+      status: 400,
+      statusText: "No recipe content was provided",
     });
   }
 
@@ -57,8 +57,8 @@ export default defineEventHandler(async (event) => {
         exists = false;
       } else if (isSystemError(error)) {
         throw createError({
-          statusCode: 500,
-          statusMessage: `Error checking file: ${error.message}`,
+          status: 500,
+          statusText: `Error checking file: ${error.message}`,
         });
       }
     }
@@ -72,8 +72,8 @@ export default defineEventHandler(async (event) => {
     await writeFile(newFile, body.content);
   } catch (err) {
     throw createError({
-      statusCode: 500,
-      statusMessage: `Error creating recipe: ${err}`,
+      status: 500,
+      statusText: `Error creating recipe: ${err}`,
     });
   }
 

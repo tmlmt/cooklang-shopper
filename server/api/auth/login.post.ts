@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   const pwProvider = getPasswordProvider(config);
   if (!pwProvider) {
     throw createError({
-      statusCode: 403,
+      status: 403,
       message: "Password authentication is not enabled",
     });
   }
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
   const valid = await verifyPassword(hashedPassword, password);
 
   if (!valid) {
-    throw createError({ statusCode: 401, message: "Invalid password" });
+    throw createError({ status: 401, message: "Invalid password" });
   }
 
   await setUserSession(event, {

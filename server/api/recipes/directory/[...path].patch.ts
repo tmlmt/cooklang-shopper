@@ -10,8 +10,8 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   if (body.destination === undefined) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "No destination directory was provided",
+      status: 400,
+      statusText: "No destination directory was provided",
     });
   }
   validateRecipeDir(body.destination.trim());
@@ -29,8 +29,8 @@ export default defineEventHandler(async (event) => {
   for (const dir of [sourceDir, destinationDir]) {
     if (!dir.startsWith(recipesRoot + nodePath.sep) && dir !== recipesRoot) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "Invalid directory path",
+        status: 400,
+        statusText: "Invalid directory path",
       });
     }
   }
@@ -41,8 +41,8 @@ export default defineEventHandler(async (event) => {
     destinationDir.startsWith(sourceDir + nodePath.sep)
   ) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Cannot move a folder into itself or its own subdirectory",
+      status: 400,
+      statusText: "Cannot move a folder into itself or its own subdirectory",
     });
   }
 

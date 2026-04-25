@@ -4,8 +4,8 @@ export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, "token");
   if (!token) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Token is required",
+      status: 400,
+      statusText: "Token is required",
     });
   }
 
@@ -16,15 +16,15 @@ export default defineEventHandler(async (event) => {
 
   if (!shareLink) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Share link not found",
+      status: 404,
+      statusText: "Share link not found",
     });
   }
 
   if (shareLink.expiresAt && shareLink.expiresAt < new Date()) {
     throw createError({
-      statusCode: 410,
-      statusMessage: "Share link has expired",
+      status: 410,
+      statusText: "Share link has expired",
     });
   }
 
@@ -36,8 +36,8 @@ export default defineEventHandler(async (event) => {
 
   if (!content) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Recipe not found",
+      status: 404,
+      statusText: "Recipe not found",
     });
   }
 

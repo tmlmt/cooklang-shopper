@@ -6,8 +6,8 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
   if (!id || isNaN(Number(id))) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Valid link ID is required",
+      status: 400,
+      statusText: "Valid link ID is required",
     });
   }
 
@@ -18,12 +18,12 @@ export default defineEventHandler(async (event) => {
   });
   if (!link) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Share link not found",
+      status: 404,
+      statusText: "Share link not found",
     });
   }
   if (link.userKey !== userKey) {
-    throw createError({ statusCode: 403, statusMessage: "Forbidden" });
+    throw createError({ status: 403, statusText: "Forbidden" });
   }
 
   await db.shoppingListShareLink.delete({ where: { id: Number(id) } });

@@ -22,8 +22,8 @@ export default defineEventHandler(async (event) => {
 
   if (typeof body.index !== "number" || body.index < 0) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "index must be a non-negative number",
+      status: 400,
+      statusText: "index must be a non-negative number",
     });
   }
 

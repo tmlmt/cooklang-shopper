@@ -35,7 +35,7 @@ export async function getAppConfig(): Promise<AppConfig> {
     config.auth.providers.length === 0
   ) {
     throw createError({
-      statusCode: 500,
+      status: 500,
       message: "Missing or empty auth.providers in config.yaml",
     });
   }
@@ -44,7 +44,7 @@ export async function getAppConfig(): Promise<AppConfig> {
   const duplicates = names.filter((n, i) => names.indexOf(n) !== i);
   if (duplicates.length > 0) {
     throw createError({
-      statusCode: 500,
+      status: 500,
       message: `Duplicate auth provider names in config.yaml: ${[...new Set(duplicates)].join(", ")}`,
     });
   }
@@ -54,7 +54,7 @@ export async function getAppConfig(): Promise<AppConfig> {
   ).length;
   if (passwordCount > 1) {
     throw createError({
-      statusCode: 500,
+      status: 500,
       message: "Only one password provider is allowed in config.yaml",
     });
   }
@@ -62,7 +62,7 @@ export async function getAppConfig(): Promise<AppConfig> {
   for (const provider of config.auth.providers) {
     if (!provider.type || !provider.name) {
       throw createError({
-        statusCode: 500,
+        status: 500,
         message: "Each auth provider must have a type and name in config.yaml",
       });
     }
@@ -71,7 +71,7 @@ export async function getAppConfig(): Promise<AppConfig> {
       const cfg = provider.config;
       if (!cfg?.password_editor || !cfg?.password_viewer) {
         throw createError({
-          statusCode: 500,
+          status: 500,
           message: `Password provider "${provider.name}": missing config.password_editor and/or config.password_viewer`,
         });
       }
@@ -81,19 +81,19 @@ export async function getAppConfig(): Promise<AppConfig> {
       const cfg = provider.config;
       if (!cfg?.clientId || !cfg?.clientSecret || !cfg?.issuerUrl) {
         throw createError({
-          statusCode: 500,
+          status: 500,
           message: `OIDC provider "${provider.name}": missing config.clientId, clientSecret, and/or issuerUrl`,
         });
       }
       if (!config.baseUrl) {
         throw createError({
-          statusCode: 500,
+          status: 500,
           message: `OIDC provider "${provider.name}" requires baseUrl to be set at root level in config.yaml`,
         });
       }
       if (!cfg.roleMapping?.editor?.claim || !cfg.roleMapping?.editor?.value) {
         throw createError({
-          statusCode: 500,
+          status: 500,
           message: `OIDC provider "${provider.name}": missing config.roleMapping.editor.claim and/or value`,
         });
       }
@@ -102,14 +102,14 @@ export async function getAppConfig(): Promise<AppConfig> {
 
   if (!config.sessionSecret) {
     throw createError({
-      statusCode: 500,
+      status: 500,
       message: "Missing sessionSecret in config.yaml",
     });
   }
 
   if (config.sharing?.federation?.enabled && !config.baseUrl) {
     throw createError({
-      statusCode: 500,
+      status: 500,
       message:
         "Federation requires baseUrl to be set at root level in config.yaml",
     });

@@ -24,22 +24,22 @@ export default defineEventHandler(async (event) => {
 
   if (!body.name || typeof body.name !== "string" || !body.name.trim()) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "name is required",
+      status: 400,
+      statusText: "name is required",
     });
   }
 
   if (body.quantity !== undefined && typeof body.quantity !== "string") {
     throw createError({
-      statusCode: 400,
-      statusMessage: "quantity must be a string or number",
+      status: 400,
+      statusText: "quantity must be a string or number",
     });
   }
 
   if (body.unit !== undefined && typeof body.unit !== "string") {
     throw createError({
-      statusCode: 400,
-      statusMessage: "unit must be a string",
+      status: 400,
+      statusText: "unit must be a string",
     });
   }
 

@@ -93,3 +93,19 @@ await $fetchWithHeaders(`/api/recipe/${path}`, { method: "DELETE" });
 ## Imports
 
 Elements exported in `server/utils`, `app/utils` and `shared/utils` are auto-imported, so do not import them in any file within `server/` and `app/`.
+
+## Errors
+
+Use the auto-imported `createError` to create errors on the server or client side. This function accepts an object with the following properties:
+
+```ts
+function createError(
+  err:
+    | string
+    | { cause; data; message; name; stack; status; statusText; fatal },
+): Error;
+```
+
+Note that statusCode and statusMessage have been deprecated in nuxt v4 and will be removed in nuxt v5 so don't use them.
+
+The statusText property is intended for short, HTTP-compliant status texts (e.g., "Not Found"). It should only contain horizontal tabs, spaces, and visible ASCII characters ([\t\u0020-\u007E]).For any detailed descriptions, multi-line messages, or content with non-ASCII characters, you should always use the message property instead.

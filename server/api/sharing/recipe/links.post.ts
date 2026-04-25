@@ -7,8 +7,8 @@ export default defineEventHandler(async (event) => {
 
   if (!body.recipePath || typeof body.recipePath !== "string") {
     throw createError({
-      statusCode: 400,
-      statusMessage: "recipePath is required",
+      status: 400,
+      statusText: "recipePath is required",
     });
   }
 
@@ -19,8 +19,8 @@ export default defineEventHandler(async (event) => {
   const index = getRecipeIndex();
   if (!index.has(recipePath)) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Recipe not found",
+      status: 404,
+      statusText: "Recipe not found",
     });
   }
 
@@ -29,14 +29,14 @@ export default defineEventHandler(async (event) => {
     expiresAt = new Date(body.expiresAt);
     if (isNaN(expiresAt.getTime())) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "Invalid expiresAt date",
+        status: 400,
+        statusText: "Invalid expiresAt date",
       });
     }
     if (expiresAt <= new Date()) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "expiresAt must be in the future",
+        status: 400,
+        statusText: "expiresAt must be in the future",
       });
     }
   }

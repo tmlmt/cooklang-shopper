@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { NuxtError } from "#app";
+
 const route = useRoute();
 
 definePageMeta({
@@ -110,7 +112,7 @@ const createNewFolder = async () => {
   } catch (e) {
     toast.add({
       title: "Error creating folder",
-      description: (e as { statusMessage?: string }).statusMessage,
+      description: (e as NuxtError).statusText,
       color: "error",
     });
   }
@@ -151,7 +153,7 @@ const moveFolder = async () => {
   } catch (e) {
     toast.add({
       title: "Error moving folder",
-      description: (e as { statusMessage?: string }).statusMessage,
+      description: (e as NuxtError).statusText,
       color: "error",
     });
   }
@@ -193,7 +195,7 @@ const renameFolder = async () => {
   } catch (e) {
     toast.add({
       title: "Error renaming folder",
-      description: (e as { statusMessage?: string }).statusMessage,
+      description: (e as NuxtError).statusText,
       color: "error",
     });
   }
@@ -225,7 +227,7 @@ const deleteFolder = async () => {
   } catch (e) {
     toast.add({
       title: "Error deleting folder",
-      description: (e as { statusMessage?: string }).statusMessage,
+      description: (e as NuxtError).statusText,
       color: "error",
     });
   }

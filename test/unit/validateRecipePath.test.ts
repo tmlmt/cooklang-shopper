@@ -3,8 +3,7 @@ import { validateRecipePath } from "~~/shared/utils/validateRecipePath";
 
 vi.stubGlobal(
   "createError",
-  (opts: { statusCode: number; statusMessage: string }) =>
-    new Error(opts.statusMessage),
+  (opts: { status: number; statusText: string }) => new Error(opts.statusText),
 );
 
 describe("validateRecipePath", () => {

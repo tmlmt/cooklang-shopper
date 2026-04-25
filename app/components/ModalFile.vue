@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TreeItem } from "@nuxt/ui";
 import * as v from "valibot";
-import type { H3Error } from "h3";
+import type { NuxtError } from "#app";
 
 //--------------------
 // Component basics
@@ -224,7 +224,7 @@ const createSubDir = async () => {
   } catch (e) {
     toast.add({
       title: "Error",
-      description: (e as H3Error).statusMessage,
+      description: (e as NuxtError).statusText,
       color: "error",
     });
   } finally {

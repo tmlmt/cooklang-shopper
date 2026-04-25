@@ -14,12 +14,12 @@ export async function requireShoppingAccess(
   const enabled = config.shopping?.enabled ?? false;
 
   if (!enabled) {
-    throw createError({ statusCode: 403, message: "Shopping is disabled" });
+    throw createError({ status: 403, message: "Shopping is disabled" });
   }
 
   if (enabled === "editor-only" && session.user.role !== "editor") {
     throw createError({
-      statusCode: 403,
+      status: 403,
       message: "Shopping is restricted to editors",
     });
   }

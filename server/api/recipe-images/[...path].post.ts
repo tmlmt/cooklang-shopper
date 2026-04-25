@@ -15,16 +15,16 @@ export default defineEventHandler(
     const content = await storage.getItem(`${decodedPath}.cook`);
     if (!content) {
       throw createError({
-        statusCode: 404,
-        statusMessage: "Recipe not found",
+        status: 404,
+        statusText: "Recipe not found",
       });
     }
 
     const formData = await readMultipartFormData(event);
     if (!formData || formData.length === 0) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "No form data provided",
+        status: 400,
+        statusText: "No form data provided",
       });
     }
 
@@ -39,31 +39,31 @@ export default defineEventHandler(
 
     if (!filePart || !filePart.data || filePart.data.length === 0) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "No file provided",
+        status: 400,
+        statusText: "No file provided",
       });
     }
 
     if (!role) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "No role provided (expected 'cover' or 'step-N')",
+        status: 400,
+        statusText: "No role provided (expected 'cover' or 'step-N')",
       });
     }
 
     // Validate role format
     if (role !== "cover" && !/^step-\d+$/.test(role)) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "Invalid role. Expected 'cover' or 'step-N'",
+        status: 400,
+        statusText: "Invalid role. Expected 'cover' or 'step-N'",
       });
     }
 
     // Validate file size
     if (filePart.data.length > MAX_FILE_SIZE) {
       throw createError({
-        statusCode: 413,
-        statusMessage: `File too large. Maximum size is ${MAX_FILE_SIZE / 1024 / 1024}MB`,
+        status: 413,
+        statusText: `File too large. Maximum size is ${MAX_FILE_SIZE / 1024 / 1024}MB`,
       });
     }
 
@@ -72,8 +72,8 @@ export default defineEventHandler(
     const ext = nodePath.extname(originalFilename).slice(1).toLowerCase();
     if (!ext || !IMAGE_EXTENSIONS.includes(ext)) {
       throw createError({
-        statusCode: 400,
-        statusMessage: `Invalid file type. Allowed: ${IMAGE_EXTENSIONS.join(", ")}`,
+        status: 400,
+        statusText: `Invalid file type. Allowed: ${IMAGE_EXTENSIONS.join(", ")}`,
       });
     }
 
@@ -103,8 +103,8 @@ export default defineEventHandler(
       targetPath !== recipesRoot
     ) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "Invalid target path",
+        status: 400,
+        statusText: "Invalid target path",
       });
     }
 

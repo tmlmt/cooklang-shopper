@@ -15,15 +15,15 @@ export async function resolveShoppingShareToken(
 
   if (!link) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Share link not found",
+      status: 404,
+      statusText: "Share link not found",
     });
   }
 
   if (link.expiresAt && link.expiresAt < new Date()) {
     throw createError({
-      statusCode: 410,
-      statusMessage: "Share link has expired",
+      status: 410,
+      statusText: "Share link has expired",
     });
   }
 

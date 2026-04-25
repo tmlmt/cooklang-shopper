@@ -7,8 +7,8 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   if (!body.recipe || body.recipe.trim().length === 0) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "No recipe or empty recipe was provided",
+      status: 400,
+      statusText: "No recipe or empty recipe was provided",
     });
   }
 

@@ -10,20 +10,20 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   if (body.fileName === undefined || body.dir === undefined) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "No data to patch was provided for the recipe",
+      status: 400,
+      statusText: "No data to patch was provided for the recipe",
     });
   }
   if (body.fileName.trim().length === 0) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "An empty filename was provided",
+      status: 400,
+      statusText: "An empty filename was provided",
     });
   }
   if (body.fileName.includes("/")) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "A recipe filename cannot contain '/'",
+      status: 400,
+      statusText: "A recipe filename cannot contain '/'",
     });
   }
 
@@ -35,8 +35,8 @@ export default defineEventHandler(async (event) => {
   const content = (await storage.getItem(oldRecipeKey + ".cook")) as string;
   if (!content) {
     throw createError({
-      statusCode: 404,
-      statusMessage: "Recipe not found",
+      status: 404,
+      statusText: "Recipe not found",
     });
   }
   await storage.removeItem(oldRecipeKey + ".cook");

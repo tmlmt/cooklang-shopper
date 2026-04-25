@@ -22,14 +22,14 @@ export default defineEventHandler(async (event) => {
 
   if (!body.ingredientName || typeof body.ingredientName !== "string") {
     throw createError({
-      statusCode: 400,
-      statusMessage: "ingredientName is required",
+      status: 400,
+      statusText: "ingredientName is required",
     });
   }
   if (typeof body.checked !== "boolean") {
     throw createError({
-      statusCode: 400,
-      statusMessage: "checked must be a boolean",
+      status: 400,
+      statusText: "checked must be a boolean",
     });
   }
 

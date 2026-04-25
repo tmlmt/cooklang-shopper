@@ -4,8 +4,8 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
   if (!id || isNaN(Number(id))) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Valid link ID is required",
+      status: 400,
+      statusText: "Valid link ID is required",
     });
   }
 
@@ -17,8 +17,8 @@ export default defineEventHandler(async (event) => {
   } catch (e: unknown) {
     if (e instanceof Error && "code" in e && e.code === "P2025") {
       throw createError({
-        statusCode: 404,
-        statusMessage: "Share link not found",
+        status: 404,
+        statusText: "Share link not found",
       });
     }
     throw e;

@@ -5,8 +5,8 @@ export default defineEventHandler(async (event) => {
   const recipePath = query.recipePath as string | undefined;
   if (!recipePath) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Recipe path is required",
+      status: 400,
+      statusText: "Recipe path is required",
     });
   }
 

@@ -7,22 +7,22 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   if (body.parentDir === undefined) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "No parent directory was provided",
+      status: 400,
+      statusText: "No parent directory was provided",
     });
   }
   validateRecipeDir(body.parentDir.trim());
   if (!body.name || body.name.trim().length === 0) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "No sub-directory name was provided",
+      status: 400,
+      statusText: "No sub-directory name was provided",
     });
   }
   // Also ensure the name itself doesn't contain path separators, as it should be a single directory.
   if (body.name.includes("/") || body.name.includes("\\")) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Sub-directory name must not contain path separators.",
+      status: 400,
+      statusText: "Sub-directory name must not contain path separators.",
     });
   }
 
@@ -51,8 +51,8 @@ export default defineEventHandler(async (event) => {
         exists = false;
       } else if (isSystemError(error)) {
         throw createError({
-          statusCode: 500,
-          statusMessage: `Error checking directory: ${error.message}`,
+          status: 500,
+          statusText: `Error checking directory: ${error.message}`,
         });
       }
     }
@@ -66,8 +66,8 @@ export default defineEventHandler(async (event) => {
     await mkdir(newDir, { recursive: true });
   } catch (err) {
     throw createError({
-      statusCode: 500,
-      statusMessage: `Error creating directory: ${err}`,
+      status: 500,
+      statusText: `Error creating directory: ${err}`,
     });
   }
 

@@ -16,8 +16,8 @@ export default defineEventHandler(async (event) => {
     targetDir !== recipesRoot
   ) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid directory path",
+      status: 400,
+      statusText: "Invalid directory path",
     });
   }
 

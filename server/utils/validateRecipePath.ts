@@ -10,8 +10,8 @@ function assertWithinRecipesRoot(resolvedPath: string) {
     resolvedPath !== recipesRoot
   ) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid recipe path",
+      status: 400,
+      statusText: "Invalid recipe path",
     });
   }
 }
@@ -20,8 +20,8 @@ export function getValidatedRecipePath(event: H3Event): string {
   const path = getRouterParam(event, "path");
   if (!path) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "No recipe path was provided",
+      status: 400,
+      statusText: "No recipe path was provided",
     });
   }
   validateRecipePath(path);
