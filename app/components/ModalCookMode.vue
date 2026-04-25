@@ -469,14 +469,11 @@ watch(currentSlideIndex, () => {
                 <p class="text-muted mb-6 text-center">
                   This recipe requires the following ingredients
                 </p>
-                <div class="md:columns-2">
-                  <IngredientList
-                    :ingredients="allIngredients"
-                    :all-ingredients="recipe.ingredients"
-                    :desktop-columns="1"
-                    :interactive="false"
-                  />
-                </div>
+                <IngredientList
+                  :ingredients="allIngredients"
+                  :all-ingredients="recipe.ingredients"
+                  :interactive="false"
+                />
                 <template v-if="allCookware.length > 0">
                   <h3 class="mt-8 mb-3 text-xl font-bold">Cookware</h3>
                   <ul class="ml-6 list-disc md:columns-2">
@@ -541,12 +538,11 @@ watch(currentSlideIndex, () => {
                   >
                     Ingredients for this step
                   </h3>
-                  <div class="md:columns-2">
-                    <IngredientList
-                      :ingredients="getStepIngredients(currentSlide)"
-                      :all-ingredients="recipe.ingredients"
-                    />
-                  </div>
+                  <IngredientList
+                    :ingredients="getStepIngredients(currentSlide)"
+                    :all-ingredients="recipe.ingredients"
+                    :interactive="false"
+                  />
                 </div>
 
                 <!-- Step-specific cookware -->
