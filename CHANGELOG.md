@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.12.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.12.0...v0.12.1)
+
+### 🩹 Fixes
+
+- **recipe:** Immediately show images after adding new recipe ([43ae996](https://github.com/tmlmt/cooklang-shopper/commit/43ae996))
+- **directory:** Immediately show new directory after adding new recipe in it ([7ba49ab](https://github.com/tmlmt/cooklang-shopper/commit/7ba49ab))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.12.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.11.0...v0.12.0)
