@@ -21,7 +21,7 @@
   "dependencies": {
     "@internationalized/date": "3.12.1",
     "@nuxt/image": "2.0.0",
-    "@nuxt/ui": "4.6.1",
+    "@nuxt/ui": "4.7.0",
     "@pinia/nuxt": "0.11.3",
     "@prisma/adapter-better-sqlite3": "7.8.0",
     "@prisma/client": "7.8.0",
@@ -40,7 +40,7 @@
     "vue": "3.5.33"
   },
   "devDependencies": {
-    "@iconify-json/material-symbols": "1.2.68",
+    "@iconify-json/material-symbols": "1.2.69",
     "@iconify-json/prime": "1.2.4",
     "@nuxt/devtools": "3.2.4",
     "@nuxt/eslint": "1.15.2",
@@ -53,7 +53,7 @@
     "execa": "9.6.1",
     "human-regex": "2.2.0",
     "prettier": "3.8.3",
-    "prettier-plugin-tailwindcss": "0.7.2",
+    "prettier-plugin-tailwindcss": "0.7.3",
     "prisma": "7.8.0",
     "typescript": "5.9.3",
     "vue-tsc": "3.2.7"
