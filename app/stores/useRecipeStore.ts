@@ -66,6 +66,11 @@ export const useRecipeStore = defineStore("recipe", () => {
   function addRecipe(name: string, dir: string, content: string) {
     const key = (dir ? `${dir}/${name}` : name).replace(/\//g, ":");
     recipes.value[key] = parseRecipeDetails(name, dir, content);
+    if (dir && !directories.value.includes(normalizeDirectory(dir))) {
+      directories.value = [...directories.value, normalizeDirectory(dir)].sort(
+        (a, b) => a.localeCompare(b),
+      );
+    }
   }
 
   function updateRecipe(name: string, dir: string, content: string) {
