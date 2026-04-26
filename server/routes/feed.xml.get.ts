@@ -1,3 +1,4 @@
+import { type Metadata, Recipe } from "@tmlmt/cooklang-parser";
 import { getAppConfig } from "#server/utils/appConfig";
 
 export default defineCachedEventHandler(
@@ -18,6 +19,7 @@ export default defineCachedEventHandler(
     const publicPaths = await getPublicRecipePaths();
     const { getRecipeIndex } = await import("~~/server/utils/recipeIndex");
     const index = getRecipeIndex();
+    const storage = useStorage("recipes");
 
     // Build entries from public recipes
     const entries: string[] = [];
@@ -28,6 +30,10 @@ export default defineCachedEventHandler(
       if (!recipe) continue;
 
       const filePath = recipePath.replace(/:/g, "/");
+      const raw = await storage.getItem(`${filePath}.cook`);
+      const recipeMetadata = raw
+        ? (new Recipe(String(raw)).metadata as Metadata)
+        : {};
       const recipeUrl = `${baseUrl}/recipe/${filePath}`;
       const rawUrl = `${baseUrl}/api/public/recipe/${filePath}`;
       const updated = recipe.lastModified || new Date().toISOString();
@@ -84,15 +90,10 @@ export default defineCachedEventHandler(
         );
       }
 
-      // Add cover image if available (metadata-based images are not available
-      // here, but filesystem-based implicit cover images are discovered)
-      const imageManifest = await buildImageManifest(
-        recipePath.replace(/:/g, "/"),
-        {},
-      );
+      const imageManifest = await buildImageManifest(filePath, recipeMetadata);
       if (imageManifest.coverImage) {
         cooklangParts.push(
-          `        <cooklang:image>${escapeXml(`${baseUrl}${imageManifest.coverImage}`)}</cooklang:image>`,
+          `        <cooklang:image>${escapeXml(`${imageManifest.coverImage?.startsWith("http") ? "" : baseUrl}${imageManifest.coverImage}`)}</cooklang:image>`,
         );
       }
 
@@ -133,7 +134,7 @@ ${entries.join("\n")}
     );
     return xml;
   },
-  { maxAge: 60, name: "feed-xml" },
+  { maxAge: 600, name: "feed-xml" },
 );
 
 function escapeXml(str: string): string {
