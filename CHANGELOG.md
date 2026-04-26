@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.12.3
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.12.2...v0.12.3)
+
+### 🔥 Performance
+
+- **recipe:** Convert menuItems from computed to plain const ([2b5e0b0](https://github.com/tmlmt/cooklang-shopper/commit/2b5e0b0))
+
+### 🩹 Fixes
+
+- **recipe:** When yield default to servings value, put 'servings' in the plural only when > 1 ([0064339](https://github.com/tmlmt/cooklang-shopper/commit/0064339))
+- **recipe:** Show header actions after saving new recipe ([0c679fb](https://github.com/tmlmt/cooklang-shopper/commit/0c679fb))
+- **ModalFile:** Pre-select browsed directory when opening "new recipe" modal ([6e3c268](https://github.com/tmlmt/cooklang-shopper/commit/6e3c268))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.12.2
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.12.1...v0.12.2)
