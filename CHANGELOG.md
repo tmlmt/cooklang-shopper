@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.12.2
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.12.1...v0.12.2)
+
+### 🩹 Fixes
+
+- **directory:** Immediately show new directory after creating it ([273df3e](https://github.com/tmlmt/cooklang-shopper/commit/273df3e))
+- **recipe:** Disable xss validation for recipe addition and edits ([30365b8](https://github.com/tmlmt/cooklang-shopper/commit/30365b8))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.12.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.12.0...v0.12.1)
