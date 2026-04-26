@@ -403,10 +403,10 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
         title: "Success",
         description: "Recipe successfully saved",
       });
-      isEditMode.value = false;
       rawRecipe.value = event.data.recipe;
       recipeStore.addRecipe(recipeName, recipeDir, event.data.recipe);
       await navigateTo(`/recipe/${path}`, { replace: true });
+      isEditMode.value = false;
     } catch (error: unknown) {
       if (error instanceof FetchError) {
         toast.add({
@@ -513,7 +513,12 @@ const editServingsInShoppingList = async (
 // Header actions
 //---------------------
 
-const { setHeaderActions, setHeaderMenuItems } = useHeaderMenu();
+const {
+  setHeaderActions,
+  setHeaderMenuItems,
+  clearHeaderActions,
+  clearHeaderMenuItems,
+} = useHeaderMenu();
 
 const openCookMode = () => {
   const r = currentScaledRecipe.value ?? recipe.value;
@@ -529,18 +534,26 @@ const cookItem: DropdownMenuItem = {
   onSelect: openCookMode,
 };
 
-if (loggedIn.value) {
-  if (route.query.mode !== "new") {
-    setHeaderActions([cookItem, ...menuItems]);
-    setHeaderMenuItems([
-      ...(isEditor.value ? [uploadImageItem] : []),
-      downloadItem,
-    ]);
-  }
-} else {
-  setHeaderActions([cookItem]);
-  setHeaderMenuItems([downloadItem]);
-}
+watch(
+  isEditMode,
+  () => {
+    clearHeaderActions();
+    clearHeaderMenuItems();
+    if (loggedIn.value) {
+      if (!isEditMode.value) {
+        setHeaderActions([cookItem, ...menuItems]);
+        setHeaderMenuItems([
+          ...(isEditor.value ? [uploadImageItem] : []),
+          downloadItem,
+        ]);
+      }
+    } else {
+      setHeaderActions([cookItem]);
+      setHeaderMenuItems([downloadItem]);
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
