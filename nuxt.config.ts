@@ -65,6 +65,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    // Public API routes can be accessed from any origin, but only allow GET and HEAD requests.
     "/api/public/**": {
       security: {
         corsHandler: {
@@ -72,6 +73,14 @@ export default defineNuxtConfig({
           methods: ["GET", "HEAD"],
         },
       },
+    },
+    // Cooklang content uses > for notes and & for references, which the XSS filter escapes to &gt; and &amp;.
+    // These routes require editor auth; content is stored as raw text, never rendered as HTML.
+    "/api/recipes": {
+      security: { xssValidator: false },
+    },
+    "/api/recipe/**": {
+      security: { xssValidator: false },
     },
   },
 
