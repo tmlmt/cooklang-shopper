@@ -245,94 +245,90 @@ const downloadItem: DropdownMenuItem = {
   },
 };
 
-const menuItems = computed<DropdownMenuItem[]>(() => {
-  const items: DropdownMenuItem[] = [];
+const menuItems: DropdownMenuItem[] = [];
 
-  if (isEditor.value || viewerCanShare.value) {
-    items.push({
-      label: "Share",
-      icon: "prime:share-alt",
+if (isEditor.value || viewerCanShare.value) {
+  menuItems.push({
+    label: "Share",
+    icon: "prime:share-alt",
+    onSelect: () => {
+      modalShare.open(recipeKey);
+    },
+  });
+}
+
+if (isEditor.value) {
+  menuItems.push(
+    {
+      label: "Edit",
+      icon: "prime:file-edit",
       onSelect: () => {
-        modalShare.open(recipeKey);
+        isEditMode.value = true;
+        isManualEdit.value = true;
       },
-    });
-  }
-
-  if (isEditor.value) {
-    items.push(
-      {
-        label: "Edit",
-        icon: "prime:file-edit",
-        onSelect: () => {
-          isEditMode.value = true;
-          isManualEdit.value = true;
-        },
-      },
-      {
-        label: "Move",
-        icon: "prime:arrow-right",
-        onSelect: async () => {
-          const result = await modalFile.open(
-            "move",
-            path,
-            recipe.value?.metadata.title,
+    },
+    {
+      label: "Move",
+      icon: "prime:arrow-right",
+      onSelect: async () => {
+        const result = await modalFile.open(
+          "move",
+          path,
+          recipe.value?.metadata.title,
+        );
+        if (result) {
+          await $fetchWithHeaders(`/api/recipe/${path}`, {
+            method: "PATCH",
+            body: {
+              dir: result.dir,
+              fileName: result.name,
+            },
+          });
+          recipeStore.moveRecipe(
+            recipeName,
+            recipeDir,
+            result.name,
+            result.dir,
           );
-          if (result) {
-            await $fetchWithHeaders(`/api/recipe/${path}`, {
-              method: "PATCH",
-              body: {
-                dir: result.dir,
-                fileName: result.name,
-              },
-            });
-            recipeStore.moveRecipe(
-              recipeName,
-              recipeDir,
-              result.name,
-              result.dir,
-            );
-            toast.add({
-              title: "Success",
-              description: `Recipe moved to ${result.dir}/${result.name}`,
-              color: "success",
-            });
-            await navigateTo(
-              `/recipe/${result.dir ? result.dir + "/" : ""}${result.name}`,
-            );
-          }
-        },
-      },
-      {
-        label: "Delete",
-        icon: "prime:trash",
-        color: "error",
-        onSelect: async () => {
-          const result = await modalConf.open(
-            "Are you sure you want to delete this recipe?",
+          toast.add({
+            title: "Success",
+            description: `Recipe moved to ${result.dir}/${result.name}`,
+            color: "success",
+          });
+          await navigateTo(
+            `/recipe/${result.dir ? result.dir + "/" : ""}${result.name}`,
           );
-          if (result) {
-            await $fetchWithHeaders(`/api/recipe/${path}`, {
-              method: "DELETE",
-            });
-
-            recipeStore.removeRecipe(recipeName, recipeDir);
-            await shoppingStore.removeRecipe(path);
-
-            toast.add({
-              title: "Success",
-              description: "Recipe deleted",
-              color: "success",
-            });
-
-            await navigateTo("/");
-          }
-        },
+        }
       },
-    );
-  }
+    },
+    {
+      label: "Delete",
+      icon: "prime:trash",
+      color: "error",
+      onSelect: async () => {
+        const result = await modalConf.open(
+          "Are you sure you want to delete this recipe?",
+        );
+        if (result) {
+          await $fetchWithHeaders(`/api/recipe/${path}`, {
+            method: "DELETE",
+          });
 
-  return items;
-});
+          recipeStore.removeRecipe(recipeName, recipeDir);
+          await shoppingStore.removeRecipe(path);
+
+          toast.add({
+            title: "Success",
+            description: "Recipe deleted",
+            color: "success",
+          });
+
+          await navigateTo("/");
+        }
+      },
+    },
+  );
+}
 
 //---------------------
 // View / Edit Recipe
@@ -535,7 +531,7 @@ const cookItem: DropdownMenuItem = {
 
 if (loggedIn.value) {
   if (route.query.mode !== "new") {
-    setHeaderActions([cookItem, ...(menuItems.value as DropdownMenuItem[])]);
+    setHeaderActions([cookItem, ...menuItems]);
     setHeaderMenuItems([
       ...(isEditor.value ? [uploadImageItem] : []),
       downloadItem,
