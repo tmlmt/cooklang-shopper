@@ -168,6 +168,7 @@ const maybeRevalidateNewDirForm = async () => {
 };
 
 const pendingSubDirCreate = ref(false);
+const recipeStore = useRecipeStore();
 
 const createSubDir = async () => {
   pendingSubDirCreate.value = true;
@@ -207,6 +208,14 @@ const createSubDir = async () => {
 
       // Set the new node as the current selection
       mainState.value.dir = newNode;
+
+      // Sync new directory into the recipe store
+      if (!recipeStore.directories.includes(newPath)) {
+        recipeStore.directories = [...recipeStore.directories, newPath].sort(
+          (a, b) => a.localeCompare(b),
+        );
+      }
+
       if (!data.renamed) {
         toast.add({
           title: "Sub-directory created",
