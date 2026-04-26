@@ -214,7 +214,9 @@ const visibleStepOverlay = ref<string | null>(null);
         {{ (scaledRecipe.metadata.yield as Yield).textAfter ?? "" }}
       </p>
       <p v-else-if="scaledRecipe.servings" class="mb-4 text-sm">
-        <b>Yield:</b> {{ scaledRecipe.servings }} servings
+        <b>Yield:</b> {{ scaledRecipe.servings }} serving{{
+          scaledRecipe.servings > 1 ? "s" : ""
+        }}
       </p>
       <IngredientList
         :ingredients="filteredIngredients"
