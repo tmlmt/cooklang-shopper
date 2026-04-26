@@ -1,5 +1,47 @@
 # Changelog
 
+## v0.12.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.11.0...v0.12.0)
+
+### ⚠️ Breaking Changes
+
+- Recipe sharing API moved from `/api/sharing/*` to `/api/sharing/recipe/*`
+- Shared recipe page URL changed from `/s/[token]` to `/s/r/[token]`
+
+### 🚀 Enhancements
+
+- **recipe:** Light placeholder for new recipe ([d697101](https://github.com/tmlmt/cooklang-shopper/commit/d697101))
+- ⚠️ Add shopping list sharing and align api endpoint names for recipes and lists ([31c961c](https://github.com/tmlmt/cooklang-shopper/commit/31c961c))
+- **shared-links:** Add sign in item to burger menu ([d11f87c](https://github.com/tmlmt/cooklang-shopper/commit/d11f87c))
+
+### 🩹 Fixes
+
+- **security:** Validate path in public recipe endpoint ([8625d8f](https://github.com/tmlmt/cooklang-shopper/commit/8625d8f))
+- **security:** Validate max length of password to prevent DoS on login endpoint ([f29cc57](https://github.com/tmlmt/cooklang-shopper/commit/f29cc57))
+- **recipe:** Servings defaults to 1 if undefined ([db15a80](https://github.com/tmlmt/cooklang-shopper/commit/db15a80))
+- **recipe:** Do not try to fetch images for new recipes ([ba9612b](https://github.com/tmlmt/cooklang-shopper/commit/ba9612b))
+- Return null instead of undefined ([9739aac](https://github.com/tmlmt/cooklang-shopper/commit/9739aac))
+- **header:** Do not add action items nor menu items for recipes when creating a new one ([add52f8](https://github.com/tmlmt/cooklang-shopper/commit/add52f8))
+- **shared-recipe:** Add cook mode for recipes accessed with public link ([6cce97b](https://github.com/tmlmt/cooklang-shopper/commit/6cce97b))
+- **recipe:** Remove checkboxes from per-step ingredient list in cook mode and display over correct number of columns ([8b31814](https://github.com/tmlmt/cooklang-shopper/commit/8b31814))
+- **feed:** Add cover image defined in recipe metadata and increase cache period to 10m ([dba12f0](https://github.com/tmlmt/cooklang-shopper/commit/dba12f0))
+
+### 💅 Refactors
+
+- Include baseUrl in public config and use it instead of window.location.origin ([875f812](https://github.com/tmlmt/cooklang-shopper/commit/875f812))
+- Use status and statusText instead of deprecated statusCode and statusMessage for all createError calls ([33a86ac](https://github.com/tmlmt/cooklang-shopper/commit/33a86ac))
+
+### 🏡 Chore
+
+- **README:** Update with latest features ([40fee80](https://github.com/tmlmt/cooklang-shopper/commit/40fee80))
+- **server, app:** Do not explicitely import auto-imported utils ([01c1dc5](https://github.com/tmlmt/cooklang-shopper/commit/01c1dc5))
+- **ai:** Add commit-message skill for conventional commit drafting ([78be893](https://github.com/tmlmt/cooklang-shopper/commit/78be893))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.11.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.10.1...v0.11.0)
