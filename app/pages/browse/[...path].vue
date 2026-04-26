@@ -67,7 +67,7 @@ const shoppingStore = useShoppingStore();
 await shoppingStore.init();
 
 const openNewRecipeModal = async () => {
-  const result = await modalFile.open("new");
+  const result = await modalFile.open("new", currentPath.value);
   if (result) {
     await navigateTo(`/recipe/${pathJoin(result.dir, result.name)}?mode=new`);
   }

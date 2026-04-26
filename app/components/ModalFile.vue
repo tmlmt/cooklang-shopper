@@ -90,7 +90,8 @@ const findRecursive = (
   return undefined;
 };
 
-const baseDir = currentPath?.split("/").slice(0, -1).join("/");
+const baseDir =
+  mode === "new" ? currentPath : currentPath?.split("/").slice(0, -1).join("/");
 
 const modalTitle =
   mode === "move"
@@ -124,11 +125,12 @@ interface MainState {
 
 const mainState = ref<MainState>({
   dir: findRecursive(items.value as TreeItem[], baseDir),
-  fileName: isMoveFolderMode
-    ? ""
-    : currentPath !== undefined
-      ? currentPath.split("/").pop()
-      : "Untitled",
+  fileName:
+    isMoveFolderMode || mode === "new"
+      ? ""
+      : currentPath !== undefined
+        ? currentPath.split("/").pop()
+        : "Untitled",
 });
 
 const isNotAlreadyExisting = (value: string): boolean => {
