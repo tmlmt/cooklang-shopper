@@ -410,6 +410,7 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
       isEditMode.value = false;
       rawRecipe.value = event.data.recipe;
       recipeStore.addRecipe(recipeName, recipeDir, event.data.recipe);
+      await navigateTo(`/recipe/${path}`, { replace: true });
     } catch (error: unknown) {
       if (error instanceof FetchError) {
         toast.add({
