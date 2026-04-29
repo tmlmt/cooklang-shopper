@@ -57,7 +57,7 @@ export async function useRecipeImageManifest(
     async () => {
       const p = recipePath.value.trim();
       if (!p) return null!;
-      return $fetch<RecipeImageManifest>(`/api/recipe-images/${p}`);
+      return $fetchWithHeaders<RecipeImageManifest>(`/api/recipe-images/${p}`);
     },
     {
       default: () =>
@@ -93,7 +93,6 @@ export function useRecipeCoverImages(
     COVER_CACHE_STATE_KEY,
     () => ({}),
   );
-  const headers = useRequestHeaders(["cookie"]);
 
   const coversKey = computed(() => {
     const paths = recipePaths.value.filter((p) => p.trim().length > 0);
@@ -108,9 +107,9 @@ export function useRecipeCoverImages(
 
       if (missing.length > 0) {
         const manifests = await mapWithConcurrency(missing, 4, (p) =>
-          $fetch<RecipeImageManifest>(`/api/recipe-images/${p}`, {
-            headers,
-          }).catch(() => undefined),
+          $fetchWithHeaders<RecipeImageManifest>(
+            `/api/recipe-images/${p}`,
+          ).catch(() => undefined),
         );
 
         for (let i = 0; i < missing.length; i++) {
