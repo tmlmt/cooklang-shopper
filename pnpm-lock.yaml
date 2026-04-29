@@ -35,8 +35,8 @@ importers:
         specifier: 7.8.0
         version: 7.8.0(prisma@7.8.0(@types/react@19.2.14)(better-sqlite3@12.9.0)(magicast@0.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.9.3))(typescript@5.9.3)
       '@tmlmt/cooklang-parser':
-        specifier: 3.0.0-alpha.30
-        version: 3.0.0-alpha.30
+        specifier: 3.0.0-alpha.31
+        version: 3.0.0-alpha.31
       better-sqlite3:
         specifier: 12.9.0
         version: 12.9.0
@@ -2444,8 +2444,8 @@ packages:
       y-protocols: ^1.0.1
       yjs: ^13.5.38
 
-  '@tmlmt/cooklang-parser@3.0.0-alpha.30':
-    resolution: {integrity: sha512-C+a61vyXVne5uFfsecY8ghXZmktG8nGHWTvcxXrRboYTY8TzN5feeQmidXhIAKn9puBb+qBcgo63kUNwCc6GWg==}
+  '@tmlmt/cooklang-parser@3.0.0-alpha.31':
+    resolution: {integrity: sha512-Oj4nNwgtrmfx1G7zPXTwBTyqsmKCkw8Ls+KoCLZGUOMCcVkKOoJPhVRsq4ZCp7yy9tuU+IKF/FEyyZxfR8tlDA==}
     engines: {node: '>=18'}
 
   '@tybys/wasm-util@0.10.1':
@@ -8657,7 +8657,7 @@ snapshots:
       y-protocols: 1.0.7(yjs@13.6.30)
       yjs: 13.6.30
 
-  '@tmlmt/cooklang-parser@3.0.0-alpha.30':
+  '@tmlmt/cooklang-parser@3.0.0-alpha.31':
     dependencies:
       big.js: 7.0.1
       smol-toml: 1.6.1

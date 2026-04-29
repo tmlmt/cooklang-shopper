@@ -191,8 +191,7 @@ const allCookware = computed(() =>
 function getStepIngredients(slide: CookSlide & { type: "step" }) {
   return props.recipe
     .getIngredientQuantities({
-      section: slide.sectionIndex,
-      step: slide.stepIndexInSection,
+      step: slide.step,
       choices: props.choices,
     })
     .filter((ing) => !ing.flags?.includes("hidden") && ing.usedAsPrimary);
