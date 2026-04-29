@@ -112,7 +112,6 @@ export async function scrapeRecipeText(url: string): Promise<string> {
 
   // 2. Fallback: linkedom + turndown
   const htmlDoc = parseHtmlDoc(html);
-  console.log(htmlDoc);
 
   for (const selector of NOISE_SELECTORS) {
     for (const el of htmlDoc.querySelectorAll(selector)) {
