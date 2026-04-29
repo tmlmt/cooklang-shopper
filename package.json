@@ -19,6 +19,7 @@
     "release": "node scripts/release.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "0.91.1",
     "@internationalized/date": "3.12.1",
     "@nuxt/image": "2.0.0",
     "@nuxt/ui": "4.7.0",
@@ -31,11 +32,14 @@
     "fuse.js": "7.3.0",
     "glob": "13.0.6",
     "h3": "1.15.10",
+    "linkedom": "0.18.12",
     "nuxt": "4.4.2",
     "nuxt-auth-utils": "0.5.29",
     "nuxt-security": "2.5.1",
+    "openai": "6.35.0",
     "pinia": "3.0.4",
     "tailwindcss": "4.2.4",
+    "turndown": "7.2.4",
     "valibot": "1.3.1",
     "vue": "3.5.33"
   },
@@ -47,6 +51,7 @@
     "@nuxt/hints": "1.0.3",
     "@nuxt/test-utils": "4.0.2",
     "@types/better-sqlite3": "7.6.13",
+    "@types/turndown": "5.0.6",
     "@vueuse/core": "14.2.1",
     "@vueuse/nuxt": "14.2.1",
     "eslint": "10.2.1",

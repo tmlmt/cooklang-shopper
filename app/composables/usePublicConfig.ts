@@ -24,6 +24,7 @@ export async function usePublicConfig() {
       ] as PublicAuthProvider[],
       sharing: defaultSharing,
       baseUrl: "",
+      aiEnabled: false,
     }),
   });
 
@@ -47,6 +48,8 @@ export async function usePublicConfig() {
     return authProviders.value.filter((p) => p.type === type);
   }
 
+  const aiEnabled = computed(() => data.value?.aiEnabled ?? false);
+
   return {
     title,
     shopping,
@@ -55,6 +58,7 @@ export async function usePublicConfig() {
     baseUrl,
     viewerCanShare,
     authProviders,
+    aiEnabled,
     hasAuth,
     getAuthProviders,
   };

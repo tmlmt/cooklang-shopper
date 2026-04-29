@@ -24,6 +24,7 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
 - **Recipe search** — fuzzy command-palette search across titles, tags, author, and description (<kbd>⌘/CTRL</kbd><kbd>K</kbd>)
 - **Download `.cook` files** — export any recipe as a Cooklang file
 - **Cook mode** — full-screen step-by-step walkthrough with swipe navigation, progress bar, per-step ingredients/cookware, and built-in countdown timers with browser notifications
+- **AI recipe converter** — convert any recipe to Cooklang directly in the editor: import from a URL or paste raw text and let an AI model produce the `.cook` file (opt-in, compatible with OpenAI/LocalAI and Anthropic APIs)
 
 ### 🔗 Sharing & privacy
 

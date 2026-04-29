@@ -34,5 +34,6 @@ export default defineEventHandler(async (event) => {
     authProviders,
     sharing,
     baseUrl: config.baseUrl,
+    aiEnabled: !!config.ai,
   };
 });

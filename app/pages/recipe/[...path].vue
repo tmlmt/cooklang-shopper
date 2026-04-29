@@ -71,7 +71,7 @@ validateRecipePath(path);
 
 const shoppingStore = useShoppingStore();
 const recipeStore = useRecipeStore();
-const { viewerCanShare } = await usePublicConfig();
+const { viewerCanShare, aiEnabled } = await usePublicConfig();
 const { shoppingEnabled } = await useShoppingEnabled();
 if (shoppingEnabled.value) {
   await shoppingStore.init();
@@ -343,6 +343,124 @@ servings:
 const formState = ref({
   recipe: rawRecipe.value || newRecipePlaceholder,
 });
+
+// AI converter state
+const aiUrl = ref("");
+const aiRawText = ref("");
+const isAiConverting = ref(false);
+const aiStatus = ref("");
+const aiCollapsibleOpen = ref(false);
+
+const onConvertWithAi = async () => {
+  let sourceText = aiRawText.value;
+  isAiConverting.value = true;
+
+  if (aiUrl.value) {
+    aiStatus.value = "Fetching page...";
+    try {
+      const { text } = await $fetchWithHeaders<{ text: string }>(
+        "/api/recipe/scrape",
+        { method: "POST", body: { url: aiUrl.value } },
+      );
+      sourceText = text;
+    } catch (error: unknown) {
+      isAiConverting.value = false;
+      aiStatus.value = "";
+      toast.add({
+        color: "error",
+        title: "Could not fetch page",
+        description:
+          error instanceof FetchError
+            ? error.data?.message || error.message
+            : String(error),
+      });
+      return;
+    }
+  }
+
+  if (!sourceText.trim()) {
+    isAiConverting.value = false;
+    toast.add({ color: "error", title: "No content to convert" });
+    return;
+  }
+
+  aiStatus.value = "Converting with AI...";
+  formState.value.recipe = "";
+
+  try {
+    const response = await fetch("/api/recipe/convert", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: sourceText }),
+    });
+
+    if (!response.ok) {
+      let message = `HTTP ${response.status}`;
+      try {
+        const err = await response.json();
+        message = err?.message || message;
+      } catch {
+        // ignore parse errors — use the generic HTTP status message
+      }
+      throw new Error(message);
+    }
+
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let sentinelFound = false;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      if (!sentinelFound) {
+        const idx = buffer.indexOf("\x00");
+        if (idx !== -1) {
+          formState.value.recipe += buffer.slice(0, idx);
+          buffer = buffer.slice(idx + 1);
+          sentinelFound = true;
+        } else {
+          formState.value.recipe += buffer;
+          buffer = "";
+        }
+      }
+    }
+    buffer += decoder.decode();
+
+    if (sentinelFound) {
+      try {
+        const usage = JSON.parse(buffer);
+        toast.add({
+          color: "success",
+          title: "Conversion complete",
+          duration: 3000,
+          description: `${usage.in} input / ${usage.out} output tokens`,
+        });
+      } catch {
+        toast.add({ color: "success", title: "Conversion complete" });
+      }
+      aiCollapsibleOpen.value = false;
+    }
+  } catch (error: unknown) {
+    if (formState.value.recipe.length > 0) {
+      toast.add({
+        color: "warning",
+        title: "Conversion interrupted",
+        description: "Partial content saved in editor",
+      });
+    } else {
+      toast.add({
+        color: "error",
+        title: "Conversion failed",
+        description: error instanceof Error ? error.message : String(error),
+      });
+    }
+  } finally {
+    isAiConverting.value = false;
+    aiStatus.value = "";
+  }
+};
 
 const isParsableRecipe = (value: string): boolean => {
   try {
@@ -712,6 +830,69 @@ watch(
         class="flex w-full flex-col"
         @submit="onEditSubmit"
       >
+        <div v-if="route.query.mode === 'new' && aiEnabled" class="mb-4">
+          <UCollapsible v-model:open="aiCollapsibleOpen">
+            <UButton class="group" color="neutral" variant="soft" size="sm">
+              <span class="flex items-center gap-2">
+                <UIcon name="i-lucide-sparkles" class="size-4 shrink-0" />
+                Convert from URL or text with AI
+              </span>
+              <UIcon
+                name="i-lucide-chevron-down"
+                class="size-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180"
+              />
+            </UButton>
+            <template #content>
+              <UCard class="mt-2" variant="soft">
+                <div class="flex flex-col gap-3">
+                  <UInput
+                    v-model="aiUrl"
+                    placeholder="https://..."
+                    :disabled="isAiConverting"
+                  />
+                  <UTextarea
+                    v-model="aiRawText"
+                    placeholder="Or paste recipe text directly..."
+                    :rows="5"
+                    :disabled="isAiConverting"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                  />
+                  <p class="text-muted text-xs">
+                    URL import may not work for JavaScript-rendered pages. Use
+                    the text area as fallback.
+                  </p>
+                  <div class="flex flex-row items-center gap-3">
+                    <UButton
+                      label="Convert with AI"
+                      :loading="isAiConverting"
+                      :disabled="!aiUrl && !aiRawText"
+                      size="sm"
+                      @click="onConvertWithAi"
+                    />
+                    <UButton
+                      label="Open in cook.md"
+                      icon="i-lucide-external-link"
+                      color="neutral"
+                      variant="ghost"
+                      size="sm"
+                      :disabled="!aiUrl.startsWith('http')"
+                      :to="`https://cook.md/${aiUrl}`"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                    <UChatShimmer
+                      v-if="aiStatus"
+                      :text="aiStatus"
+                      class="text-muted text-sm"
+                    />
+                  </div>
+                </div>
+              </UCard>
+            </template>
+          </UCollapsible>
+        </div>
         <UFormField name="recipe" :required="true">
           <UTextarea
             v-model="formState.recipe"

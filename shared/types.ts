@@ -83,6 +83,15 @@ export interface ShoppingConfig {
   enabled: ShoppingEnabled;
 }
 
+export type AiProviderType = "openai" | "anthropic" | "local";
+
+export interface AiConfig {
+  provider: AiProviderType;
+  apiKey?: string;
+  model?: string;
+  baseUrl?: string;
+}
+
 export interface AppConfig {
   auth: AuthConfig;
   sessionSecret: string;
@@ -91,6 +100,7 @@ export interface AppConfig {
   title?: string;
   baseUrl?: string;
   sharing?: SharingConfig;
+  ai?: AiConfig;
 }
 
 export interface RecipeChoicesWire {

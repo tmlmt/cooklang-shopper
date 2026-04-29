@@ -68,6 +68,14 @@ sessionSecret: "<session-secret>"
 # Base URL of this instance (required for OIDC and federation)
 # baseUrl: "https://cookbook.example.com"
 
+# AI recipe converter (optional — enables the "Convert with AI" feature in the new recipe editor)
+# ai:
+#   provider: openai         # "openai" | "anthropic" | "local"
+#   apiKey: "sk-..."         # Required for all providers
+#   model: "gpt-4o-mini"     # Required — no default (omitting model disables the feature with a server warning)
+#   # For local only (LocalAI, LM Studio, Ollama, vLLM, etc.):
+#   # baseUrl: "http://localhost:8080/v1"
+
 # Custom application title (default: "Cooklang Shopper")
 # title: "My Cookbook"
 

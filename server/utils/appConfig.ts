@@ -7,6 +7,8 @@ import type {
   SharingConfig,
 } from "~~/shared/types";
 
+const AI_PROVIDERS = ["openai", "anthropic", "local"] as const;
+
 const defaultShopping: ShoppingConfig = {
   enabled: false,
 };
@@ -117,6 +119,33 @@ export async function getAppConfig(): Promise<AppConfig> {
 
   config.sharing = { ...defaultSharing, ...config.sharing };
   config.shopping = { ...defaultShopping, ...config.shopping };
+
+  if (config.ai) {
+    const ai = config.ai;
+    if (!AI_PROVIDERS.includes(ai.provider as (typeof AI_PROVIDERS)[number])) {
+      throw createError({
+        status: 500,
+        message: `Invalid config.ai.provider "${ai.provider}". Must be one of: ${AI_PROVIDERS.join(", ")}`,
+      });
+    }
+    if (!ai.apiKey) {
+      throw createError({
+        status: 500,
+        message: "config.ai.apiKey is required",
+      });
+    }
+    if (!ai.model) {
+      console.warn(
+        "[AI Converter] config.ai.model is required — feature disabled",
+      );
+      config.ai = undefined;
+    } else if (ai.provider === "local" && !ai.baseUrl) {
+      throw createError({
+        status: 500,
+        message: "config.ai.baseUrl is required for the local provider",
+      });
+    }
+  }
 
   cachedConfig = config as AppConfig;
   return cachedConfig;
