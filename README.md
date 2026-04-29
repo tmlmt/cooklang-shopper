@@ -48,6 +48,7 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
 
 - **User-specific list** — add recipes from the browse view with per-recipe serving adjustments; add or remove free-hand items not tied to any recipe
 - **Store Run mode** — fullscreen checklist with a progress bar to tick off ingredients while shopping
+- **Share links** — generate time-limited (or permanent) links that let anyone view your current shopping list without logging in; logged in users can edit it; all recipients can also use Store Run mode
 
 ### ⚠️ Experimental (not stable and not recommended for use)
 
@@ -130,12 +131,11 @@ Rollback preserves all user data including the database. If a newer version adde
 
 ## Roadmap
 
-1. ~~Multi-role (admin, editor, viewer) authorization incl. support for OIDC~~ (done — editor/viewer roles with password & OIDC support)
+1. Pantry management
 2. Internationalization (i18n)
-3. Finalize shopping list features
-4. Finalize shopping cart features
-5. Develop feature to send cart to a pre-configured online store
-6. Add customization possibilities
+3. Finalize shopping cart features
+4. Develop feature to send cart to a pre-configured online store
+5. Add customization possibilities
 
 ## Screenshots
 
