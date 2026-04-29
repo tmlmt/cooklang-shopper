@@ -22,7 +22,7 @@
     "@anthropic-ai/sdk": "0.91.1",
     "@internationalized/date": "3.12.1",
     "@nuxt/image": "2.0.0",
-    "@nuxt/ui": "4.7.0",
+    "@nuxt/ui": "4.7.1",
     "@pinia/nuxt": "0.11.3",
     "@prisma/adapter-better-sqlite3": "7.8.0",
     "@prisma/client": "7.8.0",
