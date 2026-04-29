@@ -317,6 +317,7 @@ const save = async () => {
                 v-model="mainState.fileName"
                 :ui="{ root: 'grow' }"
                 placeholder="Untitled"
+                @keydown.enter.prevent="save"
               />
               <div class="mt-2 ml-1">.cook</div>
             </div>
