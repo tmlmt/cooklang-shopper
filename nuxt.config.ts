@@ -82,6 +82,11 @@ export default defineNuxtConfig({
     "/api/recipe/**": {
       security: { xssValidator: false },
     },
+    "/api/recipe/convert": {
+      headers: {
+        "X-Accel-Buffering": "no",
+      },
+    },
   },
 
   vite: {
