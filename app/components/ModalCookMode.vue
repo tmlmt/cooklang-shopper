@@ -438,17 +438,28 @@ watch(currentSlideIndex, () => {
     }"
   >
     <template #header>
-      <!-- Progress bar -->
-      <div class="flex w-full gap-1 px-4 pt-4 sm:px-6">
-        <div
-          v-for="i in totalProgressSteps"
-          :key="i"
-          class="h-1.5 flex-1 rounded-full transition-colors duration-300"
-          :class="
-            i - 1 <= currentProgressIndex
-              ? 'bg-primary'
-              : 'bg-neutral-200 dark:bg-neutral-700'
-          "
+      <!-- Progress bar + mobile close button -->
+      <div class="flex w-full items-center gap-2 px-4 pt-4 sm:px-6">
+        <div class="flex flex-1 gap-1">
+          <div
+            v-for="i in totalProgressSteps"
+            :key="i"
+            class="h-1.5 flex-1 rounded-full transition-colors duration-300"
+            :class="
+              i - 1 <= currentProgressIndex
+                ? 'bg-primary'
+                : 'bg-neutral-200 dark:bg-neutral-700'
+            "
+          />
+        </div>
+        <UButton
+          class="-my-1"
+          icon="i-lucide-x"
+          color="neutral"
+          variant="ghost"
+          size="sm"
+          aria-label="Close"
+          @click="emit('close')"
         />
       </div>
     </template>
