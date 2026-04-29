@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.13.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.0...v0.13.1)
+
+### 🩹 Fixes
+
+- **ai:** Make apiKey optional for local provider ([8090e0e](https://github.com/tmlmt/cooklang-shopper/commit/8090e0e))
+
+### 🏡 Chore
+
+- **aiConverter:** Remove console.log ([d5d1f94](https://github.com/tmlmt/cooklang-shopper/commit/d5d1f94))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.13.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.12.3...v0.13.0)
