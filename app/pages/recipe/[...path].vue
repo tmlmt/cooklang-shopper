@@ -497,6 +497,8 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
       isEditMode.value = false;
       rawRecipe.value = event.data.recipe;
       recipeStore.updateRecipe(recipeName, recipeDir, event.data.recipe);
+      await refreshImageManifest();
+      clearRecipeCoverImageCache();
     } catch (error: unknown) {
       if (error instanceof FetchError) {
         toast.add({
