@@ -163,7 +163,7 @@ export async function streamCooklangConversion(
 ): Promise<{ inputTokens: number; outputTokens: number }> {
   if (config.provider === "openai" || config.provider === "local") {
     const openai = new OpenAI({
-      apiKey: config.apiKey,
+      apiKey: config.apiKey ?? "local",
       ...(config.provider === "local" && config.baseUrl
         ? { baseURL: config.baseUrl }
         : {}),

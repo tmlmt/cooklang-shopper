@@ -128,7 +128,7 @@ export async function getAppConfig(): Promise<AppConfig> {
         message: `Invalid config.ai.provider "${ai.provider}". Must be one of: ${AI_PROVIDERS.join(", ")}`,
       });
     }
-    if (!ai.apiKey) {
+    if (ai.provider !== "local" && !ai.apiKey) {
       throw createError({
         status: 500,
         message: "config.ai.apiKey is required",

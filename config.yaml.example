@@ -71,7 +71,7 @@ sessionSecret: "<session-secret>"
 # AI recipe converter (optional — enables the "Convert with AI" feature in the new recipe editor)
 # ai:
 #   provider: openai         # "openai" | "anthropic" | "local"
-#   apiKey: "sk-..."         # Required for all providers
+#   apiKey: "sk-..."         # Required for openai and anthropic; not needed for local
 #   model: "gpt-4o-mini"     # Required — no default (omitting model disables the feature with a server warning)
 #   # For local only (LocalAI, LM Studio, Ollama, vLLM, etc.):
 #   # baseUrl: "http://localhost:8080/v1"
