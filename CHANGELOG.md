@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.13.2
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.1...v0.13.2)
+
+### 🚀 Enhancements
+
+- **CookMode:** Add close button ([130fb93](https://github.com/tmlmt/cooklang-shopper/commit/130fb93))
+- **ModalFile:** Submit form when pressing Enter ([a8e98c4](https://github.com/tmlmt/cooklang-shopper/commit/a8e98c4))
+
+### 🩹 Fixes
+
+- **CookMode:** Make sure per step ingredients and preparation step match ([29b0ba0](https://github.com/tmlmt/cooklang-shopper/commit/29b0ba0))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.13.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.0...v0.13.1)
