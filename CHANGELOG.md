@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.13.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.12.3...v0.13.0)
+
+### 🚀 Enhancements
+
+- Ai conversion of recipes ([64bdebf](https://github.com/tmlmt/cooklang-shopper/commit/64bdebf))
+
+### 🏡 Chore
+
+- **README:** Update feature list and roadmap ([02e4c62](https://github.com/tmlmt/cooklang-shopper/commit/02e4c62))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.12.3
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.12.2...v0.12.3)
