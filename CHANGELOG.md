@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.13.3
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.2...v0.13.3)
+
+### 🩹 Fixes
+
+- **ai:** Disable buffering on api route to allow streaming of model response ([ec96db2](https://github.com/tmlmt/cooklang-shopper/commit/ec96db2))
+- **recipe:** Reset image manifest when a recipe is edited ([b71e89f](https://github.com/tmlmt/cooklang-shopper/commit/b71e89f))
+- **recipe:** Send headers to properly load images in SSR ([b80b6c1](https://github.com/tmlmt/cooklang-shopper/commit/b80b6c1))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.13.2
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.1...v0.13.2)
