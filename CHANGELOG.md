@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.13.8
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.7...v0.13.8)
+
+### 🩹 Fixes
+
+- **parser:** Correctly filter cross-variant subgroup alternatives by variant ([a87382b](https://github.com/tmlmt/cooklang-shopper/commit/a87382b))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.13.7
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.6...v0.13.7)
