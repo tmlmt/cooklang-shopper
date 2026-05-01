@@ -274,8 +274,8 @@ const visibleStepOverlay = ref<string | null>(null);
       />
       <h2 class="mt-1 mb-4 text-2xl font-bold">Preparation</h2>
       <div v-for="(section, sIdx) in sectionsWithStepNumbers" :key="sIdx">
-        <!-- Optional/inactive sections behind collapsible -->
-        <template v-if="section.optional || !section.active">
+        <!-- Optional sections behind collapsible -->
+        <template v-if="section.optional && section.active">
           <UCollapsible class="mb-4">
             <UButton
               class="group"
@@ -290,14 +290,7 @@ const visibleStepOverlay = ref<string | null>(null);
               }"
             >
               <template #leading>
-                <span v-if="!section.active" class="text-xs text-neutral-500"
-                  >(inactive)</span
-                >
-                <span
-                  v-else-if="section.optional"
-                  class="text-xs text-neutral-500"
-                  >(optional)</span
-                >
+                <span class="text-xs text-neutral-500">(optional)</span>
               </template>
             </UButton>
             <template #content>
@@ -311,7 +304,7 @@ const visibleStepOverlay = ref<string | null>(null);
                     Note:
                     <RecipeNoteContent :note="item" :recipe="scaledRecipe" />
                   </div>
-                  <div v-if="item.type === 'step'">
+                  <div v-if="item.type === 'step' && item.active">
                     <h3 class="text-lg font-semibold">
                       <span v-if="item.optional" class="font-normal"
                         >(Optional)
@@ -319,7 +312,6 @@ const visibleStepOverlay = ref<string | null>(null);
                       <template v-if="item.active"
                         >Step {{ item.stepNumber }}</template
                       >
-                      <template v-else>Step (inactive)</template>
                     </h3>
                     <div v-if="item.stepImage" class="group/step relative">
                       <NuxtImg
@@ -362,7 +354,7 @@ const visibleStepOverlay = ref<string | null>(null);
           </UCollapsible>
         </template>
         <!-- Active, non-optional sections rendered normally -->
-        <template v-else>
+        <template v-else-if="section.active">
           <h3 v-if="section.name" class="mb-6 text-2xl">
             {{ section.name }}
             <span
@@ -382,7 +374,7 @@ const visibleStepOverlay = ref<string | null>(null);
               Note:
               <RecipeNoteContent :note="item" :recipe="scaledRecipe" />
             </div>
-            <div v-if="item.type === 'step'">
+            <div v-if="item.type === 'step' && item.active">
               <h3 class="text-lg font-semibold">
                 <span v-if="item.optional" class="font-normal"
                   >(Optional)
@@ -390,7 +382,6 @@ const visibleStepOverlay = ref<string | null>(null);
                 <template v-if="item.active"
                   >Step {{ item.stepNumber }}</template
                 >
-                <template v-else>Step (inactive)</template>
               </h3>
               <div v-if="item.stepImage" class="group/step relative">
                 <NuxtImg
