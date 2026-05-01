@@ -153,9 +153,13 @@ function getVisibleAlternatives(
         </template>
       </template>
       <template v-else-if="item.type === 'cookware'">
-        <span class="text-primary font-medium">{{
-          props.recipe.cookware[item.index]?.name
-        }}</span>
+        <span class="text-primary font-medium">
+          <template v-if="item.quantity">
+            <RecipeSingleQuantity :quantity="item.quantity" />
+            {{ " " }}
+          </template>
+          {{ props.recipe.cookware[item.index]?.name }}
+        </span>
       </template>
       <template v-else-if="item.type === 'timer'">
         <span
