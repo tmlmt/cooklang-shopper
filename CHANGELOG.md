@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.13.5
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.4...v0.13.5)
+
+### 🚀 Enhancements
+
+- Scale cookware quantities ([47fb72b](https://github.com/tmlmt/cooklang-shopper/commit/47fb72b))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.13.4
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.3...v0.13.4)
