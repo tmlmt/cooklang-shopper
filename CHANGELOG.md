@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.13.4
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.3...v0.13.4)
+
+### 🩹 Fixes
+
+- **sharing:** Make copy-to-clipboard work across devices ([9c35bd0](https://github.com/tmlmt/cooklang-shopper/commit/9c35bd0))
+- **parser:** Bump to v3.0.0-alpha.33 for latest fixes for quantity scaling ([9bfc79e](https://github.com/tmlmt/cooklang-shopper/commit/9bfc79e))
+
+### 🏡 Chore
+
+- **ai:** Move commit-message skill out of repo specific skills ([2e608b5](https://github.com/tmlmt/cooklang-shopper/commit/2e608b5))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.13.3
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.2...v0.13.3)
