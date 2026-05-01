@@ -75,6 +75,7 @@ async function toggleVisibility() {
   }
 }
 
+const { copy } = useClipboard({ legacy: true });
 const creatingLink = ref(false);
 
 async function createLink() {
@@ -128,7 +129,7 @@ function getShareUrl(token: string): string {
 
 async function copyLink(token: string) {
   try {
-    await navigator.clipboard.writeText(getShareUrl(token));
+    await copy(getShareUrl(token));
     toast.add({
       title: "Link copied to clipboard",
       color: "success",

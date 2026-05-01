@@ -71,13 +71,15 @@ async function revokeLink(id: number) {
   }
 }
 
+const { copy } = useClipboard({ legacy: true });
+
 function getShareUrl(token: string): string {
   return `${baseUrl.value}/s/l/${token}`;
 }
 
 async function copyLink(token: string) {
   try {
-    await navigator.clipboard.writeText(getShareUrl(token));
+    await copy(getShareUrl(token));
     toast.add({ title: "Link copied to clipboard", color: "success" });
   } catch {
     toast.add({
