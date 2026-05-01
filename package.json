@@ -33,7 +33,7 @@
     "glob": "13.0.6",
     "h3": "1.15.10",
     "linkedom": "0.18.12",
-    "nuxt": "4.4.2",
+    "nuxt": "4.4.4",
     "nuxt-auth-utils": "0.5.29",
     "nuxt-security": "2.5.1",
     "openai": "6.35.0",
