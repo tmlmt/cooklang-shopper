@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.13.7
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.6...v0.13.7)
+
+### 🎨 Styles
+
+- Do not display inactive steps and sections ([7e380ba](https://github.com/tmlmt/cooklang-shopper/commit/7e380ba))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.13.6
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.5...v0.13.6)
