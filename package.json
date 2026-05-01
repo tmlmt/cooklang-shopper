@@ -26,7 +26,7 @@
     "@pinia/nuxt": "0.11.3",
     "@prisma/adapter-better-sqlite3": "7.8.0",
     "@prisma/client": "7.8.0",
-    "@tmlmt/cooklang-parser": "3.0.0-alpha.33",
+    "@tmlmt/cooklang-parser": "3.0.0-alpha.34",
     "better-sqlite3": "12.9.0",
     "c12": "4.0.0-beta.4",
     "fuse.js": "7.3.0",
