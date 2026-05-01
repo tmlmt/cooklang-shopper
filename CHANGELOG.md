@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.13.6
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.5...v0.13.6)
+
+### 🩹 Fixes
+
+- **recipe:** Display cookware quantities ([ef71001](https://github.com/tmlmt/cooklang-shopper/commit/ef71001))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.13.5
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.4...v0.13.5)
