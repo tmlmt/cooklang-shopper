@@ -99,9 +99,8 @@ const displayMode = computed<DisplayMode>(() => {
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
+        >, {{ ingredient.preparation }}</span
       >
-        , {{ ingredient.preparation }}
-      </span>
     </template>
 
     <!-- Mode 2: Two simple quantities -->
@@ -124,9 +123,8 @@ const displayMode = computed<DisplayMode>(() => {
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
+        >, {{ ingredient.preparation }}</span
       >
-        , {{ ingredient.preparation }}
-      </span>
     </template>
 
     <!-- Mode 3: Single entry with alternatives -->
@@ -171,9 +169,8 @@ const displayMode = computed<DisplayMode>(() => {
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
+        >, {{ ingredient.preparation }}</span
       >
-        , {{ ingredient.preparation }}
-      </span>
       <span class="text-neutral-500 dark:text-neutral-300">
         {{ " " }}(or
         <template
@@ -234,9 +231,8 @@ const displayMode = computed<DisplayMode>(() => {
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
+        >, {{ ingredient.preparation }}</span
       >
-        , {{ ingredient.preparation }}
-      </span>
     </template>
 
     <!-- Mode 5: Complex case - bullet list -->
@@ -281,9 +277,8 @@ const displayMode = computed<DisplayMode>(() => {
           <span
             v-if="ingredient.preparation"
             class="text-neutral-500 dark:text-neutral-300"
+            >, {{ ingredient.preparation }}</span
           >
-            , {{ ingredient.preparation }}
-          </span>
 
           <template v-if="hasAlternatives(entry)">
             <span class="text-neutral-500 dark:text-neutral-300">
@@ -324,9 +319,8 @@ const displayMode = computed<DisplayMode>(() => {
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
+        >, {{ ingredient.preparation }}</span
       >
-        , {{ ingredient.preparation }}
-      </span>
     </template>
   </div>
 </template>
