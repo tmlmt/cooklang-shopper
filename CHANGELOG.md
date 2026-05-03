@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.13.10
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.9...v0.13.10)
+
+### 🩹 Fixes
+
+- **recipe:** Remove space between ingredient and preparation ([e997819](https://github.com/tmlmt/cooklang-shopper/commit/e997819))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.13.9
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.8...v0.13.9)
