@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@nuxt/ui",
     "nuxt-auth-utils",
+    "nuxt-seo-utils",
   ],
 
   css: ["~/assets/css/main.css"],

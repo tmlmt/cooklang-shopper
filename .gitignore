@@ -42,3 +42,6 @@ public/recipes/*
 
 # Self-signed certs for local development
 certs/
+
+# Source images
+public/chef-hat-rounded-blue.svg
