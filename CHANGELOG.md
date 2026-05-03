@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.13.9
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.8...v0.13.9)
+
+### 🩹 Fixes
+
+- **ai:** Improve system prompt ([4f3c767](https://github.com/tmlmt/cooklang-shopper/commit/4f3c767))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.13.8
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.7...v0.13.8)
