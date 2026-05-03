@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.14.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.10...v0.14.0)
+
+### 🚀 Enhancements
+
+- **seo:** Best practice defaults with nuxt-seo-utils and favicon variants ([c6cf827](https://github.com/tmlmt/cooklang-shopper/commit/c6cf827))
+- **seo:** Basic og-image, custom site description and other diverse improvements ([215e21c](https://github.com/tmlmt/cooklang-shopper/commit/215e21c))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.13.10
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.9...v0.13.10)
