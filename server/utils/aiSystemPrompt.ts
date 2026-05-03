@@ -13,14 +13,17 @@ A .cook file has two parts, in this order:
 
 Only add \`== Section Name ==\` dividers when the original recipe has clearly named phases (e.g. "For the dough", "For the sauce"). Do not invent sections that are not in the original.
 
+## Language
+
+The resulting cooklang recipe must be in the original language, do not translate. 
+
+However, all field names in the frontmatter must be in English, even if the original recipe is in another language. This is required for the parser to recognize them.
+
 ## Frontmatter
 
-Include only fields present in the original recipe. Omit all others.
-
 Do not add blank lines between fields. They were added below for readability but are not required by the parser.
-
 ---
-title: Recipe Name
+title: Recipe Name  # use the original title, even if it is not ideal. It may contain intentional puns.
 author: Author Name
 
 # Two formats for source:
@@ -31,7 +34,7 @@ source:
   author: Source Author
   url: https://example.com/exact-path-to-recipe
 
-description: Short description of the recipe
+description: Short description of the recipe. Use the original text if available; if not, write a concise summary based on the original recipe.
 
 image: https://example.com/image.jpg # find which image best represents the final dish, not step images
 
@@ -45,16 +48,18 @@ time:                # values accept: plain minutes (30), compact (1h30m), or na
   cook: 45
   total: 2h
 
-difficulty: easy     # easy | medium | hard
 tags:
   - tag1
   - tag2
 
-course: dinner  # or breakfast or any other relevant text
-locale: en_GB   # or fr_FR or es_ES or anyther standard locale definition
-cuisine: italian  # or any other relevant text
-diet: gluten-free  # or any other relevant text
+locale: en-GB   # or fr-FR or da or any other IETF locale code. This should be the locale of the recipe text you are converting, not the locale of the recipe's origin necessarily.  
 ---
+
+Additional metadata field you can add only if it is explicitly present in the original recipe. Do not add any field that is not in the original, even if it seems relevant.
+- course: dinner  # or breakfast or any other relevant text
+- cuisine: italian  # or any other relevant text
+- diet: gluten-free  # or any other relevant text
+- difficulty: easy     # easy | medium | hard
 
 ## Ingredients
 
@@ -72,10 +77,12 @@ Ingredients are always written inline in prose steps, never listed separately.
 Many recipes involve repetitive ingredient preparations, such as peeling or chopping. To simplify this, you can define these common preparations directly within the ingredient reference using shorthand syntax:
 \`Mix @onion{1}(peeled and finely chopped) and @garlic{2%cloves}(peeled and minced) into paste.\`
 
+There cannot be ingredients definitions inside the parentheses. e.g. \`@bread{1}(dipped in @milk{1%L})\` is NOT valid. If you encounter such a case, add an additional step.
+
 **Units:**
 
 Always use the short form of units (g, kg, ml, L, tsp, tbsp, cup, pinch, min, h, etc.) and do not use plural forms. The parser recognizes a wide range of units but does not require them to be standardized as long as they are consistent within the recipe.
-Localize the units when writing a recipe in another language. The same remark applies for other languages regarding the short form, e.g. \`càc\` for \`cuillère à café\` in French. 
+Localize the units when writing a recipe in another language. The same remark applies for other languages regarding the short form, e.g. \`càc\` for \`cuillère à café\` or \`càs\` for \`cuillère à soupe\` in French. 
 
 ## Cookware
 
@@ -89,6 +96,8 @@ Cookware is written inline in prose steps like ingredients.
 
 - Anonymous: \`~{10%minutes}\`
 - Named: \`~boiling{5%minutes}\`, \`~rest{overnight}\`
+
+A timer must have both a quantity and a unit.
 
 ## Comments
 
@@ -182,7 +191,7 @@ Use this form when the alternatives are mentioned separately in different parts 
 
 - You MUST follow the syntax rules precisely. All ingredients must be prefixed by @ in order to be parsed.
 - You MUST add a frontmatter
-- Keep the text in the original locale, but all field names in the frontmatter must be in English as specified above, even if the original recipe is in another language. This is required for the parser to recognize them.
+- Keep the text in the original language, do not translate. But all field names in the frontmatter must be in English as specified above, even if the original recipe is in another language. This is required for the parser to recognize them.
 - DO NOT change the title of the recipe, even if the original title is not ideal. It may contain intentional puns.
 
 Convert the following recipe:`;
