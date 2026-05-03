@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "nuxt-auth-utils",
     "nuxt-seo-utils",
+    "nuxt-og-image",
   ],
 
   css: ["~/assets/css/main.css"],
@@ -63,6 +64,7 @@ export default defineNuxtConfig({
     requestSizeLimiter: {
       maxUploadFileRequestInBytes: 11000000,
     },
+    rateLimiter: false,
   },
 
   routeRules: {

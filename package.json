@@ -16,7 +16,8 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "nuxt typecheck",
     "postinstall": "nuxt prepare",
-    "release": "node scripts/release.mjs"
+    "release": "node scripts/release.mjs",
+    "prepare": "skilld prepare || true"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.91.1",
@@ -26,6 +27,7 @@
     "@pinia/nuxt": "0.11.3",
     "@prisma/adapter-better-sqlite3": "7.8.0",
     "@prisma/client": "7.8.0",
+    "@takumi-rs/core": "^1.1.2",
     "@tmlmt/cooklang-parser": "3.0.0-alpha.35",
     "better-sqlite3": "12.9.0",
     "c12": "4.0.0-beta.4",
@@ -58,6 +60,7 @@
     "eslint": "10.2.1",
     "execa": "9.6.1",
     "human-regex": "2.2.0",
+    "nuxt-og-image": "6.4.10",
     "prettier": "3.8.3",
     "prettier-plugin-tailwindcss": "0.7.3",
     "prisma": "7.8.0",

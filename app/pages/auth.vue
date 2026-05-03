@@ -9,6 +9,22 @@ definePageMeta({
 const { loggedIn, user, clear, fetch: fetchSession } = useUserSession();
 const toast = useToast();
 const route = useRoute();
+const siteConfig = useSiteConfig();
+
+defineOgImage(
+  "DefaultOgImage",
+  {
+    title: siteConfig.name,
+    subtitle: "Authentication",
+    description: "Sign in to access your cookbook",
+  },
+  [
+    // Primary image for og:image and twitter:image (1200x600)
+    { key: "og" },
+    // Additional square image for WhatsApp (800x800)
+    { key: "whatsapp", width: 800, height: 800 },
+  ],
+);
 
 // Show OIDC error if redirected back with error — before async calls so it fires immediately
 if (import.meta.client) {

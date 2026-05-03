@@ -17,6 +17,7 @@ export async function usePublicConfig() {
     key: "public-config",
     default: () => ({
       title: "",
+      description: undefined as string | undefined,
       shopping: false as ShoppingEnabled,
       experimental: false,
       authProviders: [
@@ -49,9 +50,11 @@ export async function usePublicConfig() {
   }
 
   const aiEnabled = computed(() => data.value?.aiEnabled ?? false);
+  const description = computed(() => data.value?.description);
 
   return {
     title,
+    description,
     shopping,
     experimental,
     sharing,

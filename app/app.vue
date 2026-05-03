@@ -1,10 +1,5 @@
 <script setup lang="ts">
-const { sharing, title: appTitle } = await usePublicConfig();
-const route = useRoute();
-
-const defaultDescription =
-  "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation";
-
+const { sharing } = await usePublicConfig();
 useHead({
   htmlAttrs: {
     lang: "en",
@@ -21,20 +16,6 @@ useHead({
         ]
       : [],
   ),
-});
-
-useSeoMeta({
-  author: "Thomas Lamant",
-  title: () =>
-    (route.meta.title as string)
-      ? `${appTitle.value} - ${route.meta.title}`
-      : appTitle.value,
-  ogTitle: () =>
-    (route.meta.title as string)
-      ? `${appTitle.value} - ${route.meta.title}`
-      : appTitle.value,
-  description: () => (route.meta.description as string) || defaultDescription,
-  ogDescription: () => (route.meta.description as string) || defaultDescription,
 });
 </script>
 

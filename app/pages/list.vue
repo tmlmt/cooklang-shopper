@@ -7,6 +7,23 @@ definePageMeta({
     "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
 });
 
+const siteConfig = useSiteConfig();
+
+defineOgImage(
+  "DefaultOgImage",
+  {
+    title: siteConfig.name,
+    subtitle: "Authentication",
+    description: "Sign in to access your cookbook",
+  },
+  [
+    // Primary image for og:image and twitter:image (1200x600)
+    { key: "og" },
+    // Additional square image for WhatsApp (800x800)
+    { key: "whatsapp", width: 800, height: 800 },
+  ],
+);
+
 const shoppingStore = useShoppingStore();
 const toast = useToast();
 await useAsyncData("shopping-list", async () => {

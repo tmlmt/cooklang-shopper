@@ -4,12 +4,6 @@ import * as v from "valibot";
 import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
 import { FetchError } from "ofetch";
 
-definePageMeta({
-  title: "Recipe detail",
-  description:
-    "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
-});
-
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
@@ -117,6 +111,37 @@ watch(
   },
   { immediate: true },
 );
+
+//---------------------------
+// OG Image
+//---------------------------
+
+const siteConfig = useSiteConfig();
+const recipeMeta = recipe.value?.metadata as
+  | Record<string, unknown>
+  | undefined;
+const titleMeta = recipe.value?.metadata.title || recipeName;
+const descriptionMeta =
+  (recipeMeta?.description as string) ||
+  (recipeMeta?.introduction as string) ||
+  "";
+defineOgImage("RecipeOgImage", {
+  title: titleMeta,
+  description: descriptionMeta,
+  coverImage: heroImages.value[0] || "",
+  baseUrl: (siteConfig.url || "").replace(/^https?:\/\//, ""),
+});
+
+//---------------------------
+// Metadata
+//---------------------------
+
+useSeoMeta({
+  title: titleMeta,
+  ogTitle: titleMeta,
+  description: descriptionMeta || siteConfig.description || "",
+  ogDescription: descriptionMeta || siteConfig.description || "",
+});
 
 //---------------------------
 // Edit, Move, Delete recipe

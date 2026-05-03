@@ -45,3 +45,6 @@ certs/
 
 # Source images
 public/chef-hat-rounded-blue.svg
+
+# Skilld references (recreated by `skilld install`)
+.skilld

@@ -3,11 +3,6 @@ import type { NuxtError } from "#app";
 
 const route = useRoute();
 
-definePageMeta({
-  description:
-    "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
-});
-
 type ViewMode = "grid" | "list";
 
 const recipeStore = useRecipeStore();
@@ -74,6 +69,29 @@ const openNewRecipeModal = async () => {
 };
 
 const folderName = computed(() => currentPath.value.split("/").pop() || "");
+
+const siteConfig = useSiteConfig();
+
+defineOgImage(
+  "DefaultOgImage",
+  {
+    title: siteConfig.name,
+    description: `All recipes in the '${folderName.value}' folder`,
+  },
+  [
+    // Primary image for og:image and twitter:image (1200x600)
+    { key: "og" },
+    // Additional square image for WhatsApp (800x800)
+    { key: "whatsapp", width: 800, height: 800 },
+  ],
+);
+
+useSeoMeta({
+  title: folderName.value,
+  ogTitle: folderName.value,
+  description: `All recipes in the '${folderName.value}' folder`,
+  ogDescription: `All recipes in the '${folderName.value}' folder`,
+});
 
 const folderRecipeCount = computed(() => {
   const path = currentPath.value;

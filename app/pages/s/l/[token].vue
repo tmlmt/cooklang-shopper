@@ -4,8 +4,6 @@ import type { ShoppingListResponse } from "~/composables/useShoppingListActions"
 definePageMeta({
   layout: "shared",
   middleware: ["shared-list-redirect"],
-  title: "Shared Shopping List",
-  description: "A shopping list shared from Cooklang Shopper",
 });
 
 interface ResolveResponse extends ShoppingListResponse {
@@ -26,6 +24,27 @@ if (error.value) {
     statusText: error.value.statusText ?? "Share link not found",
   });
 }
+
+//---------------------------
+// OG Image
+//---------------------------
+
+defineOgImage("DefaultOgImage", {
+  title: "Shopping List",
+  subtitle: `Shared by ${data.value?.ownerName ?? "unknown"}`,
+  description: "A shopping list shared from Cooklang Shopper",
+});
+
+//---------------------------
+// Metadata
+//---------------------------
+
+useSeoMeta({
+  title: `Shopping List - Shared by ${data.value?.ownerName ?? "unknown"}`,
+  ogTitle: `Shopping List - Shared by ${data.value?.ownerName ?? "unknown"}`,
+  description: "A shopping list shared from Cooklang Shopper",
+  ogDescription: "A shopping list shared from Cooklang Shopper",
+});
 
 const { loggedIn } = useUserSession();
 

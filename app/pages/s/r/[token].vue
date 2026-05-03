@@ -34,6 +34,37 @@ const recipeName = computed(() => {
 
 const heroImages = computed(() => data.value?.imageManifest?.heroImages ?? []);
 
+//---------------------------
+// OG Image
+//---------------------------
+
+const siteConfig = useSiteConfig();
+const recipeMeta = recipe.value?.metadata as
+  | Record<string, unknown>
+  | undefined;
+const titleMeta = recipe.value?.metadata.title || recipeName;
+const descriptionMeta =
+  (recipeMeta?.description as string) ||
+  (recipeMeta?.introduction as string) ||
+  "";
+defineOgImage("RecipeOgImage", {
+  title: titleMeta,
+  description: descriptionMeta,
+  coverImage: heroImages.value[0] || "",
+  baseUrl: (siteConfig.url || "").replace(/^https?:\/\//, ""),
+});
+
+//---------------------------
+// Metadata
+//---------------------------
+
+useSeoMeta({
+  title: titleMeta,
+  ogTitle: titleMeta,
+  description: descriptionMeta || siteConfig.description || "",
+  ogDescription: descriptionMeta || siteConfig.description || "",
+});
+
 const stepImagesByNumber = computed(
   () => data.value?.imageManifest?.stepImagesByNumber ?? {},
 );

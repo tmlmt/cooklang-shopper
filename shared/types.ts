@@ -98,6 +98,7 @@ export interface AppConfig {
   shopping?: ShoppingConfig;
   experimental?: boolean;
   title?: string;
+  description?: string;
   baseUrl?: string;
   sharing?: SharingConfig;
   ai?: AiConfig;

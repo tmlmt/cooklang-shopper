@@ -29,6 +29,7 @@ export default defineEventHandler(async (event) => {
 
   return {
     title: config.title || "Cooklang Shopper",
+    description: config.description,
     shopping,
     experimental: config.experimental ?? false,
     authProviders,

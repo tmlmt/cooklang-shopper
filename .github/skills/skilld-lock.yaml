@@ -1,0 +1,15 @@
+skills:
+  nuxt-og-image-skilld:
+    packageName: nuxt-og-image
+    version: 6.4.10
+    repo: nuxt-modules/og-image
+    source: "https://github.com/nuxt-modules/og-image/tree/v6.4.10/docs"
+    syncedAt: 2026-05-03
+    generator: skilld
+  nuxt-site-config-skilld:
+    packageName: nuxt-site-config
+    version: 4.0.8
+    repo: harlan-zw/nuxt-site-config
+    source: "https://github.com/harlan-zw/nuxt-site-config/tree/v4.0.8/docs"
+    syncedAt: 2026-05-03
+    generator: skilld

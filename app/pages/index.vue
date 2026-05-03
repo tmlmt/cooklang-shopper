@@ -1,16 +1,26 @@
 <script setup lang="ts">
 import type { NuxtError } from "#app";
 
-definePageMeta({
-  description:
-    "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
-});
-
 type ViewMode = "grid" | "list";
 
 const recipeStore = useRecipeStore();
 const toast = useToast();
 const { isEditor } = useRole();
+const siteConfig = useSiteConfig();
+
+defineOgImage(
+  "DefaultOgImage",
+  {
+    title: siteConfig.name,
+    description: siteConfig.description,
+  },
+  [
+    // Primary image for og:image and twitter:image (1200x600)
+    { key: "og" },
+    // Additional square image for WhatsApp (800x800)
+    { key: "whatsapp", width: 800, height: 800 },
+  ],
+);
 
 await callOnce("recipe-index", () => recipeStore.fetchIndex());
 await callOnce("recipe-directories", () => recipeStore.fetchDirectories());

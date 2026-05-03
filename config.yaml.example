@@ -79,6 +79,9 @@ sessionSecret: "<session-secret>"
 # Custom application title (default: "Cooklang Shopper")
 # title: "My Cookbook"
 
+# Site description used for SEO meta tags
+# description: "A personal cookbook powered by Cooklang"
+
 # Recipe sharing & privacy settings
 # sharing:
 #   defaultVisibility: "private"    # "public" or "private" — default for recipes without an explicit override
