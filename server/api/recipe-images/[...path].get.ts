@@ -7,7 +7,7 @@ export default defineEventHandler(
     const decodedPath = getValidatedRecipePath(event);
 
     if (!authenticated) {
-      const recipeKey = decodedPath.replace(/\.cook$/, "");
+      const recipeKey = decodedPath.replace(/\//g, ":");
       const isPublic = await isRecipePublic(recipeKey);
       if (!isPublic) {
         throw createError({ status: 401, statusText: "Unauthorized" });
