@@ -3,6 +3,10 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-10-31",
   devtools: { enabled: true },
 
+  experimental: {
+    asyncContext: true,
+  },
+
   modules: [
     "nuxt-security",
     "@nuxt/hints",
