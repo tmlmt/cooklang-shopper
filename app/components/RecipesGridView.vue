@@ -80,7 +80,7 @@ const toggleSelection = async (recipe: RecipeEssentials) => {
       />
     </div>
 
-    <UAlert
+    <LazyUAlert
       v-if="folders.length === 0 && recipes.length === 0"
       color="neutral"
       variant="subtle"

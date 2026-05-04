@@ -337,7 +337,7 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
       </template>
     </UTable>
 
-    <UAlert
+    <LazyUAlert
       v-if="folders.length === 0 && recipes.length === 0"
       color="neutral"
       variant="subtle"
