@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.14.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.0...v0.14.1)
+
+### 🩹 Fixes
+
+- **security:** Deactivate rate limited only on dev ([90076bb](https://github.com/tmlmt/cooklang-shopper/commit/90076bb))
+- **seo:** Correctly resolve and display cover images of recipes ([de51f50](https://github.com/tmlmt/cooklang-shopper/commit/de51f50))
+
+### 🏡 Chore
+
+- **package:** Fix prepare command ([3f31a89](https://github.com/tmlmt/cooklang-shopper/commit/3f31a89))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.14.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.13.10...v0.14.0)
