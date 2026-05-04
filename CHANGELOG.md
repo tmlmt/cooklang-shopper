@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.14.2
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.1...v0.14.2)
+
+### 🩹 Fixes
+
+- **seo:** Correctly resolve cover images in SSR ([bac7586](https://github.com/tmlmt/cooklang-shopper/commit/bac7586))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.14.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.0...v0.14.1)
