@@ -125,12 +125,27 @@ const descriptionMeta =
   (recipeMeta?.description as string) ||
   (recipeMeta?.introduction as string) ||
   "";
-defineOgImage("RecipeOgImage", {
-  title: titleMeta,
-  description: descriptionMeta,
-  coverImage: heroImages.value[0] || "",
-  baseUrl: (siteConfig.url || "").replace(/^https?:\/\//, ""),
-});
+const siteBaseUrl = (siteConfig.url || "").replace(/\/$/, "");
+defineOgImage(
+  "RecipeOgImage",
+  {
+    title: titleMeta,
+    description: descriptionMeta,
+    coverImage: heroImages.value[0] || "",
+    baseUrl: siteBaseUrl.replace(/^https?:\/\//, ""),
+    canvasWidth: 1200,
+    canvasHeight: 600,
+  },
+  [
+    { key: "og" },
+    {
+      key: "whatsapp",
+      width: 800,
+      height: 800,
+      props: { canvasWidth: 800, canvasHeight: 800 },
+    },
+  ],
+);
 
 //---------------------------
 // Metadata
