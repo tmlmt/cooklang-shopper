@@ -17,7 +17,7 @@
     "typecheck": "nuxt typecheck",
     "postinstall": "nuxt prepare",
     "release": "node scripts/release.mjs",
-    "prepare": "skilld prepare || true"
+    "prepare": "pnpx skilld prepare || true"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.91.1",
