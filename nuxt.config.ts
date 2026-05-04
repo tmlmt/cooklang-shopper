@@ -64,7 +64,7 @@ export default defineNuxtConfig({
     requestSizeLimiter: {
       maxUploadFileRequestInBytes: 11000000,
     },
-    rateLimiter: false,
+    rateLimiter: process.env.NODE_ENV === "development" ? false : undefined,
   },
 
   routeRules: {
