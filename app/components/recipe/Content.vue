@@ -315,6 +315,8 @@ const visibleStepOverlay = ref<string | null>(null);
                     </h3>
                     <div v-if="item.stepImage" class="group/step relative">
                       <NuxtImg
+                        v-slot="{ src, isLoaded, imgAttrs }"
+                        :custom="true"
                         :src="item.stepImage"
                         :alt="`Step ${item.stepNumber} illustration`"
                         sizes="640px md:512px lg:683px xl:853px 2xl:1024px"
@@ -326,7 +328,13 @@ const visibleStepOverlay = ref<string | null>(null);
                               ? null
                               : item.stepImage
                         "
-                      />
+                      >
+                        <!-- Show the actual image when loaded -->
+                        <img v-if="isLoaded" v-bind="imgAttrs" :src="src" />
+
+                        <!-- Show a placeholder while loading -->
+                        <USkeleton v-else class="h-72 w-full" />
+                      </NuxtImg>
                       <UButton
                         v-if="
                           editable && item.stepImage.startsWith('/recipes/')

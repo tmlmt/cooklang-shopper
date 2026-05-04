@@ -121,13 +121,22 @@ const formattedModified = computed(() => {
         <div class="h-28 overflow-hidden rounded-xl">
           <NuxtImg
             v-if="coverImage"
+            v-slot="{ src, isLoaded, imgAttrs }"
             :src="coverImage"
             :alt="recipe.title"
             sizes="320px md:256px lg:341px xl:427px 2xl:512px"
             loading="lazy"
             class="h-full w-full object-cover transition-transform duration-300 ease-out transform-3d"
             :class="isImageActive ? 'transform-[rotateY(180deg)]' : ''"
-          />
+            :custom="true"
+          >
+            <!-- Show the actual image when loaded -->
+            <img v-if="isLoaded" v-bind="imgAttrs" :src="src" />
+
+            <!-- Show a placeholder while loading -->
+            <USkeleton v-else class="h-full w-full" />
+          </NuxtImg>
+
           <USkeleton v-else-if="loading" class="h-28 w-full rounded-xl" />
           <div
             v-else

@@ -738,12 +738,20 @@ watch(
         >
           <div class="group relative">
             <NuxtImg
+              v-slot="{ src, isLoaded, imgAttrs }"
+              :custom="true"
               :src="item"
               :alt="`${recipe.metadata.title ?? recipeName}${heroImages.length > 1 ? ` image ${index + 1}` : ''}`"
               sizes="640px md:768px lg:1024px xl:1280px 2xl:1536px"
               class="max-h-112 w-full rounded-sm object-cover"
               @click="heroOverlayVisible = !heroOverlayVisible"
-            />
+            >
+              <!-- Show the actual image when loaded -->
+              <img v-if="isLoaded" v-bind="imgAttrs" :src="src" />
+
+              <!-- Show a placeholder while loading -->
+              <USkeleton v-else class="h-112 w-full" />
+            </NuxtImg>
             <div
               v-if="isEditor"
               class="absolute top-3 right-3 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100 md:top-6 md:right-6 md:gap-3"
