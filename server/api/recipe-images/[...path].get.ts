@@ -10,7 +10,16 @@ export default defineEventHandler(
       const recipeKey = decodedPath.replace(/\//g, ":");
       const isPublic = await isRecipePublic(recipeKey);
       if (!isPublic) {
-        throw createError({ status: 401, statusText: "Unauthorized" });
+        const db = getDb();
+        const activeShareLink = await db.shareLink.findFirst({
+          where: {
+            recipePath: recipeKey,
+            OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+          },
+        });
+        if (!activeShareLink) {
+          throw createError({ status: 401, statusText: "Unauthorized" });
+        }
       }
     }
 
