@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.14.4
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.3...v0.14.4)
+
+### 🔥 Performance
+
+- Lazy load Alert component, rarely used ([e71caeb](https://github.com/tmlmt/cooklang-shopper/commit/e71caeb))
+
+### 🩹 Fixes
+
+- **seo:** Allow generation of og-image for shared links ([ae756fe](https://github.com/tmlmt/cooklang-shopper/commit/ae756fe))
+
+### 🎨 Styles
+
+- Show placeholders while images are loading ([b61b229](https://github.com/tmlmt/cooklang-shopper/commit/b61b229))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.14.3
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.2...v0.14.3)
