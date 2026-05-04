@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.14.3
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.2...v0.14.3)
+
+### 🩹 Fixes
+
+- **recipe:** Correctly resolve path for recipes in subfolders when unauthenticated and fix fetch of image manifest ([995d02b](https://github.com/tmlmt/cooklang-shopper/commit/995d02b))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.14.2
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.1...v0.14.2)
