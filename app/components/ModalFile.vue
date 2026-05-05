@@ -115,6 +115,14 @@ const mainSchema = v.object({
         v.trim(),
         v.nonEmpty("Please enter a filename"),
         v.excludes("/", "The filename must not contain  '/'"),
+        v.check((value) => {
+          try {
+            validateRecipePath(value);
+            return true;
+          } catch {
+            return false;
+          }
+        }, "Only letters, digits, spaces, and & ( ) ' _ + % . - are allowed"),
       ),
 });
 
@@ -145,16 +153,26 @@ const isParentDirSelected = (value: string): boolean => {
   return mainState.value.dir ? true : false;
 };
 
-const newDirSchema = v.pipe(
-  v.string(),
-  v.trim(),
-  v.nonEmpty("Please enter a subdirectory name"),
-  v.excludes("/", "The subdirectory name must not contain  '/'"),
-  v.check(isParentDirSelected, "You need to select a parent directory"),
-  v.check(isNotAlreadyExisting, "This subdirectory already exists"),
-);
+const newDirSchema = v.object({
+  subDir: v.pipe(
+    v.string(),
+    v.trim(),
+    v.nonEmpty("Please enter a subdirectory name"),
+    v.excludes("/", "The subdirectory name must not contain  '/'"),
+    v.check((value) => {
+      try {
+        validateRecipePath(value);
+        return true;
+      } catch {
+        return false;
+      }
+    }, "Only letters, digits, spaces, and & ( ) ' _ + % . - are allowed"),
+    v.check(isParentDirSelected, "You need to select a parent directory"),
+    v.check(isNotAlreadyExisting, "This subdirectory already exists"),
+  ),
+});
 
-const newDirState = ref("");
+const newDirState = reactive({ subDir: "" });
 
 //-------------------------
 // Save / return function
@@ -181,7 +199,7 @@ const createSubDir = async () => {
         method: "POST",
         body: {
           parentDir: mainState.value.dir!.path,
-          name: newDirState.value,
+          name: newDirState.subDir,
         },
       },
     );
@@ -225,12 +243,12 @@ const createSubDir = async () => {
         });
       } else {
         toast.add({
-          title: `A sub-directory called '${newDirState.value}' already exists`,
+          title: `A sub-directory called '${newDirState.subDir}' already exists`,
           description: `New sub-directory created as '${data.name}'`,
           color: "warning",
         });
       }
-      newDirState.value = "";
+      newDirState.subDir = "";
     }
   } catch (e) {
     toast.add({
@@ -298,7 +316,7 @@ const save = async () => {
               name="subDir"
               :ui="{ root: 'grow', label: 'text-gray-500' }"
             >
-              <UInput v-model="newDirState" :ui="{ root: 'w-full' }" />
+              <UInput v-model="newDirState.subDir" :ui="{ root: 'w-full' }" />
             </UFormField>
             <UButton
               class="mt-6"

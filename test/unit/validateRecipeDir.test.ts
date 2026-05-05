@@ -23,6 +23,18 @@ describe("validateRecipeDir", () => {
     expect(() => validateRecipeDir("desserts and sweets")).not.toThrow();
   });
 
+  it("accepts & ( ) characters", () => {
+    expect(() => validateRecipeDir("Sauces & Spreads (spicy)")).not.toThrow();
+  });
+
+  it("accepts single quotes", () => {
+    expect(() => validateRecipeDir("l'apéro")).not.toThrow();
+  });
+
+  it("rejects commas", () => {
+    expect(() => validateRecipeDir("Salt, Pepper")).toThrow();
+  });
+
   it("rejects .. traversal", () => {
     expect(() => validateRecipeDir("..")).toThrow();
   });

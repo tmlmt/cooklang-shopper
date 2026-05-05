@@ -24,7 +24,11 @@ export function getValidatedRecipePath(event: H3Event): string {
       statusText: "No recipe path was provided",
     });
   }
-  validateRecipePath(path);
+  try {
+    validateRecipePath(path);
+  } catch (e) {
+    throw createError({ status: 400, statusText: (e as Error).message });
+  }
 
   const decodedPath = decodeURIComponent(path).replace(/\+/g, " ");
 
@@ -36,7 +40,11 @@ export function getValidatedRecipePath(event: H3Event): string {
 
 export function validateRecipeDir(dir: string) {
   if (dir === "") return;
-  validateRecipePath(dir);
+  try {
+    validateRecipePath(dir);
+  } catch (e) {
+    throw createError({ status: 400, statusText: (e as Error).message });
+  }
 
   const resolved = nodePath.resolve(recipesRoot, dir);
   assertWithinRecipesRoot(resolved);

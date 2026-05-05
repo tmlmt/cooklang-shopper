@@ -4,6 +4,7 @@ import { access, mkdir } from "node:fs/promises";
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);
 
+  // Checking the parent directory for validity and security
   const body = await readBody(event);
   if (body.parentDir === undefined) {
     throw createError({
@@ -12,19 +13,21 @@ export default defineEventHandler(async (event) => {
     });
   }
   validateRecipeDir(body.parentDir.trim());
+  // Also ensure the name itself doesn't contain path separators, as it should be a single directory.
   if (!body.name || body.name.trim().length === 0) {
     throw createError({
       status: 400,
       statusText: "No sub-directory name was provided",
     });
   }
-  // Also ensure the name itself doesn't contain path separators, as it should be a single directory.
   if (body.name.includes("/") || body.name.includes("\\")) {
     throw createError({
       status: 400,
       statusText: "Sub-directory name must not contain path separators.",
     });
   }
+  // Validate the new directory name
+  validateRecipeDir(body.name.trim());
 
   let newDir = path.join(
     process.cwd(),

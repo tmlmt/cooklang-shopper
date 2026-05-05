@@ -27,6 +27,12 @@ describe("validateRecipePath", () => {
     expect(() => validateRecipePath("my recipes/foo.bar")).not.toThrow();
   });
 
+  it("accepts & ( ) characters", () => {
+    expect(() =>
+      validateRecipePath("Sauces & Spreads/Recipe (classic)"),
+    ).not.toThrow();
+  });
+
   it("rejects path starting with /", () => {
     expect(() => validateRecipePath("/etc/passwd")).toThrow();
   });
@@ -41,5 +47,13 @@ describe("validateRecipePath", () => {
 
   it("rejects path with null bytes", () => {
     expect(() => validateRecipePath("foo\0bar")).toThrow();
+  });
+
+  it("accepts single quotes", () => {
+    expect(() => validateRecipePath("l'herbe")).not.toThrow();
+  });
+
+  it("rejects commas", () => {
+    expect(() => validateRecipePath("Salt, Pepper")).toThrow();
   });
 });
