@@ -26,9 +26,8 @@ await callOnce("recipe-index", () => recipeStore.fetchIndex());
 await callOnce("recipe-directories", () => recipeStore.fetchDirectories());
 
 const currentPath = ref("");
-const { folders, recipes } = useDirectoryContents(currentPath);
 
-const itemCount = computed(() => folders.value.length + recipes.value.length);
+const recipeCount = computed(() => recipeStore.recipeList.length);
 
 const viewMode = useCookie<ViewMode>("ui:recipes:view-mode", {
   default: () => "grid",
@@ -164,7 +163,7 @@ if (isEditor.value) {
           </div>
         </div>
         <div class="ml-1 shrink-0 text-sm md:text-base">
-          · {{ itemCount }} items
+          · {{ recipeCount }} recipes
         </div>
       </div>
       <div class="flex flex-row">

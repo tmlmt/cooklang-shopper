@@ -20,10 +20,6 @@ const currentPath = computed(() => {
   return typeof raw === "string" ? raw : "";
 });
 
-const { folders, recipes } = useDirectoryContents(currentPath);
-
-const itemCount = computed(() => folders.value.length + recipes.value.length);
-
 const viewMode = useCookie<ViewMode>("ui:recipes:view-mode", {
   default: () => "grid",
   watch: true,
@@ -323,7 +319,7 @@ if (isEditor.value) {
           </div>
         </div>
         <div class="ml-1 shrink-0 text-sm md:text-base">
-          · {{ itemCount }} items
+          · {{ folderRecipeCount }} recipes
         </div>
       </div>
       <div class="flex flex-row">
