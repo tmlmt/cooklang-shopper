@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.14.6
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.5...v0.14.6)
+
+### 🚀 Enhancements
+
+- Show number of recipes instead of number of items (subfolders + direct recipes) on index and browse pages ([c9185d0](https://github.com/tmlmt/cooklang-shopper/commit/c9185d0))
+
+### ✅ Tests
+
+- Fix migration test by properly determining current schema version ([4e9786e](https://github.com/tmlmt/cooklang-shopper/commit/4e9786e))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.14.5
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.4...v0.14.5)
