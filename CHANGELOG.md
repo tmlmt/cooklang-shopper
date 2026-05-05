@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.14.5
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.4...v0.14.5)
+
+### 🩹 Fixes
+
+- **path-validation:** Allow & ( ) ' in recipe and directory names and do not silence path verification errors ([75d6449](https://github.com/tmlmt/cooklang-shopper/commit/75d6449))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.14.4
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.3...v0.14.4)
