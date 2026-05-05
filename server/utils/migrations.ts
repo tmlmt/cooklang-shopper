@@ -36,7 +36,7 @@ export function runMigrations(dbPath: string): void {
       )
     `);
 
-    const currentVersion =
+    let currentVersion =
       (
         db.prepare("SELECT MAX(version) as v FROM _schema_version").get() as {
           v: number | null;
@@ -61,6 +61,7 @@ export function runMigrations(dbPath: string): void {
           db.prepare(
             "INSERT INTO _schema_version (version, name) VALUES (?, ?)",
           ).run(initMigration.version, initMigration.name);
+          currentVersion = initMigration.version;
         }
         console.log(
           "Detected pre-existing database. Marked init migration as applied.",
