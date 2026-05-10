@@ -43,7 +43,7 @@ export function useShoppingListActions(options?: {
   }
 
   function isChecked(name: string): boolean {
-    return checkedItems.value.has(name);
+    return checkedItems.value.has(name.toLowerCase());
   }
 
   async function checkIngredient(
