@@ -75,6 +75,11 @@ const navigationItems = computed<BreadcrumbItem[]>(() => {
   if (loggedIn.value) {
     if (shoppingEnabled.value) {
       items.push({
+        label: "Pantry",
+        to: "/pantry",
+        active: route.path === "/pantry",
+      });
+      items.push({
         label: "Shopping List",
         to: "/list",
         active: route.path === "/list",
@@ -122,6 +127,8 @@ const dropDownMenuItems = computed<DropdownMenuItem[]>(() =>
 const navRight = computed(() => {
   if (!loggedIn.value) return undefined;
   if (route.path === "/" && shoppingEnabled.value) {
+    return { text: "Continue to pantry", to: "/pantry" };
+  } else if (route.path === "/pantry") {
     return { text: "Continue to shopping list", to: "/list" };
   } else if (route.path === "/list" && experimental.value) {
     return { text: "Continue to shopping cart", to: "/cart" };
@@ -145,8 +152,10 @@ const navLeft = computed(() => {
     return undefined;
   }
   if (!loggedIn.value) return undefined;
-  if (route.path === "/list") {
+  if (route.path === "/pantry") {
     return { text: "Back to recipes", to: "/" };
+  } else if (route.path === "/list") {
+    return { text: "Back to pantry", to: "/pantry" };
   } else if (route.path === "/cart") {
     return { text: "Back to shopping list", to: "/list" };
   } else {

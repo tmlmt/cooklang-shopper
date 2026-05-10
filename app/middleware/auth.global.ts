@@ -22,11 +22,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return navigateTo("/auth");
   }
 
-  if (to.path === "/list" && !shopping.value) {
+  if ((to.path === "/list" || to.path === "/pantry") && !shopping.value) {
     return navigateTo("/");
   }
 
-  if (to.path === "/list" && shopping.value === "editor-only") {
+  if (
+    (to.path === "/list" || to.path === "/pantry") &&
+    shopping.value === "editor-only"
+  ) {
     const { user } = useUserSession();
     if (user.value?.role !== "editor") {
       return navigateTo("/");

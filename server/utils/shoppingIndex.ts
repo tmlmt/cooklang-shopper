@@ -16,6 +16,7 @@ import nodePath from "node:path";
 import { createError } from "h3";
 import { getRecipeIndex } from "./recipeIndex";
 import { getStreams } from "./sseRegistry";
+import { readPantryFile } from "./pantryUtils";
 import { useStorage } from "nitropack/runtime";
 import { parseQuantityValue } from "~~/shared/utils/parseQuantityValue";
 
@@ -114,17 +115,37 @@ export function getShoppingList(
   return index.get(userKey)?.get(listName);
 }
 
-function getOrCreateShoppingList(
+async function getOrCreateShoppingList(
   userKey: string,
   listName: string = "",
-): ShoppingList {
+): Promise<ShoppingList> {
   const userLists = getOrCreateUserLists(userKey);
   let sl = userLists.get(listName);
   if (!sl) {
     sl = new ShoppingList();
     userLists.set(listName, sl);
+    try {
+      const pantryContent = await readPantryFile(userKey);
+      if (pantryContent) {
+        sl.addPantry(pantryContent);
+      }
+    } catch (err) {
+      console.warn(
+        `Shopping index: failed to apply pantry for "${userKey}":`,
+        err,
+      );
+    }
   }
   return sl;
+}
+
+export function applyPantryToUserLists(userKey: string, content: string): void {
+  const userLists = index.get(userKey);
+  if (!userLists) return;
+  for (const [listName, sl] of userLists) {
+    sl.addPantry(content);
+    broadcastListUpdate(userKey, getShoppingListData(userKey, listName));
+  }
 }
 
 export function getUserListNames(userKey: string): string[] {
@@ -214,7 +235,7 @@ export async function initShoppingIndex(): Promise<void> {
         nodePath.join(recipesDir, filename),
         "utf-8",
       );
-      const sl = getOrCreateShoppingList(parsed.userKey, parsed.listName);
+      const sl = await getOrCreateShoppingList(parsed.userKey, parsed.listName);
       const refs = sl.loadFile(content);
 
       for (const ref of refs) {
@@ -337,7 +358,7 @@ export async function addRecipeToList(
   choices?: RecipeChoices,
   listName: string = "",
 ): Promise<void> {
-  const sl = getOrCreateShoppingList(userKey, listName);
+  const sl = await getOrCreateShoppingList(userKey, listName);
 
   // Check if recipe is already in the list
   const parserPath = `./${recipePath}`;
@@ -541,7 +562,7 @@ export async function addManualItem(
   unit?: string,
   listName: string = "",
 ): Promise<void> {
-  const sl = getOrCreateShoppingList(userKey, listName);
+  const sl = await getOrCreateShoppingList(userKey, listName);
   const newItem: AddedIngredient = { name };
   if (quantity) {
     newItem.quantities = [

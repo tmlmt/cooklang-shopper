@@ -45,6 +45,10 @@ export default defineNuxtConfig({
         driver: "fs",
         base: "./public/config",
       },
+      pantry: {
+        driver: "fs",
+        base: "./public/pantry",
+      },
     },
   },
 
