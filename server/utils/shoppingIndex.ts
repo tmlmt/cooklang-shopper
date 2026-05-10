@@ -204,6 +204,17 @@ export async function initShoppingIndex(): Promise<void> {
       for (const ref of refs) {
         await hydrateRef(sl, ref);
       }
+
+      // hydrateRecipe (called by hydrateRef) triggers calculateIngredients.
+      // If there are no recipes, calculateIngredients is never called, so
+      // sl.ingredients stays empty even though manualItems were loaded.
+      // Re-add them via the public API to trigger the calculation.
+      if (refs.length === 0 && sl.manualItems.length > 0) {
+        const items = sl.manualItems.splice(0);
+        for (const item of items) {
+          sl.addManualItem(item);
+        }
+      }
     } catch (err) {
       console.warn(`Shopping index: failed to load "${filename}":`, err);
     }
