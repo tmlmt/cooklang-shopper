@@ -15,6 +15,7 @@ import {
 import nodePath from "node:path";
 import { createError } from "h3";
 import { getRecipeIndex } from "./recipeIndex";
+import { getStreams } from "./sseRegistry";
 import { useStorage } from "nitropack/runtime";
 import { parseQuantityValue } from "~~/shared/utils/parseQuantityValue";
 
@@ -23,6 +24,21 @@ const recipesDir = nodePath.resolve(process.cwd(), "public", "recipes");
 // Index: userKey → listName → ShoppingList
 // listName "" = default list
 const index = new Map<string, Map<string, ShoppingList>>();
+
+// ---------------------------------------------------------------------------
+// SSE broadcast
+// ---------------------------------------------------------------------------
+
+function broadcastListUpdate(userKey: string, data: ShoppingListData): void {
+  const streams = getStreams(userKey);
+  if (!streams || streams.size === 0) return;
+  const payload = JSON.stringify(data);
+  for (const stream of streams) {
+    stream.push(payload).catch(() => {
+      // Stream may have closed; will be cleaned up via onClosed
+    });
+  }
+}
 
 type ShoppingFileType = "list" | "checked";
 
@@ -347,6 +363,7 @@ export async function addRecipeToList(
   });
 
   await writeListFile(userKey, listName);
+  broadcastListUpdate(userKey, getShoppingListData(userKey, listName));
 }
 
 export async function updateRecipeInList(
@@ -389,6 +406,7 @@ export async function updateRecipeInList(
   });
 
   await writeListFile(userKey, listName);
+  broadcastListUpdate(userKey, getShoppingListData(userKey, listName));
 }
 
 export async function removeRecipeFromList(
@@ -425,6 +443,7 @@ export async function removeRecipeFromList(
   } else {
     await writeListFile(userKey, listName);
   }
+  broadcastListUpdate(userKey, getShoppingListData(userKey, listName));
 }
 
 export async function clearList(
@@ -462,6 +481,7 @@ export async function checkIngredient(
   // Append to checked file (fast, no full rewrite)
   const line = ShoppingList.checkedAppendLine(ingredientName, checked);
   await appendFile(resolvedPath("checked", userKey, listName), line, "utf-8");
+  broadcastListUpdate(userKey, getShoppingListData(userKey, listName));
 }
 
 export async function uncheckAll(
@@ -484,6 +504,7 @@ export async function uncheckAll(
   } catch {
     // File may not exist
   }
+  broadcastListUpdate(userKey, getShoppingListData(userKey, listName));
 }
 
 export async function removeManualItem(
@@ -510,6 +531,7 @@ export async function removeManualItem(
   } else {
     await writeListFile(userKey, listName);
   }
+  broadcastListUpdate(userKey, getShoppingListData(userKey, listName));
 }
 
 export async function addManualItem(
@@ -528,4 +550,5 @@ export async function addManualItem(
   }
   sl.addManualItem(newItem);
   await writeListFile(userKey, listName);
+  broadcastListUpdate(userKey, getShoppingListData(userKey, listName));
 }

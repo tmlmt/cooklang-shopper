@@ -6,6 +6,9 @@ interface StoreRunOptions {
   isCheckedFn?: (name: string) => boolean;
   onCheckFn?: (name: string, checked: boolean) => void | Promise<void>;
   onUncheckAllFn?: () => void | Promise<void>;
+  connectFn?: () => void;
+  disconnectFn?: () => void;
+  sseUpdateSignal?: Ref<number>;
 }
 
 export default async function () {

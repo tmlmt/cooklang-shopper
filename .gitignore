@@ -38,6 +38,7 @@ generated/
 # Personal files
 public/config/*.toml
 public/recipes/*
+public/pantry/*
 /generated/prisma
 
 # Self-signed certs for local development

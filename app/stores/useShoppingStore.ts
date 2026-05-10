@@ -80,5 +80,8 @@ export const useShoppingStore = defineStore("shopping", () => {
     addManualItem: actions.addManualItem,
     isRecipeInSelection,
     getServings,
+    connectToUpdates: actions.connectToUpdates,
+    disconnectFromUpdates: actions.disconnectFromUpdates,
+    sseUpdateCount: actions.sseUpdateCount,
   };
 });

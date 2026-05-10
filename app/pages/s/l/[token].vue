@@ -73,6 +73,9 @@ if (!loggedIn.value) {
                 isCheckedFn: shoppingList!.isChecked,
                 onCheckFn: shoppingList!.checkIngredient,
                 onUncheckAllFn: shoppingList!.uncheckAll,
+                connectFn: shoppingList!.connectToUpdates,
+                disconnectFn: shoppingList!.disconnectFromUpdates,
+                sseUpdateSignal: shoppingList!.sseUpdateCount,
               }),
           },
         ]);
