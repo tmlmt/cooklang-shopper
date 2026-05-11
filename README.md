@@ -47,8 +47,10 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
 > Opt-in: requires `shopping.enabled: true` (or `"editor-only"`) in `config.yaml`.
 
 - **User-specific list** — add recipes from the browse view with per-recipe serving adjustments; add or remove free-hand items not tied to any recipe
-- **Store Run mode** — fullscreen checklist with a progress bar to tick off ingredients while shopping
+- **Store Run mode** — fullscreen checklist with a progress bar to tick off ingredients while shopping. Live updates of changes made by the list owner (e.g. new ingredients/recipes added) or any store runner (e.g. ingredients checked or unchecked).
 - **Share links** — generate time-limited (or permanent) links that let anyone view your current shopping list without logging in; logged in users can edit it; all recipients can also use Store Run mode
+- **Pantry management** — define a per-user pantry in TOML format; pantry items are automatically deducted from the shopping list so ingredients you already have at home never appear
+- **Category configuration** — define a per-user ingredient categorization file to group shopping list items by aisle or category (e.g. Dairy, Bakery, Produce); uncategorized items fall into "Other"
 
 ### ⚠️ Experimental (not stable and not recommended for use)
 
@@ -99,6 +101,22 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
    node server/index.mjs
    ```
 
+### Per-user data files
+
+In line with the file-first approach of the cooklang ecosystem, shopping lists, pantry files and category configuration files are plain text files stored on the server. Each file is scoped to a specific user via a **user key** derived from their login credentials:
+
+- For **password authentication**: `password-{username}` (dots in the username replaced with underscores)
+- For **OIDC authentication**: `{provider}-{userId}` (dots in either part replaced with underscores)
+
+| Feature         | Directory                 | Filename pattern                 | Format                  |
+| --------------- | ------------------------- | -------------------------------- | ----------------------- |
+| Shopping list   | `dist/public/recipes/`    | `.shopping-list.{userKey}`       | Cooklang shopping list  |
+| Checked items   | `dist/public/recipes/`    | `.shopping-checked.{userKey}`    | Plain text              |
+| Pantry          | `dist/public/pantry/`     | `pantry.{userKey}.conf`          | [TOML](https://toml.io) |
+| Category config | `dist/public/categories/` | `category-config.{userKey}.conf` | Cooklang category DSL   |
+
+The two latter ones can be edited in-app (Pantry page for the pantry; Category Config in the shopping list menu). You can also create or pre-populate them directly on the server before users log in. Refer to the [Cooklang conventions](https://cooklang.org/docs/conventions/) for the expected file formats.
+
 ### Upgrade
 
 The release tarball includes an `upgrade.sh` script at the root of the installation directory. It downloads the latest release, replaces the application files, and restores your recipes, product catalog, and `config.yaml` automatically.
@@ -131,11 +149,10 @@ Rollback preserves all user data including the database. If a newer version adde
 
 ## Roadmap
 
-1. Pantry management
-2. Internationalization (i18n)
-3. Finalize shopping cart features
-4. Develop feature to send cart to a pre-configured online store
-5. Add customization possibilities
+1. Internationalization (i18n)
+2. Finalize shopping cart features
+3. Develop feature to send cart to a pre-configured online store
+4. Add customization possibilities
 
 ## Screenshots
 
