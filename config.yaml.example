@@ -58,6 +58,14 @@ auth:
 # Generate one with: openssl rand -base64 32
 sessionSecret: "<session-secret>"
 
+# Secret used to sign OG image URLs (optional — auto-generated at startup if not set)
+# This prevents unauthorized image generation requests that would otherwise consume server resources.
+# Recommended: set it as an environment variable to avoid (harmless) warning during cold startups
+#   NUXT_OG_IMAGE_SECRET=$(openssl rand -base64 32)
+# Add it to your .env file, or to your process manager config (e.g. pm2 ecosystem file).
+# Alternatively, set it here:
+# ogImageSecret: "<og-image-secret>"
+
 # Shopping List feature
 # shopping:              
 #   enabled: false        # false (disabled), true (all users), or "editor-only"

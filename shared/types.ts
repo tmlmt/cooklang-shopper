@@ -95,6 +95,7 @@ export interface AiConfig {
 export interface AppConfig {
   auth: AuthConfig;
   sessionSecret: string;
+  ogImageSecret?: string;
   shopping?: ShoppingConfig;
   experimental?: boolean;
   title?: string;

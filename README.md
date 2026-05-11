@@ -78,11 +78,22 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
    cp config.yaml.example config.yaml
    ```
 4. Edit `config.yaml` — set the different parameters (see the file for instructions). For **password** authentication, generate hashed passwords for the editor and viewer roles:
+
    ```bash
    node hash-password.mjs <editor-password>
    node hash-password.mjs <viewer-password>
    ```
+
    For **OIDC** authentication, configure the `oidc` block with your identity provider's client credentials, issuer URL, and role mapping. Roles are assigned based on an OIDC claim in the token — either via scopes granted by the IdP or via group membership. See `config.yaml.example` for detailed examples of both strategies. Multiple OIDC providers can be configured, and password + OIDC can be enabled simultaneously.
+
+   The `sessionSecret` field is required (minimum 32 characters). Generate one with:
+
+   ```bash
+   openssl rand -base64 32
+   ```
+
+   For OG image URL signing, set `NUXT_OG_IMAGE_SECRET` as an environment variable — add it to your `.env` file or process manager config (e.g. a pm2 ecosystem file). A secret is auto-generated at startup if omitted, but setting it explicitly ensures stable signed URLs across restarts. Alternatively, set `ogImageSecret` directly in `config.yaml`.
+
 5. Add your `.cook` recipe files to `dist/public/recipes/`
 6. Start the server once to initialize the database (created automatically at `dist/data/cooklang-shopper.db`)
 7. Set up the systemd service:
