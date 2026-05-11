@@ -60,6 +60,7 @@
     "eslint": "10.3.0",
     "execa": "9.6.1",
     "human-regex": "2.2.0",
+    "nitropack": "2.13.4",
     "nuxt-og-image": "6.5.0",
     "prettier": "3.8.3",
     "prettier-plugin-tailwindcss": "0.8.0",

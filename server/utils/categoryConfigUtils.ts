@@ -1,4 +1,4 @@
-import { useStorage } from "nitropack/runtime";
+import { useStorage } from "nitropack/runtime/storage";
 
 function getCategoryConfigKey(userKey: string): string {
   return `category-config.${userKey}.conf`;

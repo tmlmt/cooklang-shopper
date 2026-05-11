@@ -2,7 +2,7 @@ import { Recipe } from "@tmlmt/cooklang-parser";
 import { stat } from "node:fs/promises";
 import path from "node:path";
 import type { RecipeIndex } from "~~/shared/types";
-import { useStorage } from "nitropack/runtime";
+import { useStorage } from "nitropack/runtime/storage";
 
 const recipeIndex = new Map<string, RecipeIndex[number]>();
 
@@ -15,7 +15,7 @@ export async function initRecipeIndex() {
   const storage = useStorage("recipes");
   const keys = await storage.getKeys();
 
-  for (const key of keys.filter((k) => k.endsWith(".cook"))) {
+  for (const key of keys.filter((k: string) => k.endsWith(".cook"))) {
     const content = await storage.getItem(key);
     if (!content) continue;
     try {

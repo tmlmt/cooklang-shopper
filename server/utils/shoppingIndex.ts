@@ -1,3 +1,4 @@
+import { useStorage } from "nitropack/runtime/storage";
 import { ShoppingList, Recipe } from "@tmlmt/cooklang-parser";
 import type {
   RecipeChoices,
@@ -19,7 +20,6 @@ import { getRecipeIndex } from "./recipeIndex";
 import { getStreams } from "./sseRegistry";
 import { readPantryFile } from "./pantryUtils";
 import { readCategoryConfigFile } from "./categoryConfigUtils";
-import { useStorage } from "nitropack/runtime";
 import { parseQuantityValue } from "~~/shared/utils/parseQuantityValue";
 
 const recipesDir = nodePath.resolve(process.cwd(), "public", "recipes");
