@@ -6,6 +6,7 @@ export interface ShoppingListResponse {
   ingredients: AddedIngredient[];
   manualItems: AddedIngredient[];
   checkedItems: string[];
+  categories: Record<string, AddedIngredient[]>;
 }
 
 export function useShoppingListActions(options?: {
@@ -31,6 +32,7 @@ export function useShoppingListActions(options?: {
   const ingredients = ref<AddedIngredient[]>([]);
   const manualItems = ref<AddedIngredient[]>([]);
   const checkedItems = ref<Set<string>>(new Set());
+  const categories = ref<Record<string, AddedIngredient[]>>({});
 
   function applyResponse(data: ShoppingListResponse): void {
     recipeSelection.value = data.recipes.map((r) => ({
@@ -40,6 +42,7 @@ export function useShoppingListActions(options?: {
     ingredients.value = data.ingredients;
     manualItems.value = data.manualItems;
     checkedItems.value = new Set(data.checkedItems);
+    categories.value = data.categories;
   }
 
   function isChecked(name: string): boolean {
@@ -152,6 +155,7 @@ export function useShoppingListActions(options?: {
 
   function connectToUpdates(): void {
     if (!import.meta.client) return;
+    disconnectFromUpdates();
     const t = getToken();
     const eventUrl = t
       ? `/api/shopping-list/events?token=${t}`
@@ -173,6 +177,7 @@ export function useShoppingListActions(options?: {
     ingredients,
     manualItems,
     checkedItems,
+    categories,
     applyResponse,
     isChecked,
     checkIngredient,

@@ -39,6 +39,7 @@ generated/
 public/config/*.toml
 public/recipes/*
 public/pantry/*
+public/categories/*
 /generated/prisma
 
 # Self-signed certs for local development

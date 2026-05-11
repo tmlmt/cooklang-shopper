@@ -33,6 +33,7 @@ await useAsyncData("shopping-list", async () => {
 
 // Check for expired shared list on mount (token may have been set before navigating here)
 onMounted(() => {
+  shoppingStore.connectToUpdates();
   const expiresAt = shoppingStore.sharedExpiresAt;
   if (expiresAt && new Date(expiresAt) < new Date()) {
     void shoppingStore.switchToOwnList();
@@ -45,10 +46,16 @@ onMounted(() => {
   }
 });
 
-const { setHeaderActions, clearHeaderActions } = useHeaderMenu();
+const {
+  setHeaderActions,
+  clearHeaderActions,
+  setHeaderMenuItems,
+  clearHeaderMenuItems,
+} = useHeaderMenu();
 const { isEditor } = useRole();
 const modalStoreRun = await useModalStoreRun();
 const modalShare = await useModalShareShoppingList();
+const modalCategoryConfig = await useModalCategoryConfig();
 
 const storeRunItem: DropdownMenuItem = {
   label: "Store Run",
@@ -65,6 +72,19 @@ const shareItem: DropdownMenuItem = {
   variant: "ghost",
   onSelect: () => modalShare.open(),
 };
+
+const categoryConfigItem: DropdownMenuItem = {
+  label: "Category Config",
+  icon: "material-symbols:category",
+  onSelect: () => modalCategoryConfig.open(),
+};
+
+setHeaderMenuItems([categoryConfigItem]);
+
+onUnmounted(() => {
+  shoppingStore.disconnectFromUpdates();
+  clearHeaderMenuItems();
+});
 
 watch(
   () => shoppingStore.ingredients.length,
@@ -119,6 +139,7 @@ watch(
       :recipe-selection="shoppingStore.recipeSelection"
       :ingredients="shoppingStore.ingredients"
       :manual-items="shoppingStore.manualItems"
+      :categories="shoppingStore.categories"
       :is-checked-fn="shoppingStore.isChecked"
       :on-check-fn="shoppingStore.checkIngredient"
       :on-uncheck-all-fn="shoppingStore.uncheckAll"

@@ -3,6 +3,7 @@ import type {
   RecipeChoices,
   ShoppingListRecipeRef,
   AddedIngredient,
+  CategorizedIngredients,
 } from "@tmlmt/cooklang-parser";
 import type { RecipeChoicesWire } from "~~/shared/types";
 import {
@@ -17,6 +18,7 @@ import { createError } from "h3";
 import { getRecipeIndex } from "./recipeIndex";
 import { getStreams } from "./sseRegistry";
 import { readPantryFile } from "./pantryUtils";
+import { readCategoryConfigFile } from "./categoryConfigUtils";
 import { useStorage } from "nitropack/runtime";
 import { parseQuantityValue } from "~~/shared/utils/parseQuantityValue";
 
@@ -135,6 +137,17 @@ async function getOrCreateShoppingList(
         err,
       );
     }
+    try {
+      const categoryConfigContent = await readCategoryConfigFile(userKey);
+      if (categoryConfigContent) {
+        sl.setCategoryConfig(categoryConfigContent);
+      }
+    } catch (err) {
+      console.warn(
+        `Shopping index: failed to apply category config for "${userKey}":`,
+        err,
+      );
+    }
   }
   return sl;
 }
@@ -144,6 +157,18 @@ export function applyPantryToUserLists(userKey: string, content: string): void {
   if (!userLists) return;
   for (const [listName, sl] of userLists) {
     sl.addPantry(content);
+    broadcastListUpdate(userKey, getShoppingListData(userKey, listName));
+  }
+}
+
+export function applyCategoryConfigToUserLists(
+  userKey: string,
+  content: string,
+): void {
+  const userLists = index.get(userKey);
+  if (!userLists) return;
+  for (const [listName, sl] of userLists) {
+    sl.setCategoryConfig(content);
     broadcastListUpdate(userKey, getShoppingListData(userKey, listName));
   }
 }
@@ -295,6 +320,7 @@ export interface ShoppingListData {
   ingredients: AddedIngredient[];
   manualItems: AddedIngredient[];
   checkedItems: string[];
+  categories: CategorizedIngredients;
 }
 
 export function getShoppingListData(
@@ -303,7 +329,13 @@ export function getShoppingListData(
 ): ShoppingListData {
   const sl = getShoppingList(userKey, listName);
   if (!sl) {
-    return { recipes: [], ingredients: [], manualItems: [], checkedItems: [] };
+    return {
+      recipes: [],
+      ingredients: [],
+      manualItems: [],
+      checkedItems: [],
+      categories: {},
+    };
   }
 
   const recipeIndex = getRecipeIndex();
@@ -344,6 +376,7 @@ export function getShoppingListData(
     ingredients: sl.ingredients,
     manualItems: sl.manualItems,
     checkedItems: Array.from(sl.checkedItems),
+    categories: sl.categories ?? {},
   };
 }
 

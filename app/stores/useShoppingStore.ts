@@ -63,6 +63,7 @@ export const useShoppingStore = defineStore("shopping", () => {
     ingredients: actions.ingredients,
     manualItems: actions.manualItems,
     checkedItems: actions.checkedItems,
+    categories: actions.categories,
     sharedToken: sharedListStore.token,
     sharedOwnerName: sharedListStore.ownerName,
     sharedExpiresAt: sharedListStore.expiresAt,

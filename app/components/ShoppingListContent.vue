@@ -9,6 +9,7 @@ const props = withDefaults(
     recipeSelection: RecipeInfo[];
     ingredients: AddedIngredient[];
     manualItems: AddedIngredient[];
+    categories?: Record<string, AddedIngredient[]>;
     isCheckedFn: (name: string) => boolean;
     onCheckFn: (name: string, checked: boolean) => void | Promise<void>;
     onUncheckAllFn?: () => void | Promise<void>;
@@ -32,6 +33,7 @@ const props = withDefaults(
     canEditServings: true,
     showChoices: false,
     trackInitialServings: false,
+    categories: undefined,
     onUncheckAllFn: undefined,
     onEditServingsFn: undefined,
     onRemoveRecipeFn: undefined,
@@ -316,6 +318,7 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
       </div>
       <IngredientList
         :ingredients="ingredients"
+        :categories="categories"
         :is-checked-fn="isCheckedFn"
         :on-check-fn="onCheckFn"
       />
