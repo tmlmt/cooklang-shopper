@@ -32,8 +32,10 @@ await useAsyncData("shopping-list", async () => {
 });
 
 // Check for expired shared list on mount (token may have been set before navigating here)
+const sse = useShoppingSSE(shoppingStore.applyResponse);
+
 onMounted(() => {
-  shoppingStore.connectToUpdates();
+  sse.connect();
   const expiresAt = shoppingStore.sharedExpiresAt;
   if (expiresAt && new Date(expiresAt) < new Date()) {
     void shoppingStore.switchToOwnList();
@@ -82,7 +84,7 @@ const categoryConfigItem: DropdownMenuItem = {
 setHeaderMenuItems([categoryConfigItem]);
 
 onUnmounted(() => {
-  shoppingStore.disconnectFromUpdates();
+  sse.disconnect();
   clearHeaderMenuItems();
 });
 

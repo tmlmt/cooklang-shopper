@@ -1,3 +1,4 @@
+import type { createEventStream } from "h3";
 type EventStream = ReturnType<typeof createEventStream>;
 const connections = new Map<string, Set<EventStream>>();
 

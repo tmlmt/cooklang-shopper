@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { AddedIngredient } from "@tmlmt/cooklang-parser";
+import type { ShoppingListResponse } from "~/composables/useShoppingListActions";
 
 const props = withDefaults(
   defineProps<{
@@ -7,18 +8,16 @@ const props = withDefaults(
     isCheckedFn?: (name: string) => boolean;
     onCheckFn?: (name: string, checked: boolean) => void | Promise<void>;
     onUncheckAllFn?: () => void | Promise<void>;
-    connectFn?: () => void;
-    disconnectFn?: () => void;
-    sseUpdateSignal?: Ref<number>;
+    applyResponseFn?: (data: ShoppingListResponse) => void;
+    sseToken?: string;
   }>(),
   {
     ingredientsFn: undefined,
     isCheckedFn: undefined,
     onCheckFn: undefined,
     onUncheckAllFn: undefined,
-    connectFn: undefined,
-    disconnectFn: undefined,
-    sseUpdateSignal: undefined,
+    applyResponseFn: undefined,
+    sseToken: undefined,
   },
 );
 
@@ -51,24 +50,21 @@ function uncheckAll() {
   return shoppingStore.uncheckAll();
 }
 
-onMounted(() => {
-  (props.connectFn ?? shoppingStore.connectToUpdates)();
-});
+const sse = useShoppingSSE(
+  props.applyResponseFn ?? shoppingStore.applyResponse,
+  props.sseToken,
+);
 
-onUnmounted(() => {
-  (props.disconnectFn ?? shoppingStore.disconnectFromUpdates)();
-});
+onMounted(() => sse.connect());
+onUnmounted(() => sse.disconnect());
 
 const flashActive = ref(false);
-watch(
-  () => props.sseUpdateSignal?.value ?? shoppingStore.sseUpdateCount,
-  () => {
-    flashActive.value = true;
-    setTimeout(() => {
-      flashActive.value = false;
-    }, 800);
-  },
-);
+watch(sse.updateCount, () => {
+  flashActive.value = true;
+  setTimeout(() => {
+    flashActive.value = false;
+  }, 800);
+});
 </script>
 
 <template>

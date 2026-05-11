@@ -150,28 +150,6 @@ export function useShoppingListActions(options?: {
     return true;
   }
 
-  const sseUpdateCount = ref(0);
-  let eventSource: EventSource | null = null;
-
-  function connectToUpdates(): void {
-    if (!import.meta.client) return;
-    disconnectFromUpdates();
-    const t = getToken();
-    const eventUrl = t
-      ? `/api/shopping-list/events?token=${t}`
-      : `/api/shopping-list/events`;
-    eventSource = new EventSource(eventUrl);
-    eventSource.onmessage = (e: MessageEvent) => {
-      applyResponse(JSON.parse(e.data) as ShoppingListResponse);
-      sseUpdateCount.value++;
-    };
-  }
-
-  function disconnectFromUpdates(): void {
-    eventSource?.close();
-    eventSource = null;
-  }
-
   return {
     recipeSelection,
     ingredients,
@@ -187,8 +165,5 @@ export function useShoppingListActions(options?: {
     addRecipe,
     addManualItem,
     removeManualItem,
-    connectToUpdates,
-    disconnectFromUpdates,
-    sseUpdateCount,
   };
 }

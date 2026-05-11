@@ -64,6 +64,7 @@ export const useShoppingStore = defineStore("shopping", () => {
     manualItems: actions.manualItems,
     checkedItems: actions.checkedItems,
     categories: actions.categories,
+    applyResponse: actions.applyResponse,
     sharedToken: sharedListStore.token,
     sharedOwnerName: sharedListStore.ownerName,
     sharedExpiresAt: sharedListStore.expiresAt,
@@ -81,8 +82,5 @@ export const useShoppingStore = defineStore("shopping", () => {
     addManualItem: actions.addManualItem,
     isRecipeInSelection,
     getServings,
-    connectToUpdates: actions.connectToUpdates,
-    disconnectFromUpdates: actions.disconnectFromUpdates,
-    sseUpdateCount: actions.sseUpdateCount,
   };
 });

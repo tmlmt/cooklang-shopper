@@ -55,6 +55,10 @@ const shoppingList = !loggedIn.value
 const { setHeaderActions, clearHeaderActions } = useHeaderMenu();
 
 if (!loggedIn.value) {
+  const sse = useShoppingSSE(shoppingList!.applyResponse, token);
+  onMounted(() => sse.connect());
+  onUnmounted(() => sse.disconnect());
+
   const modalStoreRun = await useModalStoreRun();
 
   watch(
@@ -73,9 +77,8 @@ if (!loggedIn.value) {
                 isCheckedFn: shoppingList!.isChecked,
                 onCheckFn: shoppingList!.checkIngredient,
                 onUncheckAllFn: shoppingList!.uncheckAll,
-                connectFn: shoppingList!.connectToUpdates,
-                disconnectFn: shoppingList!.disconnectFromUpdates,
-                sseUpdateSignal: shoppingList!.sseUpdateCount,
+                applyResponseFn: shoppingList!.applyResponse,
+                sseToken: token,
               }),
           },
         ]);
@@ -112,6 +115,7 @@ if (!loggedIn.value) {
         :recipe-selection="shoppingList!.recipeSelection.value"
         :ingredients="shoppingList!.ingredients.value"
         :manual-items="shoppingList!.manualItems.value"
+        :categories="shoppingList!.categories.value"
         :is-checked-fn="shoppingList!.isChecked"
         :on-check-fn="
           (name, checked) => shoppingList!.checkIngredient(name, checked)
