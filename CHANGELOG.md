@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.15.2
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.15.1...v0.15.2)
+
+### 🩹 Fixes
+
+- Remove test pantry and category config files ([7207a93](https://github.com/tmlmt/cooklang-shopper/commit/7207a93))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.15.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.15.0...v0.15.1)
