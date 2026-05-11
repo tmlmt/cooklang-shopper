@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.15.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.6...v0.15.0)
+
+### 🚀 Enhancements
+
+- **list:** Live updates ([91f0ea7](https://github.com/tmlmt/cooklang-shopper/commit/91f0ea7))
+- **list:** Edit and apply pantry ([b42726c](https://github.com/tmlmt/cooklang-shopper/commit/b42726c))
+- **list:** Category configuration ([a283650](https://github.com/tmlmt/cooklang-shopper/commit/a283650))
+
+### 🩹 Fixes
+
+- **list:** Show ingredients list when only populated by free-hand ingredients ([dfebb3d](https://github.com/tmlmt/cooklang-shopper/commit/dfebb3d))
+- **list:** Perform ingredient check state test case-insensitively ([ba4ad33](https://github.com/tmlmt/cooklang-shopper/commit/ba4ad33))
+
+### 💅 Refactors
+
+- **sse:** Extract SSE into standalone useShoppingSSE composable to improve multi-target updates ([597740f](https://github.com/tmlmt/cooklang-shopper/commit/597740f))
+
+### 🏡 Chore
+
+- Add bug and feature-request issue templates ([d1a74d3](https://github.com/tmlmt/cooklang-shopper/commit/d1a74d3))
+- **README:** Update with new features and roadmap ([a558819](https://github.com/tmlmt/cooklang-shopper/commit/a558819))
+- Lint ([f037d40](https://github.com/tmlmt/cooklang-shopper/commit/f037d40))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.14.6
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.14.5...v0.14.6)
