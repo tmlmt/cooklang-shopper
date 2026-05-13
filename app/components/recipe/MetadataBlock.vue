@@ -111,7 +111,7 @@ const nonStandardMetaData = computed(() => {
     </p>
     <div
       v-if="tags.length > 0"
-      class="my-2 flex overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      class="my-2 flex scrollbar-none overflow-x-auto [&::-webkit-scrollbar]:hidden"
     >
       <div class="flex gap-1.5">
         <UBadge

@@ -290,7 +290,7 @@ if (isEditor.value) {
     <div class="mt-4 flex w-full flex-row items-center px-4 md:mt-0 md:px-0">
       <div class="flex min-w-0 grow items-center">
         <div
-          class="min-w-0 overflow-x-auto pr-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          class="min-w-0 scrollbar-none overflow-x-auto pr-2 [&::-webkit-scrollbar]:hidden"
         >
           <div class="flex w-max items-center whitespace-nowrap">
             <NuxtLink
