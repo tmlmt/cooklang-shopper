@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.15.3
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.15.2...v0.15.3)
+
+### 🚀 Enhancements
+
+- Various improvements in pantry / shopping-list behavior ([7d9bddb](https://github.com/tmlmt/cooklang-shopper/commit/7d9bddb))
+
+### 🏡 Chore
+
+- Use tailwindcss class for scrollbar-none ([a091b8c](https://github.com/tmlmt/cooklang-shopper/commit/a091b8c))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.15.2
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.15.1...v0.15.2)
