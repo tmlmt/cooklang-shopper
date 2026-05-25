@@ -38,8 +38,8 @@ importers:
         specifier: ^1.5.1
         version: 1.5.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tmlmt/cooklang-parser':
-        specifier: 3.0.0-alpha.35
-        version: 3.0.0-alpha.35
+        specifier: 3.0.0-alpha.36
+        version: 3.0.0-alpha.36
       better-sqlite3:
         specifier: 12.10.0
         version: 12.10.0
@@ -3122,8 +3122,8 @@ packages:
       y-protocols: ^1.0.1
       yjs: ^13.5.38
 
-  '@tmlmt/cooklang-parser@3.0.0-alpha.35':
-    resolution: {integrity: sha512-AU83pNQ5epxkze6cqtbTxsjmo3TSOG5S1ZEUc8QFLe1uptadPGUEypXRr9ojDqiYoJQarTADUm6QJrnY2W5Mqg==}
+  '@tmlmt/cooklang-parser@3.0.0-alpha.36':
+    resolution: {integrity: sha512-In5APqiLSV26aX++LpgabYKb+u9IajiLXErJSabrKcdgnQ2RczzxD6PgXlwiSaLMqk4l5vUzlOA1EbURfu6icA==}
     engines: {node: '>=18'}
 
   '@tybys/wasm-util@0.10.1':
@@ -9919,7 +9919,7 @@ snapshots:
       y-protocols: 1.0.7(yjs@13.6.30)
       yjs: 13.6.30
 
-  '@tmlmt/cooklang-parser@3.0.0-alpha.35':
+  '@tmlmt/cooklang-parser@3.0.0-alpha.36':
     dependencies:
       big.js: 7.0.1
       smol-toml: 1.6.1
