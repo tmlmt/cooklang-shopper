@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.16.0
+
+This version finalizes SEO configuration for Cooklang Shopper, by adding dynamically generated sitemap.xml and robots.txt files, where all recipes set as publicly visible are indexed. The SEO suite now therefore includes:
+
+- basic defaults like canonical urls and open graph tags
+- robots.txt
+- sitemap.xml
+- OG Images
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.15.3...v0.16.0)
+
+### 🚀 Enhancements
+
+- **seo:** Add dynamic sitemap.xml ([bef5175](https://github.com/tmlmt/cooklang-shopper/commit/bef5175))
+- **seo:** Add dynamic robots.txt ([bb2b0cd](https://github.com/tmlmt/cooklang-shopper/commit/bb2b0cd))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.15.3
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.15.2...v0.15.3)
