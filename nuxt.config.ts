@@ -19,6 +19,7 @@ export default defineNuxtConfig({
     "nuxt-auth-utils",
     "nuxt-seo-utils",
     "nuxt-og-image",
+    "@nuxtjs/sitemap",
   ],
 
   css: ["~/assets/css/main.css"],
@@ -77,6 +78,12 @@ export default defineNuxtConfig({
       maxUploadFileRequestInBytes: 11000000,
     },
     rateLimiter: process.env.NODE_ENV === "development" ? false : undefined,
+  },
+
+  sitemap: {
+    // note: automatically cached for 10 min by default
+    excludeAppSources: ["nuxt:pages"],
+    sources: ["/api/__sitemap__/urls"],
   },
 
   routeRules: {
