@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     "nuxt-seo-utils",
     "nuxt-og-image",
     "@nuxtjs/sitemap",
+    "@nuxtjs/robots",
   ],
 
   css: ["~/assets/css/main.css"],
