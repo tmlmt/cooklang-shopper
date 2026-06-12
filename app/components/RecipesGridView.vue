@@ -12,6 +12,8 @@ const modalChoices = await useModalChoices();
 const currentPathRef = toRef(props, "currentPath");
 const { folders, recipes } = useDirectoryContents(currentPathRef);
 
+const { $ts } = useI18n();
+
 const recipePath = (recipe: RecipeEssentials) =>
   recipe.dir ? `${recipe.dir}/${recipe.name}` : recipe.name;
 
@@ -84,8 +86,8 @@ const toggleSelection = async (recipe: RecipeEssentials) => {
       v-if="folders.length === 0 && recipes.length === 0"
       color="neutral"
       variant="subtle"
-      title="Nothing here yet"
-      description="Create a recipe or add a subfolder to get started."
+      :title="$ts('emptyState.nothingHere')"
+      :description="$ts('emptyState.createOrAdd')"
     />
   </div>
 </template>

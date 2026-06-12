@@ -27,6 +27,8 @@ const sourceWebsite = computed(() => {
   return sourceURL.value;
 });
 
+const { $t } = useI18n();
+
 const sourceText = computed(() => {
   if (!source) return undefined;
   if (typeof source === "string") {
@@ -40,11 +42,11 @@ const sourceText = computed(() => {
 <template>
   <p v-if="source || author" class="text-sm">
     <template v-if="author">
-      by <b>{{ author }}</b>
+      {{ $t('recipe.by') }} <b>{{ author }}</b>
     </template>
     <template v-if="source && author"> • </template>
     <template v-if="source">
-      from
+      {{ $t('recipe.from') }}
       <b v-if="sourceText">{{ sourceText }}</b>
       <ULink
         v-if="sourceWebsite"

@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "@pinia/nuxt",
     "@vueuse/nuxt",
+    "nuxt-i18n-micro",
     "@nuxt/ui",
     "nuxt-auth-utils",
     "nuxt-seo-utils",
@@ -24,6 +25,26 @@ export default defineNuxtConfig({
   ],
 
   css: ["~/assets/css/main.css"],
+
+  i18n: {
+    locales: [
+      {
+        code: "en",
+        iso: "en-US",
+        displayName: "English",
+        flag: "🇺🇸",
+      },
+      {
+        code: "fr",
+        iso: "fr-FR",
+        displayName: "Français",
+        flag: "🇫🇷",
+      },
+    ],
+    defaultLocale: "en",
+    translationDir: "locales",
+    localeCookie: "user-locale",
+  },
 
   icon: {
     serverBundle: "remote",

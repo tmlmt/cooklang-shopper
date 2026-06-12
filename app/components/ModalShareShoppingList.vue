@@ -3,6 +3,7 @@ import type { ShoppingListShareLink } from "~~/shared/types";
 
 const emit = defineEmits<{ close: [] }>();
 const toast = useToast();
+const { $ts } = useI18n();
 const { isEditor } = useRole();
 const { baseUrl } = await usePublicConfig();
 
@@ -43,11 +44,11 @@ async function createLink() {
     });
     links.value.unshift({ ...data, expired: false });
     expiresAt.value = "";
-    toast.add({ title: "Share link created", color: "success" });
+    toast.add({ title: $ts('toast.shareLinkCreated'), color: "success" });
   } catch {
     toast.add({
-      title: "Error",
-      description: "Failed to create share link",
+      title: $ts('toast.error'),
+      description: $ts('toast.shareLinkCreateError'),
       color: "error",
     });
   } finally {
@@ -61,11 +62,11 @@ async function revokeLink(id: number) {
       method: "DELETE",
     });
     links.value = links.value.filter((l) => l.id !== id);
-    toast.add({ title: "Share link revoked", color: "success" });
+    toast.add({ title: $ts('toast.shareLinkRevoked'), color: "success" });
   } catch {
     toast.add({
-      title: "Error",
-      description: "Failed to revoke share link",
+      title: $ts('toast.error'),
+      description: $ts('toast.shareLinkRevokeError'),
       color: "error",
     });
   }
@@ -80,11 +81,11 @@ function getShareUrl(token: string): string {
 async function copyLink(token: string) {
   try {
     await copy(getShareUrl(token));
-    toast.add({ title: "Link copied to clipboard", color: "success" });
+    toast.add({ title: $ts('toast.linkCopied'), color: "success" });
   } catch {
     toast.add({
-      title: "Error",
-      description: "Failed to copy link",
+      title: $ts('toast.error'),
+      description: $ts('toast.linkCopyError'),
       color: "error",
     });
   }
@@ -98,21 +99,21 @@ defineShortcuts({
 <template>
   <UModal
     :close="{ onClick: () => emit('close') }"
-    title="Share Shopping List"
+    :title="$ts('modal.share.shareShoppingList')"
     :ui="{ footer: 'justify-end' }"
   >
     <template #body>
       <div class="flex flex-col gap-6">
         <!-- Create new link -->
         <div>
-          <div class="mb-3 font-medium">Share Links</div>
+          <div class="mb-3 font-medium">{{ $ts('modal.share.shareLinks') }}</div>
           <div class="flex flex-wrap items-end gap-3">
-            <UFormField label="Expires (optional)">
+            <UFormField :label="$ts('modal.share.expiresOptional')">
               <UInput v-model="expiresAt" type="date" :min="minDate" />
             </UFormField>
             <UButton
               icon="i-lucide-plus"
-              label="Create Link"
+              :label="$ts('actions.createLink')"
               size="sm"
               :loading="creatingLink"
               @click="createLink"
@@ -130,7 +131,7 @@ defineShortcuts({
           v-else-if="links.length === 0"
           class="text-muted py-4 text-center text-sm"
         >
-          No share links yet
+          {{ $ts('modal.share.noLinks') }}
         </div>
         <div v-else class="flex flex-col gap-2">
           <div
@@ -144,13 +145,13 @@ defineShortcuts({
                 {{ getShareUrl(link.token) }}
               </div>
               <div class="text-muted text-xs">
-                Created {{ new Date(link.createdAt).toLocaleDateString() }}
+                {{ $ts('modal.share.created') }} {{ new Date(link.createdAt).toLocaleDateString() }}
                 <template v-if="link.expiresAt">
                   ·
                   {{
                     link.expired
-                      ? "Expired"
-                      : `Expires ${new Date(link.expiresAt).toLocaleDateString()}`
+                      ? $ts('modal.share.expired')
+                      : `${$ts('modal.share.expires')} ${new Date(link.expiresAt).toLocaleDateString()}`
                   }}
                 </template>
               </div>
@@ -182,7 +183,7 @@ defineShortcuts({
       <UButton
         color="neutral"
         variant="soft"
-        label="Close"
+        :label="$ts('actions.close')"
         @click="emit('close')"
       />
     </template>

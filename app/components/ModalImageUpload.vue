@@ -20,10 +20,10 @@ function onFileChange(file: File | null | undefined) {
 </script>
 
 <template>
-  <UModal :close="{ onClick: () => emit('close', false) }" title="Upload image">
+  <UModal :close="{ onClick: () => emit('close', false) }" :title="$ts('actions.uploadImage')">
     <template #body>
       <div class="flex flex-col gap-4">
-        <UFormField label="Image role">
+        <UFormField :label="$ts('modal.imageUpload.imageRole')">
           <USelect
             v-model="selectedRole"
             :items="roles"
@@ -31,7 +31,7 @@ function onFileChange(file: File | null | undefined) {
             size="sm"
           />
         </UFormField>
-        <UFormField label="Image file">
+        <UFormField :label="$ts('modal.imageUpload.imageFile')">
           <UFileUpload
             accept="image/*"
             class="min-h-64 w-full"
@@ -47,12 +47,12 @@ function onFileChange(file: File | null | undefined) {
         <UButton
           color="neutral"
           variant="soft"
-          label="Cancel"
+          :label="$ts('actions.cancel')"
           @click="emit('close', false)"
         />
         <UButton
           color="primary"
-          label="Upload"
+          :label="$ts('actions.upload')"
           :disabled="!selectedFile"
           @click="
             selectedFile &&

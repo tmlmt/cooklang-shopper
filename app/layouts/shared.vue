@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui";
+import { useLanguageSwitcher } from "~/composables/useLanguageSwitcher";
 
 const { title: appTitle } = await usePublicConfig();
+const { $ts } = useI18n();
 const modal = await useModalAbout();
 const { mobileHeaderMenuItems, desktopHeaderMenuItems, headerActionItems } =
   useHeaderMenu();
+const { languageMenuItem } = useLanguageSwitcher();
 const { loggedIn } = useUserSession();
 
 const headerOpen = ref(false);
@@ -12,12 +15,12 @@ const headerOpen = ref(false);
 const authMenuItem = computed<DropdownMenuItem>(() =>
   loggedIn.value
     ? {
-        label: "Authentication",
+        label: $ts("pages.authentication"),
         icon: "mdi:user",
         onSelect: () => navigateTo("/auth"),
       }
     : {
-        label: "Sign in",
+        label: $ts("actions.signIn"),
         icon: "material-symbols:login",
         onSelect: () => navigateTo("/auth"),
       },
@@ -25,7 +28,8 @@ const authMenuItem = computed<DropdownMenuItem>(() =>
 
 const aboutItems = computed<DropdownMenuItem[]>(() => [
   authMenuItem.value,
-  { label: "About", onSelect: async () => await modal.open() },
+  languageMenuItem.value,
+  { label: $ts("nav.about"), onSelect: async () => await modal.open() },
 ]);
 
 const dropdownItems = computed<DropdownMenuItem[]>(() =>

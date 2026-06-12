@@ -17,6 +17,8 @@ const {
 
 const emit = defineEmits<{ close: [string | false] }>();
 
+const { $ts } = useI18n();
+
 defineShortcuts({
   escape: () => emit("close", false),
 });
@@ -24,9 +26,9 @@ defineShortcuts({
 const schema = v.pipe(
   v.string(),
   v.trim(),
-  v.nonEmpty("Please enter a value"),
-  v.excludes("/", "Must not contain '/'"),
-  v.excludes("\\", "Must not contain '\\'"),
+  v.nonEmpty($ts('validation.enterValue')),
+  v.excludes("/", $ts('validation.noSlash')),
+  v.excludes("\\", $ts('validation.noBackslash')),
 );
 
 const state = ref(initialValue);
@@ -64,7 +66,7 @@ const save = async () => {
         <UButton
           color="neutral"
           variant="soft"
-          label="Cancel"
+          :label="$ts('actions.cancel')"
           @click="emit('close', false)"
         />
         <UButton color="primary" :label="submitLabel" @click="save" />

@@ -6,6 +6,7 @@ type ViewMode = "grid" | "list";
 const recipeStore = useRecipeStore();
 const toast = useToast();
 const { isEditor } = useRole();
+const { $t, $ts } = useI18n();
 const siteConfig = useSiteConfig();
 
 defineOgImage(
@@ -54,8 +55,8 @@ const reindexRecipes = async () => {
   await recipeStore.fetchDirectories();
   clearRecipeCoverImageCache();
   toast.add({
-    title: "Success",
-    description: "Recipes reindexed",
+    title: $ts("toast.success"),
+    description: $ts("toast.recipesReindexed"),
     color: "success",
   });
 };
@@ -72,10 +73,10 @@ const openNewRecipeModal = async () => {
 
 const createNewFolder = async () => {
   const name = await modalInput.open(
-    "New folder",
-    "Folder name",
+    $ts("actions.newFolder"),
+    $ts("modal.file.name"),
     "My folder",
-    "Create",
+    $ts("actions.create"),
   );
   if (!name) return;
 
@@ -89,17 +90,17 @@ const createNewFolder = async () => {
     );
     await recipeStore.fetchDirectories();
     if (!data.renamed) {
-      toast.add({ title: "Folder created", color: "success" });
+      toast.add({ title: $ts("toast.folderCreated"), color: "success" });
     } else {
       toast.add({
-        title: `A folder called '${name}' already exists`,
-        description: `Folder created as '${data.name}'`,
+        title: $ts("toast.folderExistsWarning", { name }),
+        description: $ts("toast.folderCreatedAs", { newName: data.name }),
         color: "warning",
       });
     }
   } catch (e) {
     toast.add({
-      title: "Error creating folder",
+      title: $ts("toast.folderCreationError"),
       description: (e as NuxtError).statusText,
       color: "error",
     });
@@ -111,18 +112,18 @@ const { setHeaderMenuItems } = useHeaderMenu();
 if (isEditor.value) {
   setHeaderMenuItems([
     {
-      label: "New recipe",
+      label: $ts("actions.newRecipe"),
       icon: "prime:plus",
       onSelect: openNewRecipeModal,
       mobileOnly: true,
     },
     {
-      label: "New folder",
+      label: $ts("actions.newFolder"),
       icon: "prime:folder-plus",
       onSelect: createNewFolder,
     },
     {
-      label: "Re-index recipes",
+      label: $ts("actions.reindexRecipes"),
       onSelect: reindexRecipes,
     },
   ]);
@@ -144,7 +145,7 @@ if (isEditor.value) {
                 pathItems.length === 0 ? 'font-bold' : 'text-muted font-medium'
               "
             >
-              Cookbook
+              {{ $t('pages.cookbook') }}
             </NuxtLink>
             <template v-for="(item, index) in pathItems" :key="item.to">
               <span class="text-muted mx-1 text-base md:text-lg">/</span>
@@ -163,7 +164,7 @@ if (isEditor.value) {
           </div>
         </div>
         <div class="ml-1 shrink-0 text-sm md:text-base">
-          · {{ recipeCount }} recipes
+          · {{ $tc('folder.recipes', recipeCount) }}
         </div>
       </div>
       <div class="flex flex-row">
@@ -189,7 +190,7 @@ if (isEditor.value) {
           icon="prime:plus"
           color="primary"
           variant="soft"
-          label="New Recipe"
+          :label="$ts('actions.newRecipe')"
           class="hidden md:flex"
           @click="openNewRecipeModal"
         />

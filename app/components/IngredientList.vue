@@ -24,6 +24,7 @@ const props = withDefaults(
 
 const shoppingStore = useShoppingStore();
 const hideChecked = ref(false);
+const { $ts } = useI18n();
 
 const isChecked = computed(() => {
   return props.isCheckedFn
@@ -79,9 +80,17 @@ function visibleInCategory(items: AddedIngredient[]): AddedIngredient[] {
   <div class="flex flex-col gap-3">
     <div v-if="headerVisible" class="flex items-center justify-between gap-4">
       <span class="text-sm text-neutral-500 dark:text-neutral-400">
-        {{ checkedCount }} / {{ sorted.length }} checked
+        {{
+          $ts("ingredientList.checkedCount", {
+            checked: checkedCount,
+            total: sorted.length,
+          })
+        }}
       </span>
-      <UCheckbox v-model="hideChecked" label="Hide checked" />
+      <UCheckbox
+        v-model="hideChecked"
+        :label="$ts('ingredientList.hideChecked')"
+      />
     </div>
 
     <!-- Grouped by category -->
@@ -95,7 +104,9 @@ function visibleInCategory(items: AddedIngredient[]): AddedIngredient[] {
           v-if="!(categoryKey === 'other' && categoryEntries.length === 1)"
           class="text-sm font-semibold text-neutral-500 capitalize dark:text-neutral-400"
         >
-          {{ categoryKey === "other" ? "Other" : categoryKey }}
+          {{
+            categoryKey === "other" ? $ts("ingredientList.other") : categoryKey
+          }}
         </h3>
         <div
           class="grid gap-x-8 gap-y-1"

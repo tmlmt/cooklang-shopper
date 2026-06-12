@@ -18,6 +18,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{ close: [RecipeChoices | undefined] }>();
 
+const { $ts } = useI18n();
+
 defineShortcuts({
   escape: () => emit("close", undefined),
 });
@@ -71,7 +73,7 @@ const state = reactive<Record<string, number | undefined>>(
 function validate(state: Record<string, number | undefined>): FormError[] {
   return Object.keys(state)
     .filter((key) => state[key] === undefined)
-    .map((key) => ({ name: key, message: "Please make a selection" }));
+    .map((key) => ({ name: key, message: $ts('choices.pleaseSelect') }));
 }
 
 const form = useTemplateRef("choicesForm");
@@ -108,7 +110,7 @@ function buildInlineLabel(alternatives: IngredientAlternative[]): string {
 function buildAlternativeOptions(
   alternatives: IngredientAlternative[],
 ): ChoiceOption[] {
-  const options: ChoiceOption[] = [{ label: "No choice", value: undefined }];
+  const options: ChoiceOption[] = [{ label: $ts('choices.noChoice'), value: undefined }];
   for (let i = 0; i < alternatives.length; i++) {
     const alt = alternatives[i]!;
     let label = alt.displayName;
@@ -129,7 +131,7 @@ function buildAlternativeOptions(
 function buildGroupedAlternativeOptions(
   subgroups: IngredientAlternative[][],
 ): ChoiceOption[] {
-  const options: ChoiceOption[] = [{ label: "No choice", value: undefined }];
+  const options: ChoiceOption[] = [{ label: $ts('choices.noChoice'), value: undefined }];
   for (let i = 0; i < subgroups.length; i++) {
     const subgroup = subgroups[i]!;
     const label = subgroup
@@ -153,7 +155,7 @@ function buildGroupedAlternativeOptions(
 <template>
   <UModal
     :close="{ onClick: () => emit('close', undefined) }"
-    title="Choose ingredient alternatives"
+    :title="$ts('choices.title')"
   >
     <template #body>
       <UForm
@@ -164,12 +166,12 @@ function buildGroupedAlternativeOptions(
         @submit="onSubmit"
       >
         <p v-if="!hasAnyChoices" class="text-sm text-neutral-500 italic">
-          No ingredient alternatives available for this recipe.
+          {{ $ts('choices.noAlternatives') }}
         </p>
 
         <!-- Inline alternatives -->
         <div v-if="hasInlineChoices" class="flex flex-col gap-3">
-          <h4 class="text-sm font-semibold">Inline Alternatives</h4>
+          <h4 class="text-sm font-semibold">{{ $ts('choices.inlineAlternatives') }}</h4>
           <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
             <UFormField
               v-for="[itemId, alternatives] in inlineChoicesArray"
@@ -189,7 +191,7 @@ function buildGroupedAlternativeOptions(
 
         <!-- Grouped alternatives -->
         <div v-if="hasGroupedChoices" class="flex flex-col gap-3">
-          <h4 class="text-sm font-semibold">Grouped Alternatives</h4>
+          <h4 class="text-sm font-semibold">{{ $ts('choices.groupedAlternatives') }}</h4>
           <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
             <UFormField
               v-for="[groupKey, subgroups] in groupedChoicesArray"
@@ -214,10 +216,10 @@ function buildGroupedAlternativeOptions(
         <UButton
           color="neutral"
           variant="soft"
-          label="Cancel"
+          :label="$ts('actions.cancel')"
           @click="emit('close', undefined)"
         />
-        <UButton color="primary" label="Confirm" @click="form?.submit()" />
+        <UButton color="primary" :label="$ts('actions.confirm')" @click="form?.submit()" />
       </div>
     </template>
   </UModal>

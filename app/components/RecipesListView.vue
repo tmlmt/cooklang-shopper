@@ -10,6 +10,7 @@ const props = defineProps<{
   currentPath: string;
 }>();
 
+const { $t, $ts } = useI18n();
 const recipeStore = useRecipeStore();
 const shoppingStore = useShoppingStore();
 await shoppingStore.init();
@@ -123,7 +124,7 @@ const folderColumns: TableColumn<FolderInfo>[] = [
       return h(UButton, {
         color: "neutral",
         variant: "ghost",
-        label: "Folder",
+        label: $ts("recipeList.folderColumn"),
         icon: isSorted
           ? isSorted === "asc"
             ? "prime:sort-alpha-down"
@@ -148,11 +149,11 @@ const folderColumns: TableColumn<FolderInfo>[] = [
   },
   {
     accessorKey: "subdirCount",
-    header: "Subfolders",
+    header: () => $t("recipeList.subfoldersColumn"),
   },
   {
     accessorKey: "recipeCount",
-    header: "Recipes",
+    header: () => $t("pages.recipes"),
   },
 ];
 
@@ -185,7 +186,7 @@ const recipeColumns = computed<TableColumn<RecipeEssentials>[]>(() => [
       return h(UButton, {
         color: "neutral",
         variant: "ghost",
-        label: "Title",
+        label: $ts("recipeList.titleColumn"),
         icon: isSorted
           ? isSorted === "asc"
             ? "prime:sort-alpha-down"
@@ -211,7 +212,7 @@ const recipeColumns = computed<TableColumn<RecipeEssentials>[]>(() => [
   },
   {
     accessorKey: "tags",
-    header: "Tags",
+    header: () => $t("recipeList.tagsColumn"),
     cell: ({ row }) =>
       h(RecipeTagOverflow, {
         tags: row.original.tags,
@@ -220,31 +221,31 @@ const recipeColumns = computed<TableColumn<RecipeEssentials>[]>(() => [
   },
   {
     id: "time",
-    header: "Time",
+    header: () => $t("recipeList.timeColumn"),
     cell: ({ row }) => preferredTime(row.original),
   },
   {
     id: "modified",
-    header: "Modified",
+    header: () => $t("recipeList.modifiedColumn"),
     cell: ({ row }) => formatModified(row.original),
   },
   {
     accessorKey: "servings",
-    header: "Yield",
+    header: () => $t("recipeList.yieldColumn"),
   },
   {
     id: "author",
-    header: "Author",
+    header: () => $t("recipeList.authorColumn"),
     cell: ({ row }) => row.original.author || "-",
   },
   {
     id: "source",
-    header: "Source",
+    header: () => $t("recipeList.sourceColumn"),
     cell: ({ row }) => row.original.source || "-",
   },
   {
     id: "action",
-    header: () => h("div", { class: "text-center" }, "Actions"),
+    header: () => h("div", { class: "text-center" }, $ts("recipeList.actionsColumn")),
   },
 ]);
 
@@ -254,7 +255,7 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
   return [
     [
       {
-        label: "View",
+        label: $ts("actions.view"),
         icon: "prime:eye",
         onClick: async () => {
           await navigateTo(
@@ -265,7 +266,7 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
         },
       },
       {
-        label: "Edit",
+        label: $ts("actions.edit"),
         icon: "prime:file-edit",
         onClick: async () => {
           await navigateTo(
@@ -276,7 +277,7 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
         },
       },
       {
-        label: "Delete",
+        label: $ts("actions.delete"),
         icon: "prime:trash",
         color: "error",
         onClick: async () => {
@@ -296,8 +297,8 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
           shoppingStore.removeRecipe(recipePath(recipe));
 
           toast.add({
-            title: "Success",
-            description: "Recipe deleted",
+            title: $ts("toast.success"),
+            description: $ts("toast.recipeDeleted"),
             color: "success",
           });
         },
@@ -341,8 +342,8 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
       v-if="folders.length === 0 && recipes.length === 0"
       color="neutral"
       variant="subtle"
-      title="Nothing here yet"
-      description="Create a recipe or add a subfolder to get started."
+      :title="$ts('emptyState.nothingHere')"
+      :description="$ts('emptyState.createOrAdd')"
     />
   </div>
 </template>

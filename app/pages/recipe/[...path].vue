@@ -7,6 +7,7 @@ import { FetchError } from "ofetch";
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
+const { $t, $ts } = useI18n();
 
 if (!route.params.path) {
   throw createError({
@@ -217,15 +218,15 @@ async function openUploadModal() {
     clearRecipeCoverImageCache();
 
     toast.add({
-      title: "Success",
-      description: "Image uploaded",
+      title: $ts("toast.success"),
+      description: $ts("toast.imageUploaded"),
       color: "success",
     });
   } catch (error: unknown) {
     if (error instanceof FetchError) {
       toast.add({
         color: "error",
-        title: "Error",
+        title: $ts("toast.error"),
         description: error.message,
       });
     }
@@ -237,8 +238,8 @@ async function openUploadModal() {
 async function deleteImage(imagePath: string) {
   const result = await modalConf.open(
     "Are you sure you want to delete this image?",
-    "Delete",
-    "Cancel",
+    $ts("actions.delete"),
+    $ts("actions.cancel"),
   );
   if (!result) return;
 
@@ -252,15 +253,15 @@ async function deleteImage(imagePath: string) {
     clearRecipeCoverImageCache();
 
     toast.add({
-      title: "Success",
-      description: "Image deleted",
+      title: $ts("toast.success"),
+      description: $ts("toast.imageDeleted"),
       color: "success",
     });
   } catch (error: unknown) {
     if (error instanceof FetchError) {
       toast.add({
         color: "error",
-        title: "Error",
+        title: $ts("toast.error"),
         description: error.message,
       });
     }
@@ -270,13 +271,13 @@ async function deleteImage(imagePath: string) {
 const recipeKey = path.replace(/\//g, ":");
 
 const uploadImageItem: DropdownMenuItem = {
-  label: "Upload image",
+  label: $ts("actions.uploadImage"),
   icon: "i-lucide-upload",
   onSelect: openUploadModal,
 };
 
 const downloadItem: DropdownMenuItem = {
-  label: "Download .cook",
+  label: $ts("actions.downloadCook"),
   icon: "i-lucide-download",
   onSelect: () => {
     if (rawRecipe.value !== undefined) {
@@ -289,7 +290,7 @@ const menuItems: DropdownMenuItem[] = [];
 
 if (isEditor.value || viewerCanShare.value) {
   menuItems.push({
-    label: "Share",
+    label: $ts("actions.share"),
     icon: "prime:share-alt",
     onSelect: () => {
       modalShare.open(recipeKey);
@@ -300,7 +301,7 @@ if (isEditor.value || viewerCanShare.value) {
 if (isEditor.value) {
   menuItems.push(
     {
-      label: "Edit",
+      label: $ts("actions.edit"),
       icon: "prime:file-edit",
       onSelect: () => {
         isEditMode.value = true;
@@ -308,7 +309,7 @@ if (isEditor.value) {
       },
     },
     {
-      label: "Move",
+      label: $ts("actions.move"),
       icon: "prime:arrow-right",
       onSelect: async () => {
         const result = await modalFile.open(
@@ -331,8 +332,8 @@ if (isEditor.value) {
             result.dir,
           );
           toast.add({
-            title: "Success",
-            description: `Recipe moved to ${result.dir}/${result.name}`,
+            title: $ts("toast.success"),
+            description: $ts("toast.recipeMoved", { path: `${result.dir}/${result.name}` }),
             color: "success",
           });
           await navigateTo(
@@ -342,7 +343,7 @@ if (isEditor.value) {
       },
     },
     {
-      label: "Delete",
+      label: $ts("actions.delete"),
       icon: "prime:trash",
       color: "error",
       onSelect: async () => {
@@ -358,8 +359,8 @@ if (isEditor.value) {
           await shoppingStore.removeRecipe(path);
 
           toast.add({
-            title: "Success",
-            description: "Recipe deleted",
+            title: $ts("toast.success"),
+            description: $ts("toast.recipeDeleted"),
             color: "success",
           });
 
@@ -396,7 +397,7 @@ const onConvertWithAi = async () => {
   isAiConverting.value = true;
 
   if (aiUrl.value) {
-    aiStatus.value = "Fetching page...";
+    aiStatus.value = $ts("ai.fetchingPage");
     try {
       const { text } = await $fetchWithHeaders<{ text: string }>(
         "/api/recipe/scrape",
@@ -408,7 +409,7 @@ const onConvertWithAi = async () => {
       aiStatus.value = "";
       toast.add({
         color: "error",
-        title: "Could not fetch page",
+        title: $ts("ai.fetchError"),
         description:
           error instanceof FetchError
             ? error.data?.message || error.message
@@ -420,11 +421,11 @@ const onConvertWithAi = async () => {
 
   if (!sourceText.trim()) {
     isAiConverting.value = false;
-    toast.add({ color: "error", title: "No content to convert" });
+    toast.add({ color: "error", title: $ts("ai.noContent") });
     return;
   }
 
-  aiStatus.value = "Converting with AI...";
+  aiStatus.value = $ts("ai.converting");
   formState.value.recipe = "";
 
   try {
@@ -473,12 +474,12 @@ const onConvertWithAi = async () => {
         const usage = JSON.parse(buffer);
         toast.add({
           color: "success",
-          title: "Conversion complete",
+          title: $ts("toast.conversionComplete"),
           duration: 3000,
-          description: `${usage.in} input / ${usage.out} output tokens`,
+          description: $ts("toast.conversionTokens", { in: usage.in, out: usage.out }),
         });
       } catch {
-        toast.add({ color: "success", title: "Conversion complete" });
+        toast.add({ color: "success", title: $ts("toast.conversionComplete") });
       }
       aiCollapsibleOpen.value = false;
     }
@@ -486,13 +487,13 @@ const onConvertWithAi = async () => {
     if (formState.value.recipe.length > 0) {
       toast.add({
         color: "warning",
-        title: "Conversion interrupted",
-        description: "Partial content saved in editor",
+        title: $ts("toast.conversionInterrupted"),
+        description: $ts("toast.conversionInterruptedDetail"),
       });
     } else {
       toast.add({
         color: "error",
-        title: "Conversion failed",
+        title: $ts("toast.conversionFailed"),
         description: error instanceof Error ? error.message : String(error),
       });
     }
@@ -511,12 +512,12 @@ const isParsableRecipe = (value: string): boolean => {
   }
 };
 
-const schema = v.object({
+  const schema = v.object({
   recipe: v.pipe(
     v.string(),
     v.trim(),
-    v.nonEmpty("Please enter a recipe"),
-    v.check(isParsableRecipe, "Invalid recipe. Check syntax"),
+    v.nonEmpty($ts("validation.enterRecipe")),
+    v.check(isParsableRecipe, $ts("validation.invalidRecipe")),
   ),
 });
 
@@ -531,8 +532,8 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
       });
       toast.add({
         color: "success",
-        title: "Success",
-        description: "Recipe successfully saved",
+        title: $ts("toast.success"),
+        description: $ts("toast.recipeSaved"),
       });
       isEditMode.value = false;
       rawRecipe.value = event.data.recipe;
@@ -543,7 +544,7 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
       if (error instanceof FetchError) {
         toast.add({
           color: "error",
-          title: "Error",
+          title: $ts("toast.error"),
           description: error.message,
         });
       }
@@ -560,8 +561,8 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
       });
       toast.add({
         color: "success",
-        title: "Success",
-        description: "Recipe successfully saved",
+        title: $ts("toast.success"),
+        description: $ts("toast.recipeSaved"),
       });
       rawRecipe.value = event.data.recipe;
       recipeStore.addRecipe(recipeName, recipeDir, event.data.recipe);
@@ -571,7 +572,7 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
       if (error instanceof FetchError) {
         toast.add({
           color: "error",
-          title: "Error",
+          title: $ts("toast.error"),
           description: error.data,
         });
       }
@@ -631,8 +632,8 @@ const addToShoppingList = async (
   );
   toast.add({
     color: "success",
-    title: "Success",
-    description: "Recipe successfully added to shopping list",
+    title: $ts("toast.success"),
+    description: $ts("toast.recipeAddedToList"),
   });
 };
 
@@ -663,8 +664,8 @@ const editServingsInShoppingList = async (
     await shoppingStore.editServings(path, servings, choicesToStore);
     toast.add({
       color: "success",
-      title: "Success",
-      description: "Servings successfully modified in shopping list",
+      title: $ts("toast.success"),
+      description: $ts("toast.recipeServingsModified"),
     });
   }
 };
@@ -687,7 +688,7 @@ const openCookMode = () => {
 };
 
 const cookItem: DropdownMenuItem = {
-  label: "Cook",
+  label: $ts("actions.cook"),
   icon: "i-lucide-cooking-pot",
   color: "secondary",
   variant: "soft",
@@ -808,10 +809,10 @@ watch(
           }}</span>
         </p>
         <h1 class="hidden text-3xl font-bold md:block">
-          {{ recipe.metadata.title ?? "(Untitled)" }}
+          {{ recipe.metadata.title ?? $t('recipe.untitled') }}
         </h1>
         <h1 class="text-2xl font-bold md:hidden">
-          {{ recipe.metadata.title ?? "(Untitled)" }}
+          {{ recipe.metadata.title ?? $t('recipe.untitled') }}
         </h1>
       </div>
       <RecipeMetadataBlock :recipe="recipe" />
@@ -831,15 +832,15 @@ watch(
             scaledRecipe: sr,
           }"
         >
-          <UButton
-            v-if="
-              loggedIn &&
-              shoppingEnabled &&
-              !shoppingStore.isRecipeInSelection(path)
-            "
-            size="sm"
-            color="primary"
-            label="Add to list"
+            <UButton
+              v-if="
+                loggedIn &&
+                shoppingEnabled &&
+                !shoppingStore.isRecipeInSelection(path)
+              "
+              size="sm"
+              color="primary"
+              :label="$ts('addToList')"
             icon="material-symbols:add-shopping-cart-rounded"
             class="ml-2"
             @click="addToShoppingList(sr, servings, choices, selectedVariant)"
@@ -885,7 +886,7 @@ watch(
             <UButton class="group" color="neutral" variant="soft" size="sm">
               <span class="flex items-center gap-2">
                 <UIcon name="i-lucide-sparkles" class="size-4 shrink-0" />
-                Convert from URL or text with AI
+                {{ $t('ai.convertFromUrl') }}
               </span>
               <UIcon
                 name="i-lucide-chevron-down"
@@ -897,12 +898,12 @@ watch(
                 <div class="flex flex-col gap-3">
                   <UInput
                     v-model="aiUrl"
-                    placeholder="https://..."
+                    :placeholder="$ts('ai.urlPlaceholder')"
                     :disabled="isAiConverting"
                   />
                   <UTextarea
                     v-model="aiRawText"
-                    placeholder="Or paste recipe text directly..."
+                    :placeholder="$ts('ai.pasteText')"
                     :rows="5"
                     :disabled="isAiConverting"
                     autocorrect="off"
@@ -910,19 +911,18 @@ watch(
                     spellcheck="false"
                   />
                   <p class="text-muted text-xs">
-                    URL import may not work for JavaScript-rendered pages. Use
-                    the text area as fallback.
+                    {{ $t('ai.urlWarning') }}
                   </p>
                   <div class="flex flex-row items-center gap-3">
                     <UButton
-                      label="Convert with AI"
+                      :label="$ts('actions.convertWithAi')"
                       :loading="isAiConverting"
                       :disabled="!aiUrl && !aiRawText"
                       size="sm"
                       @click="onConvertWithAi"
                     />
                     <UButton
-                      label="Open in cook.md"
+                      :label="$ts('actions.openInCookMd')"
                       icon="i-lucide-external-link"
                       color="neutral"
                       variant="ghost"
@@ -955,11 +955,11 @@ watch(
           />
         </UFormField>
         <div class="mt-4 flex flex-row gap-4">
-          <UButton type="submit" label="Save" class="resize-y" />
+          <UButton type="submit" :label="$ts('actions.save')" class="resize-y" />
           <UButton
             type="button"
             color="secondary"
-            label="Cancel"
+            :label="$ts('actions.cancel')"
             @click="onEditCancel"
           />
         </div>

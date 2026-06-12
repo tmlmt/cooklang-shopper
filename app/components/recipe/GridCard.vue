@@ -87,6 +87,8 @@ const preferredTime = computed(() => {
   return formatTime(value);
 });
 
+const { $t, $tc } = useI18n();
+
 const formattedModified = computed(() => {
   if (!props.recipe.lastModified) return "-";
 
@@ -98,9 +100,8 @@ const formattedModified = computed(() => {
   const oneDay = 24 * 60 * 60 * 1000;
   const days = Math.floor(diffMs / oneDay);
 
-  if (days <= 0) return "today";
-  if (days === 1) return "1 day ago";
-  if (days < 7) return `${days} days ago`;
+  if (days <= 0) return $t("recipeCard.today");
+  if (days < 7) return $tc("recipeCard.daysAgo", days);
 
   const month = String(modified.getMonth() + 1).padStart(2, "0");
   const day = String(modified.getDate()).padStart(2, "0");

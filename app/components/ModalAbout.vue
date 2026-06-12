@@ -29,10 +29,10 @@ const about = computed(() => sharing.value.about);
     <template #body>
       <!-- Authenticated: developer / admin info -->
       <div v-if="isEditor" class="grid grid-cols-3 items-center gap-2 p-2">
-        <div class="text-right font-bold">Author:</div>
+        <div class="text-right font-bold">{{ $ts('modal.about.author') }}</div>
         <p class="col-span-2">Thomas Lamant</p>
         <template v-if="versionInfo">
-          <div class="text-right font-bold">Version:</div>
+          <div class="text-right font-bold">{{ $ts('modal.about.version') }}</div>
           <div class="col-span-2 flex items-center gap-2">
             <span>{{ versionInfo.currentVersion }}</span>
             <a
@@ -43,11 +43,11 @@ const about = computed(() => sharing.value.about);
               class="text-primary flex items-center gap-1 text-sm"
             >
               <Icon name="mdi:arrow-up-circle-outline" size="16" />
-              Update available
+              {{ $ts('modal.about.updateAvailable') }}
             </a>
           </div>
         </template>
-        <div class="text-right font-bold">Code:</div>
+        <div class="text-right font-bold">{{ $ts('modal.about.code') }}</div>
         <div class="col-span-2 flex">
           <ULink
             to="https://github.com/tmlmt/cooklang-shopper"
@@ -62,21 +62,21 @@ const about = computed(() => sharing.value.about);
       <!-- Unauthenticated: public-facing cookbook info -->
       <div v-else class="flex flex-col gap-3 p-2">
         <div v-if="about?.author" class="flex items-center gap-2">
-          <span class="font-bold">By:</span>
+          <span class="font-bold">{{ $ts('modal.about.by') }}</span>
           <span>{{ about.author }}</span>
         </div>
         <p v-if="about?.description" class="text-muted text-sm">
           {{ about.description }}
         </p>
         <div v-if="about?.contact" class="flex items-center gap-2">
-          <span class="font-bold">Contact:</span>
+          <span class="font-bold">{{ $ts('modal.about.contact') }}</span>
           <span>{{ about.contact }}</span>
         </div>
         <div
           v-if="!about?.author && !about?.description && !about?.contact"
           class="text-muted flex items-center justify-center gap-1"
         >
-          Powered by
+          {{ $ts('modal.about.poweredBy') }}
           <ULink
             to="https://github.com/tmlmt/cooklang-shopper"
             target="_blank"
@@ -94,7 +94,7 @@ const about = computed(() => sharing.value.about);
         <UButton
           color="neutral"
           variant="soft"
-          label="Close"
+          :label="$ts('actions.close')"
           @click="emit('close', true)"
         />
       </div>

@@ -1,0 +1,258 @@
+{
+  "pages": {
+    "recipes": "Recipes",
+    "pantry": "Pantry",
+    "shoppingList": "Shopping List",
+    "shoppingCart": "Shopping Cart",
+    "cookbook": "Cookbook",
+    "authentication": "Authentication"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "create": "Create",
+    "upload": "Upload",
+    "add": "Add",
+    "done": "Done",
+    "login": "Login",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "back": "Back",
+    "browse": "Browse",
+    "view": "View",
+    "edit": "Edit",
+    "move": "Move",
+    "delete": "Delete",
+    "share": "Share",
+    "rename": "Rename",
+    "cook": "Cook",
+    "uncheckAll": "Uncheck All",
+    "importFromFile": "Import from file",
+    "switchToOwnList": "Switch to own list",
+    "goToCookbook": "Go to Cookbook",
+    "convertWithAi": "Convert with AI",
+    "openInCookMd": "Open in cook.md",
+    "createLink": "Create Link",
+    "skipSection": "Skip section",
+    "newRecipe": "New recipe",
+    "newFolder": "New folder",
+    "reindexRecipes": "Re-index recipes",
+    "uploadImage": "Upload image",
+    "downloadCook": "Download .cook",
+    "storeRun": "Store Run",
+    "categoryConfig": "Category Config"
+  },
+  "nav": {
+    "backToFolder": "Back to folder",
+    "backTo": "Back to {page}",
+    "continueTo": "Continue to {page}",
+    "toggleColorMode": "Toggle color mode",
+    "about": "About"
+  },
+  "recipe": {
+    "untitled": "(Untitled)",
+    "ingredients": "Ingredients",
+    "cookware": "Cookware",
+    "preparation": "Preparation",
+    "yield": "Yield",
+    "servings": "{count} servings | {count} serving | {count} servings",
+    "scale": "Scale:",
+    "step": "Step",
+    "optional": "(Optional)",
+    "note": "Note:",
+    "optionalSection": "Optional section",
+    "ingredientsForStep": "Ingredients for this step",
+    "moreInfo": "More info",
+    "by": "by",
+    "from": "from",
+    "time": {
+      "prep": "Prep",
+      "cook": "Cook",
+      "total": "Total"
+    }
+  },
+  "folder": {
+    "subfolders": "{count} subfolders | {count} subfolder | {count} subfolders",
+    "recipes": "{count} recipes | {count} recipe | {count} recipes"
+  },
+  "sharedLink": {
+    "linkExpires": "This link expires on {date}"
+  },
+  "recipeCard": {
+    "today": "today",
+    "daysAgo": "{count} days ago | {count} day ago | {count} days ago"
+  },
+  "recipeList": {
+    "folderColumn": "Folder",
+    "subfoldersColumn": "Subfolders",
+    "titleColumn": "Title",
+    "tagsColumn": "Tags",
+    "timeColumn": "Time",
+    "modifiedColumn": "Modified",
+    "yieldColumn": "Yield",
+    "authorColumn": "Author",
+    "sourceColumn": "Source",
+    "actionsColumn": "Actions"
+  },
+  "ingredientList": {
+    "checkedCount": "{checked} / {total} checked",
+    "hideChecked": "Hide checked",
+    "other": "Other"
+  },
+  "shoppingList": {
+    "nameColumn": "Name",
+    "servingsColumn": "Servings",
+    "choicesColumn": "Choices",
+    "customChoices": "Custom choices",
+    "noChoice": "n/a",
+    "addFreehand": "Add free-hand item",
+    "freehandItems": "Free-hand items",
+    "ingredientLabel": "Ingredient",
+    "quantityLabel": "Quantity",
+    "unitLabel": "Unit"
+  },
+  "cookMode": {
+    "ingredientsIntro": "This recipe requires the following ingredients",
+    "timers": "TIMERS",
+    "timerDone": "Timer done!"
+  },
+  "choices": {
+    "title": "Choose ingredient alternatives",
+    "noAlternatives": "No ingredient alternatives available for this recipe.",
+    "inlineAlternatives": "Inline Alternatives",
+    "groupedAlternatives": "Grouped Alternatives",
+    "noChoice": "No choice",
+    "pleaseSelect": "Please make a selection"
+  },
+  "modal": {
+    "file": {
+      "directory": "Directory",
+      "createSubdir": "Create subdirectory within selection",
+      "name": "Name",
+      "subdirCreated": "Sub-directory created",
+      "subdirExistsWarning": "A sub-directory called '{name}' already exists",
+      "subdirCreatedAs": "New sub-directory created as '{newName}'",
+      "moveRecipe": "Move recipe",
+      "moveFolder": "Move folder"
+    },
+    "about": {
+      "author": "Author:",
+      "version": "Version:",
+      "code": "Code:",
+      "updateAvailable": "Update available",
+      "poweredBy": "Powered by",
+      "by": "By:",
+      "contact": "Contact:"
+    },
+    "share": {
+      "visibility": "Visibility",
+      "visibilityPublic": "Anyone can view this recipe",
+      "visibilityPrivate": "Only you can view this recipe",
+      "shareLinks": "Share Links",
+      "noLinks": "No share links yet",
+      "expiresOptional": "Expires (optional)",
+      "created": "Created",
+      "expired": "Expired",
+      "expires": "Expires",
+      "shareRecipe": "Share Recipe",
+      "shareShoppingList": "Share Shopping List"
+    },
+    "imageUpload": {
+      "imageRole": "Image role",
+      "imageFile": "Image file"
+    },
+    "storeRun": {
+      "live": "Live"
+    }
+  },
+  "search": {
+    "placeholder": "Search recipes...",
+    "recipesMatching": "Recipes matching \"{term}\"..."
+  },
+  "toast": {
+    "success": "Success",
+    "error": "Error",
+    "recipesReindexed": "Recipes reindexed",
+    "folderCreated": "Folder created",
+    "folderExistsWarning": "A folder called '{name}' already exists",
+    "folderCreatedAs": "Folder created as '{newName}'",
+    "folderCreationError": "Error creating folder",
+    "folderMoved": "Folder moved",
+    "folderMovedError": "Error moving folder",
+    "folderRenamed": "Folder renamed",
+    "folderRenameError": "Error renaming folder",
+    "folderDeleted": "Folder deleted",
+    "folderDeleteError": "Error deleting folder",
+    "imageUploaded": "Image uploaded",
+    "imageDeleted": "Image deleted",
+    "recipeSaved": "Recipe successfully saved",
+    "recipeDeleted": "Recipe deleted",
+    "recipeMoved": "Recipe moved to {path}",
+    "recipeAddedToList": "Recipe successfully added to shopping list",
+    "recipeServingsModified": "Servings successfully modified in shopping list",
+    "recipeRemovedFromList": "Recipe successfully removed from shopping list",
+    "ingredientAdded": "Ingredient added",
+    "ingredientAddError": "Failed to add ingredient",
+    "servingsUpdateError": "Failed to update servings",
+    "pantryInvalid": "Invalid pantry",
+    "pantrySaved": "Pantry saved",
+    "categoryConfigSaved": "Category config saved",
+    "categoryConfigInvalid": "Invalid category config",
+    "visibilityUpdated": "Visibility updated",
+    "visibilityUpdatedTo": "Recipe is now {visibility}",
+    "visibilityUpdateError": "Failed to update visibility",
+    "shareLinkCreated": "Share link created",
+    "shareLinkCreateError": "Failed to create share link",
+    "shareLinkRevoked": "Share link revoked",
+    "shareLinkRevokeError": "Failed to revoke share link",
+    "linkCopied": "Link copied to clipboard",
+    "linkCopyError": "Failed to copy link",
+    "conversionComplete": "Conversion complete",
+    "conversionTokens": "{in} input / {out} output tokens",
+    "conversionInterrupted": "Conversion interrupted",
+    "conversionInterruptedDetail": "Partial content saved in editor",
+    "conversionFailed": "Conversion failed",
+    "sharedListExpired": "Shared list expired",
+    "sharedListExpiredDetail": "The shared list link has expired. Switched to your own list.",
+    "loginFailed": "Login failed",
+    "loginInvalidPassword": "Invalid password",
+    "oidcFailedDetail": "OIDC authentication failed. Please try again.",
+    "oidcUnreachable": "Provider unreachable",
+    "oidcUnreachableDetail": "The authentication provider could not be reached. Please try again later.",
+    "oidcCheckUnreachable": "The authentication provider could not be reached. Check your network connection.",
+    "loggedOut": "Logged out",
+    "loggedOutDetail": "You have been successfully logged out"
+  },
+  "emptyState": {
+    "nothingHere": "Nothing here yet",
+    "createOrAdd": "Create a recipe or add a subfolder to get started."
+  },
+  "validation": {
+    "enterRecipe": "Please enter a recipe",
+    "invalidRecipe": "Invalid recipe. Check syntax",
+    "enterFilename": "Please enter a filename",
+    "filenameNoSlash": "The filename must not contain '/'",
+    "filenameChars": "Only letters, digits, spaces, and & ( ) ' _ + % . - are allowed",
+    "enterSubdirName": "Please enter a subdirectory name",
+    "subdirNoSlash": "The subdirectory name must not contain '/'",
+    "selectDirectory": "Please select a directory",
+    "selectParentDir": "You need to select a parent directory",
+    "subdirExists": "This subdirectory already exists",
+    "enterValue": "Please enter a value",
+    "noSlash": "Must not contain '/'",
+    "noBackslash": "Must not contain '\\'",
+    "ingredientRequired": "Ingredient name is required"
+  },
+  "ai": {
+    "convertFromUrl": "Convert from URL or text with AI",
+    "urlPlaceholder": "https://...",
+    "pasteText": "Or paste recipe text directly...",
+    "urlWarning": "URL import may not work for JavaScript-rendered pages. Use the text area as fallback.",
+    "fetchingPage": "Fetching page...",
+    "converting": "Converting with AI...",
+    "noContent": "No content to convert",
+    "fetchError": "Could not fetch page"
+  }
+}

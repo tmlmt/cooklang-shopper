@@ -4,6 +4,7 @@ import type {
   DropdownMenuItem,
   NavigationMenuItem,
 } from "@nuxt/ui";
+import { useLanguageSwitcher } from "~/composables/useLanguageSwitcher";
 
 const route = useRoute();
 const { title: appTitle, sharing, experimental } = await usePublicConfig();
@@ -15,15 +16,17 @@ const { loggedIn } = useUserSession();
 // Header menus
 //---------------
 
+const { $ts } = useI18n();
+
 const authMenuItem = computed<DropdownMenuItem>(() =>
   loggedIn.value
     ? {
-        label: "Authentication",
+        label: $ts("pages.authentication"),
         icon: "mdi:user",
         onSelect: () => navigateTo("/auth"),
       }
     : {
-        label: "Sign in",
+        label: $ts("actions.signIn"),
         icon: "material-symbols:login",
         onSelect: () => navigateTo("/auth"),
       },
@@ -32,16 +35,18 @@ const authMenuItem = computed<DropdownMenuItem>(() =>
 const permanentMenuItems = computed<DropdownMenuItem[]>(() => [
   authMenuItem.value,
   {
-    label: "Toggle color mode",
+    label: $ts("nav.toggleColorMode"),
     icon: "material-symbols:dark-mode",
     onSelect: () => {
       colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
     },
   },
+  languageMenuItem.value,
 ]);
 
 const { mobileHeaderMenuItems, desktopHeaderMenuItems, headerActionItems } =
   useHeaderMenu();
+const { languageMenuItem } = useLanguageSwitcher();
 
 const isRecipePage = computed(() => route.path.startsWith("/recipe/"));
 
@@ -70,24 +75,24 @@ const mobileMenuGroups = computed<DropdownMenuItem[][]>(() => {
 
 const navigationItems = computed<BreadcrumbItem[]>(() => {
   const items: BreadcrumbItem[] = [
-    { label: "Recipes", to: "/", active: route.path === "/" },
+    { label: $ts("pages.recipes"), to: "/", active: route.path === "/" },
   ];
   if (loggedIn.value) {
     if (shoppingEnabled.value) {
       items.push({
-        label: "Pantry",
+        label: $ts("pages.pantry"),
         to: "/pantry",
         active: route.path === "/pantry",
       });
       items.push({
-        label: "Shopping List",
+        label: $ts("pages.shoppingList"),
         to: "/list",
         active: route.path === "/list",
       });
     }
     if (experimental.value) {
       items.push({
-        label: "Shopping Cart",
+        label: $ts("pages.shoppingCart"),
         to: "/cart",
         active: route.path === "/cart",
       });
@@ -104,7 +109,7 @@ defineShortcuts({
 });
 
 const aboutItems = computed<DropdownMenuItem[]>(() => [
-  { label: "About", onSelect: async () => await modal.open() },
+  { label: $ts("nav.about"), onSelect: async () => await modal.open() },
 ]);
 
 const colorMode = useColorMode();
@@ -127,11 +132,11 @@ const dropDownMenuItems = computed<DropdownMenuItem[]>(() =>
 const navRight = computed(() => {
   if (!loggedIn.value) return undefined;
   if (route.path === "/" && shoppingEnabled.value) {
-    return { text: "Continue to pantry", to: "/pantry" };
+    return { text: $ts("nav.continueTo", { page: $ts("pages.pantry") }), to: "/pantry" };
   } else if (route.path === "/pantry") {
-    return { text: "Continue to shopping list", to: "/list" };
+    return { text: $ts("nav.continueTo", { page: $ts("pages.shoppingList") }), to: "/list" };
   } else if (route.path === "/list" && experimental.value) {
-    return { text: "Continue to shopping cart", to: "/cart" };
+    return { text: $ts("nav.continueTo", { page: $ts("pages.shoppingCart") }), to: "/cart" };
   } else {
     return undefined;
   }
@@ -144,20 +149,20 @@ const goBack = () => router.back();
 const navLeft = computed(() => {
   if (isRecipePage.value) {
     if (hasInAppHistory.value) {
-      return { text: "Back to folder", action: goBack };
+      return { text: $ts("nav.backToFolder"), action: goBack };
     }
     if (loggedIn.value || sharing.value.allowPublicBrowsing) {
-      return { text: "Browse recipes", to: "/" };
+      return { text: $ts("nav.backTo", { page: $ts("pages.recipes") }), to: "/" };
     }
     return undefined;
   }
   if (!loggedIn.value) return undefined;
   if (route.path === "/pantry") {
-    return { text: "Back to recipes", to: "/" };
+    return { text: $ts("nav.backTo", { page: $ts("pages.recipes") }), to: "/" };
   } else if (route.path === "/list") {
-    return { text: "Back to pantry", to: "/pantry" };
+    return { text: $ts("nav.backTo", { page: $ts("pages.pantry") }), to: "/pantry" };
   } else if (route.path === "/cart") {
-    return { text: "Back to shopping list", to: "/list" };
+    return { text: $ts("nav.backTo", { page: $ts("pages.shoppingList") }), to: "/list" };
   } else {
     return undefined;
   }
@@ -182,7 +187,7 @@ const navLeft = computed(() => {
           size="lg"
           variant="ghost"
           color="neutral"
-          label="Back"
+          :label="$ts('actions.back')"
           @click.stop="goBack"
         />
         <UButton
@@ -191,7 +196,7 @@ const navLeft = computed(() => {
           size="lg"
           variant="ghost"
           color="neutral"
-          label="Browse"
+          :label="$ts('actions.browse')"
           to="/"
         />
         <ULink

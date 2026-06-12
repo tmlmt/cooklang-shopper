@@ -46,6 +46,7 @@ useSeoMeta({
   ogDescription: "A shopping list shared from Cooklang Shopper",
 });
 
+const { $t, $ts } = useI18n();
 const { loggedIn } = useUserSession();
 
 const shoppingList = !loggedIn.value
@@ -67,7 +68,7 @@ if (!loggedIn.value) {
       if (length > 0) {
         setHeaderActions([
           {
-            label: "Store Run",
+            label: $ts("actions.storeRun"),
             icon: "i-lucide-shopping-cart",
             color: "secondary",
             variant: "soft",
@@ -99,15 +100,14 @@ if (!loggedIn.value) {
     <div v-else class="flex flex-col gap-4">
       <div>
         <h1 class="text-2xl">
-          <span class="font-bold">Shopping List</span> shared by
+          <span class="font-bold">{{ $t('pages.shoppingList') }}</span> {{ $t('sharedBy') }}
           {{ data?.ownerName }}
         </h1>
         <p v-if="data?.expiresAt" class="mt-1 text-sm text-amber-600">
-          This link expires on
-          {{ new Date(data.expiresAt).toLocaleDateString() }}
+          {{ $t('sharedLink.linkExpires', { date: new Date(data.expiresAt).toLocaleDateString() }) }}
         </p>
         <p class="text-muted mt-1 text-sm">
-          <ULink to="/auth">Sign in</ULink> to edit this shopping list.
+          <ULink to="/auth">{{ $t('actions.signIn') }}</ULink> {{ $t('signInToEdit') }}
         </p>
       </div>
 

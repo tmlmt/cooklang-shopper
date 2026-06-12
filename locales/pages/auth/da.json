@@ -1,0 +1,10 @@
+{
+  "loggedInAs": "Du er logget ind som",
+  "roleLabel": "Rolle",
+  "passwordLabel": "Adgangskode",
+  "passwordPlaceholder": "Indtast din adgangskode",
+  "roleViewer": "Fremviser",
+  "roleEditor": "Editor",
+  "signInWith": "Log ind med {provider}",
+  "or": "eller"
+}

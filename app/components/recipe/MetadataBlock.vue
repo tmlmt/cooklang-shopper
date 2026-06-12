@@ -6,6 +6,8 @@ const { recipe } = defineProps<{
   recipe: Recipe;
 }>();
 
+const { $ts } = useI18n();
+
 interface MetadataEntry {
   key: string;
   value?: MetadataDisplayValue;
@@ -129,7 +131,7 @@ const nonStandardMetaData = computed(() => {
     <UCollapsible v-if="nonStandardMetaData.length > 0" class="mt-2">
       <UButton
         class="group"
-        label="More info"
+        :label="$ts('recipe.moreInfo')"
         color="neutral"
         variant="soft"
         trailing-icon="i-lucide-chevron-down"

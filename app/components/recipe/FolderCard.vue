@@ -22,10 +22,9 @@ const to = computed(() => `/browse/${props.folder.path}`);
           <div class="truncate font-semibold">{{ folder.name }}</div>
           <div class="text-muted text-sm">
             <template v-if="folder.subdirCount > 0">
-              {{ folder.subdirCount }} subfolders ·
+              {{ $tc('folder.subfolders', folder.subdirCount) }} ·
             </template>
-            {{ folder.recipeCount }}
-            {{ folder.recipeCount > 1 ? "recipes" : "recipe" }}
+            {{ $tc('folder.recipes', folder.recipeCount) }}
           </div>
           <div v-if="!compact" class="text-muted mt-1 text-xs">
             Yield {{ folder.servingsSummary }} · {{ folder.authorSummary }} ·

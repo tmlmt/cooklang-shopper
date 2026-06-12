@@ -1,0 +1,7 @@
+{
+  "noMatchingProducts": "Ingredients without corresponding products",
+  "columnProduct": "Product Name",
+  "columnIngredient": "Ingredient Name",
+  "columnQuantity": "Quantity",
+  "columnReason": "Reason"
+}

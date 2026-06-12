@@ -1,0 +1,10 @@
+{
+  "loggedInAs": "Vous êtes connecté en tant que",
+  "roleLabel": "Rôle",
+  "passwordLabel": "Mot de passe",
+  "passwordPlaceholder": "Entrez votre mot de passe",
+  "roleViewer": "Lecteur",
+  "roleEditor": "Editeur",
+  "signInWith": "Connectez-vous avec {provider}",
+  "or": "ou"
+}

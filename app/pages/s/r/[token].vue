@@ -74,11 +74,12 @@ const currentChoices = ref<RecipeChoices>({});
 
 const modalCookMode = await useModalCookMode();
 
+const { $t, $ts } = useI18n();
 const { setHeaderActions, setHeaderMenuItems } = useHeaderMenu();
 
 setHeaderActions([
   {
-    label: "Cook",
+    label: $ts("actions.cook"),
     icon: "i-lucide-cooking-pot",
     color: "secondary",
     variant: "soft",
@@ -92,7 +93,7 @@ setHeaderActions([
 
 setHeaderMenuItems([
   {
-    label: "Download .cook",
+    label: $ts("actions.downloadCook"),
     icon: "i-lucide-download",
     onSelect: () => {
       if (data.value?.raw) {
@@ -137,8 +138,7 @@ setHeaderMenuItems([
     <RecipeMetadataBlock :recipe="recipe" />
 
     <div v-if="data?.expiresAt" class="mt-2 text-sm text-amber-600">
-      This shared link expires on
-      {{ new Date(data.expiresAt).toLocaleDateString() }}
+      {{ $t('sharedLinkExpires', { date: new Date(data.expiresAt).toLocaleDateString() }) }}
     </div>
 
     <RecipeContent
