@@ -3,6 +3,7 @@ import type { DropdownMenuItem } from "@nuxt/ui";
 type LocaleWithFlag = {
   code: string;
   flag?: string;
+  displayName?: string;
 };
 
 export function useLanguageSwitcher() {
@@ -19,14 +20,15 @@ export function useLanguageSwitcher() {
     $getLocales()
       .filter((item: LocaleWithFlag) => item.code !== currentLocale.value.code)
       .map((locale: LocaleWithFlag) => ({
-        label: `${locale.flag ?? ""} ${locale.code.toUpperCase()}`.trim(),
+        label: `${locale.flag ?? ""} ${locale.displayName}`.trim(),
         onSelect: () => $switchLocale(locale.code),
       })),
   );
 
   const languageMenuItem = computed<DropdownMenuItem>(() => ({
     icon: "material-symbols:language-japanese-kana",
-    label: (currentLocale.value.flag as string) ?? currentLocale.value.code,
+    label:
+      `${currentLocale.value.flag as string} ${currentLocale.value.displayName ?? currentLocale.value.code}`.trim(),
     children: otherLocales.value,
   }));
 

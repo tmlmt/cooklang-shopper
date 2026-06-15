@@ -11,6 +11,8 @@ defineShortcuts({
   escape: () => emit("close", false),
 });
 
+const { $ts } = useI18n();
+
 const selectedRole = ref(roles[0]?.value ?? "cover");
 const selectedFile = ref<File | null>(null);
 
@@ -20,7 +22,10 @@ function onFileChange(file: File | null | undefined) {
 </script>
 
 <template>
-  <UModal :close="{ onClick: () => emit('close', false) }" :title="$ts('actions.uploadImage')">
+  <UModal
+    :close="{ onClick: () => emit('close', false) }"
+    :title="$ts('actions.uploadImage')"
+  >
     <template #body>
       <div class="flex flex-col gap-4">
         <UFormField :label="$ts('modal.imageUpload.imageRole')">

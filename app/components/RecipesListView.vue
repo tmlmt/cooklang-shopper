@@ -11,6 +11,7 @@ const props = defineProps<{
 }>();
 
 const { $t, $ts } = useI18n();
+const { $localeRoute } = useNuxtApp();
 const recipeStore = useRecipeStore();
 const shoppingStore = useShoppingStore();
 await shoppingStore.init();
@@ -138,9 +139,7 @@ const folderColumns: TableColumn<FolderInfo>[] = [
       return h(
         ULink,
         {
-          to: {
-            path: `/browse/${row.original.path}`,
-          },
+          to: $localeRoute(`/browse/${row.original.path}`),
           class: "font-medium",
         },
         () => row.original.name,
@@ -200,11 +199,11 @@ const recipeColumns = computed<TableColumn<RecipeEssentials>[]>(() => [
       return h(
         ULink,
         {
-          to: {
-            path: row.original.dir
+          to: $localeRoute(
+            row.original.dir
               ? `/recipe/${row.original.dir}/${row.original.name}`
               : `/recipe/${row.original.name}`,
-          },
+          ),
         },
         () => row.original.title,
       );
@@ -245,7 +244,8 @@ const recipeColumns = computed<TableColumn<RecipeEssentials>[]>(() => [
   },
   {
     id: "action",
-    header: () => h("div", { class: "text-center" }, $ts("recipeList.actionsColumn")),
+    header: () =>
+      h("div", { class: "text-center" }, $ts("recipeList.actionsColumn")),
   },
 ]);
 
@@ -259,9 +259,11 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
         icon: "prime:eye",
         onClick: async () => {
           await navigateTo(
-            recipe.dir
-              ? `/recipe/${recipe.dir}/${recipe.name}`
-              : `/recipe/${recipe.name}`,
+            $localeRoute(
+              recipe.dir
+                ? `/recipe/${recipe.dir}/${recipe.name}`
+                : `/recipe/${recipe.name}`,
+            ) as any,
           );
         },
       },
@@ -270,9 +272,11 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
         icon: "prime:file-edit",
         onClick: async () => {
           await navigateTo(
-            recipe.dir
-              ? `/recipe/${recipe.dir}/${recipe.name}?mode=edit`
-              : `/recipe/${recipe.name}?mode=edit`,
+            $localeRoute(
+              recipe.dir
+                ? `/recipe/${recipe.dir}/${recipe.name}?mode=edit`
+                : `/recipe/${recipe.name}?mode=edit`,
+            ) as any,
           );
         },
       },

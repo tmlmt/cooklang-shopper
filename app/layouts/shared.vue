@@ -9,6 +9,7 @@ const { mobileHeaderMenuItems, desktopHeaderMenuItems, headerActionItems } =
   useHeaderMenu();
 const { languageMenuItem } = useLanguageSwitcher();
 const { loggedIn } = useUserSession();
+const { $localeRoute } = useNuxtApp();
 
 const headerOpen = ref(false);
 
@@ -17,12 +18,12 @@ const authMenuItem = computed<DropdownMenuItem>(() =>
     ? {
         label: $ts("pages.authentication"),
         icon: "mdi:user",
-        onSelect: () => navigateTo("/auth"),
+        onSelect: () => navigateTo($localeRoute("/auth")),
       }
     : {
         label: $ts("actions.signIn"),
         icon: "material-symbols:login",
-        onSelect: () => navigateTo("/auth"),
+        onSelect: () => navigateTo($localeRoute("/auth")),
       },
 );
 

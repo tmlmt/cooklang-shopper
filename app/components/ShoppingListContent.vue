@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed, h } from "vue";
+import { useNuxtApp } from "#imports";
 import type { TableColumn } from "@nuxt/ui";
 import type { RecipeInfo } from "~~/shared/types";
 import type { RecipeChoices, AddedIngredient } from "@tmlmt/cooklang-parser";
@@ -172,6 +174,7 @@ const UButton = resolveComponent("UButton");
 const ULink = resolveComponent("ULink");
 const UInputNumber = resolveComponent("UInputNumber");
 const UBadge = resolveComponent("UBadge");
+const { $localeRoute } = useNuxtApp();
 
 function choicesLabel(choices?: RecipeChoices): string | null {
   if (!choices) return null;
@@ -190,9 +193,11 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
       accessorKey: "title",
       header: () => $t("shoppingList.nameColumn"),
       cell: ({ row }) =>
-        h(ULink, { to: { path: `/recipe/${row.original.path}` } }, () =>
-          row.getValue("title"),
-        ),
+        h(
+        ULink,
+        { to: $localeRoute(`/recipe/${row.original.path}`) },
+        () => row.getValue("title"),
+      ),
     },
     {
       accessorKey: "servings",

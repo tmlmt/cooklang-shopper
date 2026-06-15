@@ -118,7 +118,7 @@ const formattedModified = computed(() => {
       @mouseenter="setImageHoverState(true)"
       @mouseleave="setImageHoverState(false)"
     >
-      <NuxtLink :to="recipePath" class="block" @click.stop="handleImageTap">
+      <i18n-link :to="recipePath" class="block" @click.stop="handleImageTap">
         <div class="h-28 overflow-hidden rounded-xl">
           <NuxtImg
             v-if="coverImage"
@@ -158,7 +158,7 @@ const formattedModified = computed(() => {
             </div>
           </div>
         </div>
-      </NuxtLink>
+      </i18n-link>
       <UCheckbox
         class="bg-default/90 absolute top-3 right-3 z-10 rounded transition-all duration-200"
         :class="
@@ -174,9 +174,9 @@ const formattedModified = computed(() => {
       />
     </div>
 
-    <NuxtLink :to="recipePath" class="line-clamp-2 font-semibold">
+    <i18n-link :to="recipePath" class="line-clamp-2 font-semibold">
       {{ recipe.title }}
-    </NuxtLink>
+    </i18n-link>
 
     <div class="mt-2 flex min-h-6 flex-wrap items-center gap-1">
       <RecipeTagOverflow :tags="recipe.tags" mode="grid" />

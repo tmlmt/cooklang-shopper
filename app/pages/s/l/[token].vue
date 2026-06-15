@@ -100,14 +100,20 @@ if (!loggedIn.value) {
     <div v-else class="flex flex-col gap-4">
       <div>
         <h1 class="text-2xl">
-          <span class="font-bold">{{ $t('pages.shoppingList') }}</span> {{ $t('sharedBy') }}
+          <span class="font-bold">{{ $t("pages.shoppingList") }}</span>
+          {{ $t("sharedBy") }}
           {{ data?.ownerName }}
         </h1>
         <p v-if="data?.expiresAt" class="mt-1 text-sm text-amber-600">
-          {{ $t('sharedLink.linkExpires', { date: new Date(data.expiresAt).toLocaleDateString() }) }}
+          {{
+            $t("sharedLink.linkExpires", {
+              date: new Date(data.expiresAt).toLocaleDateString(),
+            })
+          }}
         </p>
         <p class="text-muted mt-1 text-sm">
-          <ULink to="/auth">{{ $t('actions.signIn') }}</ULink> {{ $t('signInToEdit') }}
+          <i18n-link to="/auth">{{ $t("actions.signIn") }}</i18n-link>
+          {{ $t("signInToEdit") }}
         </p>
       </div>
 

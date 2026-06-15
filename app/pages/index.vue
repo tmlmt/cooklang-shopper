@@ -7,6 +7,7 @@ const recipeStore = useRecipeStore();
 const toast = useToast();
 const { isEditor } = useRole();
 const { $t, $ts } = useI18n();
+const { $localeRoute } = useNuxtApp();
 const siteConfig = useSiteConfig();
 
 defineOgImage(
@@ -45,7 +46,7 @@ const pathItems = computed(() =>
   currentPath.value
     ? currentPath.value.split("/").map((segment, index, parts) => ({
         label: segment,
-        to: `/browse/${parts.slice(0, index + 1).join("/")}`,
+        to: $localeRoute(`/browse/${parts.slice(0, index + 1).join("/")}`),
       }))
     : [],
 );
@@ -67,7 +68,11 @@ const modalInput = await useModalInput();
 const openNewRecipeModal = async () => {
   const result = await modalFile.open("new");
   if (result) {
-    await navigateTo(`/recipe/${pathJoin(result.dir, result.name)}?mode=new`);
+    await navigateTo(
+      $localeRoute(
+        `/recipe/${pathJoin(result.dir, result.name)}?mode=new`,
+      ) as any,
+    );
   }
 };
 
@@ -128,6 +133,8 @@ if (isEditor.value) {
     },
   ]);
 }
+
+const { $tc } = useI18n();
 </script>
 
 <template>
@@ -135,21 +142,21 @@ if (isEditor.value) {
     <div class="mt-4 flex w-full flex-row items-center px-4 md:mt-0 md:px-0">
       <div class="flex min-w-0 grow items-center">
         <div
-          class="min-w-0 overflow-x-auto pr-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          class="min-w-0 scrollbar-none overflow-x-auto pr-2 [&::-webkit-scrollbar]:hidden"
         >
           <div class="flex w-max items-center whitespace-nowrap">
-            <NuxtLink
+            <i18n-link
               to="/"
               class="text-base md:text-lg"
               :class="
                 pathItems.length === 0 ? 'font-bold' : 'text-muted font-medium'
               "
             >
-              {{ $t('pages.cookbook') }}
-            </NuxtLink>
+              {{ $t("pages.cookbook") }}
+            </i18n-link>
             <template v-for="(item, index) in pathItems" :key="item.to">
               <span class="text-muted mx-1 text-base md:text-lg">/</span>
-              <NuxtLink
+              <i18n-link
                 :to="item.to"
                 class="text-base md:text-lg"
                 :class="
@@ -159,12 +166,12 @@ if (isEditor.value) {
                 "
               >
                 {{ item.label }}
-              </NuxtLink>
+              </i18n-link>
             </template>
           </div>
         </div>
         <div class="ml-1 shrink-0 text-sm md:text-base">
-          · {{ $tc('folder.recipes', recipeCount) }}
+          · {{ $tc("folder.recipes", recipeCount) }}
         </div>
       </div>
       <div class="flex flex-row">

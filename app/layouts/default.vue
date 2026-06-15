@@ -4,6 +4,7 @@ import type {
   DropdownMenuItem,
   NavigationMenuItem,
 } from "@nuxt/ui";
+import { navigateTo } from "#imports";
 import { useLanguageSwitcher } from "~/composables/useLanguageSwitcher";
 
 const route = useRoute();
@@ -11,6 +12,7 @@ const { title: appTitle, sharing, experimental } = await usePublicConfig();
 const { shoppingEnabled } = await useShoppingEnabled();
 const { hasInAppHistory } = usePreviousRoute();
 const { loggedIn } = useUserSession();
+const { $localeRoute } = useNuxtApp();
 
 //---------------
 // Header menus
@@ -23,12 +25,12 @@ const authMenuItem = computed<DropdownMenuItem>(() =>
     ? {
         label: $ts("pages.authentication"),
         icon: "mdi:user",
-        onSelect: () => navigateTo("/auth"),
+        onSelect: () => navigateTo($localeRoute("/auth") as any),
       }
     : {
         label: $ts("actions.signIn"),
         icon: "material-symbols:login",
-        onSelect: () => navigateTo("/auth"),
+        onSelect: () => navigateTo($localeRoute("/auth") as any),
       },
 );
 
@@ -75,25 +77,29 @@ const mobileMenuGroups = computed<DropdownMenuItem[][]>(() => {
 
 const navigationItems = computed<BreadcrumbItem[]>(() => {
   const items: BreadcrumbItem[] = [
-    { label: $ts("pages.recipes"), to: "/", active: route.path === "/" },
+    {
+      label: $ts("pages.recipes"),
+      to: $localeRoute("/"),
+      active: route.path === "/",
+    },
   ];
   if (loggedIn.value) {
     if (shoppingEnabled.value) {
       items.push({
         label: $ts("pages.pantry"),
-        to: "/pantry",
+        to: $localeRoute("/pantry"),
         active: route.path === "/pantry",
       });
       items.push({
         label: $ts("pages.shoppingList"),
-        to: "/list",
+        to: $localeRoute("/list"),
         active: route.path === "/list",
       });
     }
     if (experimental.value) {
       items.push({
         label: $ts("pages.shoppingCart"),
-        to: "/cart",
+        to: $localeRoute("/cart"),
         active: route.path === "/cart",
       });
     }
@@ -132,11 +138,20 @@ const dropDownMenuItems = computed<DropdownMenuItem[]>(() =>
 const navRight = computed(() => {
   if (!loggedIn.value) return undefined;
   if (route.path === "/" && shoppingEnabled.value) {
-    return { text: $ts("nav.continueTo", { page: $ts("pages.pantry") }), to: "/pantry" };
+    return {
+      text: $ts("nav.continueTo", { page: $ts("pages.pantry") }),
+      to: $localeRoute("/pantry"),
+    };
   } else if (route.path === "/pantry") {
-    return { text: $ts("nav.continueTo", { page: $ts("pages.shoppingList") }), to: "/list" };
+    return {
+      text: $ts("nav.continueTo", { page: $ts("pages.shoppingList") }),
+      to: $localeRoute("/list"),
+    };
   } else if (route.path === "/list" && experimental.value) {
-    return { text: $ts("nav.continueTo", { page: $ts("pages.shoppingCart") }), to: "/cart" };
+    return {
+      text: $ts("nav.continueTo", { page: $ts("pages.shoppingCart") }),
+      to: $localeRoute("/cart"),
+    };
   } else {
     return undefined;
   }
@@ -152,17 +167,29 @@ const navLeft = computed(() => {
       return { text: $ts("nav.backToFolder"), action: goBack };
     }
     if (loggedIn.value || sharing.value.allowPublicBrowsing) {
-      return { text: $ts("nav.backTo", { page: $ts("pages.recipes") }), to: "/" };
+      return {
+        text: $ts("nav.backTo", { page: $ts("pages.recipes") }),
+        to: $localeRoute("/"),
+      };
     }
     return undefined;
   }
   if (!loggedIn.value) return undefined;
   if (route.path === "/pantry") {
-    return { text: $ts("nav.backTo", { page: $ts("pages.recipes") }), to: "/" };
+    return {
+      text: $ts("nav.backTo", { page: $ts("pages.recipes") }),
+      to: $localeRoute("/"),
+    };
   } else if (route.path === "/list") {
-    return { text: $ts("nav.backTo", { page: $ts("pages.pantry") }), to: "/pantry" };
+    return {
+      text: $ts("nav.backTo", { page: $ts("pages.pantry") }),
+      to: $localeRoute("/pantry"),
+    };
   } else if (route.path === "/cart") {
-    return { text: $ts("nav.backTo", { page: $ts("pages.shoppingList") }), to: "/list" };
+    return {
+      text: $ts("nav.backTo", { page: $ts("pages.shoppingList") }),
+      to: $localeRoute("/list"),
+    };
   } else {
     return undefined;
   }
@@ -197,9 +224,9 @@ const navLeft = computed(() => {
           variant="ghost"
           color="neutral"
           :label="$ts('actions.browse')"
-          to="/"
+          :to="$localeRoute('/')"
         />
-        <ULink
+        <i18n-link
           v-else-if="!isRecipePage"
           to="/"
           class="focus-visible:outline-primary hover:text-default text-highlighted flex min-w-0 flex-row items-center gap-2 text-xl font-bold transition-colors"
@@ -210,7 +237,7 @@ const navLeft = computed(() => {
             class="shrink-0"
           />
           <span class="truncate">{{ appTitle }}</span>
-        </ULink>
+        </i18n-link>
         <span
           v-else
           class="text-highlighted flex min-w-0 flex-row items-center gap-2 text-xl font-bold"
@@ -290,7 +317,7 @@ const navLeft = computed(() => {
       <template v-if="navLeft" #left>
         <UCard
           class="hover:bg-elevated cursor-pointer"
-          @click="navLeft.action ? navLeft.action() : navigateTo(navLeft.to!)"
+          @click="navLeft.action ? navLeft.action() : navigateTo(navLeft.to)"
         >
           <UButton
             class="rounded-full"

@@ -55,6 +55,8 @@ const sse = useShoppingSSE(
   props.sseToken,
 );
 
+const { $ts } = useI18n();
+
 onMounted(() => sse.connect());
 onUnmounted(() => sse.disconnect());
 
@@ -82,7 +84,7 @@ watch(sse.updateCount, () => {
       <div
         class="flex w-full items-center gap-4 border-b border-neutral-200 px-6 py-3 dark:border-neutral-800"
       >
-        <span class="font-semibold">{{ $ts('actions.storeRun') }}</span>
+        <span class="font-semibold">{{ $ts("actions.storeRun") }}</span>
         <UProgress v-model="checkedCount" :max="total" class="flex-1" />
         <span class="text-muted text-sm tabular-nums"
           >{{ checkedCount }} / {{ total }}</span
@@ -91,7 +93,7 @@ watch(sse.updateCount, () => {
           <span
             class="inline-block size-2 animate-pulse rounded-full bg-green-500"
           />
-          {{ $ts('modal.storeRun.live') }}
+          {{ $ts("modal.storeRun.live") }}
         </span>
       </div>
     </template>

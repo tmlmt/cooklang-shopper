@@ -8,7 +8,8 @@ type ViewMode = "grid" | "list";
 const recipeStore = useRecipeStore();
 const toast = useToast();
 const { isEditor } = useRole();
-const { $t, $ts } = useI18n();
+const { $t, $ts, $tc } = useI18n();
+const { $localeRoute } = useNuxtApp();
 
 await callOnce("recipe-index", () => recipeStore.fetchIndex());
 await callOnce("recipe-directories", () => recipeStore.fetchDirectories());
@@ -36,7 +37,7 @@ const pathItems = computed(() =>
   currentPath.value
     ? currentPath.value.split("/").map((segment, index, parts) => ({
         label: segment,
-        to: `/browse/${parts.slice(0, index + 1).join("/")}`,
+        to: $localeRoute(`/browse/${parts.slice(0, index + 1).join("/")}`),
       }))
     : [],
 );
@@ -61,7 +62,11 @@ await shoppingStore.init();
 const openNewRecipeModal = async () => {
   const result = await modalFile.open("new", currentPath.value);
   if (result) {
-    await navigateTo(`/recipe/${pathJoin(result.dir, result.name)}?mode=new`);
+    await navigateTo(
+      $localeRoute(
+        `/recipe/${pathJoin(result.dir, result.name)}?mode=new`,
+      ) as any,
+    );
   }
 };
 
@@ -164,7 +169,7 @@ const moveFolder = async () => {
     // Refresh directories: it's a single glob call so a cheap operation
     await recipeStore.fetchDirectories();
     toast.add({ title: $ts("toast.folderMoved"), color: "success" });
-    await navigateTo(`/browse/${data.newPath}`);
+    await navigateTo($localeRoute(`/browse/${data.newPath}`) as any);
   } catch (e) {
     toast.add({
       title: $ts("toast.folderMovedError"),
@@ -206,7 +211,7 @@ const renameFolder = async () => {
     // Refresh directories: it's a single glob call so a cheap operation
     await recipeStore.fetchDirectories();
     toast.add({ title: $ts("toast.folderRenamed"), color: "success" });
-    await navigateTo(`/browse/${data.newPath}`);
+    await navigateTo($localeRoute(`/browse/${data.newPath}`) as any);
   } catch (e) {
     toast.add({
       title: $ts("toast.folderRenameError"),
@@ -238,7 +243,9 @@ const deleteFolder = async () => {
 
     // Navigate to parent folder or home
     const parentPath = currentPath.value.split("/").slice(0, -1).join("/");
-    await navigateTo(parentPath ? `/browse/${parentPath}` : "/");
+    await navigateTo(
+      $localeRoute(parentPath ? `/browse/${parentPath}` : "/") as any,
+    );
   } catch (e) {
     toast.add({
       title: $ts("toast.folderDeleteError"),
@@ -294,18 +301,18 @@ if (isEditor.value) {
           class="min-w-0 scrollbar-none overflow-x-auto pr-2 [&::-webkit-scrollbar]:hidden"
         >
           <div class="flex w-max items-center whitespace-nowrap">
-            <NuxtLink
+            <i18n-link
               to="/"
               class="text-base md:text-lg"
               :class="
                 pathItems.length === 0 ? 'font-bold' : 'text-muted font-medium'
               "
             >
-              {{ $t('pages.cookbook') }}
-            </NuxtLink>
+              {{ $t("pages.cookbook") }}
+            </i18n-link>
             <template v-for="(item, index) in pathItems" :key="item.to">
               <span class="text-muted mx-1 text-base md:text-lg">/</span>
-              <NuxtLink
+              <i18n-link
                 :to="item.to"
                 class="text-base md:text-lg"
                 :class="
@@ -315,12 +322,12 @@ if (isEditor.value) {
                 "
               >
                 {{ item.label }}
-              </NuxtLink>
+              </i18n-link>
             </template>
           </div>
         </div>
         <div class="ml-1 shrink-0 text-sm md:text-base">
-          · {{ $tc('folder.recipes', folderRecipeCount) }}
+          · {{ $tc("folder.recipes", folderRecipeCount) }}
         </div>
       </div>
       <div class="flex flex-row">
