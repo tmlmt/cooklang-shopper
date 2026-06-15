@@ -9,6 +9,9 @@ type LocaleWithFlag = {
 export function useLanguageSwitcher() {
   const { $getLocale, $getLocales, $switchLocale } = useNuxtApp();
 
+  // composer for preserving scroll on locale switch
+  const { setPreserve } = useLocaleSwitchPreserve();
+
   const currentLocale = computed(() => {
     const locale = $getLocales().find(
       (item: LocaleWithFlag) => item.code === $getLocale(),
@@ -21,7 +24,12 @@ export function useLanguageSwitcher() {
       .filter((item: LocaleWithFlag) => item.code !== currentLocale.value.code)
       .map((locale: LocaleWithFlag) => ({
         label: `${locale.flag ?? ""} ${locale.displayName}`.trim(),
-        onSelect: () => $switchLocale(locale.code),
+        onSelect: async () => {
+          if (typeof window !== "undefined") {
+            setPreserve();
+          }
+          await $switchLocale(locale.code);
+        },
       })),
   );
 
