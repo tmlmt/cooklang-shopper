@@ -92,6 +92,12 @@ export interface AiConfig {
   baseUrl?: string;
 }
 
+export interface I18nConfig {
+  defaultLocale?: string;
+  fallbackLocale?: string;
+  disabledLocales?: string[];
+}
+
 export interface AppConfig {
   auth: AuthConfig;
   sessionSecret: string;
@@ -103,6 +109,7 @@ export interface AppConfig {
   baseUrl?: string;
   sharing?: SharingConfig;
   ai?: AiConfig;
+  i18n?: I18nConfig;
 }
 
 export interface RecipeChoicesWire {

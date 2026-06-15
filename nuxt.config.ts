@@ -88,6 +88,14 @@ export default defineNuxtConfig({
       },
       maxAge: 60 * 60 * 24 * 7, // 1 week
     },
+    public: {
+      i18nRuntime: {
+        defaultLocale: "",
+        fallbackLocale: "",
+        disabledLocales: [],
+      },
+      i18nLocales: ["en", "fr"],
+    },
   },
 
   security: {
