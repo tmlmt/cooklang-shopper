@@ -1,8 +1,8 @@
 {
   "pages": {
     "recipes": "Recettes",
-    "pantry": "Garniture",
-    "shoppingList": "Liste des courses",
+    "pantry": "Garde-manger",
+    "shoppingList": "Liste de courses",
     "shoppingCart": "Panier",
     "cookbook": "Livre de cuisine",
     "authentication": "Authentification"
@@ -24,7 +24,7 @@
     "view": "Voir",
     "edit": "Editer",
     "move": "Déplacer",
-    "delete": "Supprimez",
+    "delete": "Supprimer",
     "share": "Partager",
     "rename": "Renommer",
     "cook": "Cuire",
@@ -41,14 +41,14 @@
     "reindexRecipes": "Réindexer les recettes",
     "uploadImage": "Charger une image",
     "downloadCook": "Télécharger .cook",
-    "storeRun": "Exécution de la boutique",
+    "storeRun": "Faire les courses",
     "categoryConfig": "Configuration de la catégorie"
   },
   "nav": {
     "backToFolder": "Retour au dossier",
     "backTo": "Retour à {page}",
     "continueTo": "Continuer vers {page}",
-    "toggleColorMode": "Changer le mode couleur",
+    "toggleColorMode": "Mode clair / sombre",
     "about": "À propos de"
   },
   "recipe": {
@@ -57,8 +57,8 @@
     "cookware": "Cuisson",
     "preparation": "Préparation",
     "yield": "Rendement",
-    "servings": "Portions {count} | {count} servies | {count} portions",
-    "scale": "Échelle :",
+    "servings": "aucune portion | 1 portion | {count} portions",
+    "scale": "Ajuster :",
     "step": "Étape",
     "optional": "(Facultatif)",
     "note": "Note :",
@@ -68,28 +68,28 @@
     "by": "par",
     "from": "de",
     "time": {
-      "prep": "Préparation",
-      "cook": "Cuire",
+      "prep": "Prép.",
+      "cook": "Cuisson",
       "total": "Total"
     }
   },
   "folder": {
-    "subfolders": "Sous-dossiers {count} | Sous-dossier {count} | Sous-dossiers {count}",
-    "recipes": "Recettes {count} | Recettes {count} | Recettes {count}"
+    "subfolders": "aucun sous-dossier | 1 sous-dossier | {count} sous-dossiers",
+    "recipes": "aucune recette | 1 recette | {count} recettes"
   },
   "sharedLink": {
-    "linkExpires": "Ce lien expire sur {date}"
+    "linkExpires": "Ce lien expire le {date}"
   },
   "recipeCard": {
     "today": "aujourd'hui",
-    "daysAgo": "Il y a {count} jours | Il y a {count} jour | Il y a {count} jours"
+    "daysAgo": "aujourd'hui | hier | il y a {count} jours"
   },
   "recipeList": {
-    "folderColumn": "Répertoire",
+    "folderColumn": "Dossier",
     "subfoldersColumn": "Sous-dossiers",
-    "titleColumn": "Titre de la page",
+    "titleColumn": "Titre",
     "tagsColumn": "Tags",
-    "timeColumn": "Date et heure",
+    "timeColumn": "Durée",
     "modifiedColumn": "Modifié",
     "yieldColumn": "Rendement",
     "authorColumn": "Auteur",
@@ -98,7 +98,7 @@
   },
   "ingredientList": {
     "checkedCount": "{checked} / {total} coché",
-    "hideChecked": "Cacher la case à cocher",
+    "hideChecked": "Cacher les éléments cochés",
     "other": "Autres"
   },
   "shoppingList": {
@@ -107,8 +107,8 @@
     "choicesColumn": "Choix",
     "customChoices": "Choix personnalisés",
     "noChoice": "n/a",
-    "addFreehand": "Ajouter un objet à la main libre",
-    "freehandItems": "Objets à main libre",
+    "addFreehand": "Ajouter manuellement un élément",
+    "freehandItems": "Éléments ajoutés manuellement",
     "ingredientLabel": "Ingrédient",
     "quantityLabel": "Quantité",
     "unitLabel": "Unité"
@@ -116,7 +116,7 @@
   "cookMode": {
     "ingredientsIntro": "Cette recette nécessite les ingrédients suivants",
     "timers": "TIMERS",
-    "timerDone": "Minuterie terminée !"
+    "timerDone": "Temps écoulé !"
   },
   "choices": {
     "title": "Choisissez les alternatives d'ingrédient",
@@ -128,12 +128,12 @@
   },
   "modal": {
     "file": {
-      "directory": "Répertoire",
-      "createSubdir": "Créer un sous-répertoire dans la sélection",
+      "directory": "Dossier",
+      "createSubdir": "Créer un sous-dossier dans la sélection",
       "name": "Nom",
-      "subdirCreated": "Sous-répertoire créé",
-      "subdirExistsWarning": "Un sous-répertoire nommé '{name}' existe déjà",
-      "subdirCreatedAs": "Nouveau sous-répertoire créé en tant que '{newName}'",
+      "subdirCreated": "Sous-dossier créé",
+      "subdirExistsWarning": "Un sous-dossier nommé '{name}' existe déjà",
+      "subdirCreatedAs": "Nouveau sous-dossier '{newName}' créé",
       "moveRecipe": "Déplacer la recette",
       "moveFolder": "Déplacer le dossier"
     },
@@ -150,7 +150,7 @@
       "visibility": "Visibilité",
       "visibilityPublic": "N'importe qui peut voir cette recette",
       "visibilityPrivate": "Seulement vous pouvez voir cette recette",
-      "shareLinks": "Partager les liens",
+      "shareLinks": "Liens de partage",
       "noLinks": "Aucun lien de partage pour l'instant",
       "expiresOptional": "Expire (optionnel)",
       "created": "Créé",
@@ -185,7 +185,7 @@
     "folderRenameError": "Erreur lors du renommage du dossier",
     "folderDeleted": "Dossier supprimé",
     "folderDeleteError": "Erreur lors de la suppression du dossier",
-    "imageUploaded": "Image téléchargée",
+    "imageUploaded": "Image téléversée",
     "imageDeleted": "Image supprimée",
     "recipeSaved": "Recette enregistrée avec succès",
     "recipeDeleted": "Recette supprimée",
@@ -196,10 +196,10 @@
     "ingredientAdded": "Ingrédient ajouté",
     "ingredientAddError": "Impossible d'ajouter l'ingrédient",
     "servingsUpdateError": "Échec de la mise à jour des portions",
-    "pantryInvalid": "Panier invalide",
-    "pantrySaved": "Panneau sauvegardé",
-    "categoryConfigSaved": "Configuration de la catégorie enregistrée",
-    "categoryConfigInvalid": "Configuration de catégorie invalide",
+    "pantryInvalid": "Garde-manger invalide",
+    "pantrySaved": "Garde-manger sauvegardé",
+    "categoryConfigSaved": "Catégorisation enregistrée",
+    "categoryConfigInvalid": "Catégorisation invalide",
     "visibilityUpdated": "Visibilité mise à jour",
     "visibilityUpdatedTo": "La recette est maintenant {visibility}",
     "visibilityUpdateError": "Échec de la mise à jour de la visibilité",
@@ -210,7 +210,7 @@
     "linkCopied": "Lien copié dans le presse-papiers",
     "linkCopyError": "Impossible de copier le lien",
     "conversionComplete": "Conversion terminée",
-    "conversionTokens": "{in} input / {out} output tokens",
+    "conversionTokens": "{in} tokens d'entrée / {out} de sortie",
     "conversionInterrupted": "Conversion interrompue",
     "conversionInterruptedDetail": "Contenu partiel sauvegardé dans l'éditeur",
     "conversionFailed": "La conversion a échoué",
@@ -219,9 +219,9 @@
     "loginFailed": "Échec de la connexion",
     "loginInvalidPassword": "Mot de passe invalide",
     "oidcFailedDetail": "L'authentification OIDC a échoué. Veuillez réessayer.",
-    "oidcUnreachable": "Fournisseur injoignable",
-    "oidcUnreachableDetail": "Le fournisseur d'authentification n'a pas pu être atteint. Veuillez réessayer plus tard.",
-    "oidcCheckUnreachable": "Le fournisseur d'authentification n'a pas pu être atteint. Vérifiez votre connexion réseau.",
+    "oidcUnreachable": "Serveur d'accès injoignable",
+    "oidcUnreachableDetail": "Le serveur d'authentification n'a pas pu être atteint. Veuillez réessayer plus tard.",
+    "oidcCheckUnreachable": "Le serveur \nd'authentification n'a pas pu être atteint. Vérifiez votre connexion réseau.",
     "loggedOut": "Déconnecté",
     "loggedOutDetail": "Vous avez été déconnecté avec succès"
   },
@@ -235,7 +235,7 @@
     "enterFilename": "Veuillez entrer un nom de fichier",
     "filenameNoSlash": "Le nom du fichier ne doit pas contenir '/'",
     "filenameChars": "Seuls les lettres, chiffres, espaces, et & ( ) ' _ + % . - sont autorisés",
-    "enterSubdirName": "Veuillez entrer un nom de sous-répertoire",
+    "enterSubdirName": "Veuillez entrer un nom de sous-dossier",
     "subdirNoSlash": "Le nom du sous-répertoire ne doit pas contenir '/'",
     "selectDirectory": "Veuillez sélectionner un répertoire",
     "selectParentDir": "Vous devez sélectionner un répertoire parent",

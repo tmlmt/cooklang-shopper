@@ -5,11 +5,11 @@
     "shoppingList": "Indkøbsliste",
     "shoppingCart": "Indkøbskurv",
     "cookbook": "Kogebog",
-    "authentication": "Godkendelse"
+    "authentication": "Autentificering"
   },
   "actions": {
     "save": "Gem",
-    "cancel": "Annuller",
+    "cancel": "Afbryd",
     "close": "Luk",
     "confirm": "Bekræft",
     "create": "Opret",
@@ -27,7 +27,7 @@
     "delete": "Slet",
     "share": "Del",
     "rename": "Omdøb",
-    "cook": "Kokken",
+    "cook": "Lav mad",
     "uncheckAll": "Afmarkér Alle",
     "importFromFile": "Importer fra fil",
     "switchToOwnList": "Skift til egen liste",
@@ -57,7 +57,7 @@
     "cookware": "Cookware",
     "preparation": "Forberedelse",
     "yield": "Udbytte",
-    "servings": "{count} portioner - {count} betjener {count} portioner",
+    "servings": "ingen portioner | 1 person | {count} personer",
     "scale": "Skalering:",
     "step": "Trin",
     "optional": "(Valgfrit)",
@@ -68,21 +68,21 @@
     "by": "af",
     "from": "fra",
     "time": {
-      "prep": "Forbered",
-      "cook": "Kokken",
-      "total": "I Alt"
+      "prep": "Forb",
+      "cook": "Tilb",
+      "total": "Samlet"
     }
   },
   "folder": {
-    "subfolders": "{count} undermapper ● {count} undermappen ● {count} undermapper",
-    "recipes": "{count} opskrifter Ž {count} opskrift Ž {count} opskrifter"
+    "subfolders": "ingen undermapper | 1 undermappen | {count} undermapper",
+    "recipes": "ingen opskrifter | 1 opskrift | {count} opskrifter"
   },
   "sharedLink": {
     "linkExpires": "Dette link udløber på {date}"
   },
   "recipeCard": {
     "today": "i dag",
-    "daysAgo": "{count} dage siden xHamster {count} dag siden xHamster {count} dage siden"
+    "daysAgo": "i dag | i går | for {count} dage siden"
   },
   "recipeList": {
     "folderColumn": "Mappe",

@@ -57,7 +57,7 @@
     "cookware": "Cookware",
     "preparation": "Preparation",
     "yield": "Yield",
-    "servings": "{count} servings | {count} serving | {count} servings",
+    "servings": "no servings | 1 serving | {count} servings",
     "scale": "Scale:",
     "step": "Step",
     "optional": "(Optional)",
@@ -74,15 +74,15 @@
     }
   },
   "folder": {
-    "subfolders": "{count} subfolders | {count} subfolder | {count} subfolders",
-    "recipes": "{count} recipes | {count} recipe | {count} recipes"
+    "subfolders": "no subfolders | 1 subfolder | {count} subfolders",
+    "recipes": "no recipes | 1 recipe | {count} recipes"
   },
   "sharedLink": {
     "linkExpires": "This link expires on {date}"
   },
   "recipeCard": {
     "today": "today",
-    "daysAgo": "{count} days ago | {count} day ago | {count} days ago"
+    "daysAgo": "today | yesterday | {count} days ago"
   },
   "recipeList": {
     "folderColumn": "Folder",
