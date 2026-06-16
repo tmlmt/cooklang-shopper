@@ -110,6 +110,10 @@ export default defineNuxtConfig({
     rateLimiter: process.env.NODE_ENV === "development" ? false : undefined,
   },
 
+  seo: {
+    automaticDefaults: false,
+  },
+
   sitemap: {
     // note: automatically cached for 10 min by default
     excludeAppSources: ["nuxt:pages"],
