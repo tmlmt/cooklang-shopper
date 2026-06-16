@@ -247,7 +247,6 @@
   },
   "ai": {
     "convertFromUrl": "Konverter fra URL eller tekst med AI",
-    "urlPlaceholder": "https://...",
     "pasteText": "Eller indsæt opskrift tekst direkte...",
     "urlWarning": "URL import virker muligvis ikke for JavaScript-renderede sider. Brug tekstområdet som fallback.",
     "fetchingPage": "Henter side...",

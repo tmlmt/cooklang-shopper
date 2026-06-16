@@ -20,6 +20,8 @@ const badgeClass = computed(() =>
     ? "max-w-28 truncate rounded-full"
     : "max-w-32 truncate rounded-full",
 );
+
+const { $t } = useI18n();
 </script>
 
 <template>
@@ -49,7 +51,9 @@ const badgeClass = computed(() =>
 
       <template #content>
         <div class="max-w-64 p-2">
-          <div class="text-muted mb-1 text-xs">Extra tags</div>
+          <div class="text-muted mb-1 text-xs">
+            {{ $t("recipeTags.extraTags") }}
+          </div>
           <div class="flex flex-wrap gap-1">
             <UBadge
               v-for="tag in hiddenTags"

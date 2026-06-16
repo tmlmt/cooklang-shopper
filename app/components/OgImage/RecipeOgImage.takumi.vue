@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const {
-  title = "Recipe",
+  title = "",
   description = "",
   coverImage = "",
   baseUrl = "",
@@ -14,6 +14,9 @@ const {
   canvasWidth?: number;
   canvasHeight?: number;
 }>();
+
+const { $tc } = useI18n();
+const titleText = title || capitalize($tc("basics.recipe", 1));
 
 const truncatedDescription =
   description.length > 200 ? description.slice(0, 197) + "…" : description;
@@ -72,7 +75,7 @@ const coverImageHeight = Math.round(canvasHeight * 0.6);
         class="m-0 w-full text-[50px] leading-tight font-bold"
         style="color: #111827"
       >
-        {{ title }}
+        {{ titleText }}
       </h1>
       <p
         v-if="truncatedDescription"

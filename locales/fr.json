@@ -247,7 +247,6 @@
   },
   "ai": {
     "convertFromUrl": "Convertir depuis une URL ou un texte avec une IA",
-    "urlPlaceholder": "https://...",
     "pasteText": "Ou collez directement le texte de la recette...",
     "urlWarning": "L'importation d'URL peut ne pas fonctionner pour les pages affichées en JavaScript. Utilisez la zone de texte comme zone de repli.",
     "fetchingPage": "Récupération de la page...",

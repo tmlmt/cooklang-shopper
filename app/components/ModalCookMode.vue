@@ -13,6 +13,7 @@ import {
   type Timer,
 } from "@tmlmt/cooklang-parser";
 import { useSwipe, onClickOutside, useWebNotification } from "@vueuse/core";
+import { capitalize } from "#imports";
 
 const props = defineProps<{
   recipe: Recipe;
@@ -284,7 +285,7 @@ function getStepTimerEntries(
         timerStates.set(id, {
           name:
             timer.name ||
-            `${$ts('recipe.step')} ${slide.stepNumber} (${formatQuantityWithUnit(timer.duration, timer.unit)})`,
+            `${$ts("recipe.step")} ${slide.stepNumber} (${formatQuantityWithUnit(timer.duration, timer.unit)})`,
           totalSeconds: total,
           remainingSeconds: total,
           status: "idle",
@@ -314,7 +315,7 @@ function startTimer(id: string) {
         intervals.delete(id);
         if (notificationSupported.value) {
           showNotification({
-            title: $ts('cookMode.timerDone'),
+            title: $ts("cookMode.timerDone"),
             body: state.name,
           });
         }
@@ -476,10 +477,10 @@ watch(currentSlideIndex, () => {
             <template v-if="currentSlide.type === 'ingredients'">
               <div class="mx-auto w-full max-w-3xl">
                 <h2 class="mb-6 text-center text-2xl font-bold md:text-3xl">
-                  {{ $ts('recipe.ingredients') }}
+                  {{ $ts("recipe.ingredients") }}
                 </h2>
                 <p class="text-muted mb-6 text-center">
-                  {{ $ts('cookMode.ingredientsIntro') }}
+                  {{ $ts("cookMode.ingredientsIntro") }}
                 </p>
                 <IngredientList
                   :ingredients="allIngredients"
@@ -487,7 +488,9 @@ watch(currentSlideIndex, () => {
                   :interactive="false"
                 />
                 <template v-if="allCookware.length > 0">
-                  <h3 class="mt-8 mb-3 text-xl font-bold">{{ $ts('recipe.cookware') }}</h3>
+                  <h3 class="mt-8 mb-3 text-xl font-bold">
+                    {{ $ts("recipe.cookware") }}
+                  </h3>
                   <ul class="ml-6 list-disc md:columns-2">
                     <li v-for="item in allCookware" :key="item.name">
                       {{ item.name }}
@@ -525,9 +528,9 @@ watch(currentSlideIndex, () => {
               <div class="mx-auto w-full max-w-2xl">
                 <h2 class="mb-4 text-xl font-semibold md:text-2xl">
                   <span v-if="currentSlide.optional" class="font-normal"
-                    >({{ $ts('recipe.optional') }})
+                    >({{ capitalize($ts("basics.optional")) }})
                   </span>
-                  {{ $ts('recipe.step') }} {{ currentSlide.stepNumber }}
+                  {{ $ts("recipe.step") }} {{ currentSlide.stepNumber }}
                 </h2>
 
                 <!-- Step image -->
@@ -548,7 +551,7 @@ watch(currentSlideIndex, () => {
                   <h3
                     class="mb-2 text-sm font-semibold tracking-wide uppercase"
                   >
-                    {{ $ts('recipe.ingredientsForStep') }}
+                    {{ $ts("recipe.ingredientsForStep") }}
                   </h3>
                   <IngredientList
                     :ingredients="getStepIngredients(currentSlide)"
@@ -565,7 +568,7 @@ watch(currentSlideIndex, () => {
                   <h3
                     class="mb-2 text-sm font-semibold tracking-wide uppercase"
                   >
-                    {{ $ts('recipe.cookware') }}
+                    {{ $ts("recipe.cookware") }}
                   </h3>
                   <ul class="ml-6 list-disc">
                     <li
@@ -600,7 +603,9 @@ watch(currentSlideIndex, () => {
                   name="i-lucide-circle-check"
                   class="text-primary size-24"
                 />
-                <h2 class="text-center text-3xl font-bold">{{ $ts('actions.done') }}</h2>
+                <h2 class="text-center text-3xl font-bold">
+                  {{ $ts("actions.done") }}
+                </h2>
                 <UButton
                   :label="$ts('actions.close')"
                   color="primary"
@@ -625,7 +630,9 @@ watch(currentSlideIndex, () => {
               class="bg-elevated w-72 rounded-2xl p-3 shadow-lg"
             >
               <div class="mb-2 flex items-center justify-between">
-                <span class="mb-1 ml-1.5 text-base font-semibold">{{ $ts('cookMode.timers') }}</span>
+                <span class="mb-1 ml-1.5 text-base font-semibold">{{
+                  $ts("cookMode.timers")
+                }}</span>
                 <UButton
                   icon="i-lucide-x"
                   color="neutral"

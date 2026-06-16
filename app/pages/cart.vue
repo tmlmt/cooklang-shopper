@@ -6,14 +6,14 @@ import {
   type ProductSelection,
 } from "@tmlmt/cooklang-parser";
 
-definePageMeta({
-  title: "Shopping Cart",
-  description:
-    "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
+const { $t, $ts } = useI18n();
+
+useSeoMeta({
+  title: $ts("pages.shoppingCart"),
+  description: $ts("description"),
 });
 
 const { cart, misMatch } = await useShoppingCart();
-const { $t } = useI18n();
 
 const columnsCart: TableColumn<ProductSelection>[] = [
   {
@@ -74,9 +74,9 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
 
 <template>
   <div class="flex w-full flex-col gap-4">
-    <h1 class="text-3xl">{{ $t('pages.shoppingCart') }}</h1>
+    <h1 class="text-3xl">{{ $t("pages.shoppingCart") }}</h1>
     <UTable :data="cart" :columns="columnsCart" />
-    <h2 class="text-2xl">{{ $t('noMatchingProducts') }}</h2>
+    <h2 class="text-2xl">{{ $t("noMatchingProducts") }}</h2>
     <UTable :data="misMatch" :columns="columnsMisMatch" />
   </div>
 </template>

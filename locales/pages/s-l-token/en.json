@@ -1,5 +1,8 @@
 {
+  "title": "Shopping List - Shared by {username}",
+  "description": "A shopping list shared from Cooklang Shopper",
+  "ogImageTitle": "Shopping List",
+  "ogImageSubtitle": "Shared by {username}",
   "sharedBy": "shared by",
-  "signInToEdit": "to edit this shopping list.",
-  "ogDescription": "A shopping list shared from Cooklang Shopper"
+  "signInToEdit": "to edit this shopping list."
 }

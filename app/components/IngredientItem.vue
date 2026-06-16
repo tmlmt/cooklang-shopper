@@ -15,17 +15,21 @@ type IngredientQuantityEntry =
   | IngredientQuantityGroup
   | IngredientQuantityAndGroup;
 
+const { $ts } = useI18n();
+
 const props = defineProps<{
   ingredient: Ingredient;
   allIngredients: Ingredient[];
 }>();
 
 const optionalPrefix = computed(() =>
-  props.ingredient.flags?.includes("optional") ? "(optional) " : "",
+  props.ingredient.flags?.includes("optional")
+    ? `(${$ts("basics.optional")}) `
+    : "",
 );
 
 function getIngredientName(index: number): string {
-  return props.allIngredients[index]?.name ?? "unknown";
+  return props.allIngredients[index]?.name ?? $ts("basics.unknown");
 }
 
 type DisplayMode =

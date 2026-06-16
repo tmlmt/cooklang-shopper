@@ -60,7 +60,6 @@
     "servings": "no servings | 1 serving | {count} servings",
     "scale": "Scale:",
     "step": "Step",
-    "optional": "(Optional)",
     "note": "Note:",
     "optionalSection": "Optional section",
     "ingredientsForStep": "Ingredients for this step",
@@ -79,6 +78,9 @@
   },
   "sharedLink": {
     "linkExpires": "This link expires on {date}"
+  },
+  "recipeTags": {
+    "extraTags": "Extra tags"
   },
   "recipeCard": {
     "today": "today",
@@ -138,6 +140,7 @@
       "moveFolder": "Move folder"
     },
     "about": {
+      "title": "About {appTitle}",
       "author": "Author:",
       "version": "Version:",
       "code": "Code:",
@@ -170,6 +173,9 @@
   "search": {
     "placeholder": "Search recipes...",
     "recipesMatching": "Recipes matching \"{term}\"..."
+  },
+  "errors": {
+    "recipeNotFound": "Recipe not found"
   },
   "toast": {
     "success": "Success",
@@ -247,12 +253,18 @@
   },
   "ai": {
     "convertFromUrl": "Convert from URL or text with AI",
-    "urlPlaceholder": "https://...",
     "pasteText": "Or paste recipe text directly...",
     "urlWarning": "URL import may not work for JavaScript-rendered pages. Use the text area as fallback.",
     "fetchingPage": "Fetching page...",
     "converting": "Converting with AI...",
     "noContent": "No content to convert",
     "fetchError": "Could not fetch page"
+  },
+  "basics": {
+    "unknown": "unknown",
+    "optional": "optional",
+    "yes": "yes",
+    "no": "no",
+    "recipe": "recipe | recipes"
   }
 }

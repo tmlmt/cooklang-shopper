@@ -78,7 +78,7 @@ defineOgImage(
   "DefaultOgImage",
   {
     title: siteConfig.name,
-    description: `All recipes in the '${folderName.value}' folder`,
+    description: $ts("description", { folder: folderName.value }),
   },
   [
     // Primary image for og:image and twitter:image (1200x600)
@@ -91,8 +91,8 @@ defineOgImage(
 useSeoMeta({
   title: folderName.value,
   ogTitle: folderName.value,
-  description: `All recipes in the '${folderName.value}' folder`,
-  ogDescription: `All recipes in the '${folderName.value}' folder`,
+  description: $ts("description", { folder: folderName.value }),
+  ogDescription: $ts("description", { folder: folderName.value }),
 });
 
 const folderRecipeCount = computed(() => {

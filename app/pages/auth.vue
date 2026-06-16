@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import type { Role } from "~~/shared/types";
 
+const { $t, $ts } = useI18n();
+
 definePageMeta({
   layout: "naked",
-  title: "Authentication",
-  description: "Sign in to access your cookbook",
 });
+useSeoMeta({
+  title: $ts("pages.authentication"),
+  description: $ts("description"),
+});
+
 const { loggedIn, user, clear, fetch: fetchSession } = useUserSession();
 const toast = useToast();
-const { $t, $ts } = useI18n();
 const route = useRoute();
 const siteConfig = useSiteConfig();
 
@@ -16,8 +20,8 @@ defineOgImage(
   "DefaultOgImage",
   {
     title: siteConfig.name,
-    subtitle: "Authentication",
-    description: "Sign in to access your cookbook",
+    subtitle: $ts("pages.authentication"),
+    description: $ts("description"),
   },
   [
     // Primary image for og:image and twitter:image (1200x600)
@@ -104,10 +108,12 @@ async function logout() {
 
 <template>
   <UCard class="max-w-2xl">
-    <template #header>{{ appTitle }} - {{ $t('pages.authentication') }}</template>
+    <template #header
+      >{{ appTitle }} - {{ $t("pages.authentication") }}</template
+    >
     <div v-if="loggedIn" class="flex flex-col items-center gap-4">
       <p>
-        {{ $t('loggedInAs') }}
+        {{ $t("loggedInAs") }}
         <b>{{ user?.profile ?? "" }}</b>
         ({{
           user?.role
@@ -121,7 +127,9 @@ async function logout() {
         :label="$ts('actions.goToCookbook')"
         @click="navigateTo('/')"
       />
-      <UButton color="primary" @click="logout">{{ $t('actions.signOut') }}</UButton>
+      <UButton color="primary" @click="logout">{{
+        $t("actions.signOut")
+      }}</UButton>
     </div>
     <div v-else class="flex flex-col items-center gap-4">
       <UButton
@@ -141,7 +149,7 @@ async function logout() {
         class="flex w-full items-center gap-4"
       >
         <USeparator class="flex-1" />
-        <span class="text-sm text-gray-500">{{ $t('or') }}</span>
+        <span class="text-sm text-gray-500">{{ $t("or") }}</span>
         <USeparator class="flex-1" />
       </div>
 

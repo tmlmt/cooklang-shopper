@@ -9,6 +9,7 @@ import {
   type RecipeChoices,
   type Yield,
 } from "@tmlmt/cooklang-parser";
+import { capitalize } from "#imports";
 
 const props = defineProps<{
   recipe: Recipe;
@@ -312,7 +313,7 @@ const visibleStepOverlay = ref<string | null>(null);
                   <div v-if="item.type === 'step' && item.active">
                     <h3 class="text-lg font-semibold">
                       <span v-if="item.optional" class="font-normal"
-                        >{{ $t("recipe.optional") }}
+                        >({{ capitalize($ts("recipe.optional")) }})
                       </span>
                       <template v-if="item.active"
                         >{{ $t("recipe.step") }} {{ item.stepNumber }}</template
@@ -390,7 +391,7 @@ const visibleStepOverlay = ref<string | null>(null);
             <div v-if="item.type === 'step' && item.active">
               <h3 class="text-lg font-semibold">
                 <span v-if="item.optional" class="font-normal"
-                  >{{ $t("recipe.optional") }}
+                  >({{ capitalize($ts("recipe.optional")) }})
                 </span>
                 <template v-if="item.active"
                   >{{ $t("recipe.step") }} {{ item.stepNumber }}</template

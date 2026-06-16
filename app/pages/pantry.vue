@@ -1,6 +1,8 @@
 <script setup lang="ts">
-definePageMeta({
-  title: "Pantry",
+const { $ts } = useI18n();
+
+useSeoMeta({
+  title: $ts("pages.pantry"),
 });
 
 const { data } = await useFetch("/api/pantry");
@@ -10,7 +12,6 @@ const content = ref(savedContent.value);
 const isDirty = computed(() => content.value !== savedContent.value);
 
 const toast = useToast();
-const { $ts } = useI18n();
 const saving = ref(false);
 
 async function save() {

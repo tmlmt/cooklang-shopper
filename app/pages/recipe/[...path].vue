@@ -12,7 +12,7 @@ const { $t, $ts } = useI18n();
 if (!route.params.path) {
   throw createError({
     status: 404,
-    statusText: "Recipe not found",
+    statusText: $ts("errors.recipeNotFound"),
   });
 }
 
@@ -93,7 +93,7 @@ if (route.query.mode === "new") {
     }
     throw createError({
       status: 404,
-      statusText: "Recipe not found",
+      statusText: $ts("errors.recipeNotFound"),
     });
   }
 
@@ -333,7 +333,9 @@ if (isEditor.value) {
           );
           toast.add({
             title: $ts("toast.success"),
-            description: $ts("toast.recipeMoved", { path: `${result.dir}/${result.name}` }),
+            description: $ts("toast.recipeMoved", {
+              path: `${result.dir}/${result.name}`,
+            }),
             color: "success",
           });
           await navigateTo(
@@ -476,7 +478,10 @@ const onConvertWithAi = async () => {
           color: "success",
           title: $ts("toast.conversionComplete"),
           duration: 3000,
-          description: $ts("toast.conversionTokens", { in: usage.in, out: usage.out }),
+          description: $ts("toast.conversionTokens", {
+            in: usage.in,
+            out: usage.out,
+          }),
         });
       } catch {
         toast.add({ color: "success", title: $ts("toast.conversionComplete") });
@@ -512,7 +517,7 @@ const isParsableRecipe = (value: string): boolean => {
   }
 };
 
-  const schema = v.object({
+const schema = v.object({
   recipe: v.pipe(
     v.string(),
     v.trim(),
@@ -809,10 +814,10 @@ watch(
           }}</span>
         </p>
         <h1 class="hidden text-3xl font-bold md:block">
-          {{ recipe.metadata.title ?? $t('recipe.untitled') }}
+          {{ recipe.metadata.title ?? $t("recipe.untitled") }}
         </h1>
         <h1 class="text-2xl font-bold md:hidden">
-          {{ recipe.metadata.title ?? $t('recipe.untitled') }}
+          {{ recipe.metadata.title ?? $t("recipe.untitled") }}
         </h1>
       </div>
       <RecipeMetadataBlock :recipe="recipe" />
@@ -832,15 +837,15 @@ watch(
             scaledRecipe: sr,
           }"
         >
-            <UButton
-              v-if="
-                loggedIn &&
-                shoppingEnabled &&
-                !shoppingStore.isRecipeInSelection(path)
-              "
-              size="sm"
-              color="primary"
-              :label="$ts('addToList')"
+          <UButton
+            v-if="
+              loggedIn &&
+              shoppingEnabled &&
+              !shoppingStore.isRecipeInSelection(path)
+            "
+            size="sm"
+            color="primary"
+            :label="$ts('addToList')"
             icon="material-symbols:add-shopping-cart-rounded"
             class="ml-2"
             @click="addToShoppingList(sr, servings, choices, selectedVariant)"
@@ -886,7 +891,7 @@ watch(
             <UButton class="group" color="neutral" variant="soft" size="sm">
               <span class="flex items-center gap-2">
                 <UIcon name="i-lucide-sparkles" class="size-4 shrink-0" />
-                {{ $t('ai.convertFromUrl') }}
+                {{ $t("ai.convertFromUrl") }}
               </span>
               <UIcon
                 name="i-lucide-chevron-down"
@@ -898,7 +903,7 @@ watch(
                 <div class="flex flex-col gap-3">
                   <UInput
                     v-model="aiUrl"
-                    :placeholder="$ts('ai.urlPlaceholder')"
+                    placeholder="https://..."
                     :disabled="isAiConverting"
                   />
                   <UTextarea
@@ -911,7 +916,7 @@ watch(
                     spellcheck="false"
                   />
                   <p class="text-muted text-xs">
-                    {{ $t('ai.urlWarning') }}
+                    {{ $t("ai.urlWarning") }}
                   </p>
                   <div class="flex flex-row items-center gap-3">
                     <UButton
@@ -955,7 +960,11 @@ watch(
           />
         </UFormField>
         <div class="mt-4 flex flex-row gap-4">
-          <UButton type="submit" :label="$ts('actions.save')" class="resize-y" />
+          <UButton
+            type="submit"
+            :label="$ts('actions.save')"
+            class="resize-y"
+          />
           <UButton
             type="button"
             color="secondary"

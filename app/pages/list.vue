@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
 
-definePageMeta({
-  title: "Shopping List",
-  description:
-    "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
+const { $t, $ts, $tc } = useI18n();
+
+useSeoMeta({
+  title: $ts("pages.shoppingList"),
+  description: $ts("description"),
 });
 
 const siteConfig = useSiteConfig();
@@ -13,8 +14,8 @@ defineOgImage(
   "DefaultOgImage",
   {
     title: siteConfig.name,
-    subtitle: "Authentication",
-    description: "Sign in to access your cookbook",
+    subtitle: $ts("pages.shoppingList"),
+    description: $ts("description"),
   },
   [
     // Primary image for og:image and twitter:image (1200x600)
@@ -26,7 +27,6 @@ defineOgImage(
 
 const shoppingStore = useShoppingStore();
 const toast = useToast();
-const { $t, $ts } = useI18n();
 await useAsyncData("shopping-list", async () => {
   await shoppingStore.fetchList();
   return null;
@@ -109,10 +109,16 @@ watch(
       v-if="shoppingStore.sharedToken"
       color="info"
       variant="soft"
-      :title="$ts('viewingSharedList', { owner: shoppingStore.sharedOwnerName ?? '' })"
+      :title="
+        $ts('viewingSharedList', { owner: shoppingStore.sharedOwnerName ?? '' })
+      "
       :description="
         shoppingStore.sharedExpiresAt
-          ? $ts('sharedLink.linkExpires', { date: new Date(shoppingStore.sharedExpiresAt).toLocaleDateString() })
+          ? $ts('sharedLink.linkExpires', {
+              date: new Date(
+                shoppingStore.sharedExpiresAt,
+              ).toLocaleDateString(),
+            })
           : undefined
       "
       :ui="{ root: 'mb-2' }"
@@ -128,11 +134,14 @@ watch(
       </template>
     </UAlert>
     <div class="flex flex-row items-center gap-1">
-      <h1 class="text-base font-bold md:text-lg">{{ $t('pages.shoppingList') }}</h1>
+      <h1 class="text-base font-bold md:text-lg">
+        {{ $t("pages.shoppingList") }}
+      </h1>
       <span
         v-if="shoppingStore.recipeSelection.length"
         class="text-sm md:text-base"
-        >· {{ $tc('folder.recipes', shoppingStore.recipeSelection.length) }}</span
+        >·
+        {{ $tc("folder.recipes", shoppingStore.recipeSelection.length) }}</span
       >
     </div>
     <ShoppingListContent

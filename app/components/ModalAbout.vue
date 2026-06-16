@@ -23,7 +23,7 @@ const about = computed(() => sharing.value.about);
 
 <template>
   <UModal
-    :title="`About ${appTitle}`"
+    :title="$ts('modal.about.title', { appTitle })"
     :close="false"
     :ui="{ content: 'max-w-sm' }"
   >

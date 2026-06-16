@@ -25,14 +25,18 @@ if (error.value) {
   });
 }
 
+const { $t, $ts } = useI18n();
+
 //---------------------------
 // OG Image
 //---------------------------
 
 defineOgImage("DefaultOgImage", {
-  title: "Shopping List",
-  subtitle: `Shared by ${data.value?.ownerName ?? "unknown"}`,
-  description: "A shopping list shared from Cooklang Shopper",
+  title: $ts("ogImageTitle"),
+  subtitle: $ts("ogImageSubtitle", {
+    username: data.value?.ownerName ?? $ts("basics.unknown"),
+  }),
+  description: $ts("description"),
 });
 
 //---------------------------
@@ -40,13 +44,16 @@ defineOgImage("DefaultOgImage", {
 //---------------------------
 
 useSeoMeta({
-  title: `Shopping List - Shared by ${data.value?.ownerName ?? "unknown"}`,
-  ogTitle: `Shopping List - Shared by ${data.value?.ownerName ?? "unknown"}`,
-  description: "A shopping list shared from Cooklang Shopper",
-  ogDescription: "A shopping list shared from Cooklang Shopper",
+  title: $ts("title", {
+    username: data.value?.ownerName ?? $ts("basics.unknown"),
+  }),
+  ogTitle: $ts("title", {
+    username: data.value?.ownerName ?? $ts("basics.unknown"),
+  }),
+  description: $ts("description"),
+  ogDescription: $ts("description"),
 });
 
-const { $t, $ts } = useI18n();
 const { loggedIn } = useUserSession();
 
 const shoppingList = !loggedIn.value
