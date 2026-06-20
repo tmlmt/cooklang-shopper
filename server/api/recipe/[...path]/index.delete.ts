@@ -7,12 +7,23 @@ export default defineEventHandler(async (event) => {
   const decodedPath = getValidatedRecipePath(event);
 
   const storage = useStorage("recipes");
-
-  // Remove the recipe file itself
   const recipeKey = decodedPath.replace(/\//g, ":");
-  await storage.removeItem(recipeKey + ".cook");
 
-  // Remove associated images
+  // Collect all variant file keys for this recipe (default + language codes)
+  const { hasDefault, langCodes } = getVariantsForBase(recipeKey);
+  const fileKeys: string[] = [];
+  if (hasDefault) fileKeys.push(recipeKey);
+  for (const lang of langCodes) fileKeys.push(`${recipeKey}.${lang}`);
+  // Edge case: file exists on disk but was never indexed (e.g. manual drop)
+  if (fileKeys.length === 0) fileKeys.push(recipeKey);
+
+  // Delete every variant file from storage and the index
+  for (const fileKey of fileKeys) {
+    await storage.removeItem(fileKey + ".cook");
+    deleteFromRecipeIndex(fileKey + ".cook");
+  }
+
+  // Remove associated images — images use the base recipe name, so one pass
   const recipeFsPath = nodePath.join(
     process.cwd(),
     "public",
@@ -29,13 +40,11 @@ export default defineEventHandler(async (event) => {
     // Directory may not exist or images may already be gone — not critical
   }
 
-  // Remove the recipe from the index
-  deleteFromRecipeIndex(recipeKey);
-
-  // Clean up visibility overrides and share links
+  // Remove visibility overrides and share links (once, using base key)
   await deleteRecipeVisibilityAndLinks(recipeKey);
 
   const recipeIndex = getRecipeIndex();
   const recipes = Object.fromEntries(recipeIndex.entries());
   return { recipes };
 });
+

@@ -42,7 +42,9 @@
     "uploadImage": "Upload image",
     "downloadCook": "Download .cook",
     "storeRun": "Store Run",
-    "categoryConfig": "Category Config"
+    "categoryConfig": "Category Config",
+    "translate": "Translate",
+    "setAsDefault": "Set as Default"
   },
   "nav": {
     "backToFolder": "Back to folder",
@@ -215,6 +217,8 @@
     "shareLinkRevokeError": "Failed to revoke share link",
     "linkCopied": "Link copied to clipboard",
     "linkCopyError": "Failed to copy link",
+    "setAsDefaultDone": "Default language updated",
+    "translationComplete": "Translation complete",
     "conversionComplete": "Conversion complete",
     "conversionTokens": "{in} input / {out} output tokens",
     "conversionInterrupted": "Conversion interrupted",
@@ -238,6 +242,8 @@
   "validation": {
     "enterRecipe": "Please enter a recipe",
     "invalidRecipe": "Invalid recipe. Check syntax",
+    "localeRequired": "Please enter a language code",
+    "localeInvalid": "Must be a 2-letter language code (e.g. en, fr)",
     "enterFilename": "Please enter a filename",
     "filenameNoSlash": "The filename must not contain '/'",
     "filenameChars": "Only letters, digits, spaces, and & ( ) ' _ + % . - are allowed",
@@ -250,6 +256,34 @@
     "noSlash": "Must not contain '/'",
     "noBackslash": "Must not contain '\\'",
     "ingredientRequired": "Ingredient name is required"
+  },
+  "translation": {
+    "modalTitle": "Translate Recipe",
+    "manual": "Manual",
+    "usingAi": "Using AI",
+    "localeLabel": "Target language",
+    "localeDescription": "2-letter ISO 639-1 code (e.g. en, fr, de)",
+    "methodLabel": "Translation method",
+    "translateButton": "Translate",
+    "translating": "Translating…",
+    "failed": "Translation failed",
+    "editingVariant": "Editing variant",
+    "default": "Default",
+    "setAsDefault": "Set as Default",
+    "translate": "Translate",
+    "oldDefaultLocaleTitle": "Current default language",
+    "oldDefaultLocaleLabel": "What language is the current default file? (e.g. en)"
+  },
+  "recipeLocale": {
+    "modalTitle": "Recipe Language",
+    "recipeLanguageLabel": "Recipe content",
+    "pageLanguageLabel": "Page language",
+    "followRecipe": "Follow recipe",
+    "followRecipeDescription": "Switch the page UI to match the recipe language",
+    "followApp": "Follow app",
+    "followAppDescription": "Keep current app language ({locale})",
+    "fallbackTitle": "Language not available",
+    "fallbackDescription": "'{locale}' is not available as an interface language, keeping '{fallback}'"
   },
   "ai": {
     "convertFromUrl": "Convert from URL or text with AI",

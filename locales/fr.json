@@ -42,7 +42,9 @@
     "uploadImage": "Charger une image",
     "downloadCook": "Télécharger .cook",
     "storeRun": "Faire les courses",
-    "categoryConfig": "Configuration de la catégorie"
+    "categoryConfig": "Configuration de la catégorie",
+    "translate": "Traduire",
+    "setAsDefault": "Définir par défaut"
   },
   "nav": {
     "backToFolder": "Retour au dossier",
@@ -209,6 +211,8 @@
     "shareLinkRevokeError": "Impossible de révoquer le lien de partage",
     "linkCopied": "Lien copié dans le presse-papiers",
     "linkCopyError": "Impossible de copier le lien",
+    "setAsDefaultDone": "Langue par défaut mise à jour",
+    "translationComplete": "Traduction terminée",
     "conversionComplete": "Conversion terminée",
     "conversionTokens": "{in} tokens d'entrée / {out} de sortie",
     "conversionInterrupted": "Conversion interrompue",
@@ -232,6 +236,8 @@
   "validation": {
     "enterRecipe": "Veuillez entrer une recette",
     "invalidRecipe": "Recette invalide. Vérifiez la syntaxe",
+    "localeRequired": "Veuillez entrer un code de langue",
+    "localeInvalid": "Doit être un code de langue à 2 lettres (ex. en, fr)",
     "enterFilename": "Veuillez entrer un nom de fichier",
     "filenameNoSlash": "Le nom du fichier ne doit pas contenir '/'",
     "filenameChars": "Seuls les lettres, chiffres, espaces, et & ( ) ' _ + % . - sont autorisés",
@@ -244,6 +250,34 @@
     "noSlash": "Ne doit pas contenir '/'",
     "noBackslash": "Ne doit pas contenir '\\'",
     "ingredientRequired": "Le nom de l'ingrédient est requis"
+  },
+  "translation": {
+    "modalTitle": "Traduire la recette",
+    "manual": "Manuel",
+    "usingAi": "Avec l'IA",
+    "localeLabel": "Langue cible",
+    "localeDescription": "Code ISO 639-1 à 2 lettres (ex. en, fr, de)",
+    "methodLabel": "Méthode de traduction",
+    "translateButton": "Traduire",
+    "translating": "Traduction en cours…",
+    "failed": "Traduction échouée",
+    "editingVariant": "Variante en cours d'édition",
+    "default": "Par défaut",
+    "setAsDefault": "Définir par défaut",
+    "translate": "Traduire",
+    "oldDefaultLocaleTitle": "Langue par défaut actuelle",
+    "oldDefaultLocaleLabel": "Quelle est la langue du fichier par défaut actuel ? (ex. en)"
+  },
+  "recipeLocale": {
+    "modalTitle": "Langue de la recette",
+    "recipeLanguageLabel": "Contenu de la recette",
+    "pageLanguageLabel": "Langue de la page",
+    "followRecipe": "Suivre la recette",
+    "followRecipeDescription": "Basculer l'interface vers la langue de la recette",
+    "followApp": "Suivre l'application",
+    "followAppDescription": "Conserver la langue actuelle ({locale})",
+    "fallbackTitle": "Langue non disponible",
+    "fallbackDescription": "'{locale}' n'est pas disponible comme langue d'interface, conservation de '{fallback}'"
   },
   "ai": {
     "convertFromUrl": "Convertir depuis une URL ou un texte avec une IA",

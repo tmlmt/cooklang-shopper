@@ -44,10 +44,16 @@ export default defineEventHandler(async (event) => {
   const token = randomUUID();
   const db = getDb();
 
+  const locale =
+    typeof body.locale === "string" && isValidLangCode(body.locale)
+      ? body.locale
+      : null;
+
   const shareLink = await db.shareLink.create({
     data: {
       token,
       recipePath,
+      locale,
       expiresAt,
     },
   });
@@ -56,6 +62,7 @@ export default defineEventHandler(async (event) => {
     id: shareLink.id,
     token: shareLink.token,
     recipePath: shareLink.recipePath,
+    locale: shareLink.locale ?? undefined,
     expiresAt: shareLink.expiresAt,
     createdAt: shareLink.createdAt,
   };

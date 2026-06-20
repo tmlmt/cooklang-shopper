@@ -32,10 +32,29 @@ export default defineSitemapEventHandler(async () => {
           }))
         : [];
 
+    const alternatives: { hreflang: string; href: string }[] = [];
+    if (entry.locales && entry.locales.length > 0) {
+      // Default file (no lang suffix)
+      if (entry.defaultLocale !== undefined) {
+        alternatives.push({
+          hreflang: entry.defaultLocale,
+          href: `${baseUrl}/recipe/${filePath}`,
+        });
+      }
+      // Each language variant
+      for (const lang of entry.locales) {
+        alternatives.push({
+          hreflang: lang,
+          href: `${baseUrl}/recipe/${filePath}?locale=${lang}`,
+        });
+      }
+    }
+
     urls.push({
       loc: `/recipe/${filePath}`,
       lastmod: entry.lastModified,
       ...(images.length > 0 ? { images } : {}),
+      ...(alternatives.length > 0 ? { alternatives } : {}),
     });
   }
 

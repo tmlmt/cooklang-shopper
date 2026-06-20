@@ -3,6 +3,8 @@ import type { ShareLink } from "~~/shared/types";
 
 const props = defineProps<{
   recipePath: string;
+  /** Currently viewing locale (undefined = default file) */
+  viewingLocale?: string;
 }>();
 
 const emit = defineEmits<{ close: [] }>();
@@ -63,14 +65,16 @@ async function toggleVisibility() {
     );
     visibility.value = newVisibility;
     toast.add({
-      title: $ts('toast.visibilityUpdated'),
-      description: $ts('toast.visibilityUpdatedTo', { visibility: newVisibility }),
+      title: $ts("toast.visibilityUpdated"),
+      description: $ts("toast.visibilityUpdatedTo", {
+        visibility: newVisibility,
+      }),
       color: "success",
     });
   } catch {
     toast.add({
-      title: $ts('toast.error'),
-      description: $ts('toast.visibilityUpdateError'),
+      title: $ts("toast.error"),
+      description: $ts("toast.visibilityUpdateError"),
       color: "error",
     });
   }
@@ -86,18 +90,21 @@ async function createLink() {
       "/api/sharing/recipe/links",
       {
         method: "POST",
-        body: { recipePath: props.recipePath },
+        body: {
+          recipePath: props.recipePath,
+          locale: props.viewingLocale ?? undefined,
+        },
       },
     );
     links.value.unshift({ ...data, expired: false });
     toast.add({
-      title: $ts('toast.shareLinkCreated'),
+      title: $ts("toast.shareLinkCreated"),
       color: "success",
     });
   } catch {
     toast.add({
-      title: $ts('toast.error'),
-      description: $ts('toast.shareLinkCreateError'),
+      title: $ts("toast.error"),
+      description: $ts("toast.shareLinkCreateError"),
       color: "error",
     });
   } finally {
@@ -112,13 +119,13 @@ async function revokeLink(id: number) {
     });
     links.value = links.value.filter((l) => l.id !== id);
     toast.add({
-      title: $ts('toast.shareLinkRevoked'),
+      title: $ts("toast.shareLinkRevoked"),
       color: "success",
     });
   } catch {
     toast.add({
-      title: $ts('toast.error'),
-      description: $ts('toast.shareLinkRevokeError'),
+      title: $ts("toast.error"),
+      description: $ts("toast.shareLinkRevokeError"),
       color: "error",
     });
   }
@@ -132,13 +139,13 @@ async function copyLink(token: string) {
   try {
     await copy(getShareUrl(token));
     toast.add({
-      title: $ts('toast.linkCopied'),
+      title: $ts("toast.linkCopied"),
       color: "success",
     });
   } catch {
     toast.add({
-      title: $ts('toast.error'),
-      description: $ts('toast.linkCopyError'),
+      title: $ts("toast.error"),
+      description: $ts("toast.linkCopyError"),
       color: "error",
     });
   }
@@ -167,12 +174,12 @@ defineShortcuts({
         </div>
         <div v-else class="flex items-center justify-between">
           <div>
-            <div class="font-medium">{{ $ts('modal.share.visibility') }}</div>
+            <div class="font-medium">{{ $ts("modal.share.visibility") }}</div>
             <div class="text-muted text-sm">
               {{
                 visibility === "public"
-                  ? $ts('modal.share.visibilityPublic')
-                  : $ts('modal.share.visibilityPrivate')
+                  ? $ts("modal.share.visibilityPublic")
+                  : $ts("modal.share.visibilityPrivate")
               }}
             </div>
           </div>
@@ -187,7 +194,7 @@ defineShortcuts({
         <!-- Share links -->
         <div>
           <div class="mb-3 flex items-center justify-between">
-            <div class="font-medium">{{ $ts('modal.share.shareLinks') }}</div>
+            <div class="font-medium">{{ $ts("modal.share.shareLinks") }}</div>
             <UButton
               size="sm"
               icon="i-lucide-plus"
@@ -204,7 +211,7 @@ defineShortcuts({
             v-else-if="links.length === 0"
             class="text-muted py-4 text-center text-sm"
           >
-            {{ $ts('modal.share.noLinks') }}
+            {{ $ts("modal.share.noLinks") }}
           </div>
           <div v-else class="flex flex-col gap-2">
             <div
@@ -214,17 +221,26 @@ defineShortcuts({
               :class="{ 'opacity-50': link.expired }"
             >
               <div class="min-w-0 flex-1">
-                <div class="truncate font-mono text-xs">
+                <div class="flex items-center gap-1 truncate font-mono text-xs">
                   {{ getShareUrl(link.token) }}
+                  <UBadge
+                    v-if="link.locale"
+                    :label="link.locale.toUpperCase()"
+                    size="xs"
+                    color="neutral"
+                    variant="soft"
+                    class="shrink-0"
+                  />
                 </div>
                 <div class="text-muted text-xs">
-                  {{ $ts('modal.share.created') }} {{ new Date(link.createdAt).toLocaleDateString() }}
+                  {{ $ts("modal.share.created") }}
+                  {{ new Date(link.createdAt).toLocaleDateString() }}
                   <template v-if="link.expiresAt">
                     ·
                     {{
                       link.expired
-                        ? $ts('modal.share.expired')
-                        : `${$ts('modal.share.expires')} ${new Date(link.expiresAt).toLocaleDateString()}`
+                        ? $ts("modal.share.expired")
+                        : `${$ts("modal.share.expires")} ${new Date(link.expiresAt).toLocaleDateString()}`
                     }}
                   </template>
                 </div>

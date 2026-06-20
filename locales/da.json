@@ -42,7 +42,9 @@
     "uploadImage": "Upload billede",
     "downloadCook": "Download .cook",
     "storeRun": "Butik Kør",
-    "categoryConfig": "Kategori Konfiguration"
+    "categoryConfig": "Kategori Konfiguration",
+    "translate": "Oversæt",
+    "setAsDefault": "Sæt som standard"
   },
   "nav": {
     "backToFolder": "Tilbage til mappe",
@@ -209,6 +211,8 @@
     "shareLinkRevokeError": "Kunne ikke tilbagekalde delingslink",
     "linkCopied": "Link kopieret til udklipsholder",
     "linkCopyError": "Kunne ikke kopiere link",
+    "setAsDefaultDone": "Standardsprog opdateret",
+    "translationComplete": "Oversættelse fuldført",
     "conversionComplete": "Konvertering fuldført",
     "conversionTokens": "{in} input / {out} output tokens",
     "conversionInterrupted": "Konvertering afbrudt",
@@ -232,6 +236,8 @@
   "validation": {
     "enterRecipe": "Indtast venligst en opskrift",
     "invalidRecipe": "Ugyldig opskrift. Tjek syntaks",
+    "localeRequired": "Indtast venligst en sprogkode",
+    "localeInvalid": "Skal være en 2-bogstavs sprogkode (f.eks. en, fr)",
     "enterFilename": "Indtast venligst et filnavn",
     "filenameNoSlash": "Filnavnet må ikke indeholde '/'",
     "filenameChars": "Kun bogstaver, cifre, mellemrum og & ( ) ' _ + % . - er tilladt",
@@ -244,6 +250,34 @@
     "noSlash": "Må ikke indeholde '/'",
     "noBackslash": "Må ikke indeholde '\\'",
     "ingredientRequired": "Ingrediensnavn er påkrævet"
+  },
+  "translation": {
+    "modalTitle": "Oversæt opskrift",
+    "manual": "Manuelt",
+    "usingAi": "Med AI",
+    "localeLabel": "Målsprog",
+    "localeDescription": "2-bogstavs ISO 639-1 kode (f.eks. en, fr, de)",
+    "methodLabel": "Oversættelsesmetode",
+    "translateButton": "Oversæt",
+    "translating": "Oversætter…",
+    "failed": "Oversættelse mislykkedes",
+    "editingVariant": "Redigerer variant",
+    "default": "Standard",
+    "setAsDefault": "Sæt som standard",
+    "translate": "Oversæt",
+    "oldDefaultLocaleTitle": "Nuværende standardsprog",
+    "oldDefaultLocaleLabel": "Hvilket sprog er den nuværende standardfil? (f.eks. en)"
+  },
+  "recipeLocale": {
+    "modalTitle": "Opskriftssprog",
+    "recipeLanguageLabel": "Opskriftens indhold",
+    "pageLanguageLabel": "Sidesprog",
+    "followRecipe": "Følg opskriften",
+    "followRecipeDescription": "Skift sidegrænsefladen til opskriftens sprog",
+    "followApp": "Følg appen",
+    "followAppDescription": "Behold nuværende appsprog ({locale})",
+    "fallbackTitle": "Sprog ikke tilgængeligt",
+    "fallbackDescription": "'{locale}' er ikke tilgængeligt som grænsefladesprog, beholder '{fallback}'"
   },
   "ai": {
     "convertFromUrl": "Konverter fra URL eller tekst med AI",

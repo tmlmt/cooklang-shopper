@@ -314,6 +314,7 @@ export interface ShoppingListData {
     path: string;
     title: string;
     servings: number;
+    locale?: string;
     choices?: RecipeChoicesWire;
   }>;
   ingredients: AddedIngredient[];
@@ -340,18 +341,26 @@ export function getShoppingListData(
   const recipeIndex = getRecipeIndex();
 
   const recipes = sl.recipes.map((r) => {
-    // Strip ./ prefix to get the recipe key for index lookup
-    const recipePath = r.path?.startsWith("./")
+    // Strip ./ prefix to get the stored path (may include a lang code)
+    const storedPath = r.path?.startsWith("./")
       ? r.path.substring(2)
       : (r.path ?? "");
-    const indexEntry = recipeIndex.get(recipePath);
+
+    // Separate base path (for navigation) from locale (for display)
+    const { baseKey, langCode } = parseRecipeKey(storedPath);
+    const basePath = baseKey;
+
+    // Index is keyed by colon-separated base key
+    const indexKey = basePath.replace(/\//g, ":");
+    const indexEntry = recipeIndex.get(indexKey);
     const servings =
       "servings" in r ? r.servings : (r.recipe.servings ?? 1) * r.factor;
 
     return {
-      path: recipePath,
-      title: indexEntry?.title ?? recipePath.split("/").pop() ?? recipePath,
+      path: basePath,
+      title: indexEntry?.title ?? basePath.split("/").pop() ?? basePath,
       servings,
+      locale: langCode,
       choices: r.choices
         ? {
             ingredientItems: [
@@ -392,16 +401,23 @@ export async function addRecipeToList(
 ): Promise<void> {
   const sl = await getOrCreateShoppingList(userKey, listName);
 
-  // Check if recipe is already in the list
-  const parserPath = `./${recipePath}`;
-  if (sl.recipes.some((r) => r.path === parserPath)) {
+  // Prevent adding if ANY variant of this recipe is already in the list.
+  // Compare by base path (strip lang code) so users cannot add the same
+  // recipe twice by switching languages.
+  const { baseKey: baseRecipePath } = parseRecipeKey(recipePath);
+  const isDuplicate = sl.recipes.some((r) => {
+    const rRaw = r.path?.startsWith("./") ? r.path.substring(2) : (r.path ?? "");
+    const { baseKey: rBase } = parseRecipeKey(rRaw);
+    return rBase === baseRecipePath;
+  });
+  if (isDuplicate) {
     throw createError({
       status: 409,
       statusText: "Recipe already in shopping list",
     });
   }
 
-  // Load recipe content
+  // Load recipe content — recipePath may include a lang code (e.g. "italian/pasta.en")
   const storage = useStorage("recipes");
   const content = await storage.getItem(recipePath + ".cook");
   if (!content) {
@@ -410,7 +426,7 @@ export async function addRecipeToList(
 
   const recipe = new Recipe(content.toString());
   sl.addRecipe(recipe, {
-    path: parserPath,
+    path: `./${recipePath}`,
     scaling: { servings },
     choices,
   });
@@ -434,26 +450,36 @@ export async function updateRecipeInList(
     });
   }
 
-  const parserPath = `./${recipePath}`;
-
-  // Remove then re-add with new options
-  const recipeIndex = sl.recipes.findIndex((r) => r.path === parserPath);
-  if (recipeIndex === -1) {
+  // Match by base path to find the stored entry (which may have a lang code)
+  const { baseKey: baseRecipePath } = parseRecipeKey(recipePath);
+  const existingIdx = sl.recipes.findIndex((r) => {
+    const rRaw = r.path?.startsWith("./") ? r.path.substring(2) : (r.path ?? "");
+    const { baseKey: rBase } = parseRecipeKey(rRaw);
+    return rBase === baseRecipePath;
+  });
+  if (existingIdx === -1) {
     throw createError({
       status: 404,
       statusText: "Recipe not found in shopping list",
     });
   }
-  sl.removeRecipe(recipeIndex);
+
+  // Retrieve the stored path (preserves lang code for reloading the right file)
+  const storedParserPath = sl.recipes[existingIdx]!.path ?? `./${recipePath}`;
+  const storedFilePath = storedParserPath.startsWith("./")
+    ? storedParserPath.substring(2)
+    : storedParserPath;
+
+  sl.removeRecipe(existingIdx);
 
   const storage = useStorage("recipes");
-  const content = await storage.getItem(recipePath + ".cook");
+  const content = await storage.getItem(storedFilePath + ".cook");
   if (!content) {
     throw createError({ status: 404, statusText: "Recipe not found" });
   }
 
   sl.addRecipe(new Recipe(content.toString()), {
-    path: parserPath,
+    path: storedParserPath,
     scaling: { servings },
     choices,
   });
@@ -475,8 +501,13 @@ export async function removeRecipeFromList(
     });
   }
 
-  const parserPath = `./${recipePath}`;
-  const recipeIdx = sl.recipes.findIndex((r) => r.path === parserPath);
+  // Match by base path (the caller always sends the base path, without lang code)
+  const { baseKey: baseRecipePath } = parseRecipeKey(recipePath);
+  const recipeIdx = sl.recipes.findIndex((r) => {
+    const rRaw = r.path?.startsWith("./") ? r.path.substring(2) : (r.path ?? "");
+    const { baseKey: rBase } = parseRecipeKey(rRaw);
+    return rBase === baseRecipePath;
+  });
   if (recipeIdx === -1) {
     throw createError({
       status: 404,

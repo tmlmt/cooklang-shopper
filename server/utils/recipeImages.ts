@@ -24,6 +24,10 @@ export function toWebPathFromFsPath(fsPath: string): string | undefined {
 /**
  * Discover all image files associated with a recipe in the given directory.
  * Returns an object with categorized images and the raw list of absolute fs paths.
+ *
+ * Strips any language code suffix from recipeName before building the prefix,
+ * so that images are shared across all language variants of a recipe.
+ * e.g. recipeName "pasta.en" → prefix "pasta."
  */
 export async function discoverRecipeImages(
   recipeDirFsPath: string,
@@ -34,7 +38,10 @@ export async function discoverRecipeImages(
   all: string[];
 }> {
   const dirEntries = await readdir(recipeDirFsPath, { withFileTypes: true });
-  const prefix = recipeName.toLowerCase() + ".";
+
+  // Strip language code suffix if present (e.g. "pasta.en" → "pasta")
+  const { baseKey: baseName } = parseRecipeKey(recipeName);
+  const prefix = baseName.toLowerCase() + ".";
 
   let cover: string | undefined;
   const steps: Record<string, string> = {};
@@ -51,8 +58,8 @@ export async function discoverRecipeImages(
     const fsPath = nodePath.join(recipeDirFsPath, entry.name);
     all.push(fsPath);
 
-    // Check if it's the cover image: {recipeName}.{ext}
-    const expectedCover = `${recipeName}.${ext}`.toLowerCase();
+    // Check if it's the cover image: {baseName}.{ext}
+    const expectedCover = `${baseName}.${ext}`.toLowerCase();
     if (lowerName === expectedCover && !cover) {
       cover = fsPath;
       continue;

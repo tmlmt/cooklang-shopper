@@ -123,6 +123,8 @@ export interface RecipeInfo {
   path: string;
   servings: number;
   choices?: RecipeChoices;
+  /** Locale variant chosen when this recipe was added to the shopping list */
+  locale?: string;
 }
 
 export interface RecipeEssentials {
@@ -141,6 +143,10 @@ export interface RecipeEssentials {
   source?: string;
   description?: string;
   difficulty?: string;
+  /** Language codes available via {name}.xx.cook variant files */
+  locales?: string[];
+  /** Locale of the default file ({name}.cook), detected from metadata or app config */
+  defaultLocale?: string;
 }
 
 export interface RecipeIndex {
@@ -163,6 +169,7 @@ export interface ShareLink {
   id: number;
   token: string;
   recipePath: string;
+  locale?: string;
   expiresAt: string | null;
   createdAt: string;
   expired: boolean;

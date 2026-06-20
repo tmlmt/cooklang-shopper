@@ -19,6 +19,7 @@ model ShareLink {
   id         Int       @id @default(autoincrement())
   token      String    @unique
   recipePath String
+  locale     String?
   expiresAt  DateTime?
   createdAt  DateTime  @default(now())
 
