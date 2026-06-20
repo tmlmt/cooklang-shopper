@@ -1269,7 +1269,7 @@ watch(
           <span class="text-muted text-sm"
             >{{ $t("translation.editingVariant") }}:</span
           >
-          <UButtonGroup size="sm">
+          <UFieldGroup size="sm">
             <UButton
               :variant="editLocale === undefined ? 'solid' : 'outline'"
               color="neutral"
@@ -1297,7 +1297,7 @@ watch(
               color="neutral"
               :label="editLocale.toUpperCase()"
             />
-          </UButtonGroup>
+          </UFieldGroup>
           <UButton
             v-if="editLocale !== undefined"
             size="sm"
