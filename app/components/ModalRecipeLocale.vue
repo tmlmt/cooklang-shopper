@@ -15,6 +15,12 @@ const props = defineProps<{
 const emit = defineEmits<{ close: [result: RecipeLocaleResult | undefined] }>();
 
 const { $ts } = useI18n();
+const { $getLocales } = useNuxtApp();
+
+const localeDisplayNames = computed(() => {
+  const locales = $getLocales() as Array<{ code: string; displayName?: string }>;
+  return Object.fromEntries(locales.map((l) => [l.code, l.displayName ?? l.code.toUpperCase()]));
+});
 
 const selectedKey = ref<string>(props.currentRecipeLocale ?? RECIPE_DEFAULT);
 const pageLanguageModeCookie = useCookie<"recipe" | "app">(
@@ -23,14 +29,25 @@ const pageLanguageModeCookie = useCookie<"recipe" | "app">(
 );
 const pageLanguageMode = ref<"recipe" | "app">(pageLanguageModeCookie.value);
 
+const displayNames = computed(
+  () => new Intl.DisplayNames([props.currentAppLocale], { type: "language" }),
+);
+
 const selectItems = computed(() =>
-  props.allLocaleOptions.map((opt) => ({
-    label:
-      opt.code === undefined
-        ? `${opt.label} (${$ts("translation.default")})`
-        : opt.label,
-    value: opt.code ?? RECIPE_DEFAULT,
-  })),
+  props.allLocaleOptions.map((opt) => {
+    if (opt.code === undefined) {
+      // opt.label is either an uppercase locale code (e.g. "EN") or "default" when unknown
+      const localeCode = opt.label !== "default" ? opt.label.toLowerCase() : undefined;
+      const localeLabel = localeCode
+        ? (localeDisplayNames.value[localeCode] ?? displayNames.value.of(localeCode) ?? localeCode.toUpperCase())
+        : $ts("translation.unspecified");
+      return { label: `${localeLabel} (${$ts("translation.default")})`, value: RECIPE_DEFAULT };
+    }
+    return {
+      label: localeDisplayNames.value[opt.code] ?? displayNames.value.of(opt.code) ?? opt.code.toUpperCase(),
+      value: opt.code,
+    };
+  }),
 );
 
 const pageModeItems = computed(() => [

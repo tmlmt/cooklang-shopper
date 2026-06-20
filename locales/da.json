@@ -263,6 +263,7 @@
     "failed": "Oversættelse mislykkedes",
     "editingVariant": "Redigerer variant",
     "default": "Standard",
+    "unspecified": "Uspecificeret",
     "setAsDefault": "Sæt som standard",
     "translate": "Oversæt",
     "oldDefaultLocaleTitle": "Nuværende standardsprog",

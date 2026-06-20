@@ -263,6 +263,7 @@
     "failed": "Traduction échouée",
     "editingVariant": "Variante en cours d'édition",
     "default": "Par défaut",
+    "unspecified": "Non spécifié",
     "setAsDefault": "Définir par défaut",
     "translate": "Traduire",
     "oldDefaultLocaleTitle": "Langue par défaut actuelle",

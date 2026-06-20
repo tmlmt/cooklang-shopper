@@ -269,6 +269,7 @@
     "failed": "Translation failed",
     "editingVariant": "Editing variant",
     "default": "Default",
+    "unspecified": "Unspecified",
     "setAsDefault": "Set as Default",
     "translate": "Translate",
     "oldDefaultLocaleTitle": "Current default language",
