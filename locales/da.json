@@ -274,9 +274,9 @@
     "recipeLanguageLabel": "Opskriftens indhold",
     "pageLanguageLabel": "Sidesprog",
     "followRecipe": "Følg opskriften",
-    "followRecipeDescription": "Skift sidegrænsefladen til opskriftens sprog",
+    "followRecipeDescription": "Vis opskriftslabels på opskriftens sprog",
     "followApp": "Følg appen",
-    "followAppDescription": "Behold nuværende appsprog ({locale})",
+    "followAppDescription": "Vis opskriftslabels på app-sproget ({locale})",
     "fallbackTitle": "Sprog ikke tilgængeligt",
     "fallbackDescription": "'{locale}' er ikke tilgængeligt som grænsefladesprog, beholder '{fallback}'"
   },

@@ -274,9 +274,9 @@
     "recipeLanguageLabel": "Contenu de la recette",
     "pageLanguageLabel": "Langue de la page",
     "followRecipe": "Suivre la recette",
-    "followRecipeDescription": "Basculer l'interface vers la langue de la recette",
+    "followRecipeDescription": "Afficher les libellés en langue de la recette",
     "followApp": "Suivre l'application",
-    "followAppDescription": "Conserver la langue actuelle ({locale})",
+    "followAppDescription": "Afficher les libellés en langue de l'application ({locale})",
     "fallbackTitle": "Langue non disponible",
     "fallbackDescription": "'{locale}' n'est pas disponible comme langue d'interface, conservation de '{fallback}'"
   },
@@ -288,5 +288,12 @@
     "converting": "Conversion avec AI...",
     "noContent": "Aucun contenu à convertir",
     "fetchError": "Impossible de récupérer la page"
+  },
+  "basics": {
+    "unknown": "inconnu",
+    "optional": "optionnel",
+    "yes": "oui",
+    "no": "non",
+    "recipe": "recette | recettes"
   }
 }

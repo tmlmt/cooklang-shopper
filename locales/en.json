@@ -280,9 +280,9 @@
     "recipeLanguageLabel": "Recipe content",
     "pageLanguageLabel": "Page language",
     "followRecipe": "Follow recipe",
-    "followRecipeDescription": "Switch the page UI to match the recipe language",
+    "followRecipeDescription": "Show recipe labels in the recipe's language",
     "followApp": "Follow app",
-    "followAppDescription": "Keep current app language ({locale})",
+    "followAppDescription": "Show recipe labels in the app language ({locale})",
     "fallbackTitle": "Language not available",
     "fallbackDescription": "'{locale}' is not available as an interface language, keeping '{fallback}'"
   },

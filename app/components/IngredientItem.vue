@@ -16,6 +16,8 @@ type IngredientQuantityEntry =
   | IngredientQuantityAndGroup;
 
 const { $ts } = useI18n();
+const _recipeT = inject("recipeT", shallowRef($ts));
+const recipeT = (...args: Parameters<typeof $ts>) => _recipeT.value(...args);
 
 const props = defineProps<{
   ingredient: Ingredient;
@@ -24,12 +26,12 @@ const props = defineProps<{
 
 const optionalPrefix = computed(() =>
   props.ingredient.flags?.includes("optional")
-    ? `(${$ts("basics.optional")}) `
+    ? `(${recipeT("basics.optional")}) `
     : "",
 );
 
 function getIngredientName(index: number): string {
-  return props.allIngredients[index]?.name ?? $ts("basics.unknown");
+  return props.allIngredients[index]?.name ?? recipeT("basics.unknown");
 }
 
 type DisplayMode =

@@ -7,8 +7,7 @@ import { FetchError } from "ofetch";
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
-const { $t, $ts } = useI18n();
-const { $getLocale, $getLocales, $switchLocalePath } = useNuxtApp();
+const { $t, $ts, $getLocale, $getLocales, $defaultLocale } = useI18n();
 
 if (!route.params.path) {
   throw createError({
@@ -145,8 +144,84 @@ watch(
 
 const recipeKey = path.replace(/\//g, ":");
 const indexEntry = computed(() => recipeStore.recipes[recipeKey]);
+// Use viewLocale as the initial locale only if it represents an actual variant
+// file (i.e. it is in indexEntry.locales). The x-recipe-locale header also returns
+// the default file's language (e.g. "en"), which is NOT a variant code — in that
+// case the initial locale must be undefined (= showing the default file).
+const initialViewLocale =
+  viewLocale.value && (indexEntry.value?.locales ?? []).includes(viewLocale.value)
+    ? viewLocale.value
+    : undefined;
 const { currentLocale, allLocaleOptions, isMultilingual, setLocale } =
-  useRecipeLanguage(indexEntry, viewLocale.value);
+  useRecipeLanguage(indexEntry, initialViewLocale);
+
+// The fetched translations for the recipe UI locale when "Follow Recipe" is active.
+// Stored in useState so the SSR payload transfers them to the client — no re-fetch
+// on hydration and no hydration mismatch.
+const recipeTranslations = useState<Record<string, unknown> | null>(
+  `recipe-ui-translations-${path}`,
+  () => null,
+);
+
+// Derives a translate function from recipeTranslations.
+// When null, falls back to the global $ts (app locale).
+const recipeT = computed(() => {
+  const t = recipeTranslations.value;
+  if (!t) return $ts;
+  return (
+    key: string,
+    params?: Record<string, string | number>,
+    defaultValue?: string,
+  ): string => {
+    const parts = key.split(".");
+    let val: unknown = t;
+    for (const p of parts) {
+      val = (val as Record<string, unknown>)?.[p];
+      if (val === undefined) break;
+    }
+    if (typeof val !== "string") return defaultValue ?? key;
+    if (!params) return val;
+    return val.replace(/\{(\w+)\}/g, (_, k: string) =>
+      String((params as Record<string, unknown>)[k] ?? `{${k}}`),
+    );
+  };
+});
+provide("recipeT", recipeT);
+
+const pageLanguageModeCookie = useCookie<"recipe" | "app">(
+  "ui:recipe:page-language-mode",
+  { default: () => "app" },
+);
+
+/**
+ * Fetch translations for `targetUiLocale`, store them in state, and make recipeT
+ * use them. Works on both server (SSR) and client (SPA navigation / modal change).
+ */
+async function applyRecipeUiLocale(targetUiLocale: string) {
+  const availableLocales = ($getLocales() as Array<{ code: string }>).map(
+    (l) => l.code,
+  );
+  if (!availableLocales.includes(targetUiLocale)) {
+    recipeTranslations.value = null;
+    return;
+  }
+  try {
+    recipeTranslations.value = await $fetch<Record<string, unknown>>(
+      `/_locales/recipe-path/${targetUiLocale}/data.json`,
+    );
+  } catch {
+    recipeTranslations.value = null;
+  }
+}
+
+// On page load: apply Follow Recipe mode from cookie if applicable
+if (pageLanguageModeCookie.value === "recipe") {
+  const initialUiLocale =
+    viewLocale.value ?? indexEntry.value?.defaultLocale ?? $defaultLocale();
+  if (initialUiLocale && initialUiLocale !== $getLocale()) {
+    await applyRecipeUiLocale(initialUiLocale);
+  }
+}
 
 /**
  * Show the language selector when either:
@@ -190,54 +265,41 @@ async function openLocaleModal() {
 
   const { recipeLocale, pageLanguageMode } = result;
 
+  // Always switch the recipe file content
+  await switchViewLocale(recipeLocale);
+
   if (pageLanguageMode === "app") {
-    // Only switch the recipe content, keep the app locale (URL)
-    await switchViewLocale(recipeLocale);
+    recipeTranslations.value = null;
     return;
   }
 
-  // "Follow recipe": try to also switch the app locale to match the recipe
-  const targetAppLocale = recipeLocale ?? indexEntry.value?.defaultLocale;
+  // "Follow recipe": translate recipe UI labels to the recipe's language.
+  // Priority: explicit recipe locale → index defaultLocale → app default locale
+  const targetUiLocale =
+    recipeLocale ?? indexEntry.value?.defaultLocale ?? $defaultLocale();
 
-  if (!targetAppLocale) {
-    // Cannot determine a target app locale, just switch recipe content
-    await switchViewLocale(recipeLocale);
+  if (!targetUiLocale) {
+    recipeTranslations.value = null;
     return;
   }
 
   const availableLocales = ($getLocales() as Array<{ code: string }>).map(
     (l) => l.code,
   );
-
-  if (!availableLocales.includes(targetAppLocale)) {
-    // Recipe locale not available as an app locale — fall back, show toast
+  if (!availableLocales.includes(targetUiLocale)) {
     toast.add({
       color: "warning",
       title: $ts("recipeLocale.fallbackTitle"),
       description: $ts("recipeLocale.fallbackDescription", {
-        locale: targetAppLocale.toUpperCase(),
+        locale: targetUiLocale.toUpperCase(),
         fallback: $getLocale().toUpperCase(),
       }),
     });
-    await switchViewLocale(recipeLocale);
+    recipeTranslations.value = null;
     return;
   }
 
-  if (targetAppLocale === $getLocale()) {
-    // Already on the correct app locale, just switch recipe content
-    await switchViewLocale(recipeLocale);
-    return;
-  }
-
-  // Navigate to the target app locale URL, carrying the recipe locale as a query param.
-  // Strip any existing query from switchLocalePath (it returns fullPath including current query)
-  // to avoid building a malformed URL like /fr/path?locale=en?locale=fr.
-  const localePath =
-    ($switchLocalePath(targetAppLocale) as string).split("?")[0] || "/";
-  await navigateTo({
-    path: localePath,
-    query: recipeLocale ? { locale: recipeLocale } : {},
-  });
+  await applyRecipeUiLocale(targetUiLocale);
 }
 
 // Edit-mode: tracks which locale variant is loaded in the textarea
