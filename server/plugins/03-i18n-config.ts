@@ -12,6 +12,11 @@ function assertLocalesExist(
   }
 }
 
+/**
+ * This server plugin reads the app's config.yaml at startup and applies any
+ * i18n overrides into runtimeConfig.public.i18nRuntime, which read by nuxt-i18n-micro
+ * to override its locale settings at runtime. This allows deployment specific locale settings
+ */
 export default defineNitroPlugin(async () => {
   const config = await getAppConfig();
   const runtimeConfig = useRuntimeConfig();
