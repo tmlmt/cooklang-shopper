@@ -82,6 +82,9 @@
   "sharedLink": {
     "linkExpires": "Ce lien expire le {date}"
   },
+  "recipeTags": {
+    "extraTags": "Tags additionnels"
+  },
   "recipeCard": {
     "today": "aujourd'hui",
     "daysAgo": "aujourd'hui | hier | il y a {count} jours"
@@ -140,6 +143,7 @@
       "moveFolder": "Déplacer le dossier"
     },
     "about": {
+      "title": "À propos de {appTitle}",
       "author": "Auteur:",
       "version": "Version :",
       "code": "Code :",
@@ -172,6 +176,9 @@
   "search": {
     "placeholder": "Rechercher des recettes...",
     "recipesMatching": "Recettes correspondant à \"{term}\"..."
+  },
+  "errors": {
+    "recipeNotFound": "Recette introuvable"
   },
   "toast": {
     "success": "Succès",

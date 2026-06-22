@@ -62,7 +62,6 @@
     "servings": "ingen portioner | 1 person | {count} personer",
     "scale": "Skalering:",
     "step": "Trin",
-    "optional": "(Valgfrit)",
     "note": "Bemærk:",
     "optionalSection": "Valgfri sektion",
     "ingredientsForStep": "Ingredienser til dette trin",
@@ -81,6 +80,9 @@
   },
   "sharedLink": {
     "linkExpires": "Dette link udløber på {date}"
+  },
+  "recipeTags": {
+    "extraTags": "Ekstra tags"
   },
   "recipeCard": {
     "today": "i dag",
@@ -140,6 +142,7 @@
       "moveFolder": "Flyt mappe"
     },
     "about": {
+      "title": "Om {appTitle}",
       "author": "Forfatter:",
       "version": "Version:",
       "code": "Kode:",
@@ -172,6 +175,9 @@
   "search": {
     "placeholder": "Søg efter opskrifter...",
     "recipesMatching": "Opskrifter der matcher \"{term}\"..."
+  },
+  "errors": {
+    "recipeNotFound": "Opskrift ikke fundet"
   },
   "toast": {
     "success": "Succes",
@@ -288,5 +294,12 @@
     "converting": "Konverterer med AI...",
     "noContent": "Intet indhold at konvertere",
     "fetchError": "Kunne ikke hente siden"
+  },
+  "basics": {
+    "unknown": "ukendt",
+    "optional": "valgfrit",
+    "yes": "ja",
+    "no": "nej",
+    "recipe": "opskrift | opskrifter"
   }
 }
