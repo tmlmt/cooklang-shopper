@@ -90,8 +90,15 @@ export async function initRecipeIndex() {
     variantTracker.set(baseKey, tracker);
 
     // Use the primary variant for metadata:
-    // the default file if it exists, otherwise the first alphabetically
-    const primary = variants[0]!;
+    // 1. default file (no lang code) if it exists
+    // 2. variant matching configDefaultLocale if set
+    // 3. first alphabetically
+    const primary =
+      variants.find((v) => !v.langCode) ??
+      (configDefaultLocale
+        ? variants.find((v) => v.langCode === configDefaultLocale)
+        : undefined) ??
+      variants[0]!;
     const primaryContent = await storage.getItem(primary.fileKey + ".cook");
     if (!primaryContent) continue;
 
@@ -101,7 +108,7 @@ export async function initRecipeIndex() {
         primary.fileKey,
         primary.langCode,
         primaryContent.toString(),
-        tracker,
+        tracker.langCodes,
         configDefaultLocale,
       );
     } catch (err) {
@@ -137,14 +144,14 @@ function getTimeMetadata(
 /** Builds and sets a recipe index entry from a parsed file. */
 async function buildIndexEntry(
   baseKey: string,
-  fileKey: string, // key without .cook
-  langCode: string | undefined,
+  primaryFileKey: string, // key without .cook
+  primaryLangCode: string | undefined,
   content: string,
-  tracker: { hasDefault: boolean; langCodes: Set<string> },
+  langCodes: Set<string>,
   configDefaultLocale?: string,
 ) {
   const parsed = new Recipe(content);
-  const fileKeyAsPath = `${fileKey}.cook`.replace(/:/g, "/");
+  const fileKeyAsPath = `${primaryFileKey}.cook`.replace(/:/g, "/");
   const baseKeyAsPath = baseKey.replace(/:/g, "/");
   const name = baseKeyAsPath.split("/").pop()!;
 
@@ -165,7 +172,7 @@ async function buildIndexEntry(
   const metadata = parsed.metadata;
 
   let defaultLocale: string | undefined;
-  if (!langCode) {
+  if (!primaryLangCode) {
     // Default file: extract from metadata or fall back to app config
     defaultLocale = extractLocaleFromMetadata(metadata) ?? configDefaultLocale;
   }
@@ -188,7 +195,7 @@ async function buildIndexEntry(
           : undefined,
     difficulty:
       typeof metadata.difficulty === "string" ? metadata.difficulty : undefined,
-    locales: Array.from(tracker.langCodes).sort(),
+    locales: Array.from(langCodes).sort(),
     defaultLocale,
   });
 }
@@ -228,7 +235,7 @@ export async function updateRecipeIndex(key: string, content: string) {
       keyWithoutExt,
       langCode,
       content,
-      tracker,
+      tracker.langCodes,
       configDefaultLocale,
     );
 
