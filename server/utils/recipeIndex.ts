@@ -38,18 +38,23 @@ export function getVariantsForBase(baseKey: string): {
   };
 }
 
+/**
+ * Resolves the configured default locale for recipe files.
+ * Prefers runtimeConfig (set by 03-i18n-config from config.yaml) over a
+ * direct getAppConfig() read, falling back to the latter if not set.
+ */
+const resolveConfigDefaultLocale = async (): Promise<string | undefined> => {
+  const runtimeDefault = useRuntimeConfig().public.i18nRuntime.defaultLocale;
+  if (runtimeDefault) return runtimeDefault;
+  const config = await getAppConfig();
+  return config.i18n?.defaultLocale;
+};
+
 export async function initRecipeIndex() {
   recipeIndex.clear();
   variantTracker.clear();
 
-  // Resolve defaultLocale once from app config
-  let configDefaultLocale: string | undefined;
-  try {
-    const config = await getAppConfig();
-    configDefaultLocale = config.i18n?.defaultLocale;
-  } catch {
-    // best-effort
-  }
+  const configDefaultLocale = await resolveConfigDefaultLocale();
 
   const storage = useStorage("recipes");
   const keys = await storage.getKeys();
@@ -157,7 +162,7 @@ async function buildIndexEntry(
     // best-effort
   }
 
-  const metadata = parsed.metadata as Record<string, unknown>;
+  const metadata = parsed.metadata;
 
   let defaultLocale: string | undefined;
   if (!langCode) {
@@ -214,15 +219,9 @@ export async function updateRecipeIndex(key: string, content: string) {
   const shouldRebuildMetadata = !existing || !langCode;
 
   if (shouldRebuildMetadata) {
-    let configDefaultLocale: string | undefined;
-    if (!langCode) {
-      try {
-        const config = await getAppConfig();
-        configDefaultLocale = config.i18n?.defaultLocale;
-      } catch {
-        // best-effort
-      }
-    }
+    const configDefaultLocale = !langCode
+      ? await resolveConfigDefaultLocale()
+      : undefined;
 
     await buildIndexEntry(
       baseKey,
@@ -230,7 +229,7 @@ export async function updateRecipeIndex(key: string, content: string) {
       langCode,
       content,
       tracker,
-      langCode ? undefined : configDefaultLocale,
+      configDefaultLocale,
     );
 
     // If a lang variant was the trigger but a prior defaultLocale existed, restore it
