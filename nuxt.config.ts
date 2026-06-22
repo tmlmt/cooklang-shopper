@@ -31,12 +31,14 @@ export default defineNuxtConfig({
       {
         code: "en",
         iso: "en-US",
+        og: "en_US",
         displayName: "English",
         flag: "🇺🇸",
       },
       {
         code: "fr",
         iso: "fr-FR",
+        og: "fr_FR",
         displayName: "Français",
         flag: "🇫🇷",
       },
