@@ -1,3 +1,5 @@
+import type { Metadata } from "@tmlmt/cooklang-parser";
+
 /**
  * Returns true if the given string is a valid ISO-639-1-like language code:
  * exactly 2 lowercase ASCII letters (e.g. "en", "fr", "de").
@@ -52,13 +54,10 @@ export function parseRecipeKey(keyWithoutCook: string): {
  * a valid 2-letter language code. Returns undefined otherwise.
  */
 export function extractLocaleFromMetadata(
-  metadata: Record<string, unknown>,
+  metadata: Metadata,
 ): string | undefined {
   const locale = metadata.locale;
-  if (typeof locale === "string" && isValidLangCode(locale)) {
-    return locale;
-  }
-  return undefined;
+  return locale && isValidLangCode(locale) ? locale : undefined;
 }
 
 /**
