@@ -1,5 +1,3 @@
-import { useStorage } from "nitropack/runtime/storage";
-
 function getPantryKey(userKey: string): string {
   return `pantry.${userKey}.conf`;
 }
