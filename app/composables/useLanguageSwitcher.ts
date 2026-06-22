@@ -25,9 +25,7 @@ export function useLanguageSwitcher() {
       .map((locale: LocaleWithFlag) => ({
         label: `${locale.flag ?? ""} ${locale.displayName}`.trim(),
         onSelect: async () => {
-          if (typeof window !== "undefined") {
-            setPreserve();
-          }
+          setPreserve();
           await $switchLocale(locale.code);
         },
       })),
