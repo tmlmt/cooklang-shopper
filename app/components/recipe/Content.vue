@@ -210,7 +210,7 @@ const visibleStepOverlay = ref<string | null>(null);
         {{ recipeT("recipe.ingredients") }}
       </h2>
       <p v-if="scaledRecipe.metadata.yield" class="mb-4 text-sm">
-          <b>{{ recipeT("recipe.yield") }}:</b>
+        <b>{{ recipeT("recipe.yield") }}:</b>
         {{ (scaledRecipe.metadata.yield as Yield).textBefore ?? "" }}
         {{
           formatQuantityWithUnit(
@@ -221,7 +221,7 @@ const visibleStepOverlay = ref<string | null>(null);
         {{ (scaledRecipe.metadata.yield as Yield).textAfter ?? "" }}
       </p>
       <p v-else-if="scaledRecipe.servings" class="mb-4 text-sm">
-          <b>{{ recipeT("recipe.yield") }}:</b>
+        <b>{{ recipeT("recipe.yield") }}:</b>
         {{ $tc("recipe.servings", scaledRecipe.servings) }}
       </p>
       <IngredientList
@@ -233,7 +233,9 @@ const visibleStepOverlay = ref<string | null>(null);
       <template v-if="filteredCookware.length > 0">
         <!-- Desktop: always visible -->
         <div class="mt-6 hidden md:block">
-            <h2 class="mb-2 text-2xl font-bold">{{ recipeT("recipe.cookware") }}</h2>
+          <h2 class="mb-2 text-2xl font-bold">
+            {{ recipeT("recipe.cookware") }}
+          </h2>
           <ul class="ml-6 list-disc">
             <li v-for="item in filteredCookware" :key="item.name">
               {{ item.name }}
@@ -318,7 +320,8 @@ const visibleStepOverlay = ref<string | null>(null);
                         >({{ capitalize(recipeT("basics.optional")) }})
                       </span>
                       <template v-if="item.active"
-                        >{{ recipeT("recipe.step") }} {{ item.stepNumber }}</template
+                        >{{ recipeT("recipe.step") }}
+                        {{ item.stepNumber }}</template
                       >
                     </h3>
                     <div v-if="item.stepImage" class="group/step relative">

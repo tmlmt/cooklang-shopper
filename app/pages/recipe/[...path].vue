@@ -149,7 +149,8 @@ const indexEntry = computed(() => recipeStore.recipes[recipeKey]);
 // the default file's language (e.g. "en"), which is NOT a variant code — in that
 // case the initial locale must be undefined (= showing the default file).
 const initialViewLocale =
-  viewLocale.value && (indexEntry.value?.locales ?? []).includes(viewLocale.value)
+  viewLocale.value &&
+  (indexEntry.value?.locales ?? []).includes(viewLocale.value)
     ? viewLocale.value
     : undefined;
 const { currentLocale, allLocaleOptions, isMultilingual, setLocale } =
