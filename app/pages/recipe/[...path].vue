@@ -16,6 +16,10 @@ if (!route.params.path) {
   });
 }
 
+//---------------------------
+// Breadcrumbs
+//---------------------------
+
 const pathParams =
   typeof route.params.path === "string"
     ? [route.params.path]
@@ -64,16 +68,27 @@ const recipePathRef = computed(() => (route.query.mode === "new" ? "" : path));
 // Validate provided path
 validateRecipePath(path);
 
+//---------------------------
+// Config and initialization
+//---------------------------
+
 const shoppingStore = useShoppingStore();
 const recipeStore = useRecipeStore();
 const { viewerCanShare, aiEnabled } = await usePublicConfig();
 const { shoppingEnabled } = await useShoppingEnabled();
+
 await callOnce("recipe-index", () => recipeStore.fetchIndex());
+
 if (shoppingEnabled.value) {
   await shoppingStore.init();
 }
 const { loggedIn } = useUserSession();
 const { isEditor } = useRole();
+
+//---------------------------
+// Recipe images
+//---------------------------
+
 const {
   heroImages,
   stepImagesByNumber,
@@ -83,12 +98,7 @@ const {
 
 const rawRecipe = ref<string>();
 // The language variant currently being viewed (undefined = default file).
-// useState ensures the SSR-determined locale is transferred in the Nuxt payload
-// and correctly available during client hydration and client-side navigation.
-const viewLocale = useState<string | undefined>(
-  `recipe-locale-${path}`,
-  () => undefined,
-);
+const viewLocale = ref<string | undefined>(undefined);
 
 if (route.query.mode === "new") {
   rawRecipe.value = "";
@@ -97,7 +107,7 @@ if (route.query.mode === "new") {
   const initialLocaleQuery = route.query.locale;
   const initialLocale =
     typeof initialLocaleQuery === "string" &&
-    /^[a-z]{2}$/.test(initialLocaleQuery)
+    isValidLangCode(initialLocaleQuery)
       ? initialLocaleQuery
       : undefined;
   const res = await useFetch(
