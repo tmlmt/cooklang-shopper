@@ -149,6 +149,15 @@ export interface RecipeEssentials {
   defaultLocale?: string;
 }
 
+export interface LocaleOption {
+  /** undefined = default file ({name}.cook), string = .xx.cook variant */
+  code: string | undefined;
+  label: string;
+}
+
+/** A (possibly nested) i18n translation dictionary loaded for a recipe locale. */
+export type TranslationDict = Record<string, unknown>;
+
 export interface RecipeIndex {
   [key: string]: RecipeEssentials;
 }

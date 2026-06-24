@@ -3,11 +3,12 @@ import { Recipe, type RecipeChoices } from "@tmlmt/cooklang-parser";
 import * as v from "valibot";
 import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
 import { FetchError } from "ofetch";
+import type { TranslationDict } from "~~/shared/types";
 
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
-const { $t, $ts, $getLocale, $getLocales, $defaultLocale } = useI18n();
+const { $t, $ts, $getLocale, $defaultLocale } = useI18n();
 
 if (!route.params.path) {
   throw createError({
@@ -68,6 +69,10 @@ const recipePathRef = computed(() => (route.query.mode === "new" ? "" : path));
 // Validate provided path
 validateRecipePath(path);
 
+// Recipe content endpoint, optionally scoped to a language variant.
+const recipeApiUrl = (code: string | undefined) =>
+  code ? `/api/recipe/${path}?locale=${code}` : `/api/recipe/${path}`;
+
 //---------------------------
 // Config and initialization
 //---------------------------
@@ -110,17 +115,12 @@ if (route.query.mode === "new") {
     isValidLangCode(initialLocaleQuery)
       ? initialLocaleQuery
       : undefined;
-  const res = await useFetch(
-    initialLocale
-      ? `/api/recipe/${path}?locale=${initialLocale}`
-      : `/api/recipe/${path}`,
-    {
-      onResponse({ response }) {
-        const localeHeader = response.headers.get("x-recipe-locale");
-        if (localeHeader) viewLocale.value = localeHeader;
-      },
+  const res = await useFetch(recipeApiUrl(initialLocale), {
+    onResponse({ response }) {
+      const localeHeader = response.headers.get("x-recipe-locale");
+      if (localeHeader) viewLocale.value = localeHeader;
     },
-  );
+  });
 
   if (res.error.value) {
     if (res.error.value.status === 401) {
@@ -154,22 +154,26 @@ watch(
 
 const recipeKey = path.replace(/\//g, ":");
 const indexEntry = computed(() => recipeStore.recipes[recipeKey]);
-// Use viewLocale as the initial locale only if it represents an actual variant
-// file (i.e. it is in indexEntry.locales). The x-recipe-locale header also returns
-// the default file's language (e.g. "en"), which is NOT a variant code — in that
-// case the initial locale must be undefined (= showing the default file).
-const initialViewLocale =
-  viewLocale.value &&
-  (indexEntry.value?.locales ?? []).includes(viewLocale.value)
-    ? viewLocale.value
-    : undefined;
-const { currentLocale, allLocaleOptions, isMultilingual, setLocale } =
-  useRecipeLanguage(indexEntry, initialViewLocale);
+const {
+  currentLocale,
+  variantLocales,
+  defaultLocale,
+  allLocaleOptions,
+  isMultilingual,
+  setLocale,
+} = useRecipeLanguage(indexEntry, undefined);
+
+// Adopt the SSR-served locale only when it's an actual variant file. The
+// x-recipe-locale header also reports the default file's language, which is not
+// a variant code and must keep the view on the default file.
+if (viewLocale.value && variantLocales.value.includes(viewLocale.value)) {
+  setLocale(viewLocale.value);
+}
 
 // UI-label translations for "Follow Recipe" mode, keyed by locale.
 // useState makes the cache app-scoped: it serializes via the SSR payload (no
 // re-fetch on hydration) and persists across client-side recipe navigations.
-const uiTranslationsCache = useState<Record<string, Record<string, unknown>>>(
+const uiTranslationsCache = useState<Record<string, TranslationDict>>(
   "recipe-ui-translations-cache",
   () => ({}),
 );
@@ -179,70 +183,61 @@ const activeUiLocale = useState<string | undefined>(
   `recipe-ui-active-locale-${path}`,
   () => undefined,
 );
-const recipeTranslations = computed<Record<string, unknown> | null>(() =>
+const recipeTranslations = computed<TranslationDict | null>(() =>
   activeUiLocale.value
     ? (uiTranslationsCache.value[activeUiLocale.value] ?? null)
     : null,
 );
 
-// Derives a translate function from recipeTranslations.
-// When no override translations are loaded, falls back to the global $ts
-// (app locale). Provided as a stable plain function: it reads the reactive
-// recipeTranslations / i18n context on each call, so child components that call
-// it during render re-render whenever either changes.
+// Translate function backed by recipeTranslations, falling back to the global
+// $ts (app locale) when no override is loaded. A stable plain function that reads
+// reactive state per call, so children re-render when the active locale changes.
 const recipeT: typeof $ts = (key, params, defaultValue) => {
-  const t = recipeTranslations.value;
-  if (!t) return $ts(key, params, defaultValue);
-  const parts = key.split(".");
-  let val: unknown = t;
-  for (const p of parts) {
-    val = (val as Record<string, unknown>)?.[p];
-    if (val === undefined) break;
-  }
-  if (typeof val !== "string") return defaultValue ?? key;
-  if (!params) return val;
-  return val.replace(/\{(\w+)\}/g, (_, k: string) =>
-    String((params as Record<string, unknown>)[k] ?? `{${k}}`),
+  const dict = recipeTranslations.value;
+  if (!dict) return $ts(key, params, defaultValue);
+  const resolved = resolveTranslationKey(
+    dict,
+    key,
+    params as Record<string, unknown> | undefined,
   );
+  return resolved ?? defaultValue ?? key;
 };
 provide("recipeT", recipeT);
 
-const pageLanguageModeCookie = useCookie<"recipe" | "app">(
-  "ui:recipe:page-language-mode",
-  { default: () => "app" },
-);
+const pageLanguageModeCookie = useRecipePageLanguageMode();
 
 // App locale codes configured in nuxt-i18n-micro, used to validate UI locales.
-const availableLocales = computed(() =>
-  ($getLocales() as Array<{ code: string }>).map((l) => l.code),
-);
+const availableLocales = useAppLocaleCodes();
 
 /**
  * Activate UI-label translations for `targetUiLocale` (or follow the app locale
  * when undefined / unavailable). The fetched dictionary is memoised per locale in
  * `uiTranslationsCache`, so each locale is fetched at most once per session and
  * the SSR payload spares the client a hydration re-fetch.
+ *
+ * Returns true when the target locale was activated, false when it fell back to
+ * the app locale (no target, unavailable, or fetch failure).
  */
-async function applyRecipeUiLocale(targetUiLocale: string | undefined) {
-  if (!targetUiLocale) {
+async function applyRecipeUiLocale(
+  targetUiLocale: string | undefined,
+): Promise<boolean> {
+  if (!targetUiLocale || !availableLocales.value.includes(targetUiLocale)) {
     activeUiLocale.value = undefined;
-    return;
-  }
-  if (!availableLocales.value.includes(targetUiLocale)) {
-    activeUiLocale.value = undefined;
-    return;
+    return false;
   }
   if (!uiTranslationsCache.value[targetUiLocale]) {
     try {
-      uiTranslationsCache.value[targetUiLocale] = await $fetch<
-        Record<string, unknown>
-      >(`/_locales/recipe-path/${targetUiLocale}/data.json`);
+      uiTranslationsCache.value[targetUiLocale] =
+        await $fetch<TranslationDict>(
+          `/_locales/recipe-path/${targetUiLocale}/data.json`,
+        );
     } catch {
       activeUiLocale.value = undefined;
-      return;
+      return false;
     }
   }
   activeUiLocale.value = targetUiLocale;
+  return true;
 }
 
 // On page load: apply Follow Recipe mode from the cookie. The cache is serialized
@@ -250,7 +245,7 @@ async function applyRecipeUiLocale(targetUiLocale: string | undefined) {
 // present — no hydration re-fetch and no race with an immediate user toggle.
 if (pageLanguageModeCookie.value === "recipe") {
   const initialUiLocale =
-    viewLocale.value ?? indexEntry.value?.defaultLocale ?? $defaultLocale();
+    viewLocale.value ?? defaultLocale.value ?? $defaultLocale();
   if (initialUiLocale && initialUiLocale !== $getLocale()) {
     await applyRecipeUiLocale(initialUiLocale);
   }
@@ -265,7 +260,7 @@ if (pageLanguageModeCookie.value === "recipe") {
 const showLocaleSelector = computed(() => {
   if (isMultilingual.value) return true;
   const effectiveLocale =
-    currentLocale.value ?? indexEntry.value?.defaultLocale;
+    currentLocale.value ?? defaultLocale.value;
   return effectiveLocale !== undefined && effectiveLocale !== $getLocale();
 });
 
@@ -273,11 +268,8 @@ const showLocaleSelector = computed(() => {
 async function switchViewLocale(code: string | undefined) {
   // Already viewing this variant — no content change needed.
   if (code === currentLocale.value) return;
-  const url = code
-    ? `/api/recipe/${path}?locale=${code}`
-    : `/api/recipe/${path}`;
   try {
-    const res = await $fetchWithHeaders<string>(url);
+    const res = await $fetchWithHeaders<string>(recipeApiUrl(code));
     rawRecipe.value = res;
     setLocale(code);
   } catch {
@@ -295,12 +287,12 @@ async function openLocaleModal() {
     allLocaleOptions.value,
     currentLocale.value,
     $getLocale(),
+    defaultLocale.value,
   );
   if (!result) return;
 
   const { recipeLocale, pageLanguageMode } = result;
 
-  // Always switch the recipe file content
   await switchViewLocale(recipeLocale);
 
   if (pageLanguageMode === "app") {
@@ -311,14 +303,16 @@ async function openLocaleModal() {
   // "Follow recipe": translate recipe UI labels to the recipe's language.
   // Priority: explicit recipe locale → index defaultLocale → app default locale
   const targetUiLocale =
-    recipeLocale ?? indexEntry.value?.defaultLocale ?? $defaultLocale();
+    recipeLocale ?? defaultLocale.value ?? $defaultLocale();
 
-  if (!targetUiLocale) {
-    activeUiLocale.value = undefined;
-    return;
-  }
+  const applied = await applyRecipeUiLocale(targetUiLocale);
 
-  if (!availableLocales.value.includes(targetUiLocale)) {
+  // Warn when the recipe's language has no matching app translation.
+  if (
+    !applied &&
+    targetUiLocale &&
+    !availableLocales.value.includes(targetUiLocale)
+  ) {
     toast.add({
       color: "warning",
       title: $ts("recipeLocale.fallbackTitle"),
@@ -326,42 +320,6 @@ async function openLocaleModal() {
         locale: targetUiLocale.toUpperCase(),
         fallback: $getLocale().toUpperCase(),
       }),
-    });
-    activeUiLocale.value = undefined;
-    return;
-  }
-
-  await applyRecipeUiLocale(targetUiLocale);
-}
-
-// Edit-mode: tracks which locale variant is loaded in the textarea
-const editLocale = ref<string | undefined>(undefined);
-
-// In-memory cache of fetched variant contents, keyed by locale (undefined = default).
-// Persists while editing (and is discarded on page navigation, since the page
-// unmounts). Cleared when leaving edit mode so a fresh edit re-reads from disk.
-const variantCache = new Map<string | undefined, string>();
-
-async function loadVariantInEditor(code: string | undefined) {
-  const cached = variantCache.get(code);
-  if (cached !== undefined) {
-    formState.value.recipe = cached;
-    editLocale.value = code;
-    return;
-  }
-  const url = code
-    ? `/api/recipe/${path}?locale=${code}`
-    : `/api/recipe/${path}`;
-  try {
-    const content = await $fetchWithHeaders<string>(url);
-    variantCache.set(code, content);
-    formState.value.recipe = content;
-    editLocale.value = code;
-  } catch {
-    toast.add({
-      color: "error",
-      title: $ts("toast.error"),
-      description: $ts("errors.recipeNotFound"),
     });
   }
 }
@@ -640,6 +598,34 @@ servings:
 const formState = ref({
   recipe: rawRecipe.value || newRecipePlaceholder,
 });
+
+// Edit-mode language variants: editLocale tracks which variant is loaded in the
+// textarea; variantCache memoises fetched contents (undefined = default file).
+// The cache persists while editing and is cleared on leaving edit mode so a later
+// edit re-reads from disk.
+const editLocale = ref<string | undefined>(undefined);
+const variantCache = new Map<string | undefined, string>();
+
+async function loadVariantInEditor(code: string | undefined) {
+  const cached = variantCache.get(code);
+  if (cached !== undefined) {
+    formState.value.recipe = cached;
+    editLocale.value = code;
+    return;
+  }
+  try {
+    const content = await $fetchWithHeaders<string>(recipeApiUrl(code));
+    variantCache.set(code, content);
+    formState.value.recipe = content;
+    editLocale.value = code;
+  } catch {
+    toast.add({
+      color: "error",
+      title: $ts("toast.error"),
+      description: $ts("errors.recipeNotFound"),
+    });
+  }
+}
 
 // Sync editor content with the currently-viewed locale when entering edit mode
 watch(isEditMode, (editing) => {
@@ -1388,13 +1374,13 @@ watch(
               :variant="editLocale === undefined ? 'solid' : 'outline'"
               color="neutral"
               :label="
-                indexEntry?.defaultLocale?.toUpperCase() ??
+                defaultLocale?.toUpperCase() ??
                 $ts('translation.default')
               "
               @click="loadVariantInEditor(undefined)"
             />
             <UButton
-              v-for="lang in indexEntry?.locales ?? []"
+              v-for="lang in variantLocales"
               :key="lang"
               :variant="editLocale === lang ? 'solid' : 'outline'"
               color="neutral"
@@ -1405,7 +1391,7 @@ watch(
             <UButton
               v-if="
                 editLocale !== undefined &&
-                !(indexEntry?.locales ?? []).includes(editLocale)
+                !variantLocales.includes(editLocale)
               "
               variant="solid"
               color="neutral"

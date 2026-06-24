@@ -10,17 +10,10 @@ export function isValidLangCode(code: string): boolean {
 
 /**
  * Parses a recipe key (without the .cook extension) into its base key and
- * optional language code.
+ * optional language code, preserving the input's separator style (":" or "/").
  *
- * Works with both colon-separated Nitro storage keys and slash-separated paths,
- * preserving the separator style of the input.
- *
- * Examples:
- *   "italian:pasta.en"  → { baseKey: "italian:pasta", langCode: "en" }
- *   "italian/pasta.en"  → { baseKey: "italian/pasta", langCode: "en" }
- *   "italian:pasta"     → { baseKey: "italian:pasta", langCode: undefined }
- *   "pasta.en"          → { baseKey: "pasta",         langCode: "en" }
- *   "pasta"             → { baseKey: "pasta",          langCode: undefined }
+ *   "italian:pasta.en" → { baseKey: "italian:pasta", langCode: "en" }
+ *   "pasta"            → { baseKey: "pasta", langCode: undefined }
  */
 export function parseRecipeKey(keyWithoutCook: string): {
   baseKey: string;

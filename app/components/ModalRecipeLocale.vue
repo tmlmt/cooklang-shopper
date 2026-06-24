@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { LocaleOption } from "~~/shared/types";
+
 const RECIPE_DEFAULT = "__default__";
 
 export type RecipeLocaleResult = {
@@ -7,9 +9,10 @@ export type RecipeLocaleResult = {
 };
 
 const props = defineProps<{
-  allLocaleOptions: { code: string | undefined; label: string }[];
+  allLocaleOptions: LocaleOption[];
   currentRecipeLocale: string | undefined;
   currentAppLocale: string;
+  defaultRecipeLocale: string | undefined;
 }>();
 
 const emit = defineEmits<{ close: [result: RecipeLocaleResult | undefined] }>();
@@ -18,46 +21,41 @@ const { $ts } = useI18n();
 const { $getLocales } = useNuxtApp();
 
 const localeDisplayNames = computed(() => {
-  const locales = $getLocales() as Array<{
-    code: string;
-    displayName?: string;
-  }>;
+  const locales = $getLocales();
   return Object.fromEntries(
     locales.map((l) => [l.code, l.displayName ?? l.code.toUpperCase()]),
   );
 });
 
 const selectedKey = ref<string>(props.currentRecipeLocale ?? RECIPE_DEFAULT);
-const pageLanguageModeCookie = useCookie<"recipe" | "app">(
-  "ui:recipe:page-language-mode",
-  { default: () => "app", maxAge: 60 * 60 * 24 * 365 },
-);
+const pageLanguageModeCookie = useRecipePageLanguageMode();
 const pageLanguageMode = ref<"recipe" | "app">(pageLanguageModeCookie.value);
 
 const displayNames = computed(
   () => new Intl.DisplayNames([props.currentAppLocale], { type: "language" }),
 );
 
+function localeLabel(code: string) {
+  return (
+    localeDisplayNames.value[code] ??
+    capitalize(displayNames.value.of(code)) ??
+    code.toUpperCase()
+  );
+}
+
 const selectItems = computed(() =>
   props.allLocaleOptions.map((opt) => {
     if (opt.code === undefined) {
-      const localeCode =
-        opt.label !== "default" ? opt.label.toLowerCase() : undefined;
-      const localeLabel = localeCode
-        ? (localeDisplayNames.value[localeCode] ??
-          capitalize(displayNames.value.of(localeCode)) ??
-          localeCode.toUpperCase())
+      const label = props.defaultRecipeLocale
+        ? localeLabel(props.defaultRecipeLocale)
         : $ts("translation.unspecified");
       return {
-        label: `${localeLabel} (${$ts("translation.default")})`,
+        label: `${label} (${$ts("translation.default")})`,
         value: RECIPE_DEFAULT,
       };
     }
     return {
-      label:
-        localeDisplayNames.value[opt.code] ??
-        capitalize(displayNames.value.of(opt.code)) ??
-        opt.code.toUpperCase(),
+      label: localeLabel(opt.code),
       value: opt.code,
     };
   }),

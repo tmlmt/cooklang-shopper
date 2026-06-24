@@ -1,11 +1,11 @@
-import type { RecipeEssentials } from "~~/shared/types";
+import type { LocaleOption, RecipeEssentials } from "~~/shared/types";
 
 /**
  * Manages the currently-viewed language variant of a recipe.
  *
- * `indexEntry`  – the recipe's index entry (carries locales / defaultLocale)
- * `initialLocale` – lang code served on SSR (from x-recipe-locale header), or
- *                   undefined when the default file was served
+ * @param indexEntry   the recipe's index entry (carries locales / defaultLocale)
+ * @param initialLocale lang code served on SSR (x-recipe-locale header), or
+ *                      undefined when the default file was served
  */
 export function useRecipeLanguage(
   indexEntry:
@@ -23,15 +23,12 @@ export function useRecipeLanguage(
   const defaultLocale = computed(() => indexEntry.value?.defaultLocale);
 
   /**
-   * Full list of all locale codes the recipe is available in, including the
-   * default file represented by its detected locale (if known) or a
-   * placeholder "default" label.
-   *
-   * Shape: Array<{ code: string | undefined; label: string }>
-   *  - code: undefined = default file, string = .xx.cook variant
+   * All locale codes the recipe is available in. The default file is the first
+   * entry (code: undefined), labelled by its detected locale or "default";
+   * remaining entries are the explicit .xx.cook variants.
    */
   const allLocaleOptions = computed(() => {
-    const options: { code: string | undefined; label: string }[] = [];
+    const options: LocaleOption[] = [];
 
     // Default file entry
     const defaultLabel = defaultLocale.value
