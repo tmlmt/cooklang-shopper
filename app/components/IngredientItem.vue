@@ -16,8 +16,7 @@ type IngredientQuantityEntry =
   | IngredientQuantityAndGroup;
 
 const { $ts } = useI18n();
-const _recipeT = inject("recipeT", shallowRef($ts));
-const recipeT = (...args: Parameters<typeof $ts>) => _recipeT.value(...args);
+const recipeT = inject<typeof $ts>("recipeT", $ts);
 
 const props = defineProps<{
   ingredient: Ingredient;

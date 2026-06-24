@@ -166,37 +166,45 @@ const initialViewLocale =
 const { currentLocale, allLocaleOptions, isMultilingual, setLocale } =
   useRecipeLanguage(indexEntry, initialViewLocale);
 
-// The fetched translations for the recipe UI locale when "Follow Recipe" is active.
-// Stored in useState so the SSR payload transfers them to the client — no re-fetch
-// on hydration and no hydration mismatch.
-const recipeTranslations = useState<Record<string, unknown> | null>(
-  `recipe-ui-translations-${path}`,
-  () => null,
+// UI-label translations for "Follow Recipe" mode, keyed by locale.
+// useState makes the cache app-scoped: it serializes via the SSR payload (no
+// re-fetch on hydration) and persists across client-side recipe navigations.
+const uiTranslationsCache = useState<Record<string, Record<string, unknown>>>(
+  "recipe-ui-translations-cache",
+  () => ({}),
+);
+// Which UI locale is active for this recipe page (undefined = follow app locale).
+// Per-path useState so the choice survives hydration without recomputation.
+const activeUiLocale = useState<string | undefined>(
+  `recipe-ui-active-locale-${path}`,
+  () => undefined,
+);
+const recipeTranslations = computed<Record<string, unknown> | null>(() =>
+  activeUiLocale.value
+    ? (uiTranslationsCache.value[activeUiLocale.value] ?? null)
+    : null,
 );
 
 // Derives a translate function from recipeTranslations.
-// When null, falls back to the global $ts (app locale).
-const recipeT = computed(() => {
+// When no override translations are loaded, falls back to the global $ts
+// (app locale). Provided as a stable plain function: it reads the reactive
+// recipeTranslations / i18n context on each call, so child components that call
+// it during render re-render whenever either changes.
+const recipeT: typeof $ts = (key, params, defaultValue) => {
   const t = recipeTranslations.value;
-  if (!t) return $ts;
-  return (
-    key: string,
-    params?: Record<string, string | number>,
-    defaultValue?: string,
-  ): string => {
-    const parts = key.split(".");
-    let val: unknown = t;
-    for (const p of parts) {
-      val = (val as Record<string, unknown>)?.[p];
-      if (val === undefined) break;
-    }
-    if (typeof val !== "string") return defaultValue ?? key;
-    if (!params) return val;
-    return val.replace(/\{(\w+)\}/g, (_, k: string) =>
-      String((params as Record<string, unknown>)[k] ?? `{${k}}`),
-    );
-  };
-});
+  if (!t) return $ts(key, params, defaultValue);
+  const parts = key.split(".");
+  let val: unknown = t;
+  for (const p of parts) {
+    val = (val as Record<string, unknown>)?.[p];
+    if (val === undefined) break;
+  }
+  if (typeof val !== "string") return defaultValue ?? key;
+  if (!params) return val;
+  return val.replace(/\{(\w+)\}/g, (_, k: string) =>
+    String((params as Record<string, unknown>)[k] ?? `{${k}}`),
+  );
+};
 provide("recipeT", recipeT);
 
 const pageLanguageModeCookie = useCookie<"recipe" | "app">(
@@ -204,28 +212,42 @@ const pageLanguageModeCookie = useCookie<"recipe" | "app">(
   { default: () => "app" },
 );
 
+// App locale codes configured in nuxt-i18n-micro, used to validate UI locales.
+const availableLocales = computed(() =>
+  ($getLocales() as Array<{ code: string }>).map((l) => l.code),
+);
+
 /**
- * Fetch translations for `targetUiLocale`, store them in state, and make recipeT
- * use them. Works on both server (SSR) and client (SPA navigation / modal change).
+ * Activate UI-label translations for `targetUiLocale` (or follow the app locale
+ * when undefined / unavailable). The fetched dictionary is memoised per locale in
+ * `uiTranslationsCache`, so each locale is fetched at most once per session and
+ * the SSR payload spares the client a hydration re-fetch.
  */
-async function applyRecipeUiLocale(targetUiLocale: string) {
-  const availableLocales = ($getLocales() as Array<{ code: string }>).map(
-    (l) => l.code,
-  );
-  if (!availableLocales.includes(targetUiLocale)) {
-    recipeTranslations.value = null;
+async function applyRecipeUiLocale(targetUiLocale: string | undefined) {
+  if (!targetUiLocale) {
+    activeUiLocale.value = undefined;
     return;
   }
-  try {
-    recipeTranslations.value = await $fetch<Record<string, unknown>>(
-      `/_locales/recipe-path/${targetUiLocale}/data.json`,
-    );
-  } catch {
-    recipeTranslations.value = null;
+  if (!availableLocales.value.includes(targetUiLocale)) {
+    activeUiLocale.value = undefined;
+    return;
   }
+  if (!uiTranslationsCache.value[targetUiLocale]) {
+    try {
+      uiTranslationsCache.value[targetUiLocale] = await $fetch<
+        Record<string, unknown>
+      >(`/_locales/recipe-path/${targetUiLocale}/data.json`);
+    } catch {
+      activeUiLocale.value = undefined;
+      return;
+    }
+  }
+  activeUiLocale.value = targetUiLocale;
 }
 
-// On page load: apply Follow Recipe mode from cookie if applicable
+// On page load: apply Follow Recipe mode from the cookie. The cache is serialized
+// via the SSR payload, so when this runs on the client the dictionary is already
+// present — no hydration re-fetch and no race with an immediate user toggle.
 if (pageLanguageModeCookie.value === "recipe") {
   const initialUiLocale =
     viewLocale.value ?? indexEntry.value?.defaultLocale ?? $defaultLocale();
@@ -249,6 +271,8 @@ const showLocaleSelector = computed(() => {
 
 /** Fetch a specific language variant and update the view (client-side, no URL change) */
 async function switchViewLocale(code: string | undefined) {
+  // Already viewing this variant — no content change needed.
+  if (code === currentLocale.value) return;
   const url = code
     ? `/api/recipe/${path}?locale=${code}`
     : `/api/recipe/${path}`;
@@ -280,7 +304,7 @@ async function openLocaleModal() {
   await switchViewLocale(recipeLocale);
 
   if (pageLanguageMode === "app") {
-    recipeTranslations.value = null;
+    activeUiLocale.value = undefined;
     return;
   }
 
@@ -290,14 +314,11 @@ async function openLocaleModal() {
     recipeLocale ?? indexEntry.value?.defaultLocale ?? $defaultLocale();
 
   if (!targetUiLocale) {
-    recipeTranslations.value = null;
+    activeUiLocale.value = undefined;
     return;
   }
 
-  const availableLocales = ($getLocales() as Array<{ code: string }>).map(
-    (l) => l.code,
-  );
-  if (!availableLocales.includes(targetUiLocale)) {
+  if (!availableLocales.value.includes(targetUiLocale)) {
     toast.add({
       color: "warning",
       title: $ts("recipeLocale.fallbackTitle"),
@@ -306,7 +327,7 @@ async function openLocaleModal() {
         fallback: $getLocale().toUpperCase(),
       }),
     });
-    recipeTranslations.value = null;
+    activeUiLocale.value = undefined;
     return;
   }
 
@@ -316,12 +337,24 @@ async function openLocaleModal() {
 // Edit-mode: tracks which locale variant is loaded in the textarea
 const editLocale = ref<string | undefined>(undefined);
 
+// In-memory cache of fetched variant contents, keyed by locale (undefined = default).
+// Persists while editing (and is discarded on page navigation, since the page
+// unmounts). Cleared when leaving edit mode so a fresh edit re-reads from disk.
+const variantCache = new Map<string | undefined, string>();
+
 async function loadVariantInEditor(code: string | undefined) {
+  const cached = variantCache.get(code);
+  if (cached !== undefined) {
+    formState.value.recipe = cached;
+    editLocale.value = code;
+    return;
+  }
   const url = code
     ? `/api/recipe/${path}?locale=${code}`
     : `/api/recipe/${path}`;
   try {
     const content = await $fetchWithHeaders<string>(url);
+    variantCache.set(code, content);
     formState.value.recipe = content;
     editLocale.value = code;
   } catch {
@@ -611,8 +644,16 @@ const formState = ref({
 // Sync editor content with the currently-viewed locale when entering edit mode
 watch(isEditMode, (editing) => {
   if (editing && route.query.mode !== "new") {
-    formState.value.recipe = rawRecipe.value ?? "";
+    const content = rawRecipe.value ?? "";
+    formState.value.recipe = content;
+    // Seed the cache with the current variant so switching back to it skips a round trip,
+    // and align editLocale so the correct variant button is highlighted and the correct
+    // file is targeted on save.
+    variantCache.set(currentLocale.value, content);
+    editLocale.value = currentLocale.value;
   }
+  // Drop cached variants when leaving edit mode so a later edit re-reads from disk.
+  if (!editing) variantCache.clear();
 });
 
 // AI converter state

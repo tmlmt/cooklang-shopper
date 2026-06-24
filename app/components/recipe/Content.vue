@@ -143,8 +143,7 @@ const servingsStep = computed(() => {
 });
 
 const { $ts, $tc } = useI18n();
-const _recipeT = inject("recipeT", shallowRef($ts));
-const recipeT = (...args: Parameters<typeof $ts>) => _recipeT.value(...args);
+const recipeT = inject<typeof $ts>("recipeT", $ts);
 
 // Step image overlay
 const visibleStepOverlay = ref<string | null>(null);
