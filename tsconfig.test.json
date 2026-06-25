@@ -1,19 +1,4 @@
 {
-  "include": ["test/**/*"],
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "Bundler",
-    "allowJs": true,
-    "strict": true,
-    "noEmit": true,
-    "skipLibCheck": true,
-    "paths": {
-      "~~/*": ["./*"],
-      "@/*": ["./*"],
-      "nitropack/runtime": [
-        "./node_modules/.pnpm/nitropack@2.13.2_@electric-sql+pglite@0.4.1_better-sqlite3@12.9.0_mysql2@3.15.3/node_modules/nitropack/runtime"
-      ]
-    }
-  }
+  "extends": "./.nuxt/tsconfig.server.json",
+  "include": ["test/**/*", ".nuxt/types/nitro.d.ts", "shared/**/*.d.ts"]
 }
