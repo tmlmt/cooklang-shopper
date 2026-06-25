@@ -1,12 +1,14 @@
 import type { DropdownMenuItem } from "@nuxt/ui";
 
-interface HeaderMenuItem extends DropdownMenuItem {
+type HeaderMenuItem = Omit<DropdownMenuItem, "children"> & {
   mobileOnly?: boolean;
-}
+};
 
-const mobileHeaderMenuItems = ref<DropdownMenuItem[][]>([]);
-const desktopHeaderMenuItems = ref<DropdownMenuItem[][]>([]);
-const headerActionItems = ref<DropdownMenuItem[]>([]);
+type MenuGroup = Omit<DropdownMenuItem, "children">[];
+
+const mobileHeaderMenuItems = ref<MenuGroup[]>([]);
+const desktopHeaderMenuItems = ref<MenuGroup[]>([]);
+const headerActionItems = ref<Omit<DropdownMenuItem, "children">[]>([]);
 
 export function useHeaderMenu() {
   function setHeaderMenuItems(items: HeaderMenuItem[] | HeaderMenuItem[][]) {
@@ -15,18 +17,19 @@ export function useHeaderMenu() {
       : [items as HeaderMenuItem[]];
 
     for (const group of groups) {
-      const mobileGroup: DropdownMenuItem[] = [];
-      const desktopGroup: DropdownMenuItem[] = [];
-      for (const item of group) {
-        const { mobileOnly, ...rest }: { mobileOnly?: boolean } = item;
-        mobileGroup.push(rest);
-        if (!mobileOnly) {
-          desktopGroup.push(rest);
-        }
+      const mobileGroup: MenuGroup = group.map(
+        ({ mobileOnly, ...item }) => item,
+      );
+      const desktopGroup: MenuGroup = group
+        .filter((item) => !item.mobileOnly)
+        .map(({ mobileOnly, ...item }) => item);
+
+      if (mobileGroup.length > 0) {
+        mobileHeaderMenuItems.value.push(mobileGroup);
       }
-      if (mobileGroup.length > 0) mobileHeaderMenuItems.value.push(mobileGroup);
-      if (desktopGroup.length > 0)
+      if (desktopGroup.length > 0) {
         desktopHeaderMenuItems.value.push(desktopGroup);
+      }
     }
   }
 
