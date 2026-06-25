@@ -1,5 +1,40 @@
 # Changelog
 
+## v0.17.0
+
+This version introduces a major feature: i18n! Have a look at the [README](https://github.com/tmlmt/cooklang-shopper#translations) for details, including potential wish to adapt your `config.yaml` file.
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.16.0...v0.17.0)
+
+### 🚀 Enhancements
+
+- **i18n:** Multilingual UI and recipes ([#22](https://github.com/tmlmt/cooklang-shopper/pull/22))
+
+### 🩹 Fixes
+
+- **types:** Prevent error on possible infinite depth of dropdown items ([#18](https://github.com/tmlmt/cooklang-shopper/pull/18))
+- **middleware:** Allow shared metadata recipe images ([#20](https://github.com/tmlmt/cooklang-shopper/pull/20))
+- **recipe-move:** Keep metadata image filenames unchanged ([#21](https://github.com/tmlmt/cooklang-shopper/pull/21))
+- Implement missing function to move recipes in the index ([#23](https://github.com/tmlmt/cooklang-shopper/pull/23))
+- **typecheck:** Extend test tsconfig with Nuxt server type context to avoid out-of-context errors ([#25](https://github.com/tmlmt/cooklang-shopper/pull/25))
+
+### 📦 Build
+
+- Raise memory gap to prevent build to fail ([eb89bd1](https://github.com/tmlmt/cooklang-shopper/commit/eb89bd1))
+
+### 🏡 Chore
+
+- Remove vue as dependency to avoid package mixing ([#17](https://github.com/tmlmt/cooklang-shopper/pull/17))
+- Do not explicitely import useStorage ([#19](https://github.com/tmlmt/cooklang-shopper/pull/19))
+
+### 🎨 Styles
+
+- Lint with tailwindcss rules ([9a00200](https://github.com/tmlmt/cooklang-shopper/commit/9a00200))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.16.0
 
 This version finalizes SEO configuration for Cooklang Shopper, by adding dynamically generated sitemap.xml and robots.txt files, where all recipes set as publicly visible are indexed. The SEO suite now therefore includes:
