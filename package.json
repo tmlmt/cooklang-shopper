@@ -7,7 +7,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 nuxt build",
     "dev": "nuxt dev",
     "format": "prettier --loglevel warn --config .prettierrc --write \"{app,server,shared,test}/**/*.{ts,vue,mjs}\"",
     "generate": "nuxt generate",
