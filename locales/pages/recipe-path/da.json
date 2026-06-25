@@ -1,5 +1,14 @@
 {
   "defaultVariant": "Standard",
   "addToList": "Føj til liste",
-  "recipeNotFound": "Opskrift ikke fundet"
+  "recipeNotFound": "Opskrift ikke fundet",
+  "translate": {
+    "editingVariant": "Editing variant",
+    "translating": "Translating…",
+    "failed": "Translation failed",
+    "setAsDefault": "Set as Default",
+    "buttonLabel": "Translate",
+    "oldDefaultLocaleTitle": "Current default language",
+    "oldDefaultLocaleLabel": "What language is the current default file? (e.g. en)"
+  }
 }

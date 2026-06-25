@@ -101,9 +101,9 @@
     "actionsColumn": "Handlinger"
   },
   "ingredientList": {
-    "checkedCount": "{checked} / {total} kontrolleret",
+    "checkedCount": "{checked} / {total} markeret",
     "hideChecked": "Skjul markerede",
-    "other": "Andet"
+    "other": "Øvrige"
   },
   "shoppingList": {
     "nameColumn": "Navn",
@@ -111,7 +111,7 @@
     "choicesColumn": "Valg",
     "customChoices": "Tilpassede valg",
     "noChoice": "n/a",
-    "addFreehand": "Tilføj gratis element",
+    "addFreehand": "Tilføj fritstående element",
     "freehandItems": "Frie varer",
     "ingredientLabel": "Ingrediens",
     "quantityLabel": "Mængde",
@@ -120,7 +120,7 @@
   "cookMode": {
     "ingredientsIntro": "Denne opskrift kræver følgende ingredienser",
     "timers": "TIMERS",
-    "timerDone": "Timer gjort!"
+    "timerDone": "Timer færdig!"
   },
   "choices": {
     "title": "Vælg ingrediensalternativer",
@@ -170,6 +170,14 @@
     },
     "storeRun": {
       "live": "Levende"
+    },
+    "translate": {
+      "title": "Oversæt Opskrift",
+      "manual": "Manuelt",
+      "usingAi": "Ved brug af AI",
+      "localeLabel": "Målsprog",
+      "localeDescription": "2-letter ISO 639-1 code (e.g. en, fr, de)",
+      "methodLabel": "Oversættelsesmetode"
     }
   },
   "search": {
@@ -257,24 +265,6 @@
     "noBackslash": "Må ikke indeholde '\\'",
     "ingredientRequired": "Ingrediensnavn er påkrævet"
   },
-  "translation": {
-    "modalTitle": "Oversæt opskrift",
-    "manual": "Manuelt",
-    "usingAi": "Med AI",
-    "localeLabel": "Målsprog",
-    "localeDescription": "2-bogstavs ISO 639-1 kode (f.eks. en, fr, de)",
-    "methodLabel": "Oversættelsesmetode",
-    "translateButton": "Oversæt",
-    "translating": "Oversætter…",
-    "failed": "Oversættelse mislykkedes",
-    "editingVariant": "Redigerer variant",
-    "default": "Standard",
-    "unspecified": "Uspecificeret",
-    "setAsDefault": "Sæt som standard",
-    "translate": "Oversæt",
-    "oldDefaultLocaleTitle": "Nuværende standardsprog",
-    "oldDefaultLocaleLabel": "Hvilket sprog er den nuværende standardfil? (f.eks. en)"
-  },
   "recipeLocale": {
     "modalTitle": "Opskriftssprog",
     "recipeLanguageLabel": "Opskriftens indhold",
@@ -300,6 +290,8 @@
     "optional": "valgfrit",
     "yes": "ja",
     "no": "nej",
-    "recipe": "opskrift | opskrifter"
+    "recipe": "opskrift | opskrifter",
+    "default": "Standard",
+    "unspecified": "Uspecificeret"
   }
 }

@@ -42,6 +42,13 @@ export default defineNuxtConfig({
         displayName: "Français",
         flag: "🇫🇷",
       },
+      {
+        code: "da",
+        iso: "da-DK",
+        og: "da_DK",
+        displayName: "Dansk",
+        flag: "🇩🇰",
+      },
     ],
     defaultLocale: "en",
     fallbackLocale: "en",
@@ -97,7 +104,7 @@ export default defineNuxtConfig({
         fallbackLocale: "",
         disabledLocales: [],
       },
-      i18nLocales: ["en", "fr"],
+      i18nLocales: ["en", "fr", "da"],
     },
   },
 

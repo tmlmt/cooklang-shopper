@@ -1,3 +1,4 @@
 {
+  "description": "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
   "viewingSharedList": "Visning af {owner}'s indkøbsliste, som du fuldt ud kan redigere. Genopfriskning af siden eller klik på knappen nedenfor vil skifte tilbage til din egen liste."
 }

@@ -1,4 +1,5 @@
 {
+  "description": "Connectez-vous pour accéder à votre livre de recettes",
   "loggedInAs": "Vous êtes connecté en tant que",
   "roleLabel": "Rôle",
   "passwordLabel": "Mot de passe",

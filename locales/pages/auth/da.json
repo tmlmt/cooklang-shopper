@@ -1,4 +1,5 @@
 {
+  "description": "Sign in to access your cookbook",
   "loggedInAs": "Du er logget ind som",
   "roleLabel": "Rolle",
   "passwordLabel": "Adgangskode",

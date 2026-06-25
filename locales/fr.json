@@ -62,7 +62,6 @@
     "servings": "aucune portion | 1 portion | {count} portions",
     "scale": "Ajuster :",
     "step": "Étape",
-    "optional": "(Facultatif)",
     "note": "Note :",
     "optionalSection": "Section optionnelle",
     "ingredientsForStep": "Ingrédients pour cette étape",
@@ -159,9 +158,9 @@
       "shareLinks": "Liens de partage",
       "noLinks": "Aucun lien de partage pour l'instant",
       "expiresOptional": "Expire (optionnel)",
-      "created": "Créé le",
+      "created": "Créé",
       "expired": "Expiré",
-      "expires": "Expire le",
+      "expires": "Expire",
       "shareRecipe": "Partager la recette",
       "shareShoppingList": "Partager la liste de courses"
     },
@@ -171,6 +170,14 @@
     },
     "storeRun": {
       "live": "En direct"
+    },
+    "translate": {
+      "title": "Traduire la recette",
+      "manual": "Manuellement",
+      "usingAi": "Avec l'IA",
+      "localeLabel": "Langue cible",
+      "localeDescription": "Code ISO 639-1 à deux lettres (par ex. en, fr, de)",
+      "methodLabel": "Méthode de traduction"
     }
   },
   "search": {
@@ -258,32 +265,14 @@
     "noBackslash": "Ne doit pas contenir '\\'",
     "ingredientRequired": "Le nom de l'ingrédient est requis"
   },
-  "translation": {
-    "modalTitle": "Traduire la recette",
-    "manual": "Manuel",
-    "usingAi": "Avec l'IA",
-    "localeLabel": "Langue cible",
-    "localeDescription": "Code ISO 639-1 à 2 lettres (ex. en, fr, de)",
-    "methodLabel": "Méthode de traduction",
-    "translateButton": "Traduire",
-    "translating": "Traduction en cours…",
-    "failed": "Traduction échouée",
-    "editingVariant": "Variante en cours d'édition",
-    "default": "Par défaut",
-    "unspecified": "Non spécifié",
-    "setAsDefault": "Définir par défaut",
-    "translate": "Traduire",
-    "oldDefaultLocaleTitle": "Langue par défaut actuelle",
-    "oldDefaultLocaleLabel": "Quelle est la langue du fichier par défaut actuel ? (ex. en)"
-  },
   "recipeLocale": {
     "modalTitle": "Langue de la recette",
     "recipeLanguageLabel": "Contenu de la recette",
     "pageLanguageLabel": "Langue de la page",
     "sameAsRecipe": "Comme la recette",
-    "sameAsRecipeDescription": "Afficher les libellés en langue de la recette",
+    "sameAsRecipeDescription": "Afficher les libellés dans la langue de la recette",
     "sameAsApp": "Comme l'application",
-    "sameAsAppDescription": "Afficher les libellés en langue de l'application ({locale})",
+    "sameAsAppDescription": "Afficher les libellés dans langue de l'application ({locale})",
     "fallbackTitle": "Langue non disponible",
     "fallbackDescription": "'{locale}' n'est pas disponible dans la bibliothèque de langues, conservation de '{fallback}'"
   },
@@ -301,6 +290,8 @@
     "optional": "optionnel",
     "yes": "oui",
     "no": "non",
-    "recipe": "recette | recettes"
+    "recipe": "recette | recettes",
+    "default": "Par défaut",
+    "unspecified": "Non spécifié"
   }
 }
