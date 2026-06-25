@@ -110,9 +110,9 @@ function buildRows(locales, status, defaultLocale) {
   return rows;
 }
 
-function formatPercent(value) {
-  const rounded = Number.isInteger(value) ? value.toString() : value.toFixed(1);
-  return `${rounded}%`;
+function formatProgressBar(value) {
+  const percent = Math.max(0, Math.min(100, Math.round(value)));
+  return `![${percent}%](https://progress-bar.xyz/${percent})`;
 }
 
 function buildTable(rows) {
@@ -123,7 +123,7 @@ function buildTable(rows) {
 
   for (const row of rows) {
     lines.push(
-      `| ${row.language} | ${formatPercent(row.translation)} | ${formatPercent(row.proofreading)} |`,
+      `| ${row.language} | ${formatProgressBar(row.translation)} | ${formatProgressBar(row.proofreading)} |`,
     );
   }
 

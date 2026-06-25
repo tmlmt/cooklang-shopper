@@ -189,12 +189,10 @@ Translations are managed via a public Crowdin project that you are welcome to co
 ### Status
 
 <!--TRANSLATION_STATUS_START-->
-
-| Language    | Translation (%) | Proofreading (%) |
-| ----------- | --------------: | ---------------: |
-| 🇺🇸 English  |            100% |             100% |
-| 🇫🇷 Français |             88% |              68% |
-
+| Language | Translation (%) | Proofreading (%) |
+| --- | ---: | ---: |
+| 🇺🇸 English | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
+| 🇫🇷 Français | ![88%](https://progress-bar.xyz/88) | ![68%](https://progress-bar.xyz/68) |
 <!--TRANSLATION_STATUS_END-->
 
 ## Screenshots
