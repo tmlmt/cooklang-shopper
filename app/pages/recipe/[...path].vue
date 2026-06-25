@@ -8,7 +8,15 @@ import type { TranslationDict } from "~~/shared/types";
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
-const { $t, $ts, $getLocale, $defaultLocale } = useI18n();
+const {
+  $t,
+  $ts,
+  $_ts,
+  $getLocale,
+  $defaultLocale,
+  $localePath,
+  $loadPageTranslations,
+} = useI18n();
 
 if (!route.params.path) {
   throw createError({
@@ -170,11 +178,11 @@ if (viewLocale.value && variantLocales.value.includes(viewLocale.value)) {
   setLocale(viewLocale.value);
 }
 
-// UI-label translations for "Follow Recipe" mode, keyed by locale.
-// useState makes the cache app-scoped: it serializes via the SSR payload (no
-// re-fetch on hydration) and persists across client-side recipe navigations.
-const uiTranslationsCache = useState<Record<string, TranslationDict>>(
-  "recipe-ui-translations-cache",
+// Fetched UI-label dictionaries for "Follow Recipe" mode, keyed by locale. Kept
+// in a useState so they ride the SSR payload (no hydration re-fetch); resolution
+// itself is delegated to the library cache, populated via $loadPageTranslations.
+const recipeUiDicts = useState<Record<string, TranslationDict>>(
+  "recipe-ui-translations",
   () => ({}),
 );
 // Which UI locale is active for this recipe page (undefined = follow app locale).
@@ -183,24 +191,31 @@ const activeUiLocale = useState<string | undefined>(
   `recipe-ui-active-locale-${path}`,
   () => undefined,
 );
-const recipeTranslations = computed<TranslationDict | null>(() =>
-  activeUiLocale.value
-    ? (uiTranslationsCache.value[activeUiLocale.value] ?? null)
-    : null,
-);
 
-// Translate function backed by recipeTranslations, falling back to the global
-// $ts (app locale) when no override is loaded. A stable plain function that reads
-// reactive state per call, so children re-render when the active locale changes.
+// The recipe route resolved in the active UI locale, so $_ts reads that locale's
+// chunk from the library cache. undefined = follow app locale (use $ts).
+const recipeUiRoute = computed(() => {
+  const locale = activeUiLocale.value;
+  if (!locale) return undefined;
+  // $localePath only prepends a prefix for non-default locales; it never strips
+  // an existing one. Feeding it the current (possibly /xx/-prefixed) path would
+  // keep that prefix, making $_ts read the wrong locale's chunk. Strip the active
+  // app-locale prefix first so the localization starts from a clean base path.
+  const appLocale = $getLocale();
+  const basePath =
+    appLocale && route.path.startsWith(`/${appLocale}/`)
+      ? route.path.slice(appLocale.length + 1)
+      : route.path;
+  return router.resolve($localePath(basePath, locale));
+});
+
+// Translate function backed by the active UI locale's chunk via $_ts, falling
+// back to the global $ts (app locale) when no override is active. Reads reactive
+// state per call, so children re-render when the active locale changes.
 const recipeT: typeof $ts = (key, params, defaultValue) => {
-  const dict = recipeTranslations.value;
-  if (!dict) return $ts(key, params, defaultValue);
-  const resolved = resolveTranslationKey(
-    dict,
-    key,
-    params as Record<string, unknown> | undefined,
-  );
-  return resolved ?? defaultValue ?? key;
+  const uiRoute = recipeUiRoute.value;
+  if (!uiRoute) return $ts(key, params, defaultValue);
+  return $_ts(uiRoute as Parameters<typeof $_ts>[0])(key, params, defaultValue);
 };
 provide("recipeT", recipeT);
 
@@ -212,8 +227,8 @@ const availableLocales = useAppLocaleCodes();
 /**
  * Activate UI-label translations for `targetUiLocale` (or follow the app locale
  * when undefined / unavailable). The fetched dictionary is memoised per locale in
- * `uiTranslationsCache`, so each locale is fetched at most once per session and
- * the SSR payload spares the client a hydration re-fetch.
+ * `recipeUiDicts` (SSR-payload transferred, so the client skips the re-fetch) and
+ * loaded into the library chunk cache so $_ts can resolve keys in that locale.
  *
  * Returns true when the target locale was activated, false when it fell back to
  * the app locale (no target, unavailable, or fetch failure).
@@ -225,17 +240,24 @@ async function applyRecipeUiLocale(
     activeUiLocale.value = undefined;
     return false;
   }
-  if (!uiTranslationsCache.value[targetUiLocale]) {
+  let dict = recipeUiDicts.value[targetUiLocale];
+  if (!dict) {
     try {
-      uiTranslationsCache.value[targetUiLocale] =
-        await $fetch<TranslationDict>(
-          `/_locales/recipe-path/${targetUiLocale}/data.json`,
-        );
+      dict = await $fetch<TranslationDict>(
+        `/_locales/recipe-path/${targetUiLocale}/data.json`,
+      );
+      recipeUiDicts.value[targetUiLocale] = dict;
     } catch {
       activeUiLocale.value = undefined;
       return false;
     }
   }
+  // Populate the library chunk cache so $_ts resolves keys in this locale.
+  $loadPageTranslations(
+    targetUiLocale,
+    "recipe-path",
+    dict as Parameters<typeof $loadPageTranslations>[2],
+  );
   activeUiLocale.value = targetUiLocale;
   return true;
 }
@@ -259,8 +281,7 @@ if (pageLanguageModeCookie.value === "recipe") {
  */
 const showLocaleSelector = computed(() => {
   if (isMultilingual.value) return true;
-  const effectiveLocale =
-    currentLocale.value ?? defaultLocale.value;
+  const effectiveLocale = currentLocale.value ?? defaultLocale.value;
   return effectiveLocale !== undefined && effectiveLocale !== $getLocale();
 });
 
@@ -1374,8 +1395,7 @@ watch(
               :variant="editLocale === undefined ? 'solid' : 'outline'"
               color="neutral"
               :label="
-                defaultLocale?.toUpperCase() ??
-                $ts('translation.default')
+                defaultLocale?.toUpperCase() ?? $ts('translation.default')
               "
               @click="loadVariantInEditor(undefined)"
             />
@@ -1390,8 +1410,7 @@ watch(
             <!-- Show the in-progress variant even before it has been saved -->
             <UButton
               v-if="
-                editLocale !== undefined &&
-                !variantLocales.includes(editLocale)
+                editLocale !== undefined && !variantLocales.includes(editLocale)
               "
               variant="solid"
               color="neutral"
