@@ -63,8 +63,8 @@ const selectItems = computed(() =>
 
 const pageModeItems = computed(() => [
   {
-    label: $ts("recipeLocale.followRecipe"),
-    description: $ts("recipeLocale.followRecipeDescription"),
+    label: $ts("recipeLocale.sameAsRecipe"),
+    description: $ts("recipeLocale.sameAsRecipeDescription"),
     value: "recipe",
   },
   {

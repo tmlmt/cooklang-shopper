@@ -117,7 +117,7 @@ const viewLocale = ref<string | undefined>(undefined);
 if (route.query.mode === "new") {
   rawRecipe.value = "";
 } else {
-  // Support ?locale=xx in the URL (set when navigating with "follow recipe" mode)
+  // Support ?locale=xx in the URL (set when navigating with "same as recipe" mode)
   const initialLocaleQuery = route.query.locale;
   const initialLocale =
     typeof initialLocaleQuery === "string" &&
@@ -179,7 +179,7 @@ if (viewLocale.value && variantLocales.value.includes(viewLocale.value)) {
   setLocale(viewLocale.value);
 }
 
-// Fetched UI-label dictionaries for "Follow Recipe" mode, keyed by locale. Kept
+// Fetched UI-label dictionaries for "Same as Recipe" mode, keyed by locale. Kept
 // in a useState so they ride the SSR payload (no hydration re-fetch); resolution
 // itself is delegated to the library cache, populated via $loadPageTranslations.
 const recipeUiDicts = useState<Record<string, TranslationDict>>(
@@ -263,7 +263,7 @@ async function applyRecipeUiLocale(
   return true;
 }
 
-// On page load: apply Follow Recipe mode from the cookie. The cache is serialized
+// On page load: apply Same as Recipe mode from the cookie. The cache is serialized
 // via the SSR payload, so when this runs on the client the dictionary is already
 // present — no hydration re-fetch and no race with an immediate user toggle.
 if (pageLanguageModeCookie.value === "recipe") {
@@ -322,7 +322,7 @@ async function openLocaleModal() {
     return;
   }
 
-  // "Follow recipe": translate recipe UI labels to the recipe's language.
+  // "Same as recipe": translate recipe UI labels to the recipe's language.
   // Priority: explicit recipe locale → index defaultLocale → app default locale
   const targetUiLocale =
     recipeLocale ?? defaultLocale.value ?? $defaultLocale();
