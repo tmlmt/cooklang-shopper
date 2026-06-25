@@ -829,8 +829,8 @@ async function onSetAsDefault() {
 
     if (!oldDefaultLangCode) {
       const result = await modalInput.open(
-        $ts("translation.oldDefaultLocaleTitle"),
-        $ts("translation.oldDefaultLocaleLabel"),
+        $ts("translate.oldDefaultLocaleTitle"),
+        $ts("translate.oldDefaultLocaleLabel"),
         "en",
         $ts("actions.confirm"),
       );
@@ -903,7 +903,7 @@ async function onTranslate() {
   }
 
   isTranslating.value = true;
-  translationStatus.value = $ts("translation.translating");
+  translationStatus.value = $ts("translate.translating");
   formState.value.recipe = "";
   editLocale.value = targetLocale;
 
@@ -984,7 +984,7 @@ async function onTranslate() {
     editLocale.value = undefined;
     toast.add({
       color: "error",
-      title: $ts("translation.failed"),
+      title: $ts("translate.failed"),
       description: error instanceof Error ? error.message : String(error),
     });
   } finally {
@@ -1404,15 +1404,13 @@ watch(
           class="mb-4 flex flex-wrap items-center gap-2"
         >
           <span class="text-muted text-sm"
-            >{{ $t("translation.editingVariant") }}:</span
+            >{{ $t("translate.editingVariant") }}:</span
           >
           <UFieldGroup size="sm">
             <UButton
               :variant="editLocale === undefined ? 'solid' : 'outline'"
               color="neutral"
-              :label="
-                defaultLocale?.toUpperCase() ?? $ts('translation.default')
-              "
+              :label="defaultLocale?.toUpperCase() ?? $ts('translate.default')"
               @click="loadVariantInEditor(undefined)"
             />
             <UButton
@@ -1438,7 +1436,7 @@ watch(
             size="sm"
             color="primary"
             variant="soft"
-            :label="$ts('translation.setAsDefault')"
+            :label="$ts('translate.setAsDefault')"
             :loading="isSettingDefault"
             @click="onSetAsDefault"
           />
@@ -1446,7 +1444,7 @@ watch(
             size="sm"
             color="secondary"
             variant="soft"
-            :label="$ts('translation.translate')"
+            :label="$ts('translate.buttonLabel')"
             icon="material-symbols:translate"
             :disabled="isTranslating || isAiConverting"
             @click="onTranslate"
@@ -1471,7 +1469,7 @@ watch(
             size="sm"
             color="secondary"
             variant="soft"
-            :label="$ts('translation.translate')"
+            :label="$ts('translate.buttonLabel')"
             icon="material-symbols:translate"
             :disabled="isTranslating || isAiConverting"
             @click="onTranslate"

@@ -7,7 +7,7 @@
     "translating": "Translating…",
     "failed": "Translation failed",
     "setAsDefault": "Set as Default",
-    "translate": "Translate",
+    "buttonLabel": "Translate",
     "oldDefaultLocaleTitle": "Current default language",
     "oldDefaultLocaleLabel": "What language is the current default file? (e.g. en)"
   }
