@@ -91,9 +91,6 @@ importers:
       valibot:
         specifier: 1.4.1
         version: 1.4.1(typescript@5.9.3)
-      vue:
-        specifier: 3.5.34
-        version: 3.5.34(typescript@5.9.3)
     devDependencies:
       '@iconify-json/material-symbols':
         specifier: 1.2.74
