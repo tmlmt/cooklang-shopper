@@ -13,5 +13,5 @@ const displayText = computed(() => {
 </script>
 
 <template>
-  <span class="quantity">{{ displayText }}</span>
+  <span>{{ displayText }}</span>
 </template>

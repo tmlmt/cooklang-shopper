@@ -201,7 +201,7 @@ const navLeft = computed(() => {
 </script>
 
 <template>
-  <div class="absolute flex h-full w-full flex-col">
+  <div class="absolute flex size-full flex-col">
     <UHeader
       v-model:open="headerOpen"
       class="min-h-16"
@@ -233,7 +233,7 @@ const navLeft = computed(() => {
         <i18n-link
           v-else-if="!isRecipePage"
           to="/"
-          class="focus-visible:outline-primary hover:text-default text-highlighted flex min-w-0 flex-row items-center gap-2 text-xl font-bold transition-colors"
+          class="flex min-w-0 flex-row items-center gap-2 text-xl font-bold text-highlighted transition-colors hover:text-default focus-visible:outline-primary"
         >
           <Icon
             name="material-symbols:chef-hat-rounded"
@@ -244,7 +244,7 @@ const navLeft = computed(() => {
         </i18n-link>
         <span
           v-else
-          class="text-highlighted flex min-w-0 flex-row items-center gap-2 text-xl font-bold"
+          class="flex min-w-0 flex-row items-center gap-2 text-xl font-bold text-highlighted"
         >
           <Icon
             name="material-symbols:chef-hat-rounded"
@@ -256,14 +256,14 @@ const navLeft = computed(() => {
       </template>
       <UBreadcrumb
         v-if="shoppingEnabled || experimental"
-        :ui="{ root: 'mt-1', link: 'text-md' }"
+        :ui="{ root: 'mt-1', link: 'text-base' }"
         :items="navigationItems"
       />
       <template #body>
         <template v-for="(group, i) in mobileMenuGroups" :key="i">
           <USeparator v-if="i > 0" class="my-2" />
           <UNavigationMenu
-            :ui="{ root: 'mt-1', link: 'text-md' }"
+            :ui="{ root: 'mt-1', link: 'text-base' }"
             :items="wrapForMobile(group) as NavigationMenuItem[]"
             orientation="vertical"
             class="-mx-2.5"
@@ -320,7 +320,7 @@ const navLeft = computed(() => {
     <UFooter v-if="navLeft || navRight">
       <template v-if="navLeft" #left>
         <UCard
-          class="hover:bg-elevated cursor-pointer"
+          class="cursor-pointer hover:bg-elevated"
           @click="navLeft.action ? navLeft.action() : navigateTo(navLeft.to)"
         >
           <UButton
@@ -329,21 +329,21 @@ const navLeft = computed(() => {
             color="neutral"
             icon="prime:arrow-left"
           />
-          <p class="text-md mt-2">{{ navLeft.text }}</p>
+          <p class="mt-2">{{ navLeft.text }}</p>
         </UCard>
       </template>
       <template v-if="navRight" #right>
         <UCard
-          class="group hover:bg-elevated cursor-pointer"
+          class="group cursor-pointer hover:bg-elevated"
           @click="navigateTo(navRight.to)"
         >
           <UButton
-            class="group-hover:bg-elevated rounded-full"
+            class="rounded-full group-hover:bg-elevated"
             variant="outline"
             color="neutral"
             icon="prime:arrow-right"
           />
-          <p class="text-md mt-2">{{ navRight.text }}</p>
+          <p class="mt-2">{{ navRight.text }}</p>
         </UCard>
       </template>
     </UFooter>

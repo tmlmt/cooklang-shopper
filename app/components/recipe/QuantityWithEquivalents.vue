@@ -27,7 +27,7 @@ const hasEquivalents = computed(
 </script>
 
 <template>
-  <span class="quantity-with-equivalents">
+  <span>
     <RecipeSingleQuantity :quantity="quantity" :unit="unit" />
     <template v-if="hasEquivalents"
       >{{ " " }}{{ wrapperStart

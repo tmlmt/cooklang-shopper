@@ -483,7 +483,7 @@ watch(currentSlideIndex, () => {
                 <h2 class="mb-6 text-center text-2xl font-bold md:text-3xl">
                   {{ modalT("recipe.ingredients") }}
                 </h2>
-                <p class="text-muted mb-6 text-center">
+                <p class="mb-6 text-center text-muted">
                   {{ modalT("cookMode.ingredientsIntro") }}
                 </p>
                 <IngredientList
@@ -550,7 +550,7 @@ watch(currentSlideIndex, () => {
                 <!-- Step-specific ingredients -->
                 <div
                   v-if="getStepIngredients(currentSlide).length > 0"
-                  class="bg-elevated mb-4 rounded-lg p-4"
+                  class="mb-4 rounded-lg bg-elevated p-4"
                 >
                   <h3
                     class="mb-2 text-sm font-semibold tracking-wide uppercase"
@@ -567,7 +567,7 @@ watch(currentSlideIndex, () => {
                 <!-- Step-specific cookware -->
                 <div
                   v-if="getStepCookware(currentSlide).length > 0"
-                  class="bg-elevated mb-4 rounded-lg p-4"
+                  class="mb-4 rounded-lg bg-elevated p-4"
                 >
                   <h3
                     class="mb-2 text-sm font-semibold tracking-wide uppercase"
@@ -605,7 +605,7 @@ watch(currentSlideIndex, () => {
               >
                 <UIcon
                   name="i-lucide-circle-check"
-                  class="text-primary size-24"
+                  class="size-24 text-primary"
                 />
                 <h2 class="text-center text-3xl font-bold">
                   {{ modalT("actions.done") }}
@@ -631,7 +631,7 @@ watch(currentSlideIndex, () => {
           <Transition name="timer-panel">
             <div
               v-if="timerPanelOpen"
-              class="bg-elevated w-72 rounded-2xl p-3 shadow-lg"
+              class="w-72 rounded-2xl bg-elevated p-3 shadow-lg"
             >
               <div class="mb-2 flex items-center justify-between">
                 <span class="mb-1 ml-1.5 text-base font-semibold">{{
@@ -651,7 +651,7 @@ watch(currentSlideIndex, () => {
                   :key="id"
                   class="flex items-center gap-2 rounded-xl px-2 transition-colors"
                   :class="{
-                    'bg-warning/10 animate-pulse': state.status === 'finished',
+                    'animate-pulse bg-warning/10': state.status === 'finished',
                   }"
                 >
                   <div class="min-w-0 flex-1">
@@ -722,7 +722,7 @@ watch(currentSlideIndex, () => {
             :class="[
               activeTimers.length > 0
                 ? hasAnyFinished
-                  ? 'bg-warning text-warning-contrast animate-pulse px-4 py-3'
+                  ? 'animate-pulse bg-warning px-4 py-3'
                   : 'bg-teal-600 px-4 py-3 text-white dark:bg-teal-500'
                 : 'bg-teal-600 p-3 text-white dark:bg-teal-500',
             ]"
@@ -731,7 +731,7 @@ watch(currentSlideIndex, () => {
             <UIcon name="i-lucide-timer" class="size-5 shrink-0" />
             <span
               v-if="activeTimers.length > 0 && shortestActiveTimer"
-              class="translate-y-[2px] font-mono text-sm font-bold whitespace-nowrap"
+              class="translate-y-0.5 font-mono text-sm font-bold whitespace-nowrap"
             >
               {{ formatTime(shortestActiveTimer.state.remainingSeconds) }}
             </span>
@@ -750,7 +750,7 @@ watch(currentSlideIndex, () => {
         class="rounded-full"
         @click="goPrev()"
       />
-      <span class="text-muted text-sm">
+      <span class="text-sm text-muted">
         {{ currentProgressIndex + 1 }} / {{ totalProgressSteps }}
       </span>
       <UButton

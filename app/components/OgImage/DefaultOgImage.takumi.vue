@@ -12,7 +12,7 @@ const {
 
 <template>
   <div
-    class="flex h-full w-full flex-col items-center p-[60px] text-white"
+    class="flex size-full flex-col items-center p-[60px] text-white"
     style="background-image: linear-gradient(to bottom right, #2563eb, #ffb86a)"
   >
     <NuxtImg src="/chef-rounded-hat-white.svg" width="100" height="100" />

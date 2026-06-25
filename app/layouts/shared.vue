@@ -58,7 +58,7 @@ const wrapForMobile = (items: DropdownMenuItem[]) =>
 </script>
 
 <template>
-  <div class="absolute flex h-full w-full flex-col">
+  <div class="absolute flex size-full flex-col">
     <UHeader
       v-model:open="headerOpen"
       class="min-h-16"
@@ -70,7 +70,7 @@ const wrapForMobile = (items: DropdownMenuItem[]) =>
     >
       <template #left>
         <span
-          class="text-highlighted flex min-w-0 flex-row items-center gap-2 text-xl font-bold"
+          class="flex min-w-0 flex-row items-center gap-2 text-xl font-bold text-highlighted"
         >
           <Icon
             name="material-symbols:chef-hat-rounded"
@@ -84,7 +84,7 @@ const wrapForMobile = (items: DropdownMenuItem[]) =>
         <template v-for="(group, i) in mobileMenuGroups" :key="i">
           <USeparator v-if="i > 0" class="my-2" />
           <UNavigationMenu
-            :ui="{ root: 'mt-1', link: 'text-md' }"
+            :ui="{ root: 'mt-1' }"
             :items="wrapForMobile(group) as NavigationMenuItem[]"
             orientation="vertical"
             class="-mx-2.5"

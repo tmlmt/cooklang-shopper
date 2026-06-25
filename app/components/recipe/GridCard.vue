@@ -116,7 +116,7 @@ const formattedModified = computed(() => {
             :alt="recipe.title"
             sizes="320px md:256px lg:341px xl:427px 2xl:512px"
             loading="lazy"
-            class="h-full w-full object-cover transition-transform duration-300 ease-out transform-3d"
+            class="size-full object-cover transition-transform duration-300 ease-out transform-3d"
             :class="isImageActive ? 'transform-[rotateY(180deg)]' : ''"
             :custom="true"
           >
@@ -124,7 +124,7 @@ const formattedModified = computed(() => {
             <img v-if="isLoaded" v-bind="imgAttrs" :src="src" />
 
             <!-- Show a placeholder while loading -->
-            <USkeleton v-else class="h-full w-full" />
+            <USkeleton v-else class="size-full" />
           </NuxtImg>
 
           <USkeleton v-else-if="loading" class="h-28 w-full rounded-xl" />
@@ -137,10 +137,10 @@ const formattedModified = computed(() => {
             ]"
           >
             <div
-              class="bg-default/25 flex h-full items-center justify-center rounded-xl"
+              class="flex h-full items-center justify-center rounded-xl bg-default/25"
             >
               <div
-                class="bg-default/80 text-primary flex h-10 w-10 items-center justify-center rounded-md backdrop-blur-sm"
+                class="flex size-10 items-center justify-center rounded-md bg-default/80 text-primary backdrop-blur-sm"
               >
                 <Icon name="material-symbols:hand-meal" size="1.4em" />
               </div>
@@ -149,7 +149,7 @@ const formattedModified = computed(() => {
         </div>
       </i18n-link>
       <UCheckbox
-        class="bg-default/90 absolute top-3 right-3 z-10 rounded transition-all duration-200"
+        class="absolute top-3 right-3 z-10 rounded bg-default/90 transition-all duration-200"
         :class="
           isImageActive
             ? 'pointer-events-auto scale-100 opacity-100'
@@ -175,7 +175,7 @@ const formattedModified = computed(() => {
         </template>
         {{ preferredTime }}
       </UBadge>
-      <span class="text-muted text-xs">{{ formattedModified }}</span>
+      <span class="text-xs text-muted">{{ formattedModified }}</span>
     </div>
   </UCard>
 </template>

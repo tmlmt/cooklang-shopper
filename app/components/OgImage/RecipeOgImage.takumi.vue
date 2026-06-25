@@ -26,7 +26,7 @@ const coverImageHeight = Math.round(canvasHeight * 0.6);
 </script>
 
 <template>
-  <div class="flex h-full w-full flex-col" style="overflow: hidden">
+  <div class="flex size-full flex-col" style="overflow: hidden">
     <!-- Top: recipe cover image or fallback gradient (60% of canvas height) -->
     <div
       v-if="coverImage"

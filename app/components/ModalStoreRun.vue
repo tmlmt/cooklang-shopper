@@ -86,7 +86,7 @@ watch(sse.updateCount, () => {
       >
         <span class="font-semibold">{{ $ts("actions.storeRun") }}</span>
         <UProgress v-model="checkedCount" :max="total" class="flex-1" />
-        <span class="text-muted text-sm tabular-nums"
+        <span class="text-sm text-muted tabular-nums"
           >{{ checkedCount }} / {{ total }}</span
         >
         <span class="flex items-center gap-1.5 text-xs text-green-500">

@@ -1403,7 +1403,7 @@ watch(
           "
           class="mb-4 flex flex-wrap items-center gap-2"
         >
-          <span class="text-muted text-sm"
+          <span class="text-sm text-muted"
             >{{ $t("translate.editingVariant") }}:</span
           >
           <UFieldGroup size="sm">
@@ -1452,7 +1452,7 @@ watch(
           <UChatShimmer
             v-if="translationStatus"
             :text="translationStatus"
-            class="text-muted text-sm"
+            class="text-sm text-muted"
           />
         </div>
         <!-- Translate button for single-language recipes with no translation in progress -->
@@ -1477,7 +1477,7 @@ watch(
           <UChatShimmer
             v-if="translationStatus"
             :text="translationStatus"
-            class="text-muted text-sm"
+            class="text-sm text-muted"
           />
         </div>
         <div v-if="route.query.mode === 'new' && aiEnabled" class="mb-4">
@@ -1509,7 +1509,7 @@ watch(
                     autocapitalize="off"
                     spellcheck="false"
                   />
-                  <p class="text-muted text-xs">
+                  <p class="text-xs text-muted">
                     {{ $t("ai.urlWarning") }}
                   </p>
                   <div class="flex flex-row items-center gap-3">
@@ -1534,7 +1534,7 @@ watch(
                     <UChatShimmer
                       v-if="aiStatus"
                       :text="aiStatus"
-                      class="text-muted text-sm"
+                      class="text-sm text-muted"
                     />
                   </div>
                 </div>

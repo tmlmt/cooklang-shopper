@@ -59,7 +59,7 @@ function getVisibleAlternatives(
 </script>
 
 <template>
-  <span class="step-content">
+  <span>
     <template v-for="(item, idx) in step.items" :key="idx">
       <template v-if="item.type === 'text'">
         <strong v-if="item.attribute === 'bold'">{{ item.value }}</strong>
@@ -83,7 +83,7 @@ function getVisibleAlternatives(
         <template v-if="isGroupedItem(item)">
           <span
             :class="[
-              'text-secondary font-medium',
+              'font-medium text-secondary',
               {
                 'line-through opacity-50': !isGroupedItemSelected(item),
               },
@@ -116,7 +116,7 @@ function getVisibleAlternatives(
             </span>
             <span
               :class="[
-                'text-secondary font-medium',
+                'font-medium text-secondary',
                 { 'text-neutral-500 dark:text-neutral-300': visIdx > 0 },
               ]"
             >
@@ -132,7 +132,7 @@ function getVisibleAlternatives(
               </template>
               <span
                 :class="{
-                  'text-secondary font-medium': visIdx === 0,
+                  'font-medium text-secondary': visIdx === 0,
                 }"
                 >{{ visibleAlt.alt.displayName }}</span
               >
@@ -153,7 +153,7 @@ function getVisibleAlternatives(
         </template>
       </template>
       <template v-else-if="item.type === 'cookware'">
-        <span class="text-primary font-medium">
+        <span class="font-medium text-primary">
           <template v-if="item.quantity">
             <RecipeSingleQuantity :quantity="item.quantity" />
             {{ " " }}

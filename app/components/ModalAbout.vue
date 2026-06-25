@@ -43,7 +43,7 @@ const about = computed(() => sharing.value.about);
               :href="`https://github.com/tmlmt/cooklang-shopper/releases/tag/v${versionInfo.latestVersion}`"
               target="_blank"
               rel="noopener noreferrer"
-              class="text-primary flex items-center gap-1 text-sm"
+              class="flex items-center gap-1 text-sm text-primary"
             >
               <Icon name="mdi:arrow-up-circle-outline" size="16" />
               {{ $ts("modal.about.updateAvailable") }}
@@ -68,7 +68,7 @@ const about = computed(() => sharing.value.about);
           <span class="font-bold">{{ $ts("modal.about.by") }}</span>
           <span>{{ about.author }}</span>
         </div>
-        <p v-if="about?.description" class="text-muted text-sm">
+        <p v-if="about?.description" class="text-sm text-muted">
           {{ about.description }}
         </p>
         <div v-if="about?.contact" class="flex items-center gap-2">
@@ -77,7 +77,7 @@ const about = computed(() => sharing.value.about);
         </div>
         <div
           v-if="!about?.author && !about?.description && !about?.contact"
-          class="text-muted flex items-center justify-center gap-1"
+          class="flex items-center justify-center gap-1 text-muted"
         >
           {{ $ts("modal.about.poweredBy") }}
           <ULink

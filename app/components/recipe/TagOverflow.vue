@@ -51,7 +51,7 @@ const { $t } = useI18n();
 
       <template #content>
         <div class="max-w-64 p-2">
-          <div class="text-muted mb-1 text-xs">
+          <div class="mb-1 text-xs text-muted">
             {{ $t("recipeTags.extraTags") }}
           </div>
           <div class="flex flex-wrap gap-1">

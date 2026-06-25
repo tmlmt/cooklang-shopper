@@ -12,7 +12,7 @@ function getArbitrary(index: number): ArbitraryScalable | undefined {
 </script>
 
 <template>
-  <span class="note-content">
+  <span>
     <template v-for="(item, idx) in note.items" :key="idx">
       <template v-if="item.type === 'text'">
         <strong v-if="item.attribute === 'bold'">{{ item.value }}</strong>

@@ -88,7 +88,7 @@ const displayMode = computed<DisplayMode>(() => {
 </script>
 
 <template>
-  <div class="ingredient-item">
+  <div>
     <!-- Mode 1: Single simple quantity -->
     <template v-if="displayMode.type === 'single'">
       {{ optionalPrefix }}
