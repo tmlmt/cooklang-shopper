@@ -80,8 +80,9 @@ sessionSecret: "<session-secret>"
 # i18n:
 #   defaultLocale: "fr"      # default is "en"
 #   fallbackLocale: "en"     # default is "en"
-#   disabledLocales:         # default is an empty list
-#     - "dk"
+#   enabledLocales:          # empty list (or omitted) means all locales are enabled
+#     - "en"
+#     - "fr"
 #
 # Valid values must match locale codes defined in nuxt.config.ts i18n.locales.
 

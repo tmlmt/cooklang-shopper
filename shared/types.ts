@@ -95,7 +95,7 @@ export interface AiConfig {
 export interface I18nConfig {
   defaultLocale?: string;
   fallbackLocale?: string;
-  disabledLocales?: string[];
+  enabledLocales?: string[];
 }
 
 export interface AppConfig {

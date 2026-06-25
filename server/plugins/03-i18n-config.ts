@@ -47,13 +47,15 @@ export default defineNitroPlugin(async () => {
       config.i18n.fallbackLocale;
   }
 
-  if (config.i18n?.disabledLocales && config.i18n.disabledLocales.length > 0) {
-    assertLocalesExist(
-      config.i18n.disabledLocales,
-      allowedLocales,
-      "disabledLocales",
-    );
+  const enabledLocales = config.i18n?.enabledLocales;
+  if (enabledLocales) {
+    assertLocalesExist(enabledLocales, allowedLocales, "enabledLocales");
+
+    // enabledLocales is interpreted as an allow-list. An empty list means
+    // "all locales enabled" (i.e. disable none).
     runtimeConfig.public.i18nRuntime.disabledLocales =
-      config.i18n.disabledLocales;
+      enabledLocales.length > 0
+        ? allowedLocales.filter((locale) => !enabledLocales.includes(locale))
+        : [];
   }
 });
