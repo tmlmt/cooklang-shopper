@@ -260,7 +260,7 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
               recipe.dir
                 ? `/recipe/${recipe.dir}/${recipe.name}`
                 : `/recipe/${recipe.name}`,
-            ) as any,
+            ).href,
           );
         },
       },
@@ -273,7 +273,7 @@ function getDropdownActions(recipe: RecipeEssentials): DropdownMenuItem[][] {
               recipe.dir
                 ? `/recipe/${recipe.dir}/${recipe.name}?mode=edit`
                 : `/recipe/${recipe.name}?mode=edit`,
-            ) as any,
+            ).href,
           );
         },
       },

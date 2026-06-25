@@ -4,5 +4,5 @@
     "./scripts/release.mjs",
     "./scripts/update-translation-status.mjs"
   ],
-  "version": "5.9.3"
+  "version": "6.0.3"
 }
