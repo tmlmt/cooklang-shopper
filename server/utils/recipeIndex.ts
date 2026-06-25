@@ -291,3 +291,25 @@ export function deleteFromRecipeIndex(key: string) {
     });
   }
 }
+
+/**
+ * Moves a recipe index entry and its variant tracker from oldKey to newKey,
+ * updating the dir field to reflect the new location.
+ * Called when a recipe file or folder is renamed or moved.
+ */
+export function moveInRecipeIndex(
+  oldKey: string,
+  newKey: string,
+  newDir: string,
+) {
+  const entry = recipeIndex.get(oldKey);
+  const tracker = variantTracker.get(oldKey);
+  if (entry) {
+    recipeIndex.delete(oldKey);
+    recipeIndex.set(newKey, { ...entry, dir: newDir });
+  }
+  if (tracker) {
+    variantTracker.delete(oldKey);
+    variantTracker.set(newKey, tracker);
+  }
+}
