@@ -278,12 +278,16 @@ if (pageLanguageModeCookie.value === "recipe") {
  * Show the language selector when either:
  * - the recipe has multiple locale variants, OR
  * - the recipe's effective locale (default file locale) differs from the app locale
- *   (so the user can sync the page UI language to the recipe)
+ *   (so the user can sync the page UI language to the recipe), OR
+ * - there are multiple app locales (the page language mode is configurable even
+ *   for monolingual recipes, since the user may switch their app locale)
  */
 const showLocaleSelector = computed(() => {
   if (isMultilingual.value) return true;
   const effectiveLocale = currentLocale.value ?? defaultLocale.value;
-  return effectiveLocale !== undefined && effectiveLocale !== $getLocale();
+  if (effectiveLocale !== undefined && effectiveLocale !== $getLocale())
+    return true;
+  return $getLocales().length > 1;
 });
 
 /** Fetch a specific language variant and update the view (client-side, no URL change) */
@@ -1403,7 +1407,7 @@ watch(
           "
           class="mb-4 flex flex-wrap items-center gap-2"
         >
-          <span class="text-sm text-muted"
+          <span class="text-muted text-sm"
             >{{ $t("translate.editingVariant") }}:</span
           >
           <UFieldGroup size="sm">
@@ -1452,7 +1456,7 @@ watch(
           <UChatShimmer
             v-if="translationStatus"
             :text="translationStatus"
-            class="text-sm text-muted"
+            class="text-muted text-sm"
           />
         </div>
         <!-- Translate button for single-language recipes with no translation in progress -->
@@ -1477,7 +1481,7 @@ watch(
           <UChatShimmer
             v-if="translationStatus"
             :text="translationStatus"
-            class="text-sm text-muted"
+            class="text-muted text-sm"
           />
         </div>
         <div v-if="route.query.mode === 'new' && aiEnabled" class="mb-4">
@@ -1509,7 +1513,7 @@ watch(
                     autocapitalize="off"
                     spellcheck="false"
                   />
-                  <p class="text-xs text-muted">
+                  <p class="text-muted text-xs">
                     {{ $t("ai.urlWarning") }}
                   </p>
                   <div class="flex flex-row items-center gap-3">
@@ -1534,7 +1538,7 @@ watch(
                     <UChatShimmer
                       v-if="aiStatus"
                       :text="aiStatus"
-                      class="text-sm text-muted"
+                      class="text-muted text-sm"
                     />
                   </div>
                 </div>

@@ -68,8 +68,8 @@ const pageModeItems = computed(() => [
     value: "recipe",
   },
   {
-    label: $ts("recipeLocale.followApp"),
-    description: $ts("recipeLocale.followAppDescription", {
+    label: $ts("recipeLocale.sameAsApp"),
+    description: $ts("recipeLocale.sameAsAppDescription", {
       locale: props.currentAppLocale.toUpperCase(),
     }),
     value: "app",
@@ -95,7 +95,10 @@ defineShortcuts({ escape: () => emit("close", undefined) });
   >
     <template #body>
       <div class="flex flex-col gap-5">
-        <UFormField :label="$ts('recipeLocale.recipeLanguageLabel')">
+        <UFormField
+          v-if="props.allLocaleOptions.length > 1"
+          :label="$ts('recipeLocale.recipeLanguageLabel')"
+        >
           <USelect
             v-model="selectedKey"
             :items="selectItems"
