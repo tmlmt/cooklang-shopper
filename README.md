@@ -191,7 +191,7 @@ Translations are managed via a public Crowdin project that you are welcome to co
 <!--TRANSLATION_STATUS_START-->
 | Language | Translation (%) | Proofreading (%) |
 | --- | ---: | ---: |
-| 🇩🇰 Dansk | ![89%](https://progress-bar.xyz/89) | ![25%](https://progress-bar.xyz/25) |
+| 🇩🇰 Dansk | ![90%](https://progress-bar.xyz/90) | ![25%](https://progress-bar.xyz/25) |
 | 🇺🇸 English | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
 | 🇫🇷 Français | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
 <!--TRANSLATION_STATUS_END-->

@@ -267,6 +267,7 @@
   },
   "recipeLocale": {
     "modalTitle": "Recipe Language",
+    "recipeLanguageTitle": "Recipe content language",
     "recipeLanguageLabel": "Recipe content",
     "pageLanguageLabel": "Page language",
     "sameAsRecipe": "Same as recipe",

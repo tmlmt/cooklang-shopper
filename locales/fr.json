@@ -158,7 +158,7 @@
       "shareLinks": "Liens de partage",
       "noLinks": "Aucun lien de partage pour l'instant",
       "expiresOptional": "Expire (optionnel)",
-      "created": "Créé",
+      "created": "Créé le",
       "expired": "Expiré",
       "expires": "Expire",
       "shareRecipe": "Partager la recette",
@@ -267,6 +267,7 @@
   },
   "recipeLocale": {
     "modalTitle": "Langue de la recette",
+    "recipeLanguageTitle": "Langue du contenu de la recette",
     "recipeLanguageLabel": "Contenu de la recette",
     "pageLanguageLabel": "Langue de la page",
     "sameAsRecipe": "Comme la recette",

@@ -256,6 +256,12 @@ defineShortcuts({
                           )}`
                     }}
                   </template>
+                  ({{ $ts("recipeLocale.recipeLanguageTitle").toLowerCase() }}:
+                  {{
+                    link.locale
+                      ? link.locale.toUpperCase()
+                      : $ts("basics.default").toLowerCase()
+                  }})
                 </div>
               </div>
               <div class="flex gap-1">

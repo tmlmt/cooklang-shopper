@@ -176,7 +176,7 @@
       "manual": "Manuelt",
       "usingAi": "Ved brug af AI",
       "localeLabel": "Målsprog",
-      "localeDescription": "2-letter ISO 639-1 code (e.g. en, fr, de)",
+      "localeDescription": "2-bogstaver ISO 639-1 kode (fx en, da, ja)",
       "methodLabel": "Oversættelsesmetode"
     }
   },
@@ -267,6 +267,7 @@
   },
   "recipeLocale": {
     "modalTitle": "Opskriftssprog",
+    "recipeLanguageTitle": "Recipe content language",
     "recipeLanguageLabel": "Opskriftens indhold",
     "pageLanguageLabel": "Sidesprog",
     "sameAsRecipe": "Som opskriften",
