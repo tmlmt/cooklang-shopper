@@ -942,7 +942,8 @@ async function onTranslate() {
             const { message } = JSON.parse(payload);
             throw new Error(message);
           } catch (e) {
-            if (e instanceof SyntaxError) throw new Error("Translation failed", { cause: e });
+            if (e instanceof SyntaxError)
+              throw new Error("Translation failed", { cause: e });
             throw e;
           }
         }
@@ -1181,7 +1182,12 @@ const {
 const openCookMode = () => {
   const r = currentScaledRecipe.value ?? recipe.value;
   if (!r) return;
-  modalCookMode.open(r, currentChoices.value, stepImagesByNumber.value);
+  modalCookMode.open(
+    r,
+    currentChoices.value,
+    stepImagesByNumber.value,
+    recipeT,
+  );
 };
 
 const cookItem: DropdownMenuItem = {
