@@ -54,7 +54,8 @@ export default defineEventHandler(async (event) => {
   // Update visibility overrides and share links to new path
   await moveRecipeVisibilityAndLinks(oldRecipeKey, newRecipeKey);
 
-  // Move associated images
+  // Move associated images. Only managed cover/step files are renamed to the
+  // new recipe base name; metadata-referenced files keep their basename.
   const oldRecipeName = nodePath.basename(decodedPath);
   const oldRecipeDirFsPath = nodePath.join(
     recipesRoot,
@@ -70,11 +71,22 @@ export default defineEventHandler(async (event) => {
       oldRecipeName,
     );
 
+    const managedImagePaths = new Set<string>([
+      ...(discovered.cover ? [discovered.cover] : []),
+      ...Object.values(discovered.steps),
+    ]);
+
     for (const oldFsPath of discovered.all) {
       const oldBasename = nodePath.basename(oldFsPath);
-      // Replace old recipe name prefix with new recipe name
-      const newBasename = fileName + oldBasename.slice(oldRecipeName.length);
+      const shouldRenameBasename = managedImagePaths.has(oldFsPath);
+      const newBasename = shouldRenameBasename
+        ? fileName + oldBasename.slice(oldRecipeName.length)
+        : oldBasename;
       const newFsPath = nodePath.join(newRecipeDirFsPath, newBasename);
+
+      if (newFsPath === oldFsPath) {
+        continue;
+      }
 
       // Security: ensure target stays within recipesRoot
       if (
