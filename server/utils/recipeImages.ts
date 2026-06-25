@@ -1,6 +1,7 @@
 import { readdir, stat } from "node:fs/promises";
 import * as nodePath from "node:path";
 import type { RecipeImageManifest } from "~~/shared/types";
+import { Recipe } from "@tmlmt/cooklang-parser";
 
 export const IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "webp", "gif", "avif"];
 
@@ -262,4 +263,85 @@ export async function buildImageManifest(
     hasImages:
       heroImages.length > 0 || Object.keys(stepImagesByNumber).length > 0,
   };
+}
+
+/**
+ * Authorizes access to a recipe image asset whose filename does not match its
+ * recipe's filename (e.g. images referenced via the `images:` metadata field,
+ * which can be named arbitrarily).
+ *
+ * Scans the .cook recipes in the asset's directory and returns true if the
+ * asset appears in the image manifest of any recipe that is public or has an
+ * active (non-expired) share link. Used as a fallback by the static-asset
+ * protection middleware after the filename-derived recipe key fails to match.
+ */
+export async function isRecipeAssetPubliclyViewable(
+  requestWebPath: string,
+): Promise<boolean> {
+  if (!requestWebPath.startsWith("/recipes/")) return false;
+
+  const relative = requestWebPath.slice("/recipes/".length);
+  const dirRelative = nodePath.dirname(relative);
+  const dirFsPath =
+    dirRelative === "." ? recipesRoot : nodePath.join(recipesRoot, dirRelative);
+
+  let dirEntries;
+  try {
+    dirEntries = await readdir(dirFsPath, { withFileTypes: true });
+  } catch {
+    return false;
+  }
+
+  // Collect the base recipe key (colon-separated, locale stripped) of each
+  // .cook variant in the directory.
+  const baseKeys = new Set<string>();
+  for (const entry of dirEntries) {
+    if (!entry.isFile() || !entry.name.endsWith(".cook")) continue;
+    const fileKey =
+      (dirRelative === "." ? "" : `${dirRelative}/`) +
+      entry.name.slice(0, -".cook".length);
+    baseKeys.add(parseRecipeKey(fileKey.replace(/\//g, ":")).baseKey);
+  }
+
+  const db = getDb();
+  const storage = useStorage("recipes");
+
+  for (const baseKey of baseKeys) {
+    const isPublic = await isRecipePublic(baseKey);
+    let viewable = isPublic;
+    if (!viewable) {
+      const activeShareLink = await db.shareLink.findFirst({
+        where: {
+          recipePath: baseKey,
+          OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+        },
+      });
+      viewable = Boolean(activeShareLink);
+    }
+    if (!viewable) continue;
+
+    const baseFilePath = baseKey.replace(/:/g, "/");
+    const content = await storage.getItem(`${baseFilePath}.cook`);
+    if (!content) continue;
+
+    let metadata: Record<string, unknown>;
+    try {
+      metadata = new Recipe(String(content)).metadata as Record<
+        string,
+        unknown
+      >;
+    } catch {
+      continue;
+    }
+
+    const manifest = await buildImageManifest(baseFilePath, metadata);
+    const assets = [
+      ...(manifest.coverImage ? [manifest.coverImage] : []),
+      ...manifest.heroImages,
+      ...Object.values(manifest.stepImagesByNumber),
+    ];
+    if (assets.includes(requestWebPath)) return true;
+  }
+
+  return false;
 }

@@ -68,5 +68,16 @@ export default defineEventHandler(async (event) => {
     }
   }
 
+  // Fallback: the asset may be a metadata-referenced image whose filename
+  // differs from the recipe's filename, so the derived recipeKey missed it.
+  // Authorize if it appears in a public or share-linked recipe's manifest.
+  const match = pathname.match(/\/recipes\/(.+)/);
+  if (match) {
+    const requestWebPath = `/recipes/${decodeURIComponent(match[1]!)}`;
+    if (await isRecipeAssetPubliclyViewable(requestWebPath)) {
+      return;
+    }
+  }
+
   await requireUserSession(event);
 });
