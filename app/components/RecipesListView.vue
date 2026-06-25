@@ -10,7 +10,7 @@ const props = defineProps<{
   currentPath: string;
 }>();
 
-const { $t, $ts } = useI18n();
+const { $t, $ts, $tdr } = useI18n();
 const { $localeRoute } = useNuxtApp();
 const recipeStore = useRecipeStore();
 const shoppingStore = useShoppingStore();
@@ -43,10 +43,8 @@ const formatModified = (recipe: RecipeEssentials) => {
   if (!recipe.lastModified) return "-";
   const date = new Date(recipe.lastModified);
   if (Number.isNaN(date.getTime())) return "-";
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const year = date.getFullYear();
-  return `${month}-${day}-${year}`;
+  // @ts-expect-error $tdr typing is DateTimeFormatOptions, but runtime accepts RelativeTimeFormatOptions
+  return $tdr(date, { numeric: "auto" });
 };
 
 const buildSelectionState = () => {

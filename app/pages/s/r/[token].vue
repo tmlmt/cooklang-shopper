@@ -138,7 +138,15 @@ setHeaderMenuItems([
     <RecipeMetadataBlock :recipe="recipe" />
 
     <div v-if="data?.expiresAt" class="mt-2 text-sm text-amber-600">
-      {{ $t('sharedLinkExpires', { date: new Date(data.expiresAt).toLocaleDateString() }) }}
+      {{
+        $t("sharedLinkExpires", {
+          date: $td(new Date(data.expiresAt), {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          }),
+        })
+      }}
     </div>
 
     <RecipeContent

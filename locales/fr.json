@@ -159,9 +159,9 @@
       "shareLinks": "Liens de partage",
       "noLinks": "Aucun lien de partage pour l'instant",
       "expiresOptional": "Expire (optionnel)",
-      "created": "Créé",
+      "created": "Créé le",
       "expired": "Expiré",
-      "expires": "Expire",
+      "expires": "Expire le",
       "shareRecipe": "Partager la recette",
       "shareShoppingList": "Partager la liste de courses"
     },

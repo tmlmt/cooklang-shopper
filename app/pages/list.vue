@@ -115,9 +115,11 @@ watch(
       :description="
         shoppingStore.sharedExpiresAt
           ? $ts('sharedLink.linkExpires', {
-              date: new Date(
-                shoppingStore.sharedExpiresAt,
-              ).toLocaleDateString(),
+              date: $td(new Date(shoppingStore.sharedExpiresAt), {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              }),
             })
           : undefined
       "

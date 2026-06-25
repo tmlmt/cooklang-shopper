@@ -87,7 +87,7 @@ const preferredTime = computed(() => {
   return formatTime(value);
 });
 
-const { $t, $tc } = useI18n();
+const { $tdr } = useI18n();
 
 const formattedModified = computed(() => {
   if (!props.recipe.lastModified) return "-";
@@ -95,18 +95,8 @@ const formattedModified = computed(() => {
   const modified = new Date(props.recipe.lastModified);
   if (Number.isNaN(modified.getTime())) return "-";
 
-  const now = new Date();
-  const diffMs = now.getTime() - modified.getTime();
-  const oneDay = 24 * 60 * 60 * 1000;
-  const days = Math.floor(diffMs / oneDay);
-
-  if (days <= 0) return $t("recipeCard.today");
-  if (days < 7) return $tc("recipeCard.daysAgo", days);
-
-  const month = String(modified.getMonth() + 1).padStart(2, "0");
-  const day = String(modified.getDate()).padStart(2, "0");
-  const year = modified.getFullYear();
-  return `${month}-${day}-${year}`;
+  // @ts-expect-error $tdr typing is DateTimeFormatOptions, but runtime accepts RelativeTimeFormatOptions
+  return $tdr(modified, { numeric: "auto" });
 });
 </script>
 

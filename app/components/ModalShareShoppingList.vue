@@ -44,11 +44,11 @@ async function createLink() {
     });
     links.value.unshift({ ...data, expired: false });
     expiresAt.value = "";
-    toast.add({ title: $ts('toast.shareLinkCreated'), color: "success" });
+    toast.add({ title: $ts("toast.shareLinkCreated"), color: "success" });
   } catch {
     toast.add({
-      title: $ts('toast.error'),
-      description: $ts('toast.shareLinkCreateError'),
+      title: $ts("toast.error"),
+      description: $ts("toast.shareLinkCreateError"),
       color: "error",
     });
   } finally {
@@ -62,11 +62,11 @@ async function revokeLink(id: number) {
       method: "DELETE",
     });
     links.value = links.value.filter((l) => l.id !== id);
-    toast.add({ title: $ts('toast.shareLinkRevoked'), color: "success" });
+    toast.add({ title: $ts("toast.shareLinkRevoked"), color: "success" });
   } catch {
     toast.add({
-      title: $ts('toast.error'),
-      description: $ts('toast.shareLinkRevokeError'),
+      title: $ts("toast.error"),
+      description: $ts("toast.shareLinkRevokeError"),
       color: "error",
     });
   }
@@ -81,11 +81,11 @@ function getShareUrl(token: string): string {
 async function copyLink(token: string) {
   try {
     await copy(getShareUrl(token));
-    toast.add({ title: $ts('toast.linkCopied'), color: "success" });
+    toast.add({ title: $ts("toast.linkCopied"), color: "success" });
   } catch {
     toast.add({
-      title: $ts('toast.error'),
-      description: $ts('toast.linkCopyError'),
+      title: $ts("toast.error"),
+      description: $ts("toast.linkCopyError"),
       color: "error",
     });
   }
@@ -106,7 +106,9 @@ defineShortcuts({
       <div class="flex flex-col gap-6">
         <!-- Create new link -->
         <div>
-          <div class="mb-3 font-medium">{{ $ts('modal.share.shareLinks') }}</div>
+          <div class="mb-3 font-medium">
+            {{ $ts("modal.share.shareLinks") }}
+          </div>
           <div class="flex flex-wrap items-end gap-3">
             <UFormField :label="$ts('modal.share.expiresOptional')">
               <UInput v-model="expiresAt" type="date" :min="minDate" />
@@ -131,7 +133,7 @@ defineShortcuts({
           v-else-if="links.length === 0"
           class="text-muted py-4 text-center text-sm"
         >
-          {{ $ts('modal.share.noLinks') }}
+          {{ $ts("modal.share.noLinks") }}
         </div>
         <div v-else class="flex flex-col gap-2">
           <div
@@ -145,13 +147,27 @@ defineShortcuts({
                 {{ getShareUrl(link.token) }}
               </div>
               <div class="text-muted text-xs">
-                {{ $ts('modal.share.created') }} {{ new Date(link.createdAt).toLocaleDateString() }}
+                {{ $ts("modal.share.created") }}
+                {{
+                  $td(new Date(link.createdAt), {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })
+                }}
                 <template v-if="link.expiresAt">
                   ·
                   {{
                     link.expired
-                      ? $ts('modal.share.expired')
-                      : `${$ts('modal.share.expires')} ${new Date(link.expiresAt).toLocaleDateString()}`
+                      ? $ts("modal.share.expired")
+                      : `${$ts("modal.share.expires")} ${$td(
+                          new Date(link.expiresAt),
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          },
+                        )}`
                   }}
                 </template>
               </div>

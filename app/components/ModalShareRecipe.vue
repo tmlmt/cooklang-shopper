@@ -234,13 +234,26 @@ defineShortcuts({
                 </div>
                 <div class="text-muted text-xs">
                   {{ $ts("modal.share.created") }}
-                  {{ new Date(link.createdAt).toLocaleDateString() }}
+                  {{
+                    $td(new Date(link.createdAt), {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })
+                  }}
                   <template v-if="link.expiresAt">
                     ·
                     {{
                       link.expired
                         ? $ts("modal.share.expired")
-                        : `${$ts("modal.share.expires")} ${new Date(link.expiresAt).toLocaleDateString()}`
+                        : `${$ts("modal.share.expires")} ${$td(
+                            new Date(link.expiresAt),
+                            {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                            },
+                          )}`
                     }}
                   </template>
                 </div>

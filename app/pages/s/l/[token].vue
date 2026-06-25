@@ -114,7 +114,11 @@ if (!loggedIn.value) {
         <p v-if="data?.expiresAt" class="mt-1 text-sm text-amber-600">
           {{
             $t("sharedLink.linkExpires", {
-              date: new Date(data.expiresAt).toLocaleDateString(),
+              date: $td(new Date(data.expiresAt), {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              }),
             })
           }}
         </p>
