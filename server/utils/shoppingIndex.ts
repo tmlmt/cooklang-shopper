@@ -1,4 +1,3 @@
-import { useStorage } from "nitropack/runtime/storage";
 import { ShoppingList, Recipe } from "@tmlmt/cooklang-parser";
 import type {
   RecipeChoices,
