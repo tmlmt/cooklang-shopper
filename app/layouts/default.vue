@@ -12,13 +12,12 @@ const { title: appTitle, sharing, experimental } = await usePublicConfig();
 const { shoppingEnabled } = await useShoppingEnabled();
 const { hasInAppHistory } = usePreviousRoute();
 const { loggedIn } = useUserSession();
-const { $localeRoute } = useNuxtApp();
 
 //---------------
 // Header menus
 //---------------
 
-const { $ts } = useI18n();
+const { $localePath, $localeRoute, $ts } = useI18n();
 
 const authMenuItem = computed<DropdownMenuItem>(() =>
   loggedIn.value
@@ -50,7 +49,9 @@ const { mobileHeaderMenuItems, desktopHeaderMenuItems, headerActionItems } =
   useHeaderMenu();
 const { languageMenuItem } = useLanguageSwitcher();
 
-const isRecipePage = computed(() => route.path.startsWith("/recipe/"));
+const isRecipePage = computed(() =>
+  route.path.startsWith($localePath({ name: "recipe" })),
+);
 
 const headerOpen = ref(false);
 
@@ -80,7 +81,7 @@ const navigationItems = computed<BreadcrumbItem[]>(() => {
     {
       label: $ts("pages.recipes"),
       to: $localeRoute("/"),
-      active: route.path === "/",
+      active: route.path === $localePath({ name: "index" }),
     },
   ];
   if (loggedIn.value) {
@@ -88,19 +89,19 @@ const navigationItems = computed<BreadcrumbItem[]>(() => {
       items.push({
         label: $ts("pages.pantry"),
         to: $localeRoute("/pantry"),
-        active: route.path === "/pantry",
+        active: route.path === $localePath({ name: "pantry" }),
       });
       items.push({
         label: $ts("pages.shoppingList"),
         to: $localeRoute("/list"),
-        active: route.path === "/list",
+        active: route.path === $localePath({ name: "list" }),
       });
     }
     if (experimental.value) {
       items.push({
         label: $ts("pages.shoppingCart"),
         to: $localeRoute("/cart"),
-        active: route.path === "/cart",
+        active: route.path === $localePath({ name: "cart" }),
       });
     }
   }
@@ -137,17 +138,20 @@ const dropDownMenuItems = computed<DropdownMenuItem[]>(() =>
 
 const navRight = computed(() => {
   if (!loggedIn.value) return undefined;
-  if (route.path === "/" && shoppingEnabled.value) {
+  if (route.path === $localePath({ name: "index" }) && shoppingEnabled.value) {
     return {
       text: $ts("nav.continueTo", { page: $ts("pages.pantry") }),
       to: $localeRoute("/pantry"),
     };
-  } else if (route.path === "/pantry") {
+  } else if (route.path === $localePath({ name: "pantry" })) {
     return {
       text: $ts("nav.continueTo", { page: $ts("pages.shoppingList") }),
       to: $localeRoute("/list"),
     };
-  } else if (route.path === "/list" && experimental.value) {
+  } else if (
+    route.path === $localePath({ name: "list" }) &&
+    experimental.value
+  ) {
     return {
       text: $ts("nav.continueTo", { page: $ts("pages.shoppingCart") }),
       to: $localeRoute("/cart"),
@@ -175,17 +179,17 @@ const navLeft = computed(() => {
     return undefined;
   }
   if (!loggedIn.value) return undefined;
-  if (route.path === "/pantry") {
+  if (route.path === $localePath({ name: "pantry" })) {
     return {
       text: $ts("nav.backTo", { page: $ts("pages.recipes") }),
       to: $localeRoute("/"),
     };
-  } else if (route.path === "/list") {
+  } else if (route.path === $localePath({ name: "list" })) {
     return {
       text: $ts("nav.backTo", { page: $ts("pages.pantry") }),
       to: $localeRoute("/pantry"),
     };
-  } else if (route.path === "/cart") {
+  } else if (route.path === $localePath({ name: "cart" })) {
     return {
       text: $ts("nav.backTo", { page: $ts("pages.shoppingList") }),
       to: $localeRoute("/list"),
