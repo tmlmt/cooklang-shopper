@@ -285,7 +285,7 @@
     "followApp": "Suivre l'application",
     "followAppDescription": "Afficher les libellés en langue de l'application ({locale})",
     "fallbackTitle": "Langue non disponible",
-    "fallbackDescription": "'{locale}' n'est pas disponible comme langue d'interface, conservation de '{fallback}'"
+    "fallbackDescription": "'{locale}' n'est pas disponible dans la bibliothèque de langues, conservation de '{fallback}'"
   },
   "ai": {
     "convertFromUrl": "Convertir depuis une URL ou un texte avec une IA",

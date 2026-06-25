@@ -13,6 +13,7 @@ const {
   $ts,
   $_ts,
   $getLocale,
+  $getLocales,
   $defaultLocale,
   $localePath,
   $loadPageTranslations,
@@ -338,9 +339,18 @@ async function openLocaleModal() {
       color: "warning",
       title: $ts("recipeLocale.fallbackTitle"),
       description: $ts("recipeLocale.fallbackDescription", {
-        locale: targetUiLocale.toUpperCase(),
-        fallback: $getLocale().toUpperCase(),
+        locale: getLocaleDisplayName(
+          targetUiLocale,
+          $getLocale(),
+          $getLocales(),
+        ),
+        fallback: getLocaleDisplayName(
+          $getLocale(),
+          $getLocale(),
+          $getLocales(),
+        ),
       }),
+      duration: 3000,
     });
   }
 }
