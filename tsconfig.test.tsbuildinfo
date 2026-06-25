@@ -1,1 +1,1 @@
-{"root":["./test/unit/migrations.test.ts","./test/unit/regex.test.ts","./test/unit/shoppingIndex.test.ts","./test/unit/validateRecipeDir.test.ts","./test/unit/validateRecipePath.test.ts"],"errors":true,"version":"6.0.3"}
+{"root":["./test/unit/migrations.test.ts","./test/unit/regex.test.ts","./test/unit/shoppingIndex.test.ts","./test/unit/validateRecipeDir.test.ts","./test/unit/validateRecipePath.test.ts","./.nuxt/types/nitro.d.ts","./shared/auth.d.ts"],"version":"6.0.3"}
