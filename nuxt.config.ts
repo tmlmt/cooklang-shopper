@@ -44,6 +44,7 @@ export default defineNuxtConfig({
       },
     ],
     defaultLocale: "en",
+    fallbackLocale: "en",
     translationDir: "locales",
     localeCookie: "user-locale",
   },
