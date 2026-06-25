@@ -1,1 +1,8 @@
-{"root":["./scripts/hash-password.mjs","./scripts/release.mjs"],"version":"5.9.3"}
+{
+  "root": [
+    "./scripts/hash-password.mjs",
+    "./scripts/release.mjs",
+    "./scripts/update-translation-status.mjs"
+  ],
+  "version": "5.9.3"
+}

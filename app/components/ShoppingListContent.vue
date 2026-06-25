@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed, h } from "vue";
+import { useNuxtApp } from "#imports";
 import type { TableColumn } from "@nuxt/ui";
 import type { RecipeInfo } from "~~/shared/types";
 import type { RecipeChoices, AddedIngredient } from "@tmlmt/cooklang-parser";
@@ -42,6 +44,7 @@ const props = withDefaults(
   },
 );
 
+const { $t, $ts } = useI18n();
 const toast = useToast();
 
 const anyChecked = computed(() =>
@@ -95,8 +98,8 @@ async function saveServings(
   } catch {
     toast.add({
       color: "error",
-      title: "Error",
-      description: "Failed to update servings",
+      title: $ts("toast.error"),
+      description: $ts("toast.servingsUpdateError"),
     });
   } finally {
     pendingServings.value[path] = false;
@@ -125,7 +128,7 @@ onBeforeUnmount(() => {
 // ---------------------------------------------------------------------------
 
 const addItemSchema = v.object({
-  name: v.pipe(v.string(), v.trim(), v.nonEmpty("Ingredient name is required")),
+  name: v.pipe(v.string(), v.trim(), v.nonEmpty($ts("validation.ingredientRequired"))),
   quantity: v.pipe(v.string(), v.trim()),
   unit: v.pipe(v.string(), v.trim()),
 });
@@ -151,14 +154,14 @@ async function addManualIngredient(): Promise<void> {
     addItemState.unit = "";
     toast.add({
       color: "success",
-      title: "Success",
-      description: "Ingredient added",
+      title: $ts("toast.success"),
+      description: $ts("toast.ingredientAdded"),
     });
   } catch {
     toast.add({
       color: "error",
-      title: "Error",
-      description: "Failed to add ingredient",
+      title: $ts("toast.error"),
+      description: $ts("toast.ingredientAddError"),
     });
   }
 }
@@ -171,6 +174,7 @@ const UButton = resolveComponent("UButton");
 const ULink = resolveComponent("ULink");
 const UInputNumber = resolveComponent("UInputNumber");
 const UBadge = resolveComponent("UBadge");
+const { $localeRoute } = useNuxtApp();
 
 function choicesLabel(choices?: RecipeChoices): string | null {
   if (!choices) return null;
@@ -179,7 +183,7 @@ function choicesLabel(choices?: RecipeChoices): string | null {
     (choices.ingredientGroups?.size ?? 0) > 0;
   if (choices.variant && hasAlts) return `${choices.variant} + custom`;
   if (choices.variant) return choices.variant;
-  if (hasAlts) return "Custom choices";
+  if (hasAlts) return $ts("shoppingList.customChoices");
   return null;
 }
 
@@ -187,15 +191,17 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
   const cols: TableColumn<RecipeInfo>[] = [
     {
       accessorKey: "title",
-      header: "Name",
+      header: () => $t("shoppingList.nameColumn"),
       cell: ({ row }) =>
-        h(ULink, { to: { path: `/recipe/${row.original.path}` } }, () =>
-          row.getValue("title"),
-        ),
+        h(
+        ULink,
+        { to: $localeRoute(`/recipe/${row.original.path}`) },
+        () => row.getValue("title"),
+      ),
     },
     {
       accessorKey: "servings",
-      header: "Servings",
+      header: () => $t("shoppingList.servingsColumn"),
       meta: { class: { td: "w-36" } },
       cell: ({ row }) => {
         const path = row.original.path;
@@ -260,10 +266,10 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
   if (props.showChoices) {
     cols.push({
       accessorKey: "choices",
-      header: "Choices",
+      header: () => $t("shoppingList.choicesColumn"),
       cell: ({ row }) => {
         const label = choicesLabel(row.original.choices);
-        if (!label) return "n/a";
+        if (!label) return $t("shoppingList.noChoice");
         return h(UBadge, { color: "neutral", variant: "subtle" }, () => label);
       },
     });
@@ -284,8 +290,8 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
             await props.onRemoveRecipeFn!(row.original.path);
             toast.add({
               color: "success",
-              title: "Success",
-              description: "Recipe successfully removed from shopping list",
+              title: $ts("toast.success"),
+              description: $ts("toast.recipeRemovedFromList"),
             });
           },
         }),
@@ -306,10 +312,10 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
 
     <div v-if="ingredients.length > 0">
       <div class="mb-3 flex items-center justify-between">
-        <h2 class="text-base font-bold md:text-lg">Ingredients</h2>
+        <h2 class="text-base font-bold md:text-lg">{{ $t('recipe.ingredients') }}</h2>
         <UButton
           v-if="onUncheckAllFn && anyChecked"
-          label="Uncheck All"
+          :label="$ts('actions.uncheckAll')"
           color="neutral"
           variant="soft"
           size="sm"
@@ -331,33 +337,33 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
       class="space-y-3"
       @submit="addManualIngredient"
     >
-      <h2 class="text-base font-bold md:text-lg">Add free-hand item</h2>
+      <h2 class="text-base font-bold md:text-lg">{{ $t('shoppingList.addFreehand') }}</h2>
       <div class="grid grid-cols-5 items-end gap-3 md:flex md:flex-row">
         <UFormField
           name="name"
-          label="Ingredient"
+          :label="$ts('shoppingList.ingredientLabel')"
           class="col-span-2"
           :required="true"
         >
           <UInput v-model="addItemState.name" />
         </UFormField>
-        <UFormField name="quantity" label="Quantity">
+        <UFormField name="quantity" :label="$ts('shoppingList.quantityLabel')">
           <UInput
             v-model="addItemState.quantity"
             class="md:w-16"
             :ui="{ root: 'w-full' }"
           />
         </UFormField>
-        <UFormField name="unit" label="Unit">
+        <UFormField name="unit" :label="$ts('shoppingList.unitLabel')">
           <UInput v-model="addItemState.unit" class="md:w-16" />
         </UFormField>
-        <UButton type="submit" class="h-8 justify-center" label="Add" />
+        <UButton type="submit" class="h-8 justify-center" :label="$ts('actions.add')" />
       </div>
     </UForm>
 
     <div v-if="manualItems.length > 0">
       <USeparator class="my-4" />
-      <h2 class="text-base font-bold md:text-lg">Free-hand items</h2>
+      <h2 class="text-base font-bold md:text-lg">{{ $ts('shoppingList.freehandItems') }}</h2>
       <ManualItemsList
         class="mt-4"
         :items="manualItems"

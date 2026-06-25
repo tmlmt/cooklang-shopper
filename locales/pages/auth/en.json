@@ -1,0 +1,11 @@
+{
+  "description": "Sign in to access your cookbook",
+  "loggedInAs": "You are logged in as",
+  "roleLabel": "Role",
+  "passwordLabel": "Password",
+  "passwordPlaceholder": "Enter your password",
+  "roleViewer": "Viewer",
+  "roleEditor": "Editor",
+  "signInWith": "Sign in with {provider}",
+  "or": "or"
+}

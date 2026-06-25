@@ -1,0 +1,8 @@
+{
+  "description": "Gestion de livre de recettes écrites en Cooklang et création de listes de courses avec génération automatique de panier en ligne",
+  "noMatchingProducts": "Ingrédients sans produits correspondants",
+  "columnProduct": "Nom du produit",
+  "columnIngredient": "Nom de l'ingrédient",
+  "columnQuantity": "Quantité",
+  "columnReason": "Raison"
+}

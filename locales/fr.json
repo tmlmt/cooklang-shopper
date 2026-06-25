@@ -1,0 +1,298 @@
+{
+  "pages": {
+    "recipes": "Recettes",
+    "pantry": "Garde-manger",
+    "shoppingList": "Liste de courses",
+    "shoppingCart": "Panier",
+    "cookbook": "Livre de cuisine",
+    "authentication": "Authentification"
+  },
+  "actions": {
+    "save": "Enregistrer",
+    "cancel": "Abandonner",
+    "close": "Fermer",
+    "confirm": "Valider",
+    "create": "Créer",
+    "upload": "Charger",
+    "add": "Ajouter",
+    "done": "Fait",
+    "login": "Se connecter",
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter",
+    "back": "Précédent",
+    "browse": "Parcourir",
+    "view": "Voir",
+    "edit": "Editer",
+    "move": "Déplacer",
+    "delete": "Supprimer",
+    "share": "Partager",
+    "rename": "Renommer",
+    "cook": "Cuire",
+    "uncheckAll": "Tout décocher",
+    "importFromFile": "Importer depuis un fichier",
+    "switchToOwnList": "Basculer vers sa propre liste",
+    "goToCookbook": "Aller au livre de cuisine",
+    "convertWithAi": "Convertir avec l'IA",
+    "openInCookMd": "Ouvrir dans cook.md",
+    "createLink": "Créer un lien",
+    "skipSection": "Passer la section",
+    "newRecipe": "Nouvelle recette",
+    "newFolder": "Nouveau dossier",
+    "reindexRecipes": "Réindexer les recettes",
+    "uploadImage": "Charger une image",
+    "downloadCook": "Télécharger .cook",
+    "storeRun": "Faire les courses",
+    "categoryConfig": "Configuration de la catégorie",
+    "translate": "Traduire",
+    "setAsDefault": "Définir par défaut"
+  },
+  "nav": {
+    "backToFolder": "Retour au dossier",
+    "backTo": "Retour à {page}",
+    "continueTo": "Continuer vers {page}",
+    "toggleColorMode": "Mode clair / sombre",
+    "about": "À propos de"
+  },
+  "recipe": {
+    "untitled": "(Sans titre)",
+    "ingredients": "Ingrédients",
+    "cookware": "Cuisson",
+    "preparation": "Préparation",
+    "yield": "Rendement",
+    "servings": "aucune portion | 1 portion | {count} portions",
+    "scale": "Ajuster :",
+    "step": "Étape",
+    "note": "Note :",
+    "optionalSection": "Section optionnelle",
+    "ingredientsForStep": "Ingrédients pour cette étape",
+    "moreInfo": "Plus d'infos",
+    "by": "par",
+    "from": "de",
+    "time": {
+      "prep": "Prép.",
+      "cook": "Cuisson",
+      "total": "Total"
+    }
+  },
+  "folder": {
+    "subfolders": "aucun sous-dossier | 1 sous-dossier | {count} sous-dossiers",
+    "recipes": "aucune recette | 1 recette | {count} recettes"
+  },
+  "sharedLink": {
+    "linkExpires": "Ce lien expire le {date}"
+  },
+  "recipeTags": {
+    "extraTags": "Tags additionnels"
+  },
+  "recipeCard": {
+    "today": "aujourd'hui",
+    "daysAgo": "aujourd'hui | hier | il y a {count} jours"
+  },
+  "recipeList": {
+    "folderColumn": "Dossier",
+    "subfoldersColumn": "Sous-dossiers",
+    "titleColumn": "Titre",
+    "tagsColumn": "Tags",
+    "timeColumn": "Durée",
+    "modifiedColumn": "Modifié",
+    "yieldColumn": "Rendement",
+    "authorColumn": "Auteur",
+    "sourceColumn": "Source",
+    "actionsColumn": "Actions"
+  },
+  "ingredientList": {
+    "checkedCount": "{checked} / {total} coché",
+    "hideChecked": "Cacher les éléments cochés",
+    "other": "Autres"
+  },
+  "shoppingList": {
+    "nameColumn": "Nom",
+    "servingsColumn": "Portions",
+    "choicesColumn": "Choix",
+    "customChoices": "Choix personnalisés",
+    "noChoice": "n/a",
+    "addFreehand": "Ajouter manuellement un élément",
+    "freehandItems": "Éléments ajoutés manuellement",
+    "ingredientLabel": "Ingrédient",
+    "quantityLabel": "Quantité",
+    "unitLabel": "Unité"
+  },
+  "cookMode": {
+    "ingredientsIntro": "Cette recette nécessite les ingrédients suivants",
+    "timers": "TIMERS",
+    "timerDone": "Temps écoulé !"
+  },
+  "choices": {
+    "title": "Choisissez les alternatives d'ingrédient",
+    "noAlternatives": "Aucune alternative d'ingrédient disponible pour cette recette.",
+    "inlineAlternatives": "Alternatives en ligne",
+    "groupedAlternatives": "Alternatives groupées",
+    "noChoice": "Pas de choix",
+    "pleaseSelect": "Veuillez faire une sélection"
+  },
+  "modal": {
+    "file": {
+      "directory": "Dossier",
+      "createSubdir": "Créer un sous-dossier dans la sélection",
+      "name": "Nom",
+      "subdirCreated": "Sous-dossier créé",
+      "subdirExistsWarning": "Un sous-dossier nommé '{name}' existe déjà",
+      "subdirCreatedAs": "Nouveau sous-dossier '{newName}' créé",
+      "moveRecipe": "Déplacer la recette",
+      "moveFolder": "Déplacer le dossier"
+    },
+    "about": {
+      "title": "À propos de {appTitle}",
+      "author": "Auteur:",
+      "version": "Version :",
+      "code": "Code :",
+      "updateAvailable": "Mise à jour disponible",
+      "poweredBy": "Propulsé par",
+      "by": "Par :",
+      "contact": "Contact:"
+    },
+    "share": {
+      "visibility": "Visibilité",
+      "visibilityPublic": "N'importe qui peut voir cette recette",
+      "visibilityPrivate": "Seulement vous pouvez voir cette recette",
+      "shareLinks": "Liens de partage",
+      "noLinks": "Aucun lien de partage pour l'instant",
+      "expiresOptional": "Expire (optionnel)",
+      "created": "Créé le",
+      "expired": "Expiré",
+      "expires": "Expire",
+      "shareRecipe": "Partager la recette",
+      "shareShoppingList": "Partager la liste de courses"
+    },
+    "imageUpload": {
+      "imageRole": "Rôle de l'image",
+      "imageFile": "Fichier image"
+    },
+    "storeRun": {
+      "live": "En direct"
+    },
+    "translate": {
+      "title": "Traduire la recette",
+      "manual": "Manuellement",
+      "usingAi": "Avec l'IA",
+      "localeLabel": "Langue cible",
+      "localeDescription": "Code ISO 639-1 à deux lettres (par ex. en, fr, de)",
+      "methodLabel": "Méthode de traduction"
+    }
+  },
+  "search": {
+    "placeholder": "Rechercher des recettes...",
+    "recipesMatching": "Recettes correspondant à \"{term}\"..."
+  },
+  "errors": {
+    "recipeNotFound": "Recette introuvable"
+  },
+  "toast": {
+    "success": "Succès",
+    "error": "Erreur",
+    "recipesReindexed": "Recettes réindexées",
+    "folderCreated": "Dossier créé",
+    "folderExistsWarning": "Un dossier nommé '{name}' existe déjà",
+    "folderCreatedAs": "Dossier créé en tant que '{newName}'",
+    "folderCreationError": "Erreur lors de la création du dossier",
+    "folderMoved": "Dossier déplacé",
+    "folderMovedError": "Erreur lors du déplacement du dossier",
+    "folderRenamed": "Dossier renommé",
+    "folderRenameError": "Erreur lors du renommage du dossier",
+    "folderDeleted": "Dossier supprimé",
+    "folderDeleteError": "Erreur lors de la suppression du dossier",
+    "imageUploaded": "Image téléversée",
+    "imageDeleted": "Image supprimée",
+    "recipeSaved": "Recette enregistrée avec succès",
+    "recipeDeleted": "Recette supprimée",
+    "recipeMoved": "Recette déplacée vers {path}",
+    "recipeAddedToList": "Recette ajoutée avec succès à la liste de courses",
+    "recipeServingsModified": "Les portions ont été modifiées avec succès dans la liste de courses",
+    "recipeRemovedFromList": "Recette retirée de la liste de courses avec succès",
+    "ingredientAdded": "Ingrédient ajouté",
+    "ingredientAddError": "Impossible d'ajouter l'ingrédient",
+    "servingsUpdateError": "Échec de la mise à jour des portions",
+    "pantryInvalid": "Garde-manger invalide",
+    "pantrySaved": "Garde-manger sauvegardé",
+    "categoryConfigSaved": "Catégorisation enregistrée",
+    "categoryConfigInvalid": "Catégorisation invalide",
+    "visibilityUpdated": "Visibilité mise à jour",
+    "visibilityUpdatedTo": "La recette est maintenant {visibility}",
+    "visibilityUpdateError": "Échec de la mise à jour de la visibilité",
+    "shareLinkCreated": "Lien de partage créé",
+    "shareLinkCreateError": "Impossible de créer le lien de partage",
+    "shareLinkRevoked": "Lien de partage révoqué",
+    "shareLinkRevokeError": "Impossible de révoquer le lien de partage",
+    "linkCopied": "Lien copié dans le presse-papiers",
+    "linkCopyError": "Impossible de copier le lien",
+    "setAsDefaultDone": "Langue par défaut mise à jour",
+    "translationComplete": "Traduction terminée",
+    "conversionComplete": "Conversion terminée",
+    "conversionTokens": "{in} tokens d'entrée / {out} de sortie",
+    "conversionInterrupted": "Conversion interrompue",
+    "conversionInterruptedDetail": "Contenu partiel sauvegardé dans l'éditeur",
+    "conversionFailed": "La conversion a échoué",
+    "sharedListExpired": "Liste partagée expirée",
+    "sharedListExpiredDetail": "Le lien de la liste partagée a expiré. Passé à votre propre liste.",
+    "loginFailed": "Échec de la connexion",
+    "loginInvalidPassword": "Mot de passe invalide",
+    "oidcFailedDetail": "L'authentification OIDC a échoué. Veuillez réessayer.",
+    "oidcUnreachable": "Serveur d'accès injoignable",
+    "oidcUnreachableDetail": "Le serveur d'authentification n'a pas pu être atteint. Veuillez réessayer plus tard.",
+    "oidcCheckUnreachable": "Le serveur \nd'authentification n'a pas pu être atteint. Vérifiez votre connexion réseau.",
+    "loggedOut": "Déconnecté",
+    "loggedOutDetail": "Vous avez été déconnecté avec succès"
+  },
+  "emptyState": {
+    "nothingHere": "Rien ici pour l'instant",
+    "createOrAdd": "Créez une recette ou ajoutez un sous-dossier pour commencer."
+  },
+  "validation": {
+    "enterRecipe": "Veuillez entrer une recette",
+    "invalidRecipe": "Recette invalide. Vérifiez la syntaxe",
+    "localeRequired": "Veuillez entrer un code de langue",
+    "localeInvalid": "Doit être un code de langue à 2 lettres (ex. en, fr)",
+    "enterFilename": "Veuillez entrer un nom de fichier",
+    "filenameNoSlash": "Le nom du fichier ne doit pas contenir '/'",
+    "filenameChars": "Seuls les lettres, chiffres, espaces, et & ( ) ' _ + % . - sont autorisés",
+    "enterSubdirName": "Veuillez entrer un nom de sous-dossier",
+    "subdirNoSlash": "Le nom du sous-répertoire ne doit pas contenir '/'",
+    "selectDirectory": "Veuillez sélectionner un répertoire",
+    "selectParentDir": "Vous devez sélectionner un répertoire parent",
+    "subdirExists": "Ce sous-répertoire existe déjà",
+    "enterValue": "Veuillez saisir une valeur",
+    "noSlash": "Ne doit pas contenir '/'",
+    "noBackslash": "Ne doit pas contenir '\\'",
+    "ingredientRequired": "Le nom de l'ingrédient est requis"
+  },
+  "recipeLocale": {
+    "modalTitle": "Langue de la recette",
+    "recipeLanguageTitle": "Langue du contenu de la recette",
+    "recipeLanguageLabel": "Contenu de la recette",
+    "pageLanguageLabel": "Langue de la page",
+    "sameAsRecipe": "Comme la recette",
+    "sameAsRecipeDescription": "Afficher les libellés dans la langue de la recette",
+    "sameAsApp": "Comme l'application",
+    "sameAsAppDescription": "Afficher les libellés dans langue de l'application ({locale})",
+    "fallbackTitle": "Langue non disponible",
+    "fallbackDescription": "'{locale}' n'est pas disponible dans la bibliothèque de langues, conservation de '{fallback}'"
+  },
+  "ai": {
+    "convertFromUrl": "Convertir depuis une URL ou un texte avec une IA",
+    "pasteText": "Ou collez directement le texte de la recette...",
+    "urlWarning": "L'importation d'URL peut ne pas fonctionner pour les pages affichées en JavaScript. Utilisez la zone de texte comme zone de repli.",
+    "fetchingPage": "Récupération de la page...",
+    "converting": "Conversion avec AI...",
+    "noContent": "Aucun contenu à convertir",
+    "fetchError": "Impossible de récupérer la page"
+  },
+  "basics": {
+    "unknown": "inconnu",
+    "optional": "optionnel",
+    "yes": "oui",
+    "no": "non",
+    "recipe": "recette | recettes",
+    "default": "Par défaut",
+    "unspecified": "Non spécifié"
+  }
+}

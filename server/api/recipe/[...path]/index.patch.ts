@@ -29,30 +29,52 @@ export default defineEventHandler(async (event) => {
 
   validateRecipeDir(body.dir);
 
-  // Saving
   const storage = useStorage("recipes");
-  const oldRecipeKey = decodedPath.replace(/\//g, ":");
-  const content = (await storage.getItem(oldRecipeKey + ".cook")) as string;
-  if (!content) {
+  const oldBaseKey = decodedPath.replace(/\//g, ":");
+  const dir: string = body.dir;
+  const fileName: string = body.fileName;
+  const newBaseKey = (dir ? `${dir}/${fileName}` : fileName).replace(
+    /\//g,
+    ":",
+  );
+
+  // Collect all variant file keys for this recipe (default + language codes)
+  const { hasDefault, langCodes } = getVariantsForBase(oldBaseKey);
+  const filePairs: { oldKey: string; newKey: string }[] = [];
+  if (hasDefault) filePairs.push({ oldKey: oldBaseKey, newKey: newBaseKey });
+  for (const lang of langCodes) {
+    filePairs.push({
+      oldKey: `${oldBaseKey}.${lang}`,
+      newKey: `${newBaseKey}.${lang}`,
+    });
+  }
+  // Edge case: file exists on disk but was not in the tracker
+  if (filePairs.length === 0)
+    filePairs.push({ oldKey: oldBaseKey, newKey: newBaseKey });
+
+  // Verify that at least the default (or first) file exists
+  const firstContent = (await storage.getItem(
+    filePairs[0]!.oldKey + ".cook",
+  )) as string | null;
+  if (!firstContent) {
     throw createError({
       status: 404,
       statusText: "Recipe not found",
     });
   }
-  await storage.removeItem(oldRecipeKey + ".cook");
-  deleteFromRecipeIndex(oldRecipeKey);
 
-  const dir = body.dir;
-  const fileName = body.fileName;
-  const newRecipeKey = (dir ? `${dir}/${fileName}` : fileName).replace(
-    /\//g,
-    ":",
-  );
-  await storage.setItem(newRecipeKey + ".cook", content);
-  await updateRecipeIndex(newRecipeKey, content);
+  // Move every variant in storage and update the index
+  for (const { oldKey, newKey } of filePairs) {
+    const content = (await storage.getItem(oldKey + ".cook")) as string | null;
+    if (!content) continue;
+    await storage.removeItem(oldKey + ".cook");
+    deleteFromRecipeIndex(oldKey + ".cook");
+    await storage.setItem(newKey + ".cook", content);
+    await updateRecipeIndex(newKey + ".cook", content);
+  }
 
-  // Update visibility overrides and share links to new path
-  await moveRecipeVisibilityAndLinks(oldRecipeKey, newRecipeKey);
+  // Update visibility overrides and share links (once, using base keys)
+  await moveRecipeVisibilityAndLinks(oldBaseKey, newBaseKey);
 
   // Move associated images. Only managed cover/step files are renamed to the
   // new recipe base name; metadata-referenced files keep their basename.

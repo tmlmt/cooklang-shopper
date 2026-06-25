@@ -1,6 +1,8 @@
 <script setup lang="ts">
-definePageMeta({
-  title: "Pantry",
+const { $ts } = useI18n();
+
+useSeoMeta({
+  title: $ts("pages.pantry"),
 });
 
 const { data } = await useFetch("/api/pantry");
@@ -19,13 +21,13 @@ async function save() {
       method: "PUT",
       body: { content: content.value },
     });
-    toast.add({ color: "success", title: "Pantry saved" });
+    toast.add({ color: "success", title: $ts("toast.pantrySaved") });
     savedContent.value = content.value;
   } catch (e: unknown) {
     const message = (e as { data?: { message?: string } })?.data?.message;
     toast.add({
       color: "error",
-      title: "Invalid pantry",
+      title: $ts("toast.pantryInvalid"),
       description: message,
       duration: 5000,
     });
@@ -59,13 +61,13 @@ function onFileChange(e: Event) {
       v-model="content"
       :rows="20"
       :ui="{ base: 'font-mono' }"
-      placeholder='# TOML Pantry Format&#10;See https://cooklang.org/docs/use-cases/pantry/#the-pantry-configuration-file&#10;&#10;[fridge]&#10;milk = { expire = "10.05.2024", quantity = "1%L" }&#10;&#10;[freezer]&#10;spinach = { quantity = "1%kg", low = "200%g" }'
+      :placeholder="$ts('placeholder')"
       autoresize
     />
     <div class="flex gap-2">
       <UButton
         color="primary"
-        label="Save"
+        :label="$ts('actions.save')"
         :loading="saving"
         :disabled="!isDirty"
         @click="save"
@@ -73,7 +75,7 @@ function onFileChange(e: Event) {
       <UButton
         color="neutral"
         variant="soft"
-        label="Import from file"
+        :label="$ts('actions.importFromFile')"
         icon="material-symbols:upload-file"
         @click="triggerImport"
       />

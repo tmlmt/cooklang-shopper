@@ -1,13 +1,14 @@
 <script setup lang="ts">
-const {
-  question,
-  yes = "Yes",
-  no = "No",
-} = defineProps<{
+const props = defineProps<{
   question: string;
   yes?: string;
   no?: string;
 }>();
+
+const { $ts } = useI18n();
+const yes = props.yes ?? capitalize($ts("basics.yes"));
+const no = props.no ?? capitalize($ts("basics.no"));
+const { question } = props;
 
 const emit = defineEmits<{ close: [boolean] }>();
 

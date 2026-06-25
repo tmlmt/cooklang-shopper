@@ -4,8 +4,8 @@ export default async function () {
   const overlay = useOverlay();
   const modal = overlay.create(ModalShareRecipe);
 
-  async function open(recipePath: string) {
-    const instance = modal.open({ recipePath });
+  async function open(recipePath: string, viewingLocale?: string) {
+    const instance = modal.open({ recipePath, viewingLocale });
     return await instance.result;
   }
 

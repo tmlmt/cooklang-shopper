@@ -5,6 +5,8 @@ const { time } = defineProps<{
   time: MetadataTime | undefined;
 }>();
 
+const { $t } = useI18n();
+
 const hasAnyTime = computed(
   () => time && (time.prep || time.cook || time.total),
 );
@@ -16,17 +18,17 @@ const hasAnyTime = computed(
     class="my-5 grid w-full grid-cols-3 justify-self-center rounded-lg border border-neutral-400 md:w-fit md:justify-self-start dark:border-neutral-600"
   >
     <div class="px-4 py-1 text-center text-xs text-neutral-500 uppercase">
-      Prep
+      {{ $t('recipe.time.prep') }}
     </div>
     <div
       class="border-l border-neutral-400 px-4 py-1 text-center text-xs text-neutral-500 uppercase dark:border-neutral-600"
     >
-      Cook
+      {{ $t('recipe.time.cook') }}
     </div>
     <div
       class="border-l border-neutral-400 px-4 py-1 text-center text-xs text-neutral-500 uppercase dark:border-neutral-600"
     >
-      Total
+      {{ $t('recipe.time.total') }}
     </div>
     <div class="px-4 py-1 text-center text-sm font-bold">
       {{ formatTime(time?.prep) }}

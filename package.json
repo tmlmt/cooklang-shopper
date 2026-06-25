@@ -16,6 +16,9 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "nuxt typecheck",
     "postinstall": "nuxt prepare",
+    "translation:upload": "crowdin upload",
+    "translation:download": "crowdin download translations && pnpm translation:status",
+    "translation:status": "node scripts/update-translation-status.mjs",
     "release": "node scripts/release.mjs",
     "prepare": "pnpx skilld prepare || true"
   },
@@ -39,6 +42,7 @@
     "linkedom": "0.18.12",
     "nuxt": "4.4.6",
     "nuxt-auth-utils": "0.5.29",
+    "nuxt-i18n-micro": "3.18.2",
     "nuxt-security": "2.6.0",
     "nuxt-seo-utils": "8.1.11",
     "openai": "6.39.0",

@@ -87,25 +87,15 @@ const preferredTime = computed(() => {
   return formatTime(value);
 });
 
+const { $tdr } = useI18n();
+
 const formattedModified = computed(() => {
   if (!props.recipe.lastModified) return "-";
 
   const modified = new Date(props.recipe.lastModified);
   if (Number.isNaN(modified.getTime())) return "-";
 
-  const now = new Date();
-  const diffMs = now.getTime() - modified.getTime();
-  const oneDay = 24 * 60 * 60 * 1000;
-  const days = Math.floor(diffMs / oneDay);
-
-  if (days <= 0) return "today";
-  if (days === 1) return "1 day ago";
-  if (days < 7) return `${days} days ago`;
-
-  const month = String(modified.getMonth() + 1).padStart(2, "0");
-  const day = String(modified.getDate()).padStart(2, "0");
-  const year = modified.getFullYear();
-  return `${month}-${day}-${year}`;
+  return $tdr(modified, { numeric: "auto" });
 });
 </script>
 
@@ -117,7 +107,7 @@ const formattedModified = computed(() => {
       @mouseenter="setImageHoverState(true)"
       @mouseleave="setImageHoverState(false)"
     >
-      <NuxtLink :to="recipePath" class="block" @click.stop="handleImageTap">
+      <i18n-link :to="recipePath" class="block" @click.stop="handleImageTap">
         <div class="h-28 overflow-hidden rounded-xl">
           <NuxtImg
             v-if="coverImage"
@@ -157,7 +147,7 @@ const formattedModified = computed(() => {
             </div>
           </div>
         </div>
-      </NuxtLink>
+      </i18n-link>
       <UCheckbox
         class="bg-default/90 absolute top-3 right-3 z-10 rounded transition-all duration-200"
         :class="
@@ -173,9 +163,9 @@ const formattedModified = computed(() => {
       />
     </div>
 
-    <NuxtLink :to="recipePath" class="line-clamp-2 font-semibold">
+    <i18n-link :to="recipePath" class="line-clamp-2 font-semibold">
       {{ recipe.title }}
-    </NuxtLink>
+    </i18n-link>
 
     <div class="mt-2 flex min-h-6 flex-wrap items-center gap-1">
       <RecipeTagOverflow :tags="recipe.tags" mode="grid" />

@@ -6,10 +6,11 @@ import {
   type ProductSelection,
 } from "@tmlmt/cooklang-parser";
 
-definePageMeta({
-  title: "Shopping Cart",
-  description:
-    "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
+const { $t, $ts } = useI18n();
+
+useSeoMeta({
+  title: $ts("pages.shoppingCart"),
+  description: $ts("description"),
 });
 
 const { cart, misMatch } = await useShoppingCart();
@@ -22,12 +23,12 @@ const columnsCart: TableColumn<ProductSelection>[] = [
   },
   {
     accessorKey: "productName",
-    header: "Product Name",
+    header: () => $t("columnProduct"),
     cell: ({ row }) => row.original.product.productName,
   },
   {
     accessorKey: "quantity",
-    header: "Quantity",
+    header: () => $t("columnQuantity"),
     cell: ({ row }) => row.getValue("quantity"),
   },
 ];
@@ -40,12 +41,12 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
   },
   {
     accessorKey: "ingredientName",
-    header: "Ingredient Name",
+    header: () => $t("columnIngredient"),
     cell: ({ row }) => row.original.ingredient.name,
   },
   {
     accessorKey: "quantity",
-    header: "Quantity",
+    header: () => $t("columnQuantity"),
     cell: ({ row }) => {
       const quantities = row.original.ingredient.quantities;
       if (!quantities?.length) {
@@ -65,7 +66,7 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
   },
   {
     accessorKey: "reason",
-    header: "Reason",
+    header: () => $t("columnReason"),
     cell: ({ row }) => misMatchReasonToText(row.original.reason),
   },
 ];
@@ -73,9 +74,9 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
 
 <template>
   <div class="flex w-full flex-col gap-4">
-    <h1 class="text-3xl">Shopping Cart</h1>
+    <h1 class="text-3xl">{{ $t("pages.shoppingCart") }}</h1>
     <UTable :data="cart" :columns="columnsCart" />
-    <h2 class="text-2xl">Ingredients without corresponding products</h2>
+    <h2 class="text-2xl">{{ $t("noMatchingProducts") }}</h2>
     <UTable :data="misMatch" :columns="columnsMisMatch" />
   </div>
 </template>

@@ -31,8 +31,15 @@ export default defineEventHandler(async (event) => {
   // Convert recipePath (colon-separated) to file path (slash-separated)
   const filePath = shareLink.recipePath.replace(/:/g, "/");
 
+  // Select the locale variant stored in the share link (or default file)
+  const fileKey = await selectRecipeFileKey(
+    shareLink.recipePath,
+    shareLink.locale ?? undefined,
+  );
+
   const storage = useStorage("recipes");
-  const content = await storage.getItem(`${filePath}.cook`);
+  const resolvedFilePath = fileKey ? fileKey.replace(/:/g, "/") : filePath;
+  const content = await storage.getItem(resolvedFilePath + ".cook");
 
   if (!content) {
     throw createError({

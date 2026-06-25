@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import type { Role } from "~~/shared/types";
 
+const { $t, $ts } = useI18n();
+
 definePageMeta({
   layout: "naked",
-  title: "Authentication",
-  description: "Sign in to access your cookbook",
 });
+useSeoMeta({
+  title: $ts("pages.authentication"),
+  description: $ts("description"),
+});
+
 const { loggedIn, user, clear, fetch: fetchSession } = useUserSession();
 const toast = useToast();
 const route = useRoute();
@@ -15,8 +20,8 @@ defineOgImage(
   "DefaultOgImage",
   {
     title: siteConfig.name,
-    subtitle: "Authentication",
-    description: "Sign in to access your cookbook",
+    subtitle: $ts("pages.authentication"),
+    description: $ts("description"),
   },
   [
     // Primary image for og:image and twitter:image (1200x600)
@@ -30,15 +35,14 @@ defineOgImage(
 if (import.meta.client) {
   if (route.query.error === "oidc") {
     toast.add({
-      title: "Login failed",
-      description: "OIDC authentication failed. Please try again.",
+      title: $ts("toast.loginFailed"),
+      description: $ts("toast.oidcFailedDetail"),
       color: "error",
     });
   } else if (route.query.error === "oidc-unreachable") {
     toast.add({
-      title: "Provider unreachable",
-      description:
-        "The authentication provider could not be reached. Please try again later.",
+      title: $ts("toast.oidcUnreachable"),
+      description: $ts("toast.oidcUnreachableDetail"),
       color: "error",
     });
   }
@@ -46,10 +50,10 @@ if (import.meta.client) {
 
 const { hasAuth, getAuthProviders, title: appTitle } = await usePublicConfig();
 const oidcProviders = computed(() => getAuthProviders("oidc"));
-const roles: { label: string; value: Role }[] = [
-  { label: "Viewer", value: "viewer" },
-  { label: "Editor", value: "editor" },
-];
+const roles = computed<{ label: string; value: Role }[]>(() => [
+  { label: $ts("roleViewer"), value: "viewer" },
+  { label: $ts("roleEditor"), value: "editor" },
+]);
 const selectedRole = ref<Role>("viewer");
 const password = ref("");
 const loading = ref(false);
@@ -62,9 +66,8 @@ async function loginWithOidc(providerName: string) {
     await navigateTo(`/auth/oidc/${providerName}`, { external: true });
   } catch {
     toast.add({
-      title: "Provider unreachable",
-      description:
-        "The authentication provider could not be reached. Check your network connection.",
+      title: $ts("toast.oidcUnreachable"),
+      description: $ts("toast.oidcCheckUnreachable"),
       color: "error",
     });
   } finally {
@@ -83,8 +86,8 @@ async function login() {
     await navigateTo("/", { external: true });
   } catch {
     toast.add({
-      title: "Login failed",
-      description: "Invalid password",
+      title: $ts("toast.loginFailed"),
+      description: $ts("toast.loginInvalidPassword"),
       color: "error",
     });
   } finally {
@@ -96,8 +99,8 @@ async function logout() {
   await clear();
   password.value = "";
   toast.add({
-    title: "Logged out",
-    description: "You have been successfully logged out",
+    title: $ts("toast.loggedOut"),
+    description: $ts("toast.loggedOutDetail"),
     color: "success",
   });
 }
@@ -105,10 +108,12 @@ async function logout() {
 
 <template>
   <UCard class="max-w-2xl">
-    <template #header>{{ appTitle }} - Authentication</template>
+    <template #header
+      >{{ appTitle }} - {{ $t("pages.authentication") }}</template
+    >
     <div v-if="loggedIn" class="flex flex-col items-center gap-4">
       <p>
-        You are logged in as
+        {{ $t("loggedInAs") }}
         <b>{{ user?.profile ?? "" }}</b>
         ({{
           user?.role
@@ -119,17 +124,19 @@ async function logout() {
       <UButton
         color="neutral"
         variant="outline"
-        label="Go to Cookbook"
+        :label="$ts('actions.goToCookbook')"
         @click="navigateTo('/')"
       />
-      <UButton color="primary" @click="logout">Sign out</UButton>
+      <UButton color="primary" @click="logout">{{
+        $t("actions.signOut")
+      }}</UButton>
     </div>
     <div v-else class="flex flex-col items-center gap-4">
       <UButton
         v-for="provider in oidcProviders"
         :key="provider.name"
         icon="i-mdi-shield-key-outline"
-        :label="`Sign in with ${provider.name}`"
+        :label="$ts('signInWith', { provider: provider.name })"
         color="primary"
         size="lg"
         block
@@ -142,7 +149,7 @@ async function logout() {
         class="flex w-full items-center gap-4"
       >
         <USeparator class="flex-1" />
-        <span class="text-sm text-gray-500">or</span>
+        <span class="text-sm text-gray-500">{{ $t("or") }}</span>
         <USeparator class="flex-1" />
       </div>
 
@@ -151,7 +158,7 @@ async function logout() {
         class="flex w-full flex-col gap-4"
         @submit.prevent="login"
       >
-        <UFormField label="Role" name="role">
+        <UFormField :label="$ts('roleLabel')" name="role">
           <URadioGroup
             v-model="selectedRole"
             orientation="horizontal"
@@ -159,16 +166,16 @@ async function logout() {
             :items="roles"
           />
         </UFormField>
-        <UFormField label="Password" name="password">
+        <UFormField :label="$ts('passwordLabel')" name="password">
           <UInput
             v-model="password"
             type="password"
-            placeholder="Enter your password"
+            :placeholder="$ts('passwordPlaceholder')"
           />
         </UFormField>
         <UButton
           type="submit"
-          label="Login"
+          :label="$ts('actions.login')"
           :disabled="!password"
           :loading="loading"
         />

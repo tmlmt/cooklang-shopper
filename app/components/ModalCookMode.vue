@@ -13,14 +13,21 @@ import {
   type Timer,
 } from "@tmlmt/cooklang-parser";
 import { useSwipe, onClickOutside, useWebNotification } from "@vueuse/core";
+import { capitalize } from "#imports";
 
 const props = defineProps<{
   recipe: Recipe;
   choices: RecipeChoices;
   stepImagesByNumber?: Record<string, string>;
+  translateFunction?: typeof $ts;
 }>();
 
 const emit = defineEmits<{ close: [] }>();
+
+const { $ts } = useI18n();
+const modalT: typeof $ts = (key, params, defaultValue) =>
+  props.translateFunction?.(key, params, defaultValue) ??
+  $ts(key, params, defaultValue);
 
 defineShortcuts({
   escape: () => emit("close"),
@@ -282,7 +289,7 @@ function getStepTimerEntries(
         timerStates.set(id, {
           name:
             timer.name ||
-            `Step ${slide.stepNumber} (${formatQuantityWithUnit(timer.duration, timer.unit)})`,
+            `${modalT("recipe.step")} ${slide.stepNumber} (${formatQuantityWithUnit(timer.duration, timer.unit)})`,
           totalSeconds: total,
           remainingSeconds: total,
           status: "idle",
@@ -312,7 +319,7 @@ function startTimer(id: string) {
         intervals.delete(id);
         if (notificationSupported.value) {
           showNotification({
-            title: "Timer done!",
+            title: modalT("cookMode.timerDone"),
             body: state.name,
           });
         }
@@ -474,10 +481,10 @@ watch(currentSlideIndex, () => {
             <template v-if="currentSlide.type === 'ingredients'">
               <div class="mx-auto w-full max-w-3xl">
                 <h2 class="mb-6 text-center text-2xl font-bold md:text-3xl">
-                  Ingredients
+                  {{ modalT("recipe.ingredients") }}
                 </h2>
                 <p class="text-muted mb-6 text-center">
-                  This recipe requires the following ingredients
+                  {{ modalT("cookMode.ingredientsIntro") }}
                 </p>
                 <IngredientList
                   :ingredients="allIngredients"
@@ -485,7 +492,9 @@ watch(currentSlideIndex, () => {
                   :interactive="false"
                 />
                 <template v-if="allCookware.length > 0">
-                  <h3 class="mt-8 mb-3 text-xl font-bold">Cookware</h3>
+                  <h3 class="mt-8 mb-3 text-xl font-bold">
+                    {{ modalT("recipe.cookware") }}
+                  </h3>
                   <ul class="ml-6 list-disc md:columns-2">
                     <li v-for="item in allCookware" :key="item.name">
                       {{ item.name }}
@@ -508,7 +517,7 @@ watch(currentSlideIndex, () => {
                 </h2>
                 <UButton
                   v-if="currentSlide.optional"
-                  label="Skip section"
+                  :label="modalT('actions.skipSection')"
                   color="neutral"
                   variant="soft"
                   size="lg"
@@ -523,9 +532,9 @@ watch(currentSlideIndex, () => {
               <div class="mx-auto w-full max-w-2xl">
                 <h2 class="mb-4 text-xl font-semibold md:text-2xl">
                   <span v-if="currentSlide.optional" class="font-normal"
-                    >(Optional)
+                    >({{ capitalize(modalT("basics.optional")) }})
                   </span>
-                  Step {{ currentSlide.stepNumber }}
+                  {{ modalT("recipe.step") }} {{ currentSlide.stepNumber }}
                 </h2>
 
                 <!-- Step image -->
@@ -546,7 +555,7 @@ watch(currentSlideIndex, () => {
                   <h3
                     class="mb-2 text-sm font-semibold tracking-wide uppercase"
                   >
-                    Ingredients for this step
+                    {{ modalT("recipe.ingredientsForStep") }}
                   </h3>
                   <IngredientList
                     :ingredients="getStepIngredients(currentSlide)"
@@ -563,7 +572,7 @@ watch(currentSlideIndex, () => {
                   <h3
                     class="mb-2 text-sm font-semibold tracking-wide uppercase"
                   >
-                    Cookware
+                    {{ modalT("recipe.cookware") }}
                   </h3>
                   <ul class="ml-6 list-disc">
                     <li
@@ -598,9 +607,11 @@ watch(currentSlideIndex, () => {
                   name="i-lucide-circle-check"
                   class="text-primary size-24"
                 />
-                <h2 class="text-center text-3xl font-bold">Done!</h2>
+                <h2 class="text-center text-3xl font-bold">
+                  {{ modalT("actions.done") }}
+                </h2>
                 <UButton
-                  label="Close"
+                  :label="modalT('actions.close')"
                   color="primary"
                   size="lg"
                   @click="emit('close')"
@@ -623,7 +634,9 @@ watch(currentSlideIndex, () => {
               class="bg-elevated w-72 rounded-2xl p-3 shadow-lg"
             >
               <div class="mb-2 flex items-center justify-between">
-                <span class="mb-1 ml-1.5 text-base font-semibold">TIMERS</span>
+                <span class="mb-1 ml-1.5 text-base font-semibold">{{
+                  modalT("cookMode.timers")
+                }}</span>
                 <UButton
                   icon="i-lucide-x"
                   color="neutral"

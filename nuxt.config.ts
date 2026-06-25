@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "@pinia/nuxt",
     "@vueuse/nuxt",
+    "nuxt-i18n-micro",
     "@nuxt/ui",
     "nuxt-auth-utils",
     "nuxt-seo-utils",
@@ -24,6 +25,36 @@ export default defineNuxtConfig({
   ],
 
   css: ["~/assets/css/main.css"],
+
+  i18n: {
+    locales: [
+      {
+        code: "en",
+        iso: "en-US",
+        og: "en_US",
+        displayName: "English",
+        flag: "🇺🇸",
+      },
+      {
+        code: "fr",
+        iso: "fr-FR",
+        og: "fr_FR",
+        displayName: "Français",
+        flag: "🇫🇷",
+      },
+      {
+        code: "da",
+        iso: "da-DK",
+        og: "da_DK",
+        displayName: "Dansk",
+        flag: "🇩🇰",
+      },
+    ],
+    defaultLocale: "en",
+    fallbackLocale: "en",
+    translationDir: "locales",
+    localeCookie: "user-locale",
+  },
 
   icon: {
     serverBundle: "remote",
@@ -67,6 +98,14 @@ export default defineNuxtConfig({
       },
       maxAge: 60 * 60 * 24 * 7, // 1 week
     },
+    public: {
+      i18nRuntime: {
+        defaultLocale: "",
+        fallbackLocale: "",
+        disabledLocales: [],
+      },
+      i18nLocales: ["en", "fr", "da"],
+    },
   },
 
   security: {
@@ -79,6 +118,10 @@ export default defineNuxtConfig({
       maxUploadFileRequestInBytes: 11000000,
     },
     rateLimiter: process.env.NODE_ENV === "development" ? false : undefined,
+  },
+
+  seo: {
+    automaticDefaults: false,
   },
 
   sitemap: {

@@ -40,6 +40,7 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
 - **🌗 Dark / light mode** — toggle between color themes
 - **📱 Responsive design** — optimized for both desktop and mobile
 - **Custom app title** — configurable application name shown in the header and SEO tags
+- **🌍 Internationalization (i18n)** — multilingual UI and recipe content support. More details in the [Translation](#translations) section, including how to contribute.
 - **🛡️ Security hardening** — built-in HTTP security headers (CSP with nonce, HSTS, X-Frame-Options), request size limiting, rate limiting, and SRI via [nuxt-security](https://nuxt-security.vercel.app/)
 
 ### 🛒 Shopping list
@@ -160,10 +161,40 @@ Rollback preserves all user data including the database. If a newer version adde
 
 ## Roadmap
 
-1. Internationalization (i18n)
-2. Finalize shopping cart features
-3. Develop feature to send cart to a pre-configured online store
-4. Add customization possibilities
+1. Finalize shopping cart features
+2. Develop feature to send cart to a pre-configured online store
+
+## Translations
+
+### Features
+
+Cooklang-Shopper has multiple internationalization (i18n) features:
+
+- **Multilingual UI** (language switch via burger menu)
+- **Per-recipe language variants**: recipes can be saved and displayed in multiple languages (switch via button next to the recipe title on the recipe details page)
+  - File naming convention with a base recipe name <baseName>: `<baseName>.cook` is considered as the default variant, and `<baseName>.<lang>.cook` as the variant for locale `<lang>` which should be the 2-digit code of the language as per [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes). It is recommended to also specify the locale in the recipe frontmatter/metadata using the `locale` key, especially for the default variant.
+- Possibility to select whether all the labels on a recipe details page should be displayed in the same locale as the recipe content, or as the UI.
+
+### Configuration
+
+You can configure the default locale, the fallback one (used in case a specific string is not available in the target locale) and also only enable specific locales, via the `i18n` section of the `config.yaml` file.
+
+### Contribution
+
+Translations are managed via a public Crowdin project that you are welcome to contribute to.
+
+- Project page / invite link: https://crowdin.com/project/cooklang-shopper/invite?h=40be1757be0533e87568e3721c162be52809579
+- Translators can translate content and vote for existing translations to help select the best wording.
+
+### Status
+
+<!--TRANSLATION_STATUS_START-->
+| Language | Translation (%) | Proofreading (%) |
+| --- | ---: | ---: |
+| 🇩🇰 Dansk | ![90%](https://progress-bar.xyz/90) | ![25%](https://progress-bar.xyz/25) |
+| 🇺🇸 English | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
+| 🇫🇷 Français | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
+<!--TRANSLATION_STATUS_END-->
 
 ## Screenshots
 

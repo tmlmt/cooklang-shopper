@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import * as v from "valibot";
 
-const {
-  title,
-  label,
-  placeholder = "",
-  submitLabel = "Save",
-  initialValue = "",
-} = defineProps<{
+const props = defineProps<{
   title: string;
   label: string;
   placeholder?: string;
   submitLabel?: string;
   initialValue?: string;
 }>();
+
+const { $ts } = useI18n();
+const placeholder = props.placeholder ?? "";
+const submitLabel = props.submitLabel ?? $ts("actions.save");
+const initialValue = props.initialValue ?? "";
+const { title, label } = props;
 
 const emit = defineEmits<{ close: [string | false] }>();
 
@@ -24,9 +24,9 @@ defineShortcuts({
 const schema = v.pipe(
   v.string(),
   v.trim(),
-  v.nonEmpty("Please enter a value"),
-  v.excludes("/", "Must not contain '/'"),
-  v.excludes("\\", "Must not contain '\\'"),
+  v.nonEmpty($ts("validation.enterValue")),
+  v.excludes("/", $ts("validation.noSlash")),
+  v.excludes("\\", $ts("validation.noBackslash")),
 );
 
 const state = ref(initialValue);
@@ -64,7 +64,7 @@ const save = async () => {
         <UButton
           color="neutral"
           variant="soft"
-          label="Cancel"
+          :label="$ts('actions.cancel')"
           @click="emit('close', false)"
         />
         <UButton color="primary" :label="submitLabel" @click="save" />

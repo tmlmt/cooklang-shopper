@@ -1,0 +1,14 @@
+{
+  "defaultVariant": "Par défaut",
+  "addToList": "Ajouter à la liste",
+  "recipeNotFound": "Recette introuvable",
+  "translate": {
+    "editingVariant": "Variante en cours d'édition",
+    "translating": "Traduction en cours...",
+    "failed": "Échec de la traduction",
+    "setAsDefault": "Définir comme valeur par défaut",
+    "buttonLabel": "Traduire",
+    "oldDefaultLocaleTitle": "Langue par défaut actuelle",
+    "oldDefaultLocaleLabel": "Dans quelle langue est écrite la recette par défaut actuelle ? (p. ex. fr)"
+  }
+}

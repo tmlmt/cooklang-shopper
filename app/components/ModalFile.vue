@@ -7,17 +7,19 @@ import type { NuxtError } from "#app";
 // Component basics
 //--------------------
 
-const {
-  mode,
-  currentPath = "",
-  title = "Untitled",
-  excludePaths = [],
-} = defineProps<{
+const { $ts } = useI18n();
+
+const props = defineProps<{
   mode: "new" | "move" | "move-folder";
   currentPath?: string;
   title?: string;
   excludePaths?: string[];
 }>();
+
+const mode = props.mode;
+const currentPath = props.currentPath ?? "";
+const title = computed(() => props.title ?? $ts("recipe.untitled"));
+const excludePaths = props.excludePaths ?? [];
 const emit = defineEmits<{ close: [{ dir: string; name: string } | false] }>();
 defineShortcuts({
   escape: () => emit("close", false),
@@ -95,10 +97,10 @@ const baseDir =
 
 const modalTitle =
   mode === "move"
-    ? "Move recipe"
+    ? $ts("modal.file.moveRecipe")
     : mode === "move-folder"
-      ? "Move folder"
-      : "New recipe";
+      ? $ts("modal.file.moveFolder")
+      : $ts("actions.newRecipe");
 
 const isMoveFolderMode = mode === "move-folder";
 
@@ -107,14 +109,14 @@ const isMoveFolderMode = mode === "move-folder";
 //--------------------
 
 const mainSchema = v.object({
-  dir: v.nonOptional(v.unknown(), "Please select a directory"),
+  dir: v.nonOptional(v.unknown(), $ts("validation.selectDirectory")),
   fileName: isMoveFolderMode
     ? v.optional(v.string())
     : v.pipe(
         v.string(),
         v.trim(),
-        v.nonEmpty("Please enter a filename"),
-        v.excludes("/", "The filename must not contain  '/'"),
+        v.nonEmpty($ts("validation.enterFilename")),
+        v.excludes("/", $ts("validation.filenameNoSlash")),
         v.check((value) => {
           try {
             validateRecipePath(value);
@@ -122,7 +124,7 @@ const mainSchema = v.object({
           } catch {
             return false;
           }
-        }, "Only letters, digits, spaces, and & ( ) ' _ + % . - are allowed"),
+        }, $ts("validation.filenameChars")),
       ),
 });
 
@@ -138,7 +140,7 @@ const mainState = ref<MainState>({
       ? ""
       : currentPath !== undefined
         ? currentPath.split("/").pop()
-        : "Untitled",
+        : $ts("recipe.untitled"),
 });
 
 const isNotAlreadyExisting = (value: string): boolean => {
@@ -157,8 +159,8 @@ const newDirSchema = v.object({
   subDir: v.pipe(
     v.string(),
     v.trim(),
-    v.nonEmpty("Please enter a subdirectory name"),
-    v.excludes("/", "The subdirectory name must not contain  '/'"),
+    v.nonEmpty($ts("validation.enterSubdirName")),
+    v.excludes("/", $ts("validation.subdirNoSlash")),
     v.check((value) => {
       try {
         validateRecipePath(value);
@@ -166,9 +168,9 @@ const newDirSchema = v.object({
       } catch {
         return false;
       }
-    }, "Only letters, digits, spaces, and & ( ) ' _ + % . - are allowed"),
-    v.check(isParentDirSelected, "You need to select a parent directory"),
-    v.check(isNotAlreadyExisting, "This subdirectory already exists"),
+    }, $ts("validation.filenameChars")),
+    v.check(isParentDirSelected, $ts("validation.selectParentDir")),
+    v.check(isNotAlreadyExisting, $ts("validation.subdirExists")),
   ),
 });
 
@@ -238,13 +240,17 @@ const createSubDir = async () => {
 
       if (!data.renamed) {
         toast.add({
-          title: "Sub-directory created",
+          title: $ts("modal.file.subdirCreated"),
           color: "success",
         });
       } else {
         toast.add({
-          title: `A sub-directory called '${newDirState.subDir}' already exists`,
-          description: `New sub-directory created as '${data.name}'`,
+          title: $ts("modal.file.subdirExistsWarning", {
+            name: newDirState.subDir,
+          }),
+          description: $ts("modal.file.subdirCreatedAs", {
+            newName: data.name,
+          }),
           color: "warning",
         });
       }
@@ -252,7 +258,7 @@ const createSubDir = async () => {
     }
   } catch (e) {
     toast.add({
-      title: "Error",
+      title: $ts("toast.error"),
       description: (e as NuxtError).statusText,
       color: "error",
     });
@@ -295,7 +301,12 @@ const save = async () => {
   >
     <template #body>
       <UForm ref="mainForm" :schema="mainSchema" :state="mainState">
-        <UFormField label="Directory" class="mb-4" name="dir" :required="true">
+        <UFormField
+          :label="$ts('modal.file.directory')"
+          class="mb-4"
+          name="dir"
+          :required="true"
+        >
           <UTree
             v-model="mainState.dir"
             :items="items"
@@ -312,7 +323,7 @@ const save = async () => {
             @submit="createSubDir"
           >
             <UFormField
-              label="Create subdirectory within selection"
+              :label="$ts('modal.file.createSubdir')"
               name="subDir"
               :ui="{ root: 'grow', label: 'text-gray-500' }"
             >
@@ -329,12 +340,16 @@ const save = async () => {
         </div>
         <template v-if="!isMoveFolderMode">
           <USeparator class="my-2 h-px" />
-          <UFormField label="Name" name="fileName" :required="true">
+          <UFormField
+            :label="$ts('modal.file.name')"
+            name="fileName"
+            :required="true"
+          >
             <div class="flex flex-row">
               <UInput
                 v-model="mainState.fileName"
                 :ui="{ root: 'grow' }"
-                placeholder="Untitled"
+                :placeholder="$ts('recipe.untitled')"
                 @keydown.enter.prevent="save"
               />
               <div class="mt-2 ml-1">.cook</div>
@@ -348,10 +363,10 @@ const save = async () => {
         <UButton
           color="neutral"
           variant="soft"
-          label="Cancel"
+          :label="$ts('actions.cancel')"
           @click="emit('close', false)"
         />
-        <UButton color="primary" label="Save" @click="save" />
+        <UButton color="primary" :label="$ts('actions.save')" @click="save" />
       </div>
     </template>
   </UModal>

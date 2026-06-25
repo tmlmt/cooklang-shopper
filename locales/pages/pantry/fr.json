@@ -1,0 +1,3 @@
+{
+  "placeholder": "# Format TOML pour garde-manger\nVoir https://cooklang.org/docs/use-cases/pantry/#the-pantry-configuration-file\n\n[frigo]\nlait = { expire = \"10.05.2024\", quantity = \"1%L\" }\n\n[congelo]\népinards = { quantity = \"1%kg\", low = \"200%g\" }"
+}

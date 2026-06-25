@@ -4,6 +4,7 @@ import type { CommandPaletteGroup } from "@nuxt/ui";
 const emit = defineEmits<{ close: [boolean] }>();
 
 const recipeStore = useRecipeStore();
+const { $ts } = useI18n();
 
 const searchTerm = ref("");
 
@@ -11,8 +12,8 @@ const groups = computed<CommandPaletteGroup[]>(() => [
   {
     id: "recipes",
     label: searchTerm.value
-      ? `Recipes matching "${searchTerm.value}"...`
-      : "Recipes",
+      ? $ts("search.recipesMatching", { term: searchTerm.value })
+      : $ts("pages.recipes"),
     items: recipeStore.recipeList.map((recipe) => ({
       label: recipe.title,
       suffix: recipe.dir || "/",
@@ -40,7 +41,7 @@ defineShortcuts({
         v-model:search-term="searchTerm"
         close
         :groups="groups"
-        placeholder="Search recipes..."
+        :placeholder="$ts('search.placeholder')"
         :fuse="{
           fuseOptions: {
             useTokenSearch: true,

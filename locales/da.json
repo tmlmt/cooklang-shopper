@@ -1,0 +1,298 @@
+{
+  "pages": {
+    "recipes": "Opskrifter",
+    "pantry": "Pantry",
+    "shoppingList": "Indkøbsliste",
+    "shoppingCart": "Indkøbskurv",
+    "cookbook": "Kogebog",
+    "authentication": "Autentificering"
+  },
+  "actions": {
+    "save": "Gem",
+    "cancel": "Afbryd",
+    "close": "Luk",
+    "confirm": "Bekræft",
+    "create": "Opret",
+    "upload": "Upload",
+    "add": "Tilføj",
+    "done": "Udført",
+    "login": "Login",
+    "signIn": "Log ind",
+    "signOut": "Log ud",
+    "back": "Tilbage",
+    "browse": "Gennemse",
+    "view": "Vis",
+    "edit": "Rediger",
+    "move": "Flyt",
+    "delete": "Slet",
+    "share": "Del",
+    "rename": "Omdøb",
+    "cook": "Lav mad",
+    "uncheckAll": "Afmarkér Alle",
+    "importFromFile": "Importer fra fil",
+    "switchToOwnList": "Skift til egen liste",
+    "goToCookbook": "Gå til kogebog",
+    "convertWithAi": "Konverter med AI",
+    "openInCookMd": "Åbn i cook.md",
+    "createLink": "Opret Link",
+    "skipSection": "Overspring sektion",
+    "newRecipe": "Ny opskrift",
+    "newFolder": "Ny mappe",
+    "reindexRecipes": "Genindeksopskrifter",
+    "uploadImage": "Upload billede",
+    "downloadCook": "Download .cook",
+    "storeRun": "Butik Kør",
+    "categoryConfig": "Kategori Konfiguration",
+    "translate": "Oversæt",
+    "setAsDefault": "Sæt som standard"
+  },
+  "nav": {
+    "backToFolder": "Tilbage til mappe",
+    "backTo": "Tilbage til {page}",
+    "continueTo": "Fortsæt til {page}",
+    "toggleColorMode": "Skift farvetilstand",
+    "about": "Om"
+  },
+  "recipe": {
+    "untitled": "(Unavngivet)",
+    "ingredients": "Ingredienser",
+    "cookware": "Cookware",
+    "preparation": "Forberedelse",
+    "yield": "Udbytte",
+    "servings": "ingen portioner | 1 person | {count} personer",
+    "scale": "Skalering:",
+    "step": "Trin",
+    "note": "Bemærk:",
+    "optionalSection": "Valgfri sektion",
+    "ingredientsForStep": "Ingredienser til dette trin",
+    "moreInfo": "Mere info",
+    "by": "af",
+    "from": "fra",
+    "time": {
+      "prep": "Forb",
+      "cook": "Tilb",
+      "total": "Samlet"
+    }
+  },
+  "folder": {
+    "subfolders": "ingen undermapper | 1 undermappen | {count} undermapper",
+    "recipes": "ingen opskrifter | 1 opskrift | {count} opskrifter"
+  },
+  "sharedLink": {
+    "linkExpires": "Dette link udløber på {date}"
+  },
+  "recipeTags": {
+    "extraTags": "Ekstra tags"
+  },
+  "recipeCard": {
+    "today": "i dag",
+    "daysAgo": "i dag | i går | for {count} dage siden"
+  },
+  "recipeList": {
+    "folderColumn": "Mappe",
+    "subfoldersColumn": "Undermapper",
+    "titleColumn": "Titel",
+    "tagsColumn": "Mærker",
+    "timeColumn": "Tid",
+    "modifiedColumn": "Ændret",
+    "yieldColumn": "Udbytte",
+    "authorColumn": "Forfatter",
+    "sourceColumn": "Kilde",
+    "actionsColumn": "Handlinger"
+  },
+  "ingredientList": {
+    "checkedCount": "{checked} / {total} markeret",
+    "hideChecked": "Skjul markerede",
+    "other": "Øvrige"
+  },
+  "shoppingList": {
+    "nameColumn": "Navn",
+    "servingsColumn": "Serveringer",
+    "choicesColumn": "Valg",
+    "customChoices": "Tilpassede valg",
+    "noChoice": "n/a",
+    "addFreehand": "Tilføj fritstående element",
+    "freehandItems": "Frie varer",
+    "ingredientLabel": "Ingrediens",
+    "quantityLabel": "Mængde",
+    "unitLabel": "Enhed"
+  },
+  "cookMode": {
+    "ingredientsIntro": "Denne opskrift kræver følgende ingredienser",
+    "timers": "TIMERS",
+    "timerDone": "Timer færdig!"
+  },
+  "choices": {
+    "title": "Vælg ingrediensalternativer",
+    "noAlternatives": "Ingen ingrediensalternativer til rådighed for denne opskrift.",
+    "inlineAlternatives": "Inline Alternativer",
+    "groupedAlternatives": "Grupperede Alternativer",
+    "noChoice": "Intet valg",
+    "pleaseSelect": "Vælg venligst"
+  },
+  "modal": {
+    "file": {
+      "directory": "Mappe",
+      "createSubdir": "Opret undermappe i markeringen",
+      "name": "Navn",
+      "subdirCreated": "Undermappe oprettet",
+      "subdirExistsWarning": "En undermappe kaldet '{name}' findes allerede",
+      "subdirCreatedAs": "Ny undermappe oprettet som '{newName}'",
+      "moveRecipe": "Flyt opskrift",
+      "moveFolder": "Flyt mappe"
+    },
+    "about": {
+      "title": "Om {appTitle}",
+      "author": "Forfatter:",
+      "version": "Version:",
+      "code": "Kode:",
+      "updateAvailable": "Opdatering tilgængelig",
+      "poweredBy": "Drevet af",
+      "by": "Af:",
+      "contact": "Kontakt:"
+    },
+    "share": {
+      "visibility": "Synlighed",
+      "visibilityPublic": "Alle kan se denne opskrift",
+      "visibilityPrivate": "Kun du kan se denne opskrift",
+      "shareLinks": "Del Links",
+      "noLinks": "Ingen delingslinks endnu",
+      "expiresOptional": "Udløber (valgfrit)",
+      "created": "Oprettet",
+      "expired": "Udløbet",
+      "expires": "Udløber",
+      "shareRecipe": "Del Opskrift",
+      "shareShoppingList": "Del Indkøbsliste"
+    },
+    "imageUpload": {
+      "imageRole": "Billede rolle",
+      "imageFile": "Billede fil"
+    },
+    "storeRun": {
+      "live": "Levende"
+    },
+    "translate": {
+      "title": "Oversæt Opskrift",
+      "manual": "Manuelt",
+      "usingAi": "Ved brug af AI",
+      "localeLabel": "Målsprog",
+      "localeDescription": "2-bogstaver ISO 639-1 kode (fx en, da, ja)",
+      "methodLabel": "Oversættelsesmetode"
+    }
+  },
+  "search": {
+    "placeholder": "Søg efter opskrifter...",
+    "recipesMatching": "Opskrifter der matcher \"{term}\"..."
+  },
+  "errors": {
+    "recipeNotFound": "Opskrift ikke fundet"
+  },
+  "toast": {
+    "success": "Succes",
+    "error": "Fejl",
+    "recipesReindexed": "Opskrifter indekseret",
+    "folderCreated": "Mappe oprettet",
+    "folderExistsWarning": "En mappe kaldet '{name}' findes allerede",
+    "folderCreatedAs": "Mappe oprettet som '{newName}'",
+    "folderCreationError": "Fejl under oprettelse af mappe",
+    "folderMoved": "Mappen er flyttet",
+    "folderMovedError": "Fejl under flytning af mappe",
+    "folderRenamed": "Mappen er omdøbt",
+    "folderRenameError": "Fejl under omdøbning af mappe",
+    "folderDeleted": "Mappen blev slettet",
+    "folderDeleteError": "Fejl ved sletning af mappe",
+    "imageUploaded": "Billede uploadet",
+    "imageDeleted": "Billede slettet",
+    "recipeSaved": "Opskrift gemt",
+    "recipeDeleted": "Opskrift slettet",
+    "recipeMoved": "Opskrift flyttet til {path}",
+    "recipeAddedToList": "Opskrift tilføjet til indkøbslisten",
+    "recipeServingsModified": "Serveringer ændret i indkøbslisten",
+    "recipeRemovedFromList": "Opskrift fjernet fra indkøbslisten",
+    "ingredientAdded": "Ingrediens tilføjet",
+    "ingredientAddError": "Mislykkedes at tilføje ingrediens",
+    "servingsUpdateError": "Kunne ikke opdatere portioner",
+    "pantryInvalid": "Ugyldigt pantry",
+    "pantrySaved": "Pantry gemt",
+    "categoryConfigSaved": "Kategori konfiguration gemt",
+    "categoryConfigInvalid": "Ugyldig kategori konfiguration",
+    "visibilityUpdated": "Synlighed opdateret",
+    "visibilityUpdatedTo": "Opskrift er nu {visibility}",
+    "visibilityUpdateError": "Kunne ikke opdatere synlighed",
+    "shareLinkCreated": "Del link oprettet",
+    "shareLinkCreateError": "Kunne ikke oprette delingslink",
+    "shareLinkRevoked": "Del link tilbagekaldt",
+    "shareLinkRevokeError": "Kunne ikke tilbagekalde delingslink",
+    "linkCopied": "Link kopieret til udklipsholder",
+    "linkCopyError": "Kunne ikke kopiere link",
+    "setAsDefaultDone": "Standardsprog opdateret",
+    "translationComplete": "Oversættelse fuldført",
+    "conversionComplete": "Konvertering fuldført",
+    "conversionTokens": "{in} input / {out} output tokens",
+    "conversionInterrupted": "Konvertering afbrudt",
+    "conversionInterruptedDetail": "Delvist indhold gemt i editoren",
+    "conversionFailed": "Konvertering mislykkedes",
+    "sharedListExpired": "Delt liste udløbet",
+    "sharedListExpiredDetail": "Det delte liste-link er udløbet. Skiftede til din egen liste.",
+    "loginFailed": "Login mislykkedes",
+    "loginInvalidPassword": "Ugyldig adgangskode",
+    "oidcFailedDetail": "OIDC-godkendelse mislykkedes. Prøv venligst igen.",
+    "oidcUnreachable": "Udbyder utilgængelig",
+    "oidcUnreachableDetail": "Godkendelsesudbyderen kunne ikke nås. Prøv igen senere.",
+    "oidcCheckUnreachable": "Godkendelsesudbyderen kunne ikke nås. Tjek din netværksforbindelse.",
+    "loggedOut": "Logget ud",
+    "loggedOutDetail": "Du er blevet logget ud"
+  },
+  "emptyState": {
+    "nothingHere": "Intet her endnu",
+    "createOrAdd": "Opret en opskrift eller tilføj en undermappe for at komme i gang."
+  },
+  "validation": {
+    "enterRecipe": "Indtast venligst en opskrift",
+    "invalidRecipe": "Ugyldig opskrift. Tjek syntaks",
+    "localeRequired": "Indtast venligst en sprogkode",
+    "localeInvalid": "Skal være en 2-bogstavs sprogkode (f.eks. en, fr)",
+    "enterFilename": "Indtast venligst et filnavn",
+    "filenameNoSlash": "Filnavnet må ikke indeholde '/'",
+    "filenameChars": "Kun bogstaver, cifre, mellemrum og & ( ) ' _ + % . - er tilladt",
+    "enterSubdirName": "Indtast et undermappenavn",
+    "subdirNoSlash": "Undermappens navn må ikke indeholde '/'",
+    "selectDirectory": "Vælg venligst en mappe",
+    "selectParentDir": "Du skal vælge en overordnet mappe",
+    "subdirExists": "Denne undermappe findes allerede",
+    "enterValue": "Indtast en værdi",
+    "noSlash": "Må ikke indeholde '/'",
+    "noBackslash": "Må ikke indeholde '\\'",
+    "ingredientRequired": "Ingrediensnavn er påkrævet"
+  },
+  "recipeLocale": {
+    "modalTitle": "Opskriftssprog",
+    "recipeLanguageTitle": "Recipe content language",
+    "recipeLanguageLabel": "Opskriftens indhold",
+    "pageLanguageLabel": "Sidesprog",
+    "sameAsRecipe": "Som opskriften",
+    "sameAsRecipeDescription": "Vis opskriftslabels på opskriftens sprog",
+    "sameAsApp": "Som appen",
+    "sameAsAppDescription": "Vis opskriftslabels på app-sproget ({locale})",
+    "fallbackTitle": "Sprog ikke tilgængeligt",
+    "fallbackDescription": "'{locale}' er ikke tilgængeligt som grænsefladesprog, beholder '{fallback}'"
+  },
+  "ai": {
+    "convertFromUrl": "Konverter fra URL eller tekst med AI",
+    "pasteText": "Eller indsæt opskrift tekst direkte...",
+    "urlWarning": "URL import virker muligvis ikke for JavaScript-renderede sider. Brug tekstområdet som fallback.",
+    "fetchingPage": "Henter side...",
+    "converting": "Konverterer med AI...",
+    "noContent": "Intet indhold at konvertere",
+    "fetchError": "Kunne ikke hente siden"
+  },
+  "basics": {
+    "unknown": "ukendt",
+    "optional": "valgfrit",
+    "yes": "ja",
+    "no": "nej",
+    "recipe": "opskrift | opskrifter",
+    "default": "Standard",
+    "unspecified": "Uspecificeret"
+  }
+}

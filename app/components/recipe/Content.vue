@@ -9,6 +9,7 @@ import {
   type RecipeChoices,
   type Yield,
 } from "@tmlmt/cooklang-parser";
+import { capitalize } from "#imports";
 
 const props = defineProps<{
   recipe: Recipe;
@@ -141,6 +142,9 @@ const servingsStep = computed(() => {
   return base / n;
 });
 
+const { $ts, $tc } = useI18n();
+const recipeT = inject<typeof $ts>("recipeT", $ts);
+
 // Step image overlay
 const visibleStepOverlay = ref<string | null>(null);
 </script>
@@ -154,7 +158,7 @@ const visibleStepOverlay = ref<string | null>(null);
         class="mb-4 md:pr-10"
       />
       <div class="flex flex-row items-center">
-        <div class="mr-2 text-sm">Scale:</div>
+        <div class="mr-2 text-sm">{{ recipeT("recipe.scale") }}</div>
         <UInputNumber
           v-model="servingsSpinner"
           :step="servingsStep"
@@ -181,7 +185,7 @@ const visibleStepOverlay = ref<string | null>(null);
             size="sm"
             color="neutral"
             variant="soft"
-            :label="selectedVariant ?? 'Default'"
+            :label="selectedVariant ?? recipeT('defaultVariant')"
             icon="i-lucide-git-branch"
           />
         </UDropdownMenu>
@@ -201,9 +205,11 @@ const visibleStepOverlay = ref<string | null>(null);
         size="sm"
         class="mt-4 h-px md:mt-0 md:pr-10"
       />
-      <h2 class="mt-1 mb-2 text-2xl font-bold">Ingredients</h2>
+      <h2 class="mt-1 mb-2 text-2xl font-bold">
+        {{ recipeT("recipe.ingredients") }}
+      </h2>
       <p v-if="scaledRecipe.metadata.yield" class="mb-4 text-sm">
-        <b>Yield:</b>
+        <b>{{ recipeT("recipe.yield") }}:</b>
         {{ (scaledRecipe.metadata.yield as Yield).textBefore ?? "" }}
         {{
           formatQuantityWithUnit(
@@ -214,9 +220,8 @@ const visibleStepOverlay = ref<string | null>(null);
         {{ (scaledRecipe.metadata.yield as Yield).textAfter ?? "" }}
       </p>
       <p v-else-if="scaledRecipe.servings" class="mb-4 text-sm">
-        <b>Yield:</b> {{ scaledRecipe.servings }} serving{{
-          scaledRecipe.servings > 1 ? "s" : ""
-        }}
+        <b>{{ recipeT("recipe.yield") }}:</b>
+        {{ $tc("recipe.servings", scaledRecipe.servings) }}
       </p>
       <IngredientList
         :ingredients="filteredIngredients"
@@ -227,7 +232,9 @@ const visibleStepOverlay = ref<string | null>(null);
       <template v-if="filteredCookware.length > 0">
         <!-- Desktop: always visible -->
         <div class="mt-6 hidden md:block">
-          <h2 class="mb-2 text-2xl font-bold">Cookware</h2>
+          <h2 class="mb-2 text-2xl font-bold">
+            {{ recipeT("recipe.cookware") }}
+          </h2>
           <ul class="ml-6 list-disc">
             <li v-for="item in filteredCookware" :key="item.name">
               {{ item.name }}
@@ -242,7 +249,7 @@ const visibleStepOverlay = ref<string | null>(null);
           <UCollapsible>
             <UButton
               class="group"
-              label="Cookware"
+              :label="recipeT('recipe.cookware')"
               color="neutral"
               variant="soft"
               trailing-icon="i-lucide-chevron-down"
@@ -272,14 +279,16 @@ const visibleStepOverlay = ref<string | null>(null);
         size="sm"
         class="mt-10 h-px md:mt-0 md:pr-0"
       />
-      <h2 class="mt-1 mb-4 text-2xl font-bold">Preparation</h2>
+      <h2 class="mt-1 mb-4 text-2xl font-bold">
+        {{ recipeT("recipe.preparation") }}
+      </h2>
       <div v-for="(section, sIdx) in sectionsWithStepNumbers" :key="sIdx">
         <!-- Optional sections behind collapsible -->
         <template v-if="section.optional && section.active">
           <UCollapsible class="mb-4">
             <UButton
               class="group"
-              :label="section.name || 'Optional section'"
+              :label="section.name || recipeT('recipe.optionalSection')"
               color="neutral"
               variant="soft"
               trailing-icon="i-lucide-chevron-down"
@@ -301,16 +310,17 @@ const visibleStepOverlay = ref<string | null>(null);
                   class="mb-4"
                 >
                   <div v-if="item.type === 'note'" class="italic">
-                    Note:
+                    {{ recipeT("recipe.note") }}
                     <RecipeNoteContent :note="item" :recipe="scaledRecipe" />
                   </div>
                   <div v-if="item.type === 'step' && item.active">
                     <h3 class="text-lg font-semibold">
                       <span v-if="item.optional" class="font-normal"
-                        >(Optional)
+                        >({{ capitalize(recipeT("basics.optional")) }})
                       </span>
                       <template v-if="item.active"
-                        >Step {{ item.stepNumber }}</template
+                        >{{ recipeT("recipe.step") }}
+                        {{ item.stepNumber }}</template
                       >
                     </h3>
                     <div v-if="item.stepImage" class="group/step relative">
@@ -379,16 +389,16 @@ const visibleStepOverlay = ref<string | null>(null);
             :class="{ 'opacity-30': !item.active }"
           >
             <div v-if="item.type === 'note'" class="italic">
-              Note:
+              {{ recipeT("recipe.note") }}
               <RecipeNoteContent :note="item" :recipe="scaledRecipe" />
             </div>
             <div v-if="item.type === 'step' && item.active">
               <h3 class="text-lg font-semibold">
                 <span v-if="item.optional" class="font-normal"
-                  >(Optional)
+                  >({{ capitalize(recipeT("basics.optional")) }})
                 </span>
                 <template v-if="item.active"
-                  >Step {{ item.stepNumber }}</template
+                  >{{ recipeT("recipe.step") }} {{ item.stepNumber }}</template
                 >
               </h3>
               <div v-if="item.stepImage" class="group/step relative">

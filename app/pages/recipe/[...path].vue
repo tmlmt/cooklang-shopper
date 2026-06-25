@@ -3,17 +3,32 @@ import { Recipe, type RecipeChoices } from "@tmlmt/cooklang-parser";
 import * as v from "valibot";
 import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
 import { FetchError } from "ofetch";
+import type { TranslationDict } from "~~/shared/types";
 
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
+const {
+  $t,
+  $ts,
+  $_ts,
+  $getLocale,
+  $getLocales,
+  $defaultLocale,
+  $localePath,
+  $loadPageTranslations,
+} = useI18n();
 
 if (!route.params.path) {
   throw createError({
     status: 404,
-    statusText: "Recipe not found",
+    statusText: $ts("errors.recipeNotFound"),
   });
 }
+
+//---------------------------
+// Breadcrumbs
+//---------------------------
 
 const pathParams =
   typeof route.params.path === "string"
@@ -63,15 +78,31 @@ const recipePathRef = computed(() => (route.query.mode === "new" ? "" : path));
 // Validate provided path
 validateRecipePath(path);
 
+// Recipe content endpoint, optionally scoped to a language variant.
+const recipeApiUrl = (code: string | undefined) =>
+  code ? `/api/recipe/${path}?locale=${code}` : `/api/recipe/${path}`;
+
+//---------------------------
+// Config and initialization
+//---------------------------
+
 const shoppingStore = useShoppingStore();
 const recipeStore = useRecipeStore();
 const { viewerCanShare, aiEnabled } = await usePublicConfig();
 const { shoppingEnabled } = await useShoppingEnabled();
+
+await callOnce("recipe-index", () => recipeStore.fetchIndex());
+
 if (shoppingEnabled.value) {
   await shoppingStore.init();
 }
 const { loggedIn } = useUserSession();
 const { isEditor } = useRole();
+
+//---------------------------
+// Recipe images
+//---------------------------
+
 const {
   heroImages,
   stepImagesByNumber,
@@ -80,11 +111,25 @@ const {
 } = await useRecipeImageManifest(recipePathRef);
 
 const rawRecipe = ref<string>();
+// The language variant currently being viewed (undefined = default file).
+const viewLocale = ref<string | undefined>(undefined);
 
 if (route.query.mode === "new") {
   rawRecipe.value = "";
 } else {
-  const res = await useFetch(`/api/recipe/${path}`);
+  // Support ?locale=xx in the URL (set when navigating with "same as recipe" mode)
+  const initialLocaleQuery = route.query.locale;
+  const initialLocale =
+    typeof initialLocaleQuery === "string" &&
+    isValidLangCode(initialLocaleQuery)
+      ? initialLocaleQuery
+      : undefined;
+  const res = await useFetch(recipeApiUrl(initialLocale), {
+    onResponse({ response }) {
+      const localeHeader = response.headers.get("x-recipe-locale");
+      if (localeHeader) viewLocale.value = localeHeader;
+    },
+  });
 
   if (res.error.value) {
     if (res.error.value.status === 401) {
@@ -92,7 +137,7 @@ if (route.query.mode === "new") {
     }
     throw createError({
       status: 404,
-      statusText: "Recipe not found",
+      statusText: $ts("errors.recipeNotFound"),
     });
   }
 
@@ -111,6 +156,204 @@ watch(
   },
   { immediate: true },
 );
+
+//---------------------------
+// Language / locale
+//---------------------------
+
+const recipeKey = path.replace(/\//g, ":");
+const indexEntry = computed(() => recipeStore.recipes[recipeKey]);
+const {
+  currentLocale,
+  variantLocales,
+  defaultLocale,
+  allLocaleOptions,
+  isMultilingual,
+  setLocale,
+} = useRecipeLanguage(indexEntry, undefined);
+
+// Adopt the SSR-served locale only when it's an actual variant file. The
+// x-recipe-locale header also reports the default file's language, which is not
+// a variant code and must keep the view on the default file.
+if (viewLocale.value && variantLocales.value.includes(viewLocale.value)) {
+  setLocale(viewLocale.value);
+}
+
+// Fetched UI-label dictionaries for "Same as Recipe" mode, keyed by locale. Kept
+// in a useState so they ride the SSR payload (no hydration re-fetch); resolution
+// itself is delegated to the library cache, populated via $loadPageTranslations.
+const recipeUiDicts = useState<Record<string, TranslationDict>>(
+  "recipe-ui-translations",
+  () => ({}),
+);
+// Which UI locale is active for this recipe page (undefined = follow app locale).
+// Per-path useState so the choice survives hydration without recomputation.
+const activeUiLocale = useState<string | undefined>(
+  `recipe-ui-active-locale-${path}`,
+  () => undefined,
+);
+
+// The recipe route resolved in the active UI locale, so $_ts reads that locale's
+// chunk from the library cache. undefined = follow app locale (use $ts).
+const recipeUiRoute = computed(() => {
+  const locale = activeUiLocale.value;
+  if (!locale) return undefined;
+  // $localePath only prepends a prefix for non-default locales; it never strips
+  // an existing one. Feeding it the current (possibly /xx/-prefixed) path would
+  // keep that prefix, making $_ts read the wrong locale's chunk. Strip the active
+  // app-locale prefix first so the localization starts from a clean base path.
+  const appLocale = $getLocale();
+  const basePath =
+    appLocale && route.path.startsWith(`/${appLocale}/`)
+      ? route.path.slice(appLocale.length + 1)
+      : route.path;
+  return router.resolve($localePath(basePath, locale));
+});
+
+// Translate function backed by the active UI locale's chunk via $_ts, falling
+// back to the global $ts (app locale) when no override is active. Reads reactive
+// state per call, so children re-render when the active locale changes.
+const recipeT: typeof $ts = (key, params, defaultValue) => {
+  const uiRoute = recipeUiRoute.value;
+  if (!uiRoute) return $ts(key, params, defaultValue);
+  return $_ts(uiRoute as Parameters<typeof $_ts>[0])(key, params, defaultValue);
+};
+provide("recipeT", recipeT);
+
+const pageLanguageModeCookie = useRecipePageLanguageMode();
+
+// App locale codes configured in nuxt-i18n-micro, used to validate UI locales.
+const availableLocales = useAppLocaleCodes();
+
+/**
+ * Activate UI-label translations for `targetUiLocale` (or follow the app locale
+ * when undefined / unavailable). The fetched dictionary is memoised per locale in
+ * `recipeUiDicts` (SSR-payload transferred, so the client skips the re-fetch) and
+ * loaded into the library chunk cache so $_ts can resolve keys in that locale.
+ *
+ * Returns true when the target locale was activated, false when it fell back to
+ * the app locale (no target, unavailable, or fetch failure).
+ */
+async function applyRecipeUiLocale(
+  targetUiLocale: string | undefined,
+): Promise<boolean> {
+  if (!targetUiLocale || !availableLocales.value.includes(targetUiLocale)) {
+    activeUiLocale.value = undefined;
+    return false;
+  }
+  let dict = recipeUiDicts.value[targetUiLocale];
+  if (!dict) {
+    try {
+      dict = await $fetch<TranslationDict>(
+        `/_locales/recipe-path/${targetUiLocale}/data.json`,
+      );
+      recipeUiDicts.value[targetUiLocale] = dict;
+    } catch {
+      activeUiLocale.value = undefined;
+      return false;
+    }
+  }
+  // Populate the library chunk cache so $_ts resolves keys in this locale.
+  $loadPageTranslations(
+    targetUiLocale,
+    "recipe-path",
+    dict as Parameters<typeof $loadPageTranslations>[2],
+  );
+  activeUiLocale.value = targetUiLocale;
+  return true;
+}
+
+// On page load: apply Same as Recipe mode from the cookie. The cache is serialized
+// via the SSR payload, so when this runs on the client the dictionary is already
+// present — no hydration re-fetch and no race with an immediate user toggle.
+if (pageLanguageModeCookie.value === "recipe") {
+  const initialUiLocale =
+    viewLocale.value ?? defaultLocale.value ?? $defaultLocale();
+  if (initialUiLocale && initialUiLocale !== $getLocale()) {
+    await applyRecipeUiLocale(initialUiLocale);
+  }
+}
+
+/**
+ * Show the language selector when either:
+ * - the recipe has multiple locale variants, OR
+ * - the recipe's effective locale (default file locale) differs from the app locale
+ *   (so the user can sync the page UI language to the recipe)
+ */
+const showLocaleSelector = computed(() => {
+  if (isMultilingual.value) return true;
+  const effectiveLocale = currentLocale.value ?? defaultLocale.value;
+  return effectiveLocale !== undefined && effectiveLocale !== $getLocale();
+});
+
+/** Fetch a specific language variant and update the view (client-side, no URL change) */
+async function switchViewLocale(code: string | undefined) {
+  // Already viewing this variant — no content change needed.
+  if (code === currentLocale.value) return;
+  try {
+    const res = await $fetchWithHeaders<string>(recipeApiUrl(code));
+    rawRecipe.value = res;
+    setLocale(code);
+  } catch {
+    toast.add({
+      color: "error",
+      title: $ts("toast.error"),
+      description: $ts("errors.recipeNotFound"),
+    });
+  }
+}
+
+/** Open the recipe locale modal and apply the selected recipe + page language */
+async function openLocaleModal() {
+  const result = await modalRecipeLocale.open(
+    allLocaleOptions.value,
+    currentLocale.value,
+    $getLocale(),
+    defaultLocale.value,
+  );
+  if (!result) return;
+
+  const { recipeLocale, pageLanguageMode } = result;
+
+  await switchViewLocale(recipeLocale);
+
+  if (pageLanguageMode === "app") {
+    activeUiLocale.value = undefined;
+    return;
+  }
+
+  // "Same as recipe": translate recipe UI labels to the recipe's language.
+  // Priority: explicit recipe locale → index defaultLocale → app default locale
+  const targetUiLocale =
+    recipeLocale ?? defaultLocale.value ?? $defaultLocale();
+
+  const applied = await applyRecipeUiLocale(targetUiLocale);
+
+  // Warn when the recipe's language has no matching app translation.
+  if (
+    !applied &&
+    targetUiLocale &&
+    !availableLocales.value.includes(targetUiLocale)
+  ) {
+    toast.add({
+      color: "warning",
+      title: $ts("recipeLocale.fallbackTitle"),
+      description: $ts("recipeLocale.fallbackDescription", {
+        locale: getLocaleDisplayName(
+          targetUiLocale,
+          $getLocale(),
+          $getLocales(),
+        ),
+        fallback: getLocaleDisplayName(
+          $getLocale(),
+          $getLocale(),
+          $getLocales(),
+        ),
+      }),
+      duration: 3000,
+    });
+  }
+}
 
 //---------------------------
 // OG Image
@@ -172,6 +415,9 @@ const modalChoices = await useModalChoices();
 const modalImageUpload = await useModalImageUpload();
 const modalShare = await useModalShareRecipe();
 const modalCookMode = await useModalCookMode();
+const modalInput = await useModalInput();
+const modalTranslate = await useModalTranslateRecipe();
+const modalRecipeLocale = await useModalRecipeLocale();
 
 // Cook mode state — captured from Content.vue's scale-actions slot
 const currentScaledRecipe = shallowRef<Recipe | undefined>(undefined);
@@ -217,15 +463,15 @@ async function openUploadModal() {
     clearRecipeCoverImageCache();
 
     toast.add({
-      title: "Success",
-      description: "Image uploaded",
+      title: $ts("toast.success"),
+      description: $ts("toast.imageUploaded"),
       color: "success",
     });
   } catch (error: unknown) {
     if (error instanceof FetchError) {
       toast.add({
         color: "error",
-        title: "Error",
+        title: $ts("toast.error"),
         description: error.message,
       });
     }
@@ -237,8 +483,8 @@ async function openUploadModal() {
 async function deleteImage(imagePath: string) {
   const result = await modalConf.open(
     "Are you sure you want to delete this image?",
-    "Delete",
-    "Cancel",
+    $ts("actions.delete"),
+    $ts("actions.cancel"),
   );
   if (!result) return;
 
@@ -252,31 +498,29 @@ async function deleteImage(imagePath: string) {
     clearRecipeCoverImageCache();
 
     toast.add({
-      title: "Success",
-      description: "Image deleted",
+      title: $ts("toast.success"),
+      description: $ts("toast.imageDeleted"),
       color: "success",
     });
   } catch (error: unknown) {
     if (error instanceof FetchError) {
       toast.add({
         color: "error",
-        title: "Error",
+        title: $ts("toast.error"),
         description: error.message,
       });
     }
   }
 }
 
-const recipeKey = path.replace(/\//g, ":");
-
 const uploadImageItem: DropdownMenuItem = {
-  label: "Upload image",
+  label: $ts("actions.uploadImage"),
   icon: "i-lucide-upload",
   onSelect: openUploadModal,
 };
 
 const downloadItem: DropdownMenuItem = {
-  label: "Download .cook",
+  label: $ts("actions.downloadCook"),
   icon: "i-lucide-download",
   onSelect: () => {
     if (rawRecipe.value !== undefined) {
@@ -289,10 +533,10 @@ const menuItems: DropdownMenuItem[] = [];
 
 if (isEditor.value || viewerCanShare.value) {
   menuItems.push({
-    label: "Share",
+    label: $ts("actions.share"),
     icon: "prime:share-alt",
     onSelect: () => {
-      modalShare.open(recipeKey);
+      modalShare.open(recipeKey, currentLocale.value);
     },
   });
 }
@@ -300,7 +544,7 @@ if (isEditor.value || viewerCanShare.value) {
 if (isEditor.value) {
   menuItems.push(
     {
-      label: "Edit",
+      label: $ts("actions.edit"),
       icon: "prime:file-edit",
       onSelect: () => {
         isEditMode.value = true;
@@ -308,7 +552,7 @@ if (isEditor.value) {
       },
     },
     {
-      label: "Move",
+      label: $ts("actions.move"),
       icon: "prime:arrow-right",
       onSelect: async () => {
         const result = await modalFile.open(
@@ -331,8 +575,10 @@ if (isEditor.value) {
             result.dir,
           );
           toast.add({
-            title: "Success",
-            description: `Recipe moved to ${result.dir}/${result.name}`,
+            title: $ts("toast.success"),
+            description: $ts("toast.recipeMoved", {
+              path: `${result.dir}/${result.name}`,
+            }),
             color: "success",
           });
           await navigateTo(
@@ -342,7 +588,7 @@ if (isEditor.value) {
       },
     },
     {
-      label: "Delete",
+      label: $ts("actions.delete"),
       icon: "prime:trash",
       color: "error",
       onSelect: async () => {
@@ -358,8 +604,8 @@ if (isEditor.value) {
           await shoppingStore.removeRecipe(path);
 
           toast.add({
-            title: "Success",
-            description: "Recipe deleted",
+            title: $ts("toast.success"),
+            description: $ts("toast.recipeDeleted"),
             color: "success",
           });
 
@@ -384,6 +630,49 @@ const formState = ref({
   recipe: rawRecipe.value || newRecipePlaceholder,
 });
 
+// Edit-mode language variants: editLocale tracks which variant is loaded in the
+// textarea; variantCache memoises fetched contents (undefined = default file).
+// The cache persists while editing and is cleared on leaving edit mode so a later
+// edit re-reads from disk.
+const editLocale = ref<string | undefined>(undefined);
+const variantCache = new Map<string | undefined, string>();
+
+async function loadVariantInEditor(code: string | undefined) {
+  const cached = variantCache.get(code);
+  if (cached !== undefined) {
+    formState.value.recipe = cached;
+    editLocale.value = code;
+    return;
+  }
+  try {
+    const content = await $fetchWithHeaders<string>(recipeApiUrl(code));
+    variantCache.set(code, content);
+    formState.value.recipe = content;
+    editLocale.value = code;
+  } catch {
+    toast.add({
+      color: "error",
+      title: $ts("toast.error"),
+      description: $ts("errors.recipeNotFound"),
+    });
+  }
+}
+
+// Sync editor content with the currently-viewed locale when entering edit mode
+watch(isEditMode, (editing) => {
+  if (editing && route.query.mode !== "new") {
+    const content = rawRecipe.value ?? "";
+    formState.value.recipe = content;
+    // Seed the cache with the current variant so switching back to it skips a round trip,
+    // and align editLocale so the correct variant button is highlighted and the correct
+    // file is targeted on save.
+    variantCache.set(currentLocale.value, content);
+    editLocale.value = currentLocale.value;
+  }
+  // Drop cached variants when leaving edit mode so a later edit re-reads from disk.
+  if (!editing) variantCache.clear();
+});
+
 // AI converter state
 const aiUrl = ref("");
 const aiRawText = ref("");
@@ -396,7 +685,7 @@ const onConvertWithAi = async () => {
   isAiConverting.value = true;
 
   if (aiUrl.value) {
-    aiStatus.value = "Fetching page...";
+    aiStatus.value = $ts("ai.fetchingPage");
     try {
       const { text } = await $fetchWithHeaders<{ text: string }>(
         "/api/recipe/scrape",
@@ -408,7 +697,7 @@ const onConvertWithAi = async () => {
       aiStatus.value = "";
       toast.add({
         color: "error",
-        title: "Could not fetch page",
+        title: $ts("ai.fetchError"),
         description:
           error instanceof FetchError
             ? error.data?.message || error.message
@@ -420,11 +709,11 @@ const onConvertWithAi = async () => {
 
   if (!sourceText.trim()) {
     isAiConverting.value = false;
-    toast.add({ color: "error", title: "No content to convert" });
+    toast.add({ color: "error", title: $ts("ai.noContent") });
     return;
   }
 
-  aiStatus.value = "Converting with AI...";
+  aiStatus.value = $ts("ai.converting");
   formState.value.recipe = "";
 
   try {
@@ -473,12 +762,15 @@ const onConvertWithAi = async () => {
         const usage = JSON.parse(buffer);
         toast.add({
           color: "success",
-          title: "Conversion complete",
+          title: $ts("toast.conversionComplete"),
           duration: 3000,
-          description: `${usage.in} input / ${usage.out} output tokens`,
+          description: $ts("toast.conversionTokens", {
+            in: usage.in,
+            out: usage.out,
+          }),
         });
       } catch {
-        toast.add({ color: "success", title: "Conversion complete" });
+        toast.add({ color: "success", title: $ts("toast.conversionComplete") });
       }
       aiCollapsibleOpen.value = false;
     }
@@ -486,13 +778,13 @@ const onConvertWithAi = async () => {
     if (formState.value.recipe.length > 0) {
       toast.add({
         color: "warning",
-        title: "Conversion interrupted",
-        description: "Partial content saved in editor",
+        title: $ts("toast.conversionInterrupted"),
+        description: $ts("toast.conversionInterruptedDetail"),
       });
     } else {
       toast.add({
         color: "error",
-        title: "Conversion failed",
+        title: $ts("toast.conversionFailed"),
         description: error instanceof Error ? error.message : String(error),
       });
     }
@@ -515,35 +807,240 @@ const schema = v.object({
   recipe: v.pipe(
     v.string(),
     v.trim(),
-    v.nonEmpty("Please enter a recipe"),
-    v.check(isParsableRecipe, "Invalid recipe. Check syntax"),
+    v.nonEmpty($ts("validation.enterRecipe")),
+    v.check(isParsableRecipe, $ts("validation.invalidRecipe")),
   ),
 });
 
 type Schema = v.InferOutput<typeof schema>;
 
+//---------------------------
+// Set as Default
+//---------------------------
+
+const isSettingDefault = ref(false);
+
+async function onSetAsDefault() {
+  if (!editLocale.value) return; // already is default
+  isSettingDefault.value = true;
+  try {
+    const entry = recipeStore.recipes[recipeKey];
+    let oldDefaultLangCode: string | undefined = entry?.defaultLocale;
+
+    if (!oldDefaultLangCode) {
+      const result = await modalInput.open(
+        $ts("translate.oldDefaultLocaleTitle"),
+        $ts("translate.oldDefaultLocaleLabel"),
+        "en",
+        $ts("actions.confirm"),
+      );
+      if (!result) {
+        isSettingDefault.value = false;
+        return;
+      }
+      oldDefaultLangCode = result.toLowerCase().trim() || undefined;
+    }
+
+    const data = await $fetchWithHeaders<{ recipes: Record<string, unknown> }>(
+      "/api/recipe/set-default",
+      {
+        method: "POST",
+        body: {
+          path,
+          newDefaultLangCode: editLocale.value,
+          oldDefaultLangCode,
+        },
+      },
+    );
+    await recipeStore.fetchIndex();
+    void data;
+    editLocale.value = undefined;
+    toast.add({
+      color: "success",
+      title: $ts("toast.success"),
+      description: $ts("toast.setAsDefaultDone"),
+    });
+  } catch (error: unknown) {
+    if (error instanceof FetchError) {
+      toast.add({
+        color: "error",
+        title: $ts("toast.error"),
+        description: error.message,
+      });
+    }
+  } finally {
+    isSettingDefault.value = false;
+  }
+}
+
+//---------------------------
+// Translate
+//---------------------------
+
+const isTranslating = ref(false);
+const translationStatus = ref("");
+
+async function onTranslate() {
+  const result = await modalTranslate.open();
+  if (!result) return;
+
+  const { locale: targetLocale, method } = result;
+
+  // Pre-fill frontmatter locale key
+  const source = formState.value.recipe;
+
+  if (method === "manual") {
+    // Insert/replace locale in frontmatter and set as new variant
+    formState.value.recipe = injectLocaleInFrontmatter(source, targetLocale);
+    editLocale.value = targetLocale;
+    return;
+  }
+
+  // AI translation
+  if (!aiEnabled.value) {
+    toast.add({ color: "error", title: $ts("ai.noContent") });
+    return;
+  }
+
+  isTranslating.value = true;
+  translationStatus.value = $ts("translate.translating");
+  formState.value.recipe = "";
+  editLocale.value = targetLocale;
+
+  try {
+    const response = await fetch("/api/recipe/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ recipe: source, targetLocale }),
+    });
+
+    if (!response.ok) {
+      let message = `HTTP ${response.status}`;
+      try {
+        const err = await response.json();
+        message = err?.message || message;
+      } catch {
+        /* ignore */
+      }
+      throw new Error(message);
+    }
+
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let sentinelFound = false;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      if (!sentinelFound) {
+        const errIdx = buffer.indexOf("\x01");
+        if (errIdx !== -1) {
+          const payload = buffer.slice(errIdx + 1);
+          try {
+            const { message } = JSON.parse(payload);
+            throw new Error(message);
+          } catch (e) {
+            if (e instanceof SyntaxError)
+              throw new Error("Translation failed", { cause: e });
+            throw e;
+          }
+        }
+        const idx = buffer.indexOf("\x00");
+        if (idx !== -1) {
+          formState.value.recipe += buffer.slice(0, idx);
+          buffer = buffer.slice(idx + 1);
+          sentinelFound = true;
+        } else {
+          formState.value.recipe += buffer;
+          buffer = "";
+        }
+      }
+    }
+    buffer += decoder.decode();
+
+    if (sentinelFound) {
+      try {
+        const usage = JSON.parse(buffer);
+        toast.add({
+          color: "success",
+          title: $ts("toast.translationComplete"),
+          duration: 3000,
+          description: $ts("toast.conversionTokens", {
+            in: usage.in,
+            out: usage.out,
+          }),
+        });
+      } catch {
+        toast.add({
+          color: "success",
+          title: $ts("toast.translationComplete"),
+        });
+      }
+    }
+  } catch (error: unknown) {
+    formState.value.recipe = source;
+    editLocale.value = undefined;
+    toast.add({
+      color: "error",
+      title: $ts("translate.failed"),
+      description: error instanceof Error ? error.message : String(error),
+    });
+  } finally {
+    isTranslating.value = false;
+    translationStatus.value = "";
+  }
+}
+
+/** Inject or replace `locale: xx` in YAML frontmatter */
+function injectLocaleInFrontmatter(content: string, locale: string): string {
+  if (!content.startsWith("---")) {
+    return `---\nlocale: ${locale}\n---\n\n${content}`;
+  }
+  const endIdx = content.indexOf("---", 3);
+  if (endIdx === -1) return content;
+  const frontmatter = content.slice(3, endIdx);
+  const updated = frontmatter.replace(/^locale:.*$/m, `locale: ${locale}`);
+  const newFrontmatter =
+    updated === frontmatter
+      ? `${frontmatter.trimEnd()}\nlocale: ${locale}\n`
+      : updated;
+  return `---${newFrontmatter}---${content.slice(endIdx + 3)}`;
+}
+
 const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
   if (route.query.mode === "edit" || isManualEdit.value) {
     try {
-      await $fetchWithHeaders(`/api/recipe/${path}`, {
+      // Save to the locale-specific file if one is being edited
+      const savePath = editLocale.value ? `${path}.${editLocale.value}` : path;
+      await $fetchWithHeaders(`/api/recipe/${savePath}`, {
         method: "PUT",
         body: { recipe: event.data.recipe },
       });
       toast.add({
         color: "success",
-        title: "Success",
-        description: "Recipe successfully saved",
+        title: $ts("toast.success"),
+        description: $ts("toast.recipeSaved"),
       });
       isEditMode.value = false;
-      rawRecipe.value = event.data.recipe;
-      recipeStore.updateRecipe(recipeName, recipeDir, event.data.recipe);
+      if (editLocale.value) {
+        // Saved a language variant: update view to show it and refresh index for updated locales
+        rawRecipe.value = event.data.recipe;
+        setLocale(editLocale.value);
+        editLocale.value = undefined;
+        await recipeStore.fetchIndex();
+      } else {
+        rawRecipe.value = event.data.recipe;
+        recipeStore.updateRecipe(recipeName, recipeDir, event.data.recipe);
+      }
       await refreshImageManifest();
       clearRecipeCoverImageCache();
     } catch (error: unknown) {
       if (error instanceof FetchError) {
         toast.add({
           color: "error",
-          title: "Error",
+          title: $ts("toast.error"),
           description: error.message,
         });
       }
@@ -560,8 +1057,8 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
       });
       toast.add({
         color: "success",
-        title: "Success",
-        description: "Recipe successfully saved",
+        title: $ts("toast.success"),
+        description: $ts("toast.recipeSaved"),
       });
       rawRecipe.value = event.data.recipe;
       recipeStore.addRecipe(recipeName, recipeDir, event.data.recipe);
@@ -571,7 +1068,7 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
       if (error instanceof FetchError) {
         toast.add({
           color: "error",
-          title: "Error",
+          title: $ts("toast.error"),
           description: error.data,
         });
       }
@@ -583,6 +1080,7 @@ const onEditCancel = async () => {
   if (route.query.mode === "new") {
     await router.back();
   } else {
+    editLocale.value = undefined;
     isEditMode.value = false;
   }
 };
@@ -590,6 +1088,7 @@ const onEditCancel = async () => {
 defineShortcuts({
   escape: () => {
     if (isEditMode.value && route.query.mode !== "new") {
+      editLocale.value = undefined;
       isEditMode.value = false;
     }
   },
@@ -625,14 +1124,14 @@ const addToShoppingList = async (
 
   await shoppingStore.addRecipe(
     scaledRecipe.metadata.title,
-    path,
+    currentLocale.value ? `${path}.${currentLocale.value}` : path,
     servings,
     choicesToStore,
   );
   toast.add({
     color: "success",
-    title: "Success",
-    description: "Recipe successfully added to shopping list",
+    title: $ts("toast.success"),
+    description: $ts("toast.recipeAddedToList"),
   });
 };
 
@@ -663,8 +1162,8 @@ const editServingsInShoppingList = async (
     await shoppingStore.editServings(path, servings, choicesToStore);
     toast.add({
       color: "success",
-      title: "Success",
-      description: "Servings successfully modified in shopping list",
+      title: $ts("toast.success"),
+      description: $ts("toast.recipeServingsModified"),
     });
   }
 };
@@ -683,11 +1182,16 @@ const {
 const openCookMode = () => {
   const r = currentScaledRecipe.value ?? recipe.value;
   if (!r) return;
-  modalCookMode.open(r, currentChoices.value, stepImagesByNumber.value);
+  modalCookMode.open(
+    r,
+    currentChoices.value,
+    stepImagesByNumber.value,
+    recipeT,
+  );
 };
 
 const cookItem: DropdownMenuItem = {
-  label: "Cook",
+  label: $ts("actions.cook"),
   icon: "i-lucide-cooking-pot",
   color: "secondary",
   variant: "soft",
@@ -807,11 +1311,21 @@ watch(
             segment
           }}</span>
         </p>
-        <h1 class="hidden text-3xl font-bold md:block">
-          {{ recipe.metadata.title ?? "(Untitled)" }}
+        <h1 class="hidden items-center gap-2 text-3xl font-bold md:flex">
+          {{ recipe.metadata.title ?? $t("recipe.untitled") }}
+          <RecipeLanguageSelector
+            v-if="showLocaleSelector"
+            :current-locale="currentLocale"
+            @open="openLocaleModal"
+          />
         </h1>
-        <h1 class="text-2xl font-bold md:hidden">
-          {{ recipe.metadata.title ?? "(Untitled)" }}
+        <h1 class="flex items-center gap-2 text-2xl font-bold md:hidden">
+          {{ recipe.metadata.title ?? $t("recipe.untitled") }}
+          <RecipeLanguageSelector
+            v-if="showLocaleSelector"
+            :current-locale="currentLocale"
+            @open="openLocaleModal"
+          />
         </h1>
       </div>
       <RecipeMetadataBlock :recipe="recipe" />
@@ -839,7 +1353,7 @@ watch(
             "
             size="sm"
             color="primary"
-            label="Add to list"
+            :label="$ts('addToList')"
             icon="material-symbols:add-shopping-cart-rounded"
             class="ml-2"
             @click="addToShoppingList(sr, servings, choices, selectedVariant)"
@@ -880,12 +1394,98 @@ watch(
         class="flex w-full flex-col"
         @submit="onEditSubmit"
       >
+        <!-- Language variant selector (only for existing recipes with variants, or when a translation is in progress) -->
+        <div
+          v-if="
+            isEditor &&
+            (isMultilingual || editLocale !== undefined) &&
+            route.query.mode !== 'new'
+          "
+          class="mb-4 flex flex-wrap items-center gap-2"
+        >
+          <span class="text-muted text-sm"
+            >{{ $t("translate.editingVariant") }}:</span
+          >
+          <UFieldGroup size="sm">
+            <UButton
+              :variant="editLocale === undefined ? 'solid' : 'outline'"
+              color="neutral"
+              :label="defaultLocale?.toUpperCase() ?? $ts('translate.default')"
+              @click="loadVariantInEditor(undefined)"
+            />
+            <UButton
+              v-for="lang in variantLocales"
+              :key="lang"
+              :variant="editLocale === lang ? 'solid' : 'outline'"
+              color="neutral"
+              :label="lang.toUpperCase()"
+              @click="loadVariantInEditor(lang)"
+            />
+            <!-- Show the in-progress variant even before it has been saved -->
+            <UButton
+              v-if="
+                editLocale !== undefined && !variantLocales.includes(editLocale)
+              "
+              variant="solid"
+              color="neutral"
+              :label="editLocale.toUpperCase()"
+            />
+          </UFieldGroup>
+          <UButton
+            v-if="editLocale !== undefined"
+            size="sm"
+            color="primary"
+            variant="soft"
+            :label="$ts('translate.setAsDefault')"
+            :loading="isSettingDefault"
+            @click="onSetAsDefault"
+          />
+          <UButton
+            size="sm"
+            color="secondary"
+            variant="soft"
+            :label="$ts('translate.buttonLabel')"
+            icon="material-symbols:translate"
+            :disabled="isTranslating || isAiConverting"
+            @click="onTranslate"
+          />
+          <UChatShimmer
+            v-if="translationStatus"
+            :text="translationStatus"
+            class="text-muted text-sm"
+          />
+        </div>
+        <!-- Translate button for single-language recipes with no translation in progress -->
+        <div
+          v-else-if="
+            isEditor &&
+            !isMultilingual &&
+            editLocale === undefined &&
+            route.query.mode !== 'new'
+          "
+          class="mb-4 flex items-center gap-2"
+        >
+          <UButton
+            size="sm"
+            color="secondary"
+            variant="soft"
+            :label="$ts('translate.buttonLabel')"
+            icon="material-symbols:translate"
+            :disabled="isTranslating || isAiConverting"
+            @click="onTranslate"
+          />
+          <UChatShimmer
+            v-if="translationStatus"
+            :text="translationStatus"
+            class="text-muted text-sm"
+          />
+        </div>
         <div v-if="route.query.mode === 'new' && aiEnabled" class="mb-4">
           <UCollapsible v-model:open="aiCollapsibleOpen">
             <UButton class="group" color="neutral" variant="soft" size="sm">
               <span class="flex items-center gap-2">
                 <UIcon name="i-lucide-sparkles" class="size-4 shrink-0" />
-                Convert from URL or text with AI
+                {{ $t("ai.convertFromUrl") }}
               </span>
               <UIcon
                 name="i-lucide-chevron-down"
@@ -902,7 +1502,7 @@ watch(
                   />
                   <UTextarea
                     v-model="aiRawText"
-                    placeholder="Or paste recipe text directly..."
+                    :placeholder="$ts('ai.pasteText')"
                     :rows="5"
                     :disabled="isAiConverting"
                     autocorrect="off"
@@ -910,19 +1510,18 @@ watch(
                     spellcheck="false"
                   />
                   <p class="text-muted text-xs">
-                    URL import may not work for JavaScript-rendered pages. Use
-                    the text area as fallback.
+                    {{ $t("ai.urlWarning") }}
                   </p>
                   <div class="flex flex-row items-center gap-3">
                     <UButton
-                      label="Convert with AI"
+                      :label="$ts('actions.convertWithAi')"
                       :loading="isAiConverting"
                       :disabled="!aiUrl && !aiRawText"
                       size="sm"
                       @click="onConvertWithAi"
                     />
                     <UButton
-                      label="Open in cook.md"
+                      :label="$ts('actions.openInCookMd')"
                       icon="i-lucide-external-link"
                       color="neutral"
                       variant="ghost"
@@ -955,11 +1554,15 @@ watch(
           />
         </UFormField>
         <div class="mt-4 flex flex-row gap-4">
-          <UButton type="submit" label="Save" class="resize-y" />
+          <UButton
+            type="submit"
+            :label="$ts('actions.save')"
+            class="resize-y"
+          />
           <UButton
             type="button"
             color="secondary"
-            label="Cancel"
+            :label="$ts('actions.cancel')"
             @click="onEditCancel"
           />
         </div>

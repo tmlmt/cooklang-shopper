@@ -25,14 +25,18 @@ if (error.value) {
   });
 }
 
+const { $t, $ts } = useI18n();
+
 //---------------------------
 // OG Image
 //---------------------------
 
 defineOgImage("DefaultOgImage", {
-  title: "Shopping List",
-  subtitle: `Shared by ${data.value?.ownerName ?? "unknown"}`,
-  description: "A shopping list shared from Cooklang Shopper",
+  title: $ts("ogImageTitle"),
+  subtitle: $ts("ogImageSubtitle", {
+    username: data.value?.ownerName ?? $ts("basics.unknown"),
+  }),
+  description: $ts("description"),
 });
 
 //---------------------------
@@ -40,10 +44,14 @@ defineOgImage("DefaultOgImage", {
 //---------------------------
 
 useSeoMeta({
-  title: `Shopping List - Shared by ${data.value?.ownerName ?? "unknown"}`,
-  ogTitle: `Shopping List - Shared by ${data.value?.ownerName ?? "unknown"}`,
-  description: "A shopping list shared from Cooklang Shopper",
-  ogDescription: "A shopping list shared from Cooklang Shopper",
+  title: $ts("title", {
+    username: data.value?.ownerName ?? $ts("basics.unknown"),
+  }),
+  ogTitle: $ts("title", {
+    username: data.value?.ownerName ?? $ts("basics.unknown"),
+  }),
+  description: $ts("description"),
+  ogDescription: $ts("description"),
 });
 
 const { loggedIn } = useUserSession();
@@ -67,7 +75,7 @@ if (!loggedIn.value) {
       if (length > 0) {
         setHeaderActions([
           {
-            label: "Store Run",
+            label: $ts("actions.storeRun"),
             icon: "i-lucide-shopping-cart",
             color: "secondary",
             variant: "soft",
@@ -99,15 +107,24 @@ if (!loggedIn.value) {
     <div v-else class="flex flex-col gap-4">
       <div>
         <h1 class="text-2xl">
-          <span class="font-bold">Shopping List</span> shared by
+          <span class="font-bold">{{ $t("pages.shoppingList") }}</span>
+          {{ $t("sharedBy") }}
           {{ data?.ownerName }}
         </h1>
         <p v-if="data?.expiresAt" class="mt-1 text-sm text-amber-600">
-          This link expires on
-          {{ new Date(data.expiresAt).toLocaleDateString() }}
+          {{
+            $t("sharedLink.linkExpires", {
+              date: $td(new Date(data.expiresAt), {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              }),
+            })
+          }}
         </p>
         <p class="text-muted mt-1 text-sm">
-          <ULink to="/auth">Sign in</ULink> to edit this shopping list.
+          <i18n-link to="/auth">{{ $t("actions.signIn") }}</i18n-link>
+          {{ $t("signInToEdit") }}
         </p>
       </div>
 

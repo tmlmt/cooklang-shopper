@@ -1,0 +1,4 @@
+{
+  "description": "Gestion de livre de recettes écrites en Cooklang et création de listes de courses avec génération automatique de panier en ligne",
+  "viewingSharedList": "Vous être en train de consulter la liste de courses de {owner}, que vous pouvez modifier sans restriction. Rafraîchir la page ou cliquer sur le bouton ci-dessous pour retourner à votre propre liste."
+}

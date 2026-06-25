@@ -20,6 +20,7 @@ export default defineEventHandler(async (event) => {
     id: link.id,
     token: link.token,
     recipePath: link.recipePath,
+    locale: link.locale ?? undefined,
     expiresAt: link.expiresAt,
     createdAt: link.createdAt,
     expired: link.expiresAt ? link.expiresAt < new Date() : false,

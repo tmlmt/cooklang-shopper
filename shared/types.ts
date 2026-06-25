@@ -92,6 +92,12 @@ export interface AiConfig {
   baseUrl?: string;
 }
 
+export interface I18nConfig {
+  defaultLocale?: string;
+  fallbackLocale?: string;
+  enabledLocales?: string[];
+}
+
 export interface AppConfig {
   auth: AuthConfig;
   sessionSecret: string;
@@ -103,6 +109,7 @@ export interface AppConfig {
   baseUrl?: string;
   sharing?: SharingConfig;
   ai?: AiConfig;
+  i18n?: I18nConfig;
 }
 
 export interface RecipeChoicesWire {
@@ -116,6 +123,8 @@ export interface RecipeInfo {
   path: string;
   servings: number;
   choices?: RecipeChoices;
+  /** Locale variant chosen when this recipe was added to the shopping list */
+  locale?: string;
 }
 
 export interface RecipeEssentials {
@@ -134,7 +143,20 @@ export interface RecipeEssentials {
   source?: string;
   description?: string;
   difficulty?: string;
+  /** Language codes available via {name}.xx.cook variant files */
+  locales?: string[];
+  /** Locale of the default file ({name}.cook), detected from metadata or app config */
+  defaultLocale?: string;
 }
+
+export interface LocaleOption {
+  /** undefined = default file ({name}.cook), string = .xx.cook variant */
+  code: string | undefined;
+  label: string;
+}
+
+/** A (possibly nested) i18n translation dictionary loaded for a recipe locale. */
+export type TranslationDict = Record<string, unknown>;
 
 export interface RecipeIndex {
   [key: string]: RecipeEssentials;
@@ -156,6 +178,7 @@ export interface ShareLink {
   id: number;
   token: string;
   recipePath: string;
+  locale?: string;
   expiresAt: string | null;
   createdAt: string;
   expired: boolean;

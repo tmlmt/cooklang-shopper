@@ -8,6 +8,8 @@ type ViewMode = "grid" | "list";
 const recipeStore = useRecipeStore();
 const toast = useToast();
 const { isEditor } = useRole();
+const { $t, $ts, $tc } = useI18n();
+const { $localeRoute } = useNuxtApp();
 
 await callOnce("recipe-index", () => recipeStore.fetchIndex());
 await callOnce("recipe-directories", () => recipeStore.fetchDirectories());
@@ -35,7 +37,7 @@ const pathItems = computed(() =>
   currentPath.value
     ? currentPath.value.split("/").map((segment, index, parts) => ({
         label: segment,
-        to: `/browse/${parts.slice(0, index + 1).join("/")}`,
+        to: $localeRoute(`/browse/${parts.slice(0, index + 1).join("/")}`),
       }))
     : [],
 );
@@ -45,8 +47,8 @@ const reindexRecipes = async () => {
   await recipeStore.fetchDirectories();
   clearRecipeCoverImageCache();
   toast.add({
-    title: "Success",
-    description: "Recipes reindexed",
+    title: $ts("toast.success"),
+    description: $ts("toast.recipesReindexed"),
     color: "success",
   });
 };
@@ -60,7 +62,11 @@ await shoppingStore.init();
 const openNewRecipeModal = async () => {
   const result = await modalFile.open("new", currentPath.value);
   if (result) {
-    await navigateTo(`/recipe/${pathJoin(result.dir, result.name)}?mode=new`);
+    await navigateTo(
+      $localeRoute(
+        `/recipe/${pathJoin(result.dir, result.name)}?mode=new`,
+      ).href,
+    );
   }
 };
 
@@ -72,7 +78,7 @@ defineOgImage(
   "DefaultOgImage",
   {
     title: siteConfig.name,
-    description: `All recipes in the '${folderName.value}' folder`,
+    description: $ts("description", { folder: folderName.value }),
   },
   [
     // Primary image for og:image and twitter:image (1200x600)
@@ -85,8 +91,8 @@ defineOgImage(
 useSeoMeta({
   title: folderName.value,
   ogTitle: folderName.value,
-  description: `All recipes in the '${folderName.value}' folder`,
-  ogDescription: `All recipes in the '${folderName.value}' folder`,
+  description: $ts("description", { folder: folderName.value }),
+  ogDescription: $ts("description", { folder: folderName.value }),
 });
 
 const folderRecipeCount = computed(() => {
@@ -98,10 +104,10 @@ const folderRecipeCount = computed(() => {
 
 const createNewFolder = async () => {
   const name = await modalInput.open(
-    "New folder",
-    "Folder name",
+    $ts("actions.newFolder"),
+    $ts("modal.file.name"),
     "My folder",
-    "Create",
+    $ts("actions.create"),
   );
   if (!name) return;
 
@@ -115,17 +121,17 @@ const createNewFolder = async () => {
     );
     await recipeStore.fetchDirectories();
     if (!data.renamed) {
-      toast.add({ title: "Folder created", color: "success" });
+      toast.add({ title: $ts("toast.folderCreated"), color: "success" });
     } else {
       toast.add({
-        title: `A folder called '${name}' already exists`,
-        description: `Folder created as '${data.name}'`,
+        title: $ts("toast.folderExistsWarning", { name }),
+        description: $ts("toast.folderCreatedAs", { newName: data.name }),
         color: "warning",
       });
     }
   } catch (e) {
     toast.add({
-      title: "Error creating folder",
+      title: $ts("toast.folderCreationError"),
       description: (e as NuxtError).statusText,
       color: "error",
     });
@@ -162,11 +168,11 @@ const moveFolder = async () => {
     recipeStore.moveFolderRecipes(currentPath.value, data.newPath);
     // Refresh directories: it's a single glob call so a cheap operation
     await recipeStore.fetchDirectories();
-    toast.add({ title: "Folder moved", color: "success" });
-    await navigateTo(`/browse/${data.newPath}`);
+    toast.add({ title: $ts("toast.folderMoved"), color: "success" });
+    await navigateTo($localeRoute(`/browse/${data.newPath}`).href);
   } catch (e) {
     toast.add({
-      title: "Error moving folder",
+      title: $ts("toast.folderMovedError"),
       description: (e as NuxtError).statusText,
       color: "error",
     });
@@ -175,10 +181,10 @@ const moveFolder = async () => {
 
 const renameFolder = async () => {
   const newName = await modalInput.open(
-    "Rename folder",
-    "New name",
+    $ts("actions.rename"),
+    $ts("modal.file.name"),
     folderName.value,
-    "Rename",
+    $ts("actions.rename"),
     folderName.value,
   );
   if (!newName || newName === folderName.value) return;
@@ -204,11 +210,11 @@ const renameFolder = async () => {
     recipeStore.moveFolderRecipes(currentPath.value, data.newPath);
     // Refresh directories: it's a single glob call so a cheap operation
     await recipeStore.fetchDirectories();
-    toast.add({ title: "Folder renamed", color: "success" });
-    await navigateTo(`/browse/${data.newPath}`);
+    toast.add({ title: $ts("toast.folderRenamed"), color: "success" });
+    await navigateTo($localeRoute(`/browse/${data.newPath}`).href);
   } catch (e) {
     toast.add({
-      title: "Error renaming folder",
+      title: $ts("toast.folderRenameError"),
       description: (e as NuxtError).statusText,
       color: "error",
     });
@@ -219,8 +225,8 @@ const deleteFolder = async () => {
   const count = folderRecipeCount.value;
   const confirmed = await modalConfirmation.open(
     `Delete folder "${folderName.value}" and its ${count} recipe(s) and corresponding images?`,
-    "Delete",
-    "Cancel",
+    $ts("actions.delete"),
+    $ts("actions.cancel"),
   );
   if (!confirmed) return;
 
@@ -233,14 +239,16 @@ const deleteFolder = async () => {
     removedPaths.forEach((p) => shoppingStore.removeRecipe(p));
     // Refresh directories: it's a single glob call so a cheap operation
     await recipeStore.fetchDirectories();
-    toast.add({ title: "Folder deleted", color: "success" });
+    toast.add({ title: $ts("toast.folderDeleted"), color: "success" });
 
     // Navigate to parent folder or home
     const parentPath = currentPath.value.split("/").slice(0, -1).join("/");
-    await navigateTo(parentPath ? `/browse/${parentPath}` : "/");
+    await navigateTo(
+      $localeRoute(parentPath ? `/browse/${parentPath}` : "/").href,
+    );
   } catch (e) {
     toast.add({
-      title: "Error deleting folder",
+      title: $ts("toast.folderDeleteError"),
       description: (e as NuxtError).statusText,
       color: "error",
     });
@@ -252,33 +260,33 @@ const { setHeaderMenuItems } = useHeaderMenu();
 if (isEditor.value) {
   setHeaderMenuItems([
     {
-      label: "New recipe",
+      label: $ts("actions.newRecipe"),
       icon: "prime:plus",
       onSelect: openNewRecipeModal,
       mobileOnly: true,
     },
     {
-      label: "New folder",
+      label: $ts("actions.newFolder"),
       icon: "prime:folder-plus",
       onSelect: createNewFolder,
     },
     {
-      label: "Rename folder",
+      label: $ts("actions.rename"),
       icon: "prime:pencil",
       onSelect: renameFolder,
     },
     {
-      label: "Move folder",
+      label: $ts("actions.move"),
       icon: "prime:arrow-right-arrow-left",
       onSelect: moveFolder,
     },
     {
-      label: "Delete folder",
+      label: $ts("actions.delete"),
       icon: "prime:trash",
       onSelect: deleteFolder,
     },
     {
-      label: "Re-index recipes",
+      label: $ts("actions.reindexRecipes"),
       onSelect: reindexRecipes,
     },
   ]);
@@ -293,18 +301,18 @@ if (isEditor.value) {
           class="min-w-0 scrollbar-none overflow-x-auto pr-2 [&::-webkit-scrollbar]:hidden"
         >
           <div class="flex w-max items-center whitespace-nowrap">
-            <NuxtLink
+            <i18n-link
               to="/"
               class="text-base md:text-lg"
               :class="
                 pathItems.length === 0 ? 'font-bold' : 'text-muted font-medium'
               "
             >
-              Cookbook
-            </NuxtLink>
+              {{ $t("pages.cookbook") }}
+            </i18n-link>
             <template v-for="(item, index) in pathItems" :key="item.to">
               <span class="text-muted mx-1 text-base md:text-lg">/</span>
-              <NuxtLink
+              <i18n-link
                 :to="item.to"
                 class="text-base md:text-lg"
                 :class="
@@ -314,12 +322,12 @@ if (isEditor.value) {
                 "
               >
                 {{ item.label }}
-              </NuxtLink>
+              </i18n-link>
             </template>
           </div>
         </div>
         <div class="ml-1 shrink-0 text-sm md:text-base">
-          · {{ folderRecipeCount }} recipes
+          · {{ $tc("folder.recipes", folderRecipeCount) }}
         </div>
       </div>
       <div class="flex flex-row">
@@ -345,7 +353,7 @@ if (isEditor.value) {
           icon="prime:plus"
           color="primary"
           variant="soft"
-          label="New Recipe"
+          :label="$ts('actions.newRecipe')"
           class="hidden md:flex"
           @click="openNewRecipeModal"
         />

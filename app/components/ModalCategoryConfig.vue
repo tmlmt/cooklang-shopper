@@ -12,6 +12,7 @@ const content = ref(savedContent.value);
 const isDirty = computed(() => content.value !== savedContent.value);
 
 const toast = useToast();
+const { $ts } = useI18n();
 const saving = ref(false);
 
 async function save() {
@@ -21,14 +22,14 @@ async function save() {
       method: "PUT",
       body: { content: content.value },
     });
-    toast.add({ color: "success", title: "Category config saved" });
+    toast.add({ color: "success", title: $ts('toast.categoryConfigSaved') });
     savedContent.value = content.value;
     emit("close");
   } catch (e: unknown) {
     const message = (e as { data?: { message?: string } })?.data?.message;
     toast.add({
       color: "error",
-      title: "Invalid category config",
+      title: $ts('toast.categoryConfigInvalid'),
       description: message,
     });
   } finally {
@@ -57,7 +58,7 @@ function onFileChange(e: Event) {
 <template>
   <UModal
     :close="{ onClick: () => emit('close') }"
-    title="Category Configuration"
+    :title="$ts('actions.categoryConfig')"
   >
     <template #body>
       <div class="flex flex-col gap-4">
@@ -71,7 +72,7 @@ function onFileChange(e: Event) {
         <div class="flex gap-2">
           <UButton
             color="primary"
-            label="Save"
+            :label="$ts('actions.save')"
             icon="material-symbols:save"
             :loading="saving"
             :disabled="!isDirty"
@@ -80,7 +81,7 @@ function onFileChange(e: Event) {
           <UButton
             color="neutral"
             variant="soft"
-            label="Import from file"
+            :label="$ts('actions.importFromFile')"
             icon="material-symbols:upload-file"
             @click="triggerImport"
           />

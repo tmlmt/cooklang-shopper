@@ -1,0 +1,8 @@
+{
+  "title": "Liste de courses - Partagé par {username}",
+  "description": "Une liste de courses partagée avec Cooklang Shopper",
+  "ogImageTitle": "Liste de courses",
+  "ogImageSubtitle": "Partagée par {username}",
+  "sharedBy": "partagée par",
+  "signInToEdit": "pour modifier cette liste de courses."
+}
