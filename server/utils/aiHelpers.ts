@@ -84,8 +84,8 @@ export async function streamAiCompletion(
 
   // Anthropic
   const anthropic = new Anthropic({ apiKey: config.apiKey });
-  let inputTokens = 0;
-  let outputTokens = 0;
+  let inputTokens: number;
+  let outputTokens: number;
   try {
     const stream = anthropic.messages.stream({
       model: config.model!,

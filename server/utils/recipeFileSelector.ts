@@ -14,8 +14,6 @@ export async function selectRecipeFileKey(
   baseKey: string,
   requestedLocale?: string,
 ): Promise<string | null> {
-  const storage = useStorage("recipes");
-
   // Gather available language variants from the index
   const { hasDefault, langCodes } = getVariantsForBase(baseKey);
 

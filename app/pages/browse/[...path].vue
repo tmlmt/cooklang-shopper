@@ -65,7 +65,7 @@ const openNewRecipeModal = async () => {
     await navigateTo(
       $localeRoute(
         `/recipe/${pathJoin(result.dir, result.name)}?mode=new`,
-      ) as any,
+      ).href,
     );
   }
 };
@@ -169,7 +169,7 @@ const moveFolder = async () => {
     // Refresh directories: it's a single glob call so a cheap operation
     await recipeStore.fetchDirectories();
     toast.add({ title: $ts("toast.folderMoved"), color: "success" });
-    await navigateTo($localeRoute(`/browse/${data.newPath}`) as any);
+    await navigateTo($localeRoute(`/browse/${data.newPath}`).href);
   } catch (e) {
     toast.add({
       title: $ts("toast.folderMovedError"),
@@ -211,7 +211,7 @@ const renameFolder = async () => {
     // Refresh directories: it's a single glob call so a cheap operation
     await recipeStore.fetchDirectories();
     toast.add({ title: $ts("toast.folderRenamed"), color: "success" });
-    await navigateTo($localeRoute(`/browse/${data.newPath}`) as any);
+    await navigateTo($localeRoute(`/browse/${data.newPath}`).href);
   } catch (e) {
     toast.add({
       title: $ts("toast.folderRenameError"),
@@ -244,7 +244,7 @@ const deleteFolder = async () => {
     // Navigate to parent folder or home
     const parentPath = currentPath.value.split("/").slice(0, -1).join("/");
     await navigateTo(
-      $localeRoute(parentPath ? `/browse/${parentPath}` : "/") as any,
+      $localeRoute(parentPath ? `/browse/${parentPath}` : "/").href,
     );
   } catch (e) {
     toast.add({

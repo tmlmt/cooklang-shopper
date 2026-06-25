@@ -95,7 +95,6 @@ const formattedModified = computed(() => {
   const modified = new Date(props.recipe.lastModified);
   if (Number.isNaN(modified.getTime())) return "-";
 
-  // @ts-expect-error $tdr typing is DateTimeFormatOptions, but runtime accepts RelativeTimeFormatOptions
   return $tdr(modified, { numeric: "auto" });
 });
 </script>

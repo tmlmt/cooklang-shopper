@@ -43,7 +43,6 @@ const formatModified = (recipe: RecipeEssentials) => {
   if (!recipe.lastModified) return "-";
   const date = new Date(recipe.lastModified);
   if (Number.isNaN(date.getTime())) return "-";
-  // @ts-expect-error $tdr typing is DateTimeFormatOptions, but runtime accepts RelativeTimeFormatOptions
   return $tdr(date, { numeric: "auto" });
 };
 

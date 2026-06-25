@@ -10,13 +10,13 @@ export default {
       const { preserve, scrollY, clearPreserve } = useLocaleSwitchPreserve();
       if (preserve?.value) {
         clearPreserve();
-        return { top: scrollY.value || 0, left: 0 } as any;
+          return { top: scrollY.value || 0, left: 0 };
       }
-    } catch (e) {
+} catch {
       // composable not available or called too early — fall through to defaults
     }
 
-    if (to.hash) return { el: to.hash, behavior: "instant" } as any;
+    if (to.hash) return { el: to.hash, behavior: "instant" };
     // Return undefined for normal navigation to use Nuxt's default smooth scroll-to-top
     return undefined;
   },

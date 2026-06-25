@@ -25,12 +25,12 @@ const authMenuItem = computed<DropdownMenuItem>(() =>
     ? {
         label: $ts("pages.authentication"),
         icon: "mdi:user",
-        onSelect: () => navigateTo($localeRoute("/auth") as any),
+        onSelect: () => navigateTo($localeRoute("/auth").href),
       }
     : {
         label: $ts("actions.signIn"),
         icon: "material-symbols:login",
-        onSelect: () => navigateTo($localeRoute("/auth") as any),
+        onSelect: () => navigateTo($localeRoute("/auth").href),
       },
 );
 

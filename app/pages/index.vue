@@ -71,7 +71,7 @@ const openNewRecipeModal = async () => {
     await navigateTo(
       $localeRoute(
         `/recipe/${pathJoin(result.dir, result.name)}?mode=new`,
-      ) as any,
+      ).href,
     );
   }
 };

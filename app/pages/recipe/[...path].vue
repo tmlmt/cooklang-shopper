@@ -942,7 +942,7 @@ async function onTranslate() {
             const { message } = JSON.parse(payload);
             throw new Error(message);
           } catch (e) {
-            if (e instanceof SyntaxError) throw new Error("Translation failed");
+            if (e instanceof SyntaxError) throw new Error("Translation failed", { cause: e });
             throw e;
           }
         }

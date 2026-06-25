@@ -2,7 +2,6 @@ import { Recipe } from "@tmlmt/cooklang-parser";
 import { stat } from "node:fs/promises";
 import path from "node:path";
 import type { RecipeIndex } from "~~/shared/types";
-import { getAppConfig } from "#server/utils/appConfig";
 
 const recipeIndex = new Map<string, RecipeIndex[number]>();
 
