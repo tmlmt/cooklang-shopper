@@ -48,9 +48,9 @@ const selectItems = computed(() =>
     if (opt.code === undefined) {
       const label = props.defaultRecipeLocale
         ? localeLabel(props.defaultRecipeLocale)
-        : $ts("translation.unspecified");
+        : $ts("basics.unspecified");
       return {
-        label: `${label} (${$ts("translation.default")})`,
+        label: `${label} (${$ts("basics.default")})`,
         value: RECIPE_DEFAULT,
       };
     }

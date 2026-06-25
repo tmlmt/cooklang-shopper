@@ -29,8 +29,8 @@ const formState = ref<{ locale: string; method: "manual" | "ai" }>({
 });
 
 const methodOptions = [
-  { label: $ts("translation.manual"), value: "manual" },
-  { label: $ts("translation.usingAi"), value: "ai" },
+  { label: $ts("modal.translate.manual"), value: "manual" },
+  { label: $ts("modal.translate.usingAi"), value: "ai" },
 ];
 
 function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -44,7 +44,7 @@ defineShortcuts({
 
 <template>
   <UModal
-    :title="$ts('translation.modalTitle')"
+    :title="$ts('modal.translate.title')"
     @close="emit('close', undefined)"
   >
     <template #body>
@@ -56,8 +56,8 @@ defineShortcuts({
       >
         <UFormField
           name="locale"
-          :label="$ts('translation.localeLabel')"
-          :description="$ts('translation.localeDescription')"
+          :label="$ts('modal.translate.localeLabel')"
+          :description="$ts('modal.translate.localeDescription')"
           required
         >
           <UInput
@@ -69,7 +69,7 @@ defineShortcuts({
           />
         </UFormField>
 
-        <UFormField name="method" :label="$ts('translation.methodLabel')">
+        <UFormField name="method" :label="$ts('modal.translate.methodLabel')">
           <URadioGroup
             v-model="formState.method"
             :items="methodOptions"
@@ -78,7 +78,7 @@ defineShortcuts({
         </UFormField>
 
         <div class="flex gap-3">
-          <UButton type="submit" :label="$ts('translation.translateButton')" />
+          <UButton type="submit" :label="$ts('actions.translate')" />
           <UButton
             type="button"
             color="neutral"

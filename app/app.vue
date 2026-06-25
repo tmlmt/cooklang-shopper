@@ -1,9 +1,11 @@
 <script setup lang="ts">
-const { sharing } = await usePublicConfig();
+const { title: appTitle, sharing } = await usePublicConfig();
 useHead({
   htmlAttrs: {
     lang: "en",
   },
+  titleTemplate: (pageTitle) =>
+    pageTitle ? `${appTitle.value} | ${pageTitle}` : appTitle.value,
   link: computed(() =>
     sharing.value.federationEnabled
       ? [

@@ -170,6 +170,14 @@
     },
     "storeRun": {
       "live": "Live"
+    },
+    "translate": {
+      "title": "Translate Recipe",
+      "manual": "Manual",
+      "usingAi": "Using AI",
+      "localeLabel": "Target language",
+      "localeDescription": "2-letter ISO 639-1 code (e.g. en, fr, de)",
+      "methodLabel": "Translation method"
     }
   },
   "search": {
@@ -257,24 +265,6 @@
     "noBackslash": "Must not contain '\\'",
     "ingredientRequired": "Ingredient name is required"
   },
-  "translation": {
-    "modalTitle": "Translate Recipe",
-    "manual": "Manual",
-    "usingAi": "Using AI",
-    "localeLabel": "Target language",
-    "localeDescription": "2-letter ISO 639-1 code (e.g. en, fr, de)",
-    "methodLabel": "Translation method",
-    "translateButton": "Translate",
-    "translating": "Translating…",
-    "failed": "Translation failed",
-    "editingVariant": "Editing variant",
-    "default": "Default",
-    "unspecified": "Unspecified",
-    "setAsDefault": "Set as Default",
-    "translate": "Translate",
-    "oldDefaultLocaleTitle": "Current default language",
-    "oldDefaultLocaleLabel": "What language is the current default file? (e.g. en)"
-  },
   "recipeLocale": {
     "modalTitle": "Recipe Language",
     "recipeLanguageLabel": "Recipe content",
@@ -300,6 +290,8 @@
     "optional": "optional",
     "yes": "yes",
     "no": "no",
-    "recipe": "recipe | recipes"
+    "recipe": "recipe | recipes",
+    "default": "Default",
+    "unspecified": "Unspecified"
   }
 }

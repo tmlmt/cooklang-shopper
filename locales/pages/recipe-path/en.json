@@ -1,5 +1,14 @@
 {
   "defaultVariant": "Default",
   "addToList": "Add to list",
-  "recipeNotFound": "Recipe not found"
+  "recipeNotFound": "Recipe not found",
+  "translate": {
+    "editingVariant": "Editing variant",
+    "translating": "Translating…",
+    "failed": "Translation failed",
+    "setAsDefault": "Set as Default",
+    "translate": "Translate",
+    "oldDefaultLocaleTitle": "Current default language",
+    "oldDefaultLocaleLabel": "What language is the current default file? (e.g. en)"
+  }
 }
