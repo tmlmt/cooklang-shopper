@@ -31,10 +31,17 @@ export default defineEventHandler(async (event) => {
   // Convert recipePath (colon-separated) to file path (slash-separated)
   const filePath = shareLink.recipePath.replace(/:/g, "/");
 
-  // Select the locale variant stored in the share link (or default file)
+  // Allow locale override via query param (for client-side locale switching)
+  const query = getQuery(event);
+  const requestedLocale =
+    typeof query.locale === "string" && isValidLangCode(query.locale)
+      ? query.locale
+      : (shareLink.locale ?? undefined);
+
+  // Select the locale variant to serve
   const fileKey = await selectRecipeFileKey(
     shareLink.recipePath,
-    shareLink.locale ?? undefined,
+    requestedLocale,
   );
 
   const storage = useStorage("recipes");
@@ -55,6 +62,12 @@ export default defineEventHandler(async (event) => {
     parsed.metadata as Record<string, unknown>,
   );
 
+  const { langCode: currentLocale } = parseRecipeKey(
+    fileKey ?? shareLink.recipePath,
+  );
+  const { langCodes: locales } = getVariantsForBase(shareLink.recipePath);
+  const indexEntry = getRecipeIndex().get(shareLink.recipePath);
+
   return {
     recipePath: shareLink.recipePath,
     raw,
@@ -62,5 +75,8 @@ export default defineEventHandler(async (event) => {
     ingredients: parsed.ingredients,
     expiresAt: shareLink.expiresAt,
     imageManifest,
+    currentLocale,
+    locales,
+    defaultLocale: indexEntry?.defaultLocale,
   };
 });

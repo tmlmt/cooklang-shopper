@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Recipe, type RecipeChoices } from "@tmlmt/cooklang-parser";
+import type { TranslationDict } from "~~/shared/types";
 
 definePageMeta({
   layout: "shared",
@@ -20,9 +21,8 @@ if (error.value) {
   });
 }
 
-const recipe = computed(() =>
-  data.value ? new Recipe(data.value.raw) : undefined,
-);
+const rawRecipe = shallowRef(data.value?.raw ?? "");
+const recipe = computed(() => new Recipe(rawRecipe.value));
 
 const recipeName = computed(() => {
   if (!data.value) return "";
@@ -31,6 +31,46 @@ const recipeName = computed(() => {
 });
 
 const heroImages = computed(() => data.value?.imageManifest?.heroImages ?? []);
+
+//---------------------------
+// Language / locale
+//---------------------------
+
+const indexEntry = computed(() =>
+  data.value
+    ? {
+        name: recipeName.value ?? "",
+        title: String(recipe.value?.metadata.title || recipeName.value),
+        dir: "",
+        servings: 1,
+        tags: [],
+        locales: data.value.locales,
+        defaultLocale: data.value.defaultLocale,
+      }
+    : undefined,
+);
+
+const {
+  currentLocale,
+  allLocaleOptions,
+  isMultilingual,
+  defaultLocale,
+  setLocale,
+} = useRecipeLanguage(indexEntry, data.value?.currentLocale);
+
+const showLocaleSelector = computed(() => isMultilingual.value);
+
+async function switchViewLocale(code: string | undefined) {
+  if (code === currentLocale.value) return;
+  const url = code
+    ? `/api/sharing/recipe/resolve/${token}?locale=${code}`
+    : `/api/sharing/recipe/resolve/${token}`;
+  const res = await $fetchWithHeaders<{ raw: string }>(url);
+  if (res) {
+    rawRecipe.value = res.raw;
+    setLocale(code);
+  }
+}
 
 //---------------------------
 // OG Image
@@ -71,8 +111,119 @@ const currentScaledRecipe = shallowRef<Recipe | undefined>(undefined);
 const currentChoices = ref<RecipeChoices>({});
 
 const modalCookMode = await useModalCookMode();
+const modalRecipeLocale = await useModalRecipeLocale();
 
-const { $t, $ts } = useI18n();
+const toast = useToast();
+const router = useRouter();
+const {
+  $t,
+  $ts,
+  $_ts,
+  $getLocale,
+  $getLocales,
+  $defaultLocale,
+  $localePath,
+  $loadPageTranslations,
+} = useI18n();
+
+const availableLocales = useAppLocaleCodes();
+
+const recipeUiDicts = ref<Record<string, TranslationDict>>({});
+const activeUiLocale = ref<string | undefined>(undefined);
+
+const recipeUiRoute = computed(() => {
+  const locale = activeUiLocale.value;
+  if (!locale) return undefined;
+  const appLocale = $getLocale();
+  const basePath =
+    appLocale && route.path.startsWith(`/${appLocale}/`)
+      ? route.path.slice(appLocale.length + 1)
+      : route.path;
+  return router.resolve($localePath(basePath, locale));
+});
+
+const recipeT: typeof $ts = (key, params, defaultValue) => {
+  const uiRoute = recipeUiRoute.value;
+  if (!uiRoute) return $ts(key, params, defaultValue);
+  return $_ts(uiRoute as Parameters<typeof $_ts>[0])(key, params, defaultValue);
+};
+provide("recipeT", recipeT);
+
+async function applyRecipeUiLocale(
+  targetUiLocale: string | undefined,
+): Promise<boolean> {
+  if (!targetUiLocale || !availableLocales.value.includes(targetUiLocale)) {
+    activeUiLocale.value = undefined;
+    return false;
+  }
+  let dict = recipeUiDicts.value[targetUiLocale];
+  if (!dict) {
+    try {
+      dict = await $fetch<TranslationDict>(
+        `/_locales/recipe-path/${targetUiLocale}/data.json`,
+      );
+      recipeUiDicts.value[targetUiLocale] = dict;
+    } catch {
+      activeUiLocale.value = undefined;
+      return false;
+    }
+  }
+  $loadPageTranslations(
+    targetUiLocale,
+    "recipe-path",
+    dict as Parameters<typeof $loadPageTranslations>[2],
+  );
+  activeUiLocale.value = targetUiLocale;
+  return true;
+}
+
+async function openLocaleModal() {
+  const result = await modalRecipeLocale.open(
+    allLocaleOptions.value,
+    currentLocale.value,
+    $getLocale(),
+    defaultLocale.value,
+  );
+  if (!result) return;
+
+  const { recipeLocale, pageLanguageMode } = result;
+
+  await switchViewLocale(recipeLocale);
+
+  if (pageLanguageMode === "app") {
+    activeUiLocale.value = undefined;
+    return;
+  }
+
+  const targetUiLocale =
+    recipeLocale ?? defaultLocale.value ?? $defaultLocale();
+
+  const applied = await applyRecipeUiLocale(targetUiLocale);
+
+  if (
+    !applied &&
+    targetUiLocale &&
+    !availableLocales.value.includes(targetUiLocale)
+  ) {
+    toast.add({
+      color: "warning",
+      title: $ts("recipeLocale.fallbackTitle"),
+      description: $ts("recipeLocale.fallbackDescription", {
+        locale: getLocaleDisplayName(
+          targetUiLocale,
+          $getLocale(),
+          $getLocales(),
+        ),
+        fallback: getLocaleDisplayName(
+          $getLocale(),
+          $getLocale(),
+          $getLocales(),
+        ),
+      }),
+      duration: 3000,
+    });
+  }
+}
 const { setHeaderActions, setHeaderMenuItems } = useHeaderMenu();
 
 setHeaderActions([
@@ -94,9 +245,7 @@ setHeaderMenuItems([
     label: $ts("actions.downloadCook"),
     icon: "i-lucide-download",
     onSelect: () => {
-      if (data.value?.raw) {
-        downloadCook(data.value.raw, recipeName.value!);
-      }
+      downloadCook(rawRecipe.value, recipeName.value!);
     },
   },
 ]);
@@ -128,8 +277,21 @@ setHeaderMenuItems([
     </div>
 
     <div class="mb-2 flex flex-col gap-4">
-      <h1 class="text-3xl font-bold">
+      <h1 class="hidden items-center gap-2 text-3xl font-bold md:flex">
         {{ recipe.metadata.title ?? recipeName }}
+        <RecipeLanguageSelector
+          v-if="showLocaleSelector"
+          :current-locale="currentLocale"
+          @open="openLocaleModal"
+        />
+      </h1>
+      <h1 class="flex items-center gap-2 text-2xl font-bold md:hidden">
+        {{ recipe.metadata.title ?? recipeName }}
+        <RecipeLanguageSelector
+          v-if="showLocaleSelector"
+          :current-locale="currentLocale"
+          @open="openLocaleModal"
+        />
       </h1>
     </div>
 
