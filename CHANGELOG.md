@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.17.3
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.17.2...v0.17.3)
+
+### 🩹 Fixes
+
+- **i18n:** Correctly fetch alternative recipe content locale for shared recipes ([0d436aa](https://github.com/tmlmt/cooklang-shopper/commit/0d436aa))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.17.2
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.17.1...v0.17.2)
