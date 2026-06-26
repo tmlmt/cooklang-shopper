@@ -175,10 +175,6 @@ Cooklang-Shopper has multiple internationalization (i18n) features:
   - File naming convention with a base recipe name <baseName>: `<baseName>.cook` is considered as the default variant, and `<baseName>.<lang>.cook` as the variant for locale `<lang>` which should be the 2-digit code of the language as per [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes). It is recommended to also specify the locale in the recipe frontmatter/metadata using the `locale` key, especially for the default variant.
 - Possibility to select whether all the labels on a recipe details page should be displayed in the same locale as the recipe content, or as the UI.
 
-### Configuration
-
-You can configure the default locale, the fallback one (used in case a specific string is not available in the target locale) and also only enable specific locales, via the `i18n` section of the `config.yaml` file.
-
 ### Contribution
 
 Translations are managed via a public Crowdin project that you are welcome to contribute to.
@@ -189,11 +185,13 @@ Translations are managed via a public Crowdin project that you are welcome to co
 ### Status
 
 <!--TRANSLATION_STATUS_START-->
-| Language | Translation (%) | Proofreading (%) |
-| --- | ---: | ---: |
-| 🇩🇰 Dansk | ![90%](https://progress-bar.xyz/90) | ![25%](https://progress-bar.xyz/25) |
-| 🇺🇸 English | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
+
+| Language    |                       Translation (%) |                      Proofreading (%) |
+| ----------- | ------------------------------------: | ------------------------------------: |
+| 🇩🇰 Dansk    |   ![90%](https://progress-bar.xyz/90) |   ![25%](https://progress-bar.xyz/25) |
+| 🇺🇸 English  | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
 | 🇫🇷 Français | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
+
 <!--TRANSLATION_STATUS_END-->
 
 ## Screenshots
