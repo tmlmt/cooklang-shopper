@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.17.2
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.17.1...v0.17.2)
+
+### 🩹 Fixes
+
+- **i18n:** 'editing variant' string key in recipe edit mode ([0ff3447](https://github.com/tmlmt/cooklang-shopper/commit/0ff3447))
+- **i18n:** Enable recipe and UI locale switch for shared recipes ([5740a1e](https://github.com/tmlmt/cooklang-shopper/commit/5740a1e))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.17.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.17.0...v0.17.1)
