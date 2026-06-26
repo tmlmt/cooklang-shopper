@@ -8,6 +8,7 @@
     "failed": "Échec de la traduction",
     "setAsDefault": "Définir comme valeur par défaut",
     "buttonLabel": "Traduire",
+    "defaultLocale": "Langue par défaut",
     "oldDefaultLocaleTitle": "Langue par défaut actuelle",
     "oldDefaultLocaleLabel": "Dans quelle langue est écrite la recette par défaut actuelle ? (p. ex. fr)"
   }

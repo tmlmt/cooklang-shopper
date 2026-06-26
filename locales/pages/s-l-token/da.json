@@ -1,8 +1,8 @@
 {
-  "title": "Shopping List - Shared by {username}",
-  "description": "A shopping list shared from Cooklang Shopper",
-  "ogImageTitle": "Shopping List",
-  "ogImageSubtitle": "Shared by {username}",
+  "title": "Indkøbsliste - Delt af {username}",
+  "description": "En indkøbsliste delt fra Cooklang Shopper",
+  "ogImageTitle": "Indkøbsliste",
+  "ogImageSubtitle": "Delt af {username}",
   "sharedBy": "delt af",
   "signInToEdit": "for at redigere denne indkøbsliste."
 }

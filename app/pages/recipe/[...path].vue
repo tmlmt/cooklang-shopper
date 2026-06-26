@@ -1414,7 +1414,7 @@ watch(
             <UButton
               :variant="editLocale === undefined ? 'solid' : 'outline'"
               color="neutral"
-              :label="defaultLocale?.toUpperCase() ?? $ts('translate.default')"
+              :label="defaultLocale?.toUpperCase() ?? $ts('translate.defaultLocale')"
               @click="loadVariantInEditor(undefined)"
             />
             <UButton

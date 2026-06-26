@@ -3,12 +3,13 @@
   "addToList": "Føj til liste",
   "recipeNotFound": "Opskrift ikke fundet",
   "translate": {
-    "editingVariant": "Editing variant",
-    "translating": "Translating…",
-    "failed": "Translation failed",
-    "setAsDefault": "Set as Default",
-    "buttonLabel": "Translate",
-    "oldDefaultLocaleTitle": "Current default language",
-    "oldDefaultLocaleLabel": "What language is the current default file? (e.g. en)"
+    "editingVariant": "Variant under redigering",
+    "translating": "Oversættelse i gang…",
+    "failed": "Oversættelse mislykkedes",
+    "setAsDefault": "Sæt som standard",
+    "buttonLabel": "Oversæt",
+    "defaultLocale": "Standardsprog",
+    "oldDefaultLocaleTitle": "Nuværende standardsprog",
+    "oldDefaultLocaleLabel": "Hvilket sprog er den nuværende standardfil? (f.eks da)"
   }
 }
