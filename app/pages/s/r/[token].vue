@@ -63,12 +63,18 @@ const showLocaleSelector = computed(() => isMultilingual.value);
 async function switchViewLocale(code: string | undefined) {
   if (code === currentLocale.value) return;
   const url = code
-    ? `/api/sharing/recipe/resolve/${token}?locale=${code}`
-    : `/api/sharing/recipe/resolve/${token}`;
-  const res = await $fetchWithHeaders<{ raw: string }>(url);
-  if (res) {
-    rawRecipe.value = res.raw;
+    ? `/api/sharing/recipe/resolve/${token}/raw?locale=${code}`
+    : `/api/sharing/recipe/resolve/${token}/raw`;
+  try {
+    const raw = await $fetch<string>(url);
+    rawRecipe.value = raw;
     setLocale(code);
+  } catch {
+    toast.add({
+      color: "error",
+      title: $ts("toast.error"),
+      description: $ts("errors.recipeNotFound"),
+    });
   }
 }
 
