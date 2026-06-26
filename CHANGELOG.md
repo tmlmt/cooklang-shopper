@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.17.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.17.0...v0.17.1)
+
+### 🩹 Fixes
+
+- **i18n:** Allow locale switch for recipe labels even if the recipe itself is only available in a single locale ([eb5c678](https://github.com/tmlmt/cooklang-shopper/commit/eb5c678))
+- **i18n:** Temporarily deactivate possibility to customize default, fallback and allowed locales ([570e847](https://github.com/tmlmt/cooklang-shopper/commit/570e847))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.17.0
 
 This version introduces a major feature: i18n! Have a look at the [README](https://github.com/tmlmt/cooklang-shopper#translations) for details, including potential wish to adapt your `config.yaml` file.
