@@ -1,1 +1,10 @@
-{}
+{
+  "title": "Accepter din invitation",
+  "instructions": "Du er blevet inviteret. Log ind med en af nedenstående konti for at aktivere din adgang.",
+  "continueWith": "Fortsæt med {provider}",
+  "noProviders": "Ingen godkendelsesudbyder er konfigureret. Kontakt venligst din administrator.",
+  "invalid": "Dette invitationslink er ugyldigt eller er udløbet. Bed venligst din administrator om et nyt.",
+  "actions": {
+    "backToLogin": "Tilbage til login"
+  }
+}

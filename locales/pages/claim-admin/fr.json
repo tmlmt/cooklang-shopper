@@ -1,1 +1,15 @@
-{}
+{
+  "title": "Revendiquer le compte administrateur",
+  "instructions": "Vous vous êtes connecté avec succès. Pour devenir l'administrateur, entrez le code d'activation unique affiché dans les logs du serveur (et également enregistré dans data/admin-claim-code.txt).",
+  "identity": "Connecté(e) en tant que",
+  "codeLabel": "Code d'activation",
+  "codePlaceholder": "Entrez le code d'activation",
+  "noPending": "Il n'y a pas de revendication admin en attente. Veuillez d'abord vous connecter.",
+  "invalidTitle": "Code d'activation invalide",
+  "invalidDetail": "Le code d'activation que vous avez entré est incorrect ou a expiré.",
+  "actions": {
+    "claim": "Activer l'accès administrateur",
+    "skip": "Ignorez pour l'instant",
+    "backToLogin": "Retour à la page de connexion"
+  }
+}

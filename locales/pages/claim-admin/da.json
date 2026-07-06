@@ -1,1 +1,15 @@
-{}
+{
+  "title": "Anmod om administratorkonto",
+  "instructions": "Du har logget ind. For at blive administrator, skal du indtaste engangs aktiveringskode udskrevet i server logs (også gemt til data / admin-claim-code.txt).",
+  "identity": "Logget ind som",
+  "codeLabel": "Anmodet kode",
+  "codePlaceholder": "Indtast fordringskoden",
+  "noPending": "Der er ingen afventende aktiveringskode. Log venligst ind først.",
+  "invalidTitle": "Ugyldig erstatningskode",
+  "invalidDetail": "Aktiveringskoden du angav er forkert eller er udløbet.",
+  "actions": {
+    "claim": "Anmod om admin adgang",
+    "skip": "Spring over for nu",
+    "backToLogin": "Tilbage til login"
+  }
+}

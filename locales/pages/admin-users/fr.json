@@ -1,1 +1,38 @@
-{}
+{
+  "title": "Gestion des utilisateurs",
+  "inviteHeader": "Inviter un utilisateur",
+  "noInviteProviders": "Inviter des utilisateurs nécessite la configuration d'un fournisseur Google ou Microsoft.",
+  "emailPlaceholder": "utilisateur@exemple.fr",
+  "namePlaceholder": "Nom affiché (facultatif)",
+  "confirmDelete": "Supprimer l'utilisateur {email}? Cette action est irréversible.",
+  "columns": {
+    "email": "Email",
+    "name": "Nom",
+    "role": "Rôle",
+    "status": "Statut",
+    "providers": "Authentification",
+    "actions": "Actions"
+  },
+  "roles": {
+    "viewer": "Lecteur",
+    "editor": "Editeur",
+    "admin": "Administrateur"
+  },
+  "status": {
+    "active": "Actif",
+    "invited": "Invité"
+  },
+  "actions": {
+    "invite": "Inviter",
+    "resend": "Renvoyer une invitation",
+    "copyLink": "Copier le lien"
+  },
+  "toast": {
+    "invited": "Invitation envoyée",
+    "invitedNoEmail": "Utilisateur créé — copiez le lien d'invitation (e-mail non configuré)",
+    "inviteFailed": "Impossible de créer l'invitation",
+    "updateFailed": "Impossible de mettre à jour l'utilisateur",
+    "deleted": "Utilisateur supprimé",
+    "deleteFailed": "Impossible de supprimer l'utilisateur"
+  }
+}

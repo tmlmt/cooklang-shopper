@@ -1,1 +1,38 @@
-{}
+{
+  "title": "Brugeradministration",
+  "inviteHeader": "Inviter en bruger",
+  "noInviteProviders": "Invitation af brugere kræver, at en Google eller Microsoft-udbyder er konfigureret.",
+  "emailPlaceholder": "bruger@eksempel.dk",
+  "namePlaceholder": "Visningsnavn (valgfrit)",
+  "confirmDelete": "Slet bruger {email}? Dette kan ikke fortrydes.",
+  "columns": {
+    "email": "E-mail",
+    "name": "Navn",
+    "role": "Rolle",
+    "status": "Status",
+    "providers": "Udbyder",
+    "actions": "Handlinger"
+  },
+  "roles": {
+    "viewer": "Fremviser",
+    "editor": "Editor",
+    "admin": "Administrator"
+  },
+  "status": {
+    "active": "Aktiv",
+    "invited": "Inviteret"
+  },
+  "actions": {
+    "invite": "Inviter",
+    "resend": "Gensend invitation",
+    "copyLink": "Kopiér link"
+  },
+  "toast": {
+    "invited": "Invitation sendt",
+    "invitedNoEmail": "Bruger oprettet — kopier invitationslinket (e-mail ikke konfigureret)",
+    "inviteFailed": "Kunne ikke oprette invitationen",
+    "updateFailed": "Kunne ikke opdatere brugeren",
+    "deleted": "Bruger slettet",
+    "deleteFailed": "Kunne ikke slette brugeren"
+  }
+}

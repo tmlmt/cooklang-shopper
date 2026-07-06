@@ -269,7 +269,7 @@
   },
   "recipeLocale": {
     "modalTitle": "Opskriftssprog",
-    "recipeLanguageTitle": "Recipe content language",
+    "recipeLanguageTitle": "Opskrift indholdssprog",
     "recipeLanguageLabel": "Opskriftens indhold",
     "pageLanguageLabel": "Sidesprog",
     "sameAsRecipe": "Som opskriften",

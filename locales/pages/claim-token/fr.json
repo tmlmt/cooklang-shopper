@@ -1,1 +1,10 @@
-{}
+{
+  "title": "Accepter votre invitation",
+  "instructions": "Vous avez été invité. Connectez-vous avec l'un des comptes ci-dessous pour activer votre accès.",
+  "continueWith": "Continuer avec {provider}",
+  "noProviders": "Aucun fournisseur d'authentification n'est configuré. Veuillez contacter votre administrateur.",
+  "invalid": "Ce lien d'invitation est invalide ou a expiré. Veuillez en demander un nouveau.",
+  "actions": {
+    "backToLogin": "Retour à la page de connexion"
+  }
+}

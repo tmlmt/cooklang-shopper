@@ -1,5 +1,5 @@
 {
-  "description": "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
+  "description": "Cooklang-stil opskrift management og shopping liste skabelse med automatiseret online indkøbskurv generation",
   "noMatchingProducts": "Ingredienser uden tilsvarende produkter",
   "columnProduct": "Produkt Navn",
   "columnIngredient": "Ingrediens Navn",
