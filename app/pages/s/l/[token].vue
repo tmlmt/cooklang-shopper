@@ -123,7 +123,7 @@ if (!loggedIn.value) {
             })
           }}
         </p>
-        <p class="text-muted mt-1 text-sm">
+        <p class="mt-1 text-sm text-muted">
           <i18n-link to="/auth">{{ $t("actions.signIn") }}</i18n-link>
           {{ $t("signInToEdit") }}
         </p>

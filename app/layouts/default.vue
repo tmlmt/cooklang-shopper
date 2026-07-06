@@ -244,7 +244,7 @@ const navLeft = computed(() => {
         <i18n-link
           v-else-if="!isRecipePage"
           to="/"
-          class="text-highlighted hover:text-default focus-visible:outline-primary flex min-w-0 flex-row items-center gap-2 text-xl font-bold transition-colors"
+          class="flex min-w-0 flex-row items-center gap-2 text-xl font-bold text-highlighted transition-colors hover:text-default focus-visible:outline-primary"
         >
           <Icon
             name="material-symbols:chef-hat-rounded"
@@ -255,7 +255,7 @@ const navLeft = computed(() => {
         </i18n-link>
         <span
           v-else
-          class="text-highlighted flex min-w-0 flex-row items-center gap-2 text-xl font-bold"
+          class="flex min-w-0 flex-row items-center gap-2 text-xl font-bold text-highlighted"
         >
           <Icon
             name="material-symbols:chef-hat-rounded"
@@ -335,7 +335,7 @@ const navLeft = computed(() => {
     <UFooter v-if="navLeft || navRight">
       <template v-if="navLeft" #left>
         <UCard
-          class="hover:bg-elevated cursor-pointer"
+          class="cursor-pointer hover:bg-elevated"
           @click="navLeft.action ? navLeft.action() : navigateTo(navLeft.to)"
         >
           <UButton
@@ -349,11 +349,11 @@ const navLeft = computed(() => {
       </template>
       <template v-if="navRight" #right>
         <UCard
-          class="group hover:bg-elevated cursor-pointer"
+          class="group cursor-pointer hover:bg-elevated"
           @click="navigateTo(navRight.to)"
         >
           <UButton
-            class="group-hover:bg-elevated rounded-full"
+            class="rounded-full group-hover:bg-elevated"
             variant="outline"
             color="neutral"
             icon="prime:arrow-right"

@@ -42,7 +42,7 @@ async function submit() {
   <UCard class="max-w-lg">
     <template #header>{{ $t("title") }}</template>
     <div v-if="pending" class="flex flex-col gap-4">
-      <p class="text-muted text-sm">{{ $t("instructions") }}</p>
+      <p class="text-sm text-muted">{{ $t("instructions") }}</p>
       <p v-if="pending.email" class="text-sm">
         {{ $t("identity") }} <b>{{ pending.email }}</b>
       </p>

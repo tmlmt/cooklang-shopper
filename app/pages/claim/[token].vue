@@ -32,7 +32,7 @@ function signIn(provider: "google" | "microsoft") {
   <UCard class="max-w-lg">
     <template #header>{{ $t("title") }}</template>
     <div v-if="valid" class="flex flex-col gap-4">
-      <p class="text-muted text-sm">{{ $t("instructions") }}</p>
+      <p class="text-sm text-muted">{{ $t("instructions") }}</p>
       <UButton
         v-if="providers.google"
         icon="i-mdi-google"
@@ -53,7 +53,7 @@ function signIn(provider: "google" | "microsoft") {
       />
       <p
         v-if="!providers.google && !providers.microsoft"
-        class="text-muted text-sm"
+        class="text-sm text-muted"
       >
         {{ $t("noProviders") }}
       </p>
