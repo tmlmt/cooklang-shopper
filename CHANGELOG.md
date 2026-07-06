@@ -1,5 +1,35 @@
 # Changelog
 
+## v0.18.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.17.3...v0.18.0)
+
+### 🚀 Enhancements
+
+- **auth:** Invite-based access via Google and Microsoft OAuth ([d55069c](https://github.com/tmlmt/cooklang-shopper/commit/d55069c))
+
+### 🩹 Fixes
+
+- **modalShareShoppingList:** Ensure placeholder is shown on mobile in prod ([0703112](https://github.com/tmlmt/cooklang-shopper/commit/0703112))
+- **shopping-list:** Match category ingredients case-insensitively ([22d6706](https://github.com/tmlmt/cooklang-shopper/commit/22d6706))
+- **shopping-list:** Do not show categories that contain no ingredient ([5218958](https://github.com/tmlmt/cooklang-shopper/commit/5218958))
+- **manual-items:** Reveal delete button on tap for touch devices ([aa96c3f](https://github.com/tmlmt/cooklang-shopper/commit/aa96c3f))
+- **ModalStoreRun:** Apply category configuration to the ingredients list ([e25ef0b](https://github.com/tmlmt/cooklang-shopper/commit/e25ef0b))
+
+### 🏡 Chore
+
+- Lint tailwindcss classes ([c8d85bd](https://github.com/tmlmt/cooklang-shopper/commit/c8d85bd))
+- Lint ([c010f67](https://github.com/tmlmt/cooklang-shopper/commit/c010f67))
+- **i18n:** Autotranslate untranslated strings ([6f5e8c0](https://github.com/tmlmt/cooklang-shopper/commit/6f5e8c0))
+
+### 🎨 Styles
+
+- **ModalShareShoppingList:** Improve alignment and text size of date selector ([4f48543](https://github.com/tmlmt/cooklang-shopper/commit/4f48543))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.17.3
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.17.2...v0.17.3)
