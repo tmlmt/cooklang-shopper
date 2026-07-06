@@ -95,50 +95,57 @@ function visibleInCategory(items: AddedIngredient[]): AddedIngredient[] {
 
     <!-- Grouped by category -->
     <template v-if="isGrouped">
-      <div
+      <template
         v-for="[categoryKey, items] in categoryEntries"
         :key="categoryKey"
-        class="flex flex-col gap-1"
       >
-        <h3
-          v-if="!(categoryKey === 'other' && categoryEntries.length === 1)"
-          class="text-sm font-semibold text-neutral-500 capitalize dark:text-neutral-400"
-        >
-          {{
-            categoryKey === "other" ? $ts("ingredientList.other") : categoryKey
-          }}
-        </h3>
         <div
-          class="grid gap-x-8 gap-y-1"
-          :class="{ 'md:grid-cols-2': props.desktopColumns === 2 }"
+          v-if="visibleInCategory(items).length > 0"
+          class="flex flex-col gap-1"
         >
-          <div
-            v-for="ingredient in visibleInCategory(items)"
-            :key="ingredient.name"
-            class="flex items-start gap-2"
-            :class="{
-              'opacity-40': props.interactive && isChecked(ingredient.name),
-            }"
+          <h3
+            v-if="!(categoryKey === 'other' && categoryEntries.length === 1)"
+            class="text-sm font-semibold text-neutral-500 capitalize dark:text-neutral-400"
           >
-            <UCheckbox
-              v-if="props.interactive"
-              class="mt-0.5 shrink-0"
-              :model-value="isChecked(ingredient.name)"
-              @update:model-value="
-                (v) =>
-                  onCheck(ingredient.name, v === 'indeterminate' ? false : v)
-              "
-            />
-            <IngredientItem
-              :ingredient="ingredient"
-              :all-ingredients="allIngredients ?? ingredients"
+            {{
+              categoryKey === "other"
+                ? $ts("ingredientList.other")
+                : categoryKey
+            }}
+          </h3>
+          <div
+            class="grid gap-x-8 gap-y-1"
+            :class="{ 'md:grid-cols-2': props.desktopColumns === 2 }"
+          >
+            <div
+              v-for="ingredient in visibleInCategory(items)"
+              :key="ingredient.name"
+              class="flex items-start gap-2"
               :class="{
-                'line-through': props.interactive && isChecked(ingredient.name),
+                'opacity-40': props.interactive && isChecked(ingredient.name),
               }"
-            />
+            >
+              <UCheckbox
+                v-if="props.interactive"
+                class="mt-0.5 shrink-0"
+                :model-value="isChecked(ingredient.name)"
+                @update:model-value="
+                  (v) =>
+                    onCheck(ingredient.name, v === 'indeterminate' ? false : v)
+                "
+              />
+              <IngredientItem
+                :ingredient="ingredient"
+                :all-ingredients="allIngredients ?? ingredients"
+                :class="{
+                  'line-through':
+                    props.interactive && isChecked(ingredient.name),
+                }"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </template>
     </template>
 
     <!-- Flat (no category config) -->
