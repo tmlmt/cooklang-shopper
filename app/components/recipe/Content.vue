@@ -173,7 +173,11 @@ const visibleStepOverlay = ref<string | null>(null);
           color="neutral"
           variant="ghost"
           size="sm"
-          @click="servingsSpinner = originalServings"
+          @click="
+            () => {
+              servingsSpinner = originalServings;
+            }
+          "
         />
         <UDropdownMenu
           v-if="hasVariants"
@@ -336,7 +340,7 @@ const visibleStepOverlay = ref<string | null>(null);
                           visibleStepOverlay =
                             visibleStepOverlay === item.stepImage
                               ? null
-                              : item.stepImage
+                              : (item.stepImage ?? null)
                         "
                       >
                         <!-- Show the actual image when loaded -->
@@ -412,7 +416,7 @@ const visibleStepOverlay = ref<string | null>(null);
                     visibleStepOverlay =
                       visibleStepOverlay === item.stepImage
                         ? null
-                        : item.stepImage
+                        : (item.stepImage ?? null)
                   "
                 />
                 <UButton

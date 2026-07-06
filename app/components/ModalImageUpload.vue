@@ -59,10 +59,7 @@ function onFileChange(file: File | null | undefined) {
           color="primary"
           :label="$ts('actions.upload')"
           :disabled="!selectedFile"
-          @click="
-            selectedFile &&
-            emit('close', { file: selectedFile, role: selectedRole })
-          "
+          @click="emit('close', { file: selectedFile!, role: selectedRole })"
         />
       </div>
     </template>

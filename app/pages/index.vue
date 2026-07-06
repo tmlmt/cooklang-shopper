@@ -69,9 +69,8 @@ const openNewRecipeModal = async () => {
   const result = await modalFile.open("new");
   if (result) {
     await navigateTo(
-      $localeRoute(
-        `/recipe/${pathJoin(result.dir, result.name)}?mode=new`,
-      ).href,
+      $localeRoute(`/recipe/${pathJoin(result.dir, result.name)}?mode=new`)
+        .href,
     );
   }
 };
@@ -155,7 +154,7 @@ const { $tc } = useI18n();
               {{ $t("pages.cookbook") }}
             </i18n-link>
             <template v-for="(item, index) in pathItems" :key="item.to">
-              <span class="mx-1 text-base text-muted md:text-lg">/</span>
+              <span class="text-muted mx-1 text-base md:text-lg">/</span>
               <i18n-link
                 :to="item.to"
                 class="text-base md:text-lg"
@@ -181,14 +180,22 @@ const { $tc } = useI18n();
             :color="viewMode === 'grid' ? 'secondary' : 'neutral'"
             :variant="viewMode === 'grid' ? 'subtle' : 'outline'"
             :active="viewMode === 'grid'"
-            @click="viewMode = 'grid'"
+            @click="
+              () => {
+                viewMode = 'grid';
+              }
+            "
           />
           <UButton
             icon="material-symbols:view-list-outline"
             :color="viewMode === 'list' ? 'secondary' : 'neutral'"
             :variant="viewMode === 'list' ? 'subtle' : 'outline'"
             :active="viewMode === 'list'"
-            @click="viewMode = 'list'"
+            @click="
+              () => {
+                viewMode = 'list';
+              }
+            "
           />
         </UFieldGroup>
 
