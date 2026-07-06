@@ -111,7 +111,12 @@ defineShortcuts({
           </div>
           <div class="flex flex-wrap items-end gap-3">
             <UFormField :label="$ts('modal.share.expiresOptional')">
-              <UInput v-model="expiresAt" type="date" :min="minDate" />
+              <UInput
+                v-model="expiresAt"
+                type="date"
+                :min="minDate"
+                :ui="{ base: 'appearance-auto' }"
+              />
             </UFormField>
             <UButton
               icon="i-lucide-plus"
@@ -131,7 +136,7 @@ defineShortcuts({
         </div>
         <div
           v-else-if="links.length === 0"
-          class="py-4 text-center text-sm text-muted"
+          class="text-muted py-4 text-center text-sm"
         >
           {{ $ts("modal.share.noLinks") }}
         </div>
@@ -139,14 +144,14 @@ defineShortcuts({
           <div
             v-for="link in links"
             :key="link.id"
-            class="flex items-center justify-between gap-2 rounded-md bg-elevated p-2"
+            class="bg-elevated flex items-center justify-between gap-2 rounded-md p-2"
             :class="{ 'opacity-50': link.expired }"
           >
             <div class="min-w-0 flex-1">
               <div class="truncate font-mono text-xs">
                 {{ getShareUrl(link.token) }}
               </div>
-              <div class="text-xs text-muted">
+              <div class="text-muted text-xs">
                 {{ $ts("modal.share.created") }}
                 {{
                   $td(new Date(link.createdAt), {
