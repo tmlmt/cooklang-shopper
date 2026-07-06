@@ -6,6 +6,9 @@
   "passwordPlaceholder": "Indtast din adgangskode",
   "roleViewer": "Fremviser",
   "roleEditor": "Editor",
+  "roleAdmin": "Administrator",
   "signInWith": "Log ind med {provider}",
+  "signInWithGoogle": "Log ind med Google",
+  "signInWithMicrosoft": "Log ind med Microsoft",
   "or": "eller"
 }

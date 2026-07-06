@@ -63,9 +63,8 @@ const openNewRecipeModal = async () => {
   const result = await modalFile.open("new", currentPath.value);
   if (result) {
     await navigateTo(
-      $localeRoute(
-        `/recipe/${pathJoin(result.dir, result.name)}?mode=new`,
-      ).href,
+      $localeRoute(`/recipe/${pathJoin(result.dir, result.name)}?mode=new`)
+        .href,
     );
   }
 };
@@ -311,7 +310,7 @@ if (isEditor.value) {
               {{ $t("pages.cookbook") }}
             </i18n-link>
             <template v-for="(item, index) in pathItems" :key="item.to">
-              <span class="mx-1 text-base text-muted md:text-lg">/</span>
+              <span class="text-muted mx-1 text-base md:text-lg">/</span>
               <i18n-link
                 :to="item.to"
                 class="text-base md:text-lg"

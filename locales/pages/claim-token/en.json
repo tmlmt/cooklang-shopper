@@ -1,0 +1,10 @@
+{
+  "title": "Accept your invitation",
+  "instructions": "You've been invited. Sign in with one of the accounts below to activate your access.",
+  "continueWith": "Continue with {provider}",
+  "noProviders": "No authentication provider is configured. Please contact your administrator.",
+  "invalid": "This invitation link is invalid or has expired. Please ask your administrator for a new one.",
+  "actions": {
+    "backToLogin": "Back to login"
+  }
+}

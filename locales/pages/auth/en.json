@@ -6,6 +6,9 @@
   "passwordPlaceholder": "Enter your password",
   "roleViewer": "Viewer",
   "roleEditor": "Editor",
+  "roleAdmin": "Admin",
   "signInWith": "Sign in with {provider}",
+  "signInWithGoogle": "Sign in with Google",
+  "signInWithMicrosoft": "Sign in with Microsoft",
   "or": "or"
 }

@@ -21,7 +21,10 @@ export function useLanguageSwitcher() {
 
   const otherLocales = computed<DropdownMenuItem[]>(() =>
     $getLocales()
-      .filter((item: LocaleWithFlag) => item.code !== currentLocale.value.code)
+      .filter(
+        (item: LocaleWithFlag & { disabled?: boolean }) =>
+          !item.disabled && item.code !== currentLocale.value.code,
+      )
       .map((locale: LocaleWithFlag) => ({
         label: `${locale.flag ?? ""} ${locale.displayName}`.trim(),
         onSelect: async () => {
@@ -38,7 +41,16 @@ export function useLanguageSwitcher() {
     children: otherLocales.value,
   }));
 
+  const enabledLocales = computed(() =>
+    $getLocales().filter(
+      (item: LocaleWithFlag & { disabled?: boolean }) => !item.disabled,
+    ),
+  );
+
+  const isMultilingual = computed(() => enabledLocales.value.length > 1);
+
   return {
     languageMenuItem,
+    isMultilingual,
   };
 }

@@ -8,6 +8,7 @@ auth:
         # Generate hashed passwords with: node hash-password.mjs <password>
         password_editor: "<scrypt-hashed-password>"   # Full access: create, edit, delete recipes
         password_viewer: "<scrypt-hashed-password>"   # Read-only: browse and view all recipes
+        # password_admin: "<scrypt-hashed-password>"  # Optional: enables admin role for password login
     # - type: oidc
     #   name: my-idp                                    # Displayed on the login button: "Sign in with my-idp"
     #   config:
@@ -23,6 +24,27 @@ auth:
     #       #   claim: "groups"
     #       #   value: "cookbook-viewers"
     #
+    # - type: google                                   # Invite-based Google sign-in (see "Account providers" below)
+    #   name: google
+    #   config:
+    #     clientId: "<google-oauth-client-id>"
+    #     clientSecret: "<google-oauth-client-secret>"
+    # - type: microsoft                                # Invite-based Microsoft sign-in
+    #   name: microsoft
+    #   config:
+    #     clientId: "<azure-app-client-id>"            # From the Overview page of the App registered on Azure / Microsoft Entra
+    #     clientSecret: "<azure-app-client-secret>"    # Value from the client secret created in the Certificates & secrets page of the App registered on Azure / Microsoft Entra
+    #     tenant: "common"                             # Optional — Azure tenant ID, or "common" (default) for multi-tenant
+    #
+    # Account providers (Google / Microsoft) — invite-based accounts with a persistent identity.
+    # Unlike password/oidc providers, users must be invited from the admin User Management page
+    # (or bootstrap the first admin via the one-time claim code printed at startup — run
+    # `pnpm admin:code` to print it again). Redirect / callback URLs to register with the provider:
+    #     Google:    {baseUrl}/auth/google
+    #     Microsoft: {baseUrl}/auth/microsoft
+    #
+  # directory: fallback                                # (sibling of "providers") "fallback" (default) or
+  #                                                    # "authoritative": only invited/known accounts may sign in.
     # Role mapping — how OIDC claims are used to assign editor vs viewer roles.
     # The approach depends on how your identity provider exposes role/group information.
     # Two common strategies:
@@ -104,3 +126,15 @@ sessionSecret: "<session-secret>"
 #     feedTitle: "My Recipe Collection"
 #     feedAuthor: "Anonymous"
 #     description: "A collection of my favourite recipes"
+
+# SMTP / email settings (optional — used to email invitations to Google/Microsoft accounts).
+# If omitted, invitations are still created but must be shared manually via the copyable invite link.
+# smtp:
+#   host: "smtp.example.com"
+#   port: 587
+#   secure: false                  # true for port 465 (implicit TLS), false for STARTTLS (587)
+#   from: "Cooklang Shopper <no-reply@example.com>"
+#   auth:                          # optional — omit for unauthenticated relays
+#     user: "<smtp-username>"
+#     pass: "<smtp-password>"
+

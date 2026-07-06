@@ -3,11 +3,21 @@ import type {
   AppConfig,
   OidcAuthProvider,
   PasswordAuthProvider,
+  GoogleAuthProvider,
+  MicrosoftAuthProvider,
+  AuthProviderEntry,
   ShoppingConfig,
   SharingConfig,
 } from "~~/shared/types";
 
 const AI_PROVIDERS = ["openai", "anthropic", "local"] as const;
+
+/**
+ * Reserved provider name used for DB-backed accounts (Google/Microsoft).
+ * The session stores this as `provider` so that the shopping-list userKey stays
+ * stable regardless of which OAuth provider the account was claimed with.
+ */
+export const ACCOUNT_PROVIDER = "account";
 
 const defaultShopping: ShoppingConfig = {
   enabled: false,
@@ -48,6 +58,13 @@ export async function getAppConfig(): Promise<AppConfig> {
     throw createError({
       status: 500,
       message: `Duplicate auth provider names in config.yaml: ${[...new Set(duplicates)].join(", ")}`,
+    });
+  }
+
+  if (names.includes(ACCOUNT_PROVIDER)) {
+    throw createError({
+      status: 500,
+      message: `"${ACCOUNT_PROVIDER}" is a reserved provider name and cannot be used in config.yaml`,
     });
   }
 
@@ -100,6 +117,22 @@ export async function getAppConfig(): Promise<AppConfig> {
         });
       }
     }
+
+    if (provider.type === "google" || provider.type === "microsoft") {
+      const cfg = provider.config;
+      if (!cfg?.clientId || !cfg?.clientSecret) {
+        throw createError({
+          status: 500,
+          message: `${provider.type} provider "${provider.name}": missing config.clientId and/or config.clientSecret`,
+        });
+      }
+      if (!config.baseUrl) {
+        throw createError({
+          status: 500,
+          message: `${provider.type} provider "${provider.name}" requires baseUrl to be set at root level in config.yaml`,
+        });
+      }
+    }
   }
 
   if (!config.sessionSecret) {
@@ -147,6 +180,34 @@ export async function getAppConfig(): Promise<AppConfig> {
     }
   }
 
+  if (config.auth.directory === undefined) {
+    config.auth.directory = "fallback";
+  } else if (
+    config.auth.directory !== "fallback" &&
+    config.auth.directory !== "authoritative"
+  ) {
+    throw createError({
+      status: 500,
+      message: `Invalid config.auth.directory "${config.auth.directory}". Must be "fallback" or "authoritative"`,
+    });
+  }
+
+  if (config.smtp) {
+    const smtp = config.smtp;
+    if (!smtp.host || !smtp.port || !smtp.from) {
+      throw createError({
+        status: 500,
+        message: "config.smtp requires host, port and from",
+      });
+    }
+    if (smtp.auth && (!smtp.auth.user || !smtp.auth.pass)) {
+      throw createError({
+        status: 500,
+        message: "config.smtp.auth requires both user and pass",
+      });
+    }
+  }
+
   cachedConfig = config as AppConfig;
   return cachedConfig;
 }
@@ -172,4 +233,32 @@ export function getOidcProviderByName(
   return config.auth.providers.find(
     (p): p is OidcAuthProvider => p.type === "oidc" && p.name === name,
   );
+}
+
+export function getGoogleProvider(
+  config: AppConfig,
+): GoogleAuthProvider | undefined {
+  return config.auth.providers.find(
+    (p): p is GoogleAuthProvider => p.type === "google",
+  );
+}
+
+export function getMicrosoftProvider(
+  config: AppConfig,
+): MicrosoftAuthProvider | undefined {
+  return config.auth.providers.find(
+    (p): p is MicrosoftAuthProvider => p.type === "microsoft",
+  );
+}
+
+/** Google + Microsoft providers, i.e. the DB-backed "account" providers. */
+export function getAccountProviders(config: AppConfig): AuthProviderEntry[] {
+  return config.auth.providers.filter(
+    (p) => p.type === "google" || p.type === "microsoft",
+  );
+}
+
+/** Whether any DB-backed account provider is configured. */
+export function hasAccountProviders(config: AppConfig): boolean {
+  return getAccountProviders(config).length > 0;
 }

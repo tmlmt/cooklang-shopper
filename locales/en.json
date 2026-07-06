@@ -51,7 +51,8 @@
     "backTo": "Back to {page}",
     "continueTo": "Continue to {page}",
     "toggleColorMode": "Toggle color mode",
-    "about": "About"
+    "about": "About",
+    "userManagement": "User management"
   },
   "recipe": {
     "untitled": "(Untitled)",
@@ -236,6 +237,7 @@
     "sharedListExpiredDetail": "The shared list link has expired. Switched to your own list.",
     "loginFailed": "Login failed",
     "loginInvalidPassword": "Invalid password",
+    "loginAdminNotConfigured": "Admin password login is not configured",
     "oidcFailedDetail": "OIDC authentication failed. Please try again.",
     "oidcUnreachable": "Provider unreachable",
     "oidcUnreachableDetail": "The authentication provider could not be reached. Please try again later.",
@@ -294,5 +296,11 @@
     "recipe": "recipe | recipes",
     "default": "Default",
     "unspecified": "Unspecified"
+  },
+  "email": {
+    "invitation": {
+      "subject": "You've been invited to {app}",
+      "body": "Hello,\n\nYou have been invited to join {app}.\n\nClick the link below to sign in with your Google or Microsoft account and activate your access:\n\n{url}\n\nIf you did not expect this invitation, you can safely ignore this email."
+    }
   }
 }

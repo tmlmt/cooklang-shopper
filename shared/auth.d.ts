@@ -7,6 +7,19 @@ declare module "#auth-utils" {
     provider: string;
     userId: string;
   }
+
+  interface UserSession {
+    /**
+     * OAuth identity captured during an admin-bootstrap login, pending
+     * verification of the one-time claim code. Not a logged-in session.
+     */
+    pendingClaim?: {
+      provider: string;
+      subject: string;
+      email?: string;
+      displayName?: string;
+    };
+  }
 }
 
 export {};

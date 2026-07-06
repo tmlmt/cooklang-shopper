@@ -1,0 +1,15 @@
+{
+  "title": "Claim administrator account",
+  "instructions": "You have signed in successfully. To become the administrator, enter the one-time claim code printed in the server logs (also saved to data/admin-claim-code.txt).",
+  "identity": "Signed in as",
+  "codeLabel": "Claim code",
+  "codePlaceholder": "Enter the claim code",
+  "noPending": "There is no pending admin claim. Please sign in first.",
+  "invalidTitle": "Invalid claim code",
+  "invalidDetail": "The claim code you entered is incorrect or has expired.",
+  "actions": {
+    "claim": "Claim admin access",
+    "skip": "Skip for now",
+    "backToLogin": "Back to login"
+  }
+}

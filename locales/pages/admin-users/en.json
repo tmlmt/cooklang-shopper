@@ -1,0 +1,38 @@
+{
+  "title": "User management",
+  "inviteHeader": "Invite a user",
+  "noInviteProviders": "Inviting users requires a Google or Microsoft provider to be configured.",
+  "emailPlaceholder": "user@example.com",
+  "namePlaceholder": "Display name (optional)",
+  "confirmDelete": "Delete user {email}? This cannot be undone.",
+  "columns": {
+    "email": "Email",
+    "name": "Name",
+    "role": "Role",
+    "status": "Status",
+    "providers": "Provider",
+    "actions": "Actions"
+  },
+  "roles": {
+    "viewer": "Viewer",
+    "editor": "Editor",
+    "admin": "Admin"
+  },
+  "status": {
+    "active": "Active",
+    "invited": "Invited"
+  },
+  "actions": {
+    "invite": "Invite",
+    "resend": "Resend invitation",
+    "copyLink": "Copy link"
+  },
+  "toast": {
+    "invited": "Invitation sent",
+    "invitedNoEmail": "User created — copy the invitation link (email not configured)",
+    "inviteFailed": "Could not create the invitation",
+    "updateFailed": "Could not update the user",
+    "deleted": "User deleted",
+    "deleteFailed": "Could not delete the user"
+  }
+}

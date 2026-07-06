@@ -50,9 +50,17 @@ if (import.meta.client) {
 
 const { hasAuth, getAuthProviders, title: appTitle } = await usePublicConfig();
 const oidcProviders = computed(() => getAuthProviders("oidc"));
+const googleProviders = computed(() => getAuthProviders("google"));
+const microsoftProviders = computed(() => getAuthProviders("microsoft"));
+const hasAccountProviders = computed(
+  () => googleProviders.value.length > 0 || microsoftProviders.value.length > 0,
+);
 const roles = computed<{ label: string; value: Role }[]>(() => [
   { label: $ts("roleViewer"), value: "viewer" },
   { label: $ts("roleEditor"), value: "editor" },
+  ...(hasAuth("password")
+    ? [{ label: $ts("roleAdmin"), value: "admin" as Role }]
+    : []),
 ]);
 const selectedRole = ref<Role>("viewer");
 const password = ref("");
@@ -83,11 +91,15 @@ async function login() {
       body: { role: selectedRole.value, password: password.value },
     });
     await fetchSession();
-    await navigateTo("/", { external: true });
-  } catch {
+    await navigateTo("/auth");
+  } catch (e) {
+    const status = (e as { status?: number })?.status;
     toast.add({
       title: $ts("toast.loginFailed"),
-      description: $ts("toast.loginInvalidPassword"),
+      description:
+        status === 403
+          ? $ts("toast.loginAdminNotConfigured")
+          : $ts("toast.loginInvalidPassword"),
       color: "error",
     });
   } finally {
@@ -125,7 +137,7 @@ async function logout() {
         color="neutral"
         variant="outline"
         :label="$ts('actions.goToCookbook')"
-        @click="navigateTo('/')"
+        :to="$localeRoute('/')"
       />
       <UButton color="primary" @click="logout">{{
         $t("actions.signOut")
@@ -144,8 +156,41 @@ async function logout() {
         @click="loginWithOidc(provider.name)"
       />
 
+      <UButton
+        v-for="provider in googleProviders"
+        :key="provider.name"
+        icon="i-mdi-google"
+        :label="$ts('signInWithGoogle')"
+        color="primary"
+        size="lg"
+        block
+        @click="
+          () => {
+            navigateTo('/auth/google', { external: true });
+          }
+        "
+      />
+
+      <UButton
+        v-for="provider in microsoftProviders"
+        :key="provider.name"
+        icon="i-mdi-microsoft"
+        :label="$ts('signInWithMicrosoft')"
+        color="primary"
+        size="lg"
+        block
+        @click="
+          () => {
+            navigateTo('/auth/microsoft', { external: true });
+          }
+        "
+      />
+
       <div
-        v-if="oidcProviders.length > 0 && hasAuth('password')"
+        v-if="
+          (oidcProviders.length > 0 || hasAccountProviders) &&
+          hasAuth('password')
+        "
         class="flex w-full items-center gap-4"
       >
         <USeparator class="flex-1" />

@@ -51,7 +51,8 @@
     "backTo": "Retour à {page}",
     "continueTo": "Continuer vers {page}",
     "toggleColorMode": "Mode clair / sombre",
-    "about": "À propos"
+    "about": "À propos",
+    "userManagement": "Gestion des utilisateurs"
   },
   "recipe": {
     "untitled": "(Sans titre)",
@@ -236,6 +237,7 @@
     "sharedListExpiredDetail": "Le lien de la liste partagée a expiré. Passé à votre propre liste.",
     "loginFailed": "Échec de la connexion",
     "loginInvalidPassword": "Mot de passe invalide",
+    "loginAdminNotConfigured": "La connexion administrateur par mot de passe n'est pas configurée",
     "oidcFailedDetail": "L'authentification OIDC a échoué. Veuillez réessayer.",
     "oidcUnreachable": "Serveur d'accès injoignable",
     "oidcUnreachableDetail": "Le serveur d'authentification n'a pas pu être atteint. Veuillez réessayer plus tard.",
@@ -294,5 +296,11 @@
     "recipe": "recette | recettes",
     "default": "Par défaut",
     "unspecified": "Non spécifié"
+  },
+  "email": {
+    "invitation": {
+      "subject": "Vous êtes invité·e à rejoindre {app}",
+      "body": "Bonjour,\n\nVous avez été invité·e à rejoindre {app}.\n\nCliquez sur le lien ci-dessous pour vous connecter avec votre compte Google ou Microsoft et activer votre accès :\n\n{url}\n\nSi vous n'attendiez pas cette invitation, vous pouvez ignorer cet e-mail."
+    }
   }
 }

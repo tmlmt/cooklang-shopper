@@ -17,6 +17,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     // (recipe API handles per-recipe visibility and returns 401 for private ones)
     if (
       canonicalPath === "/auth" ||
+      canonicalPath === "/claim-admin" ||
+      canonicalPath.startsWith("/claim/") ||
       canonicalPath.startsWith("/s/") ||
       canonicalPath.startsWith("/recipe/")
     ) {
@@ -33,7 +35,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return navigateTo("/auth");
   }
 
-  if ((canonicalPath === "/list" || canonicalPath === "/pantry") && !shopping.value) {
+  if (
+    (canonicalPath === "/list" || canonicalPath === "/pantry") &&
+    !shopping.value
+  ) {
     return navigateTo("/");
   }
 
@@ -42,7 +47,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     shopping.value === "editor-only"
   ) {
     const { user } = useUserSession();
-    if (user.value?.role !== "editor") {
+    if (!hasEditorAccess(user.value?.role)) {
       return navigateTo("/");
     }
   }

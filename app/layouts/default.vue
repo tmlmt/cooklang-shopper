@@ -12,6 +12,7 @@ const { title: appTitle, sharing, experimental } = await usePublicConfig();
 const { shoppingEnabled } = await useShoppingEnabled();
 const { hasInAppHistory } = usePreviousRoute();
 const { loggedIn } = useUserSession();
+const { isAdmin } = useRole();
 
 //---------------
 // Header menus
@@ -33,8 +34,19 @@ const authMenuItem = computed<DropdownMenuItem>(() =>
       },
 );
 
+const { languageMenuItem, isMultilingual } = useLanguageSwitcher();
+
 const permanentMenuItems = computed<DropdownMenuItem[]>(() => [
   authMenuItem.value,
+  ...(isAdmin.value
+    ? [
+        {
+          label: $ts("nav.userManagement"),
+          icon: "mdi:account-cog",
+          onSelect: () => navigateTo($localeRoute("/admin/users").href),
+        } as DropdownMenuItem,
+      ]
+    : []),
   {
     label: $ts("nav.toggleColorMode"),
     icon: "material-symbols:dark-mode",
@@ -42,12 +54,11 @@ const permanentMenuItems = computed<DropdownMenuItem[]>(() => [
       colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
     },
   },
-  languageMenuItem.value,
+  ...(isMultilingual.value ? [languageMenuItem.value] : []),
 ]);
 
 const { mobileHeaderMenuItems, desktopHeaderMenuItems, headerActionItems } =
   useHeaderMenu();
-const { languageMenuItem } = useLanguageSwitcher();
 
 const isRecipePage = computed(() =>
   route.path.startsWith($localePath({ name: "recipe" })),
@@ -233,7 +244,7 @@ const navLeft = computed(() => {
         <i18n-link
           v-else-if="!isRecipePage"
           to="/"
-          class="flex min-w-0 flex-row items-center gap-2 text-xl font-bold text-highlighted transition-colors hover:text-default focus-visible:outline-primary"
+          class="text-highlighted hover:text-default focus-visible:outline-primary flex min-w-0 flex-row items-center gap-2 text-xl font-bold transition-colors"
         >
           <Icon
             name="material-symbols:chef-hat-rounded"
@@ -244,7 +255,7 @@ const navLeft = computed(() => {
         </i18n-link>
         <span
           v-else
-          class="flex min-w-0 flex-row items-center gap-2 text-xl font-bold text-highlighted"
+          class="text-highlighted flex min-w-0 flex-row items-center gap-2 text-xl font-bold"
         >
           <Icon
             name="material-symbols:chef-hat-rounded"
@@ -276,7 +287,11 @@ const navLeft = computed(() => {
           variant="ghost"
           color="neutral"
           icon="material-symbols:search"
-          @click="searchModal.open()"
+          @click="
+            () => {
+              searchModal.open();
+            }
+          "
         />
         <template v-if="headerActionItems.length > 0">
           <UButton
@@ -320,7 +335,7 @@ const navLeft = computed(() => {
     <UFooter v-if="navLeft || navRight">
       <template v-if="navLeft" #left>
         <UCard
-          class="cursor-pointer hover:bg-elevated"
+          class="hover:bg-elevated cursor-pointer"
           @click="navLeft.action ? navLeft.action() : navigateTo(navLeft.to)"
         >
           <UButton
@@ -334,11 +349,11 @@ const navLeft = computed(() => {
       </template>
       <template v-if="navRight" #right>
         <UCard
-          class="group cursor-pointer hover:bg-elevated"
+          class="group hover:bg-elevated cursor-pointer"
           @click="navigateTo(navRight.to)"
         >
           <UButton
-            class="rounded-full group-hover:bg-elevated"
+            class="group-hover:bg-elevated rounded-full"
             variant="outline"
             color="neutral"
             icon="prime:arrow-right"

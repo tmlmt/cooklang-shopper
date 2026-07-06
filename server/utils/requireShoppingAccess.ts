@@ -17,7 +17,7 @@ export async function requireShoppingAccess(
     throw createError({ status: 403, message: "Shopping is disabled" });
   }
 
-  if (enabled === "editor-only" && session.user.role !== "editor") {
+  if (enabled === "editor-only" && !hasEditorAccess(session.user.role)) {
     throw createError({
       status: 403,
       message: "Shopping is restricted to editors",

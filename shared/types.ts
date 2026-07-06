@@ -29,13 +29,15 @@ export interface PublicSharingConfig {
   about?: SharingAboutConfig;
 }
 
-export type Role = "viewer" | "editor";
+export type Role = "viewer" | "editor" | "admin";
 
-export type AuthProviderType = "password" | "oidc";
+export type AuthProviderType = "password" | "oidc" | "google" | "microsoft";
 
 export interface PasswordProviderConfig {
   password_editor: string;
   password_viewer: string;
+  /** Optional: enables admin role for password login when set. */
+  password_admin?: string;
 }
 
 export interface OidcRoleMapping {
@@ -66,15 +68,86 @@ export interface OidcAuthProvider {
   config: OidcProviderConfig;
 }
 
-export type AuthProviderEntry = PasswordAuthProvider | OidcAuthProvider;
+export interface GoogleProviderConfig {
+  clientId: string;
+  clientSecret: string;
+}
+
+export interface MicrosoftProviderConfig {
+  clientId: string;
+  clientSecret: string;
+  /** Microsoft tenant. Use "common" or "consumers" for personal accounts. */
+  tenant?: string;
+}
+
+export interface GoogleAuthProvider {
+  type: "google";
+  name: string;
+  config: GoogleProviderConfig;
+}
+
+export interface MicrosoftAuthProvider {
+  type: "microsoft";
+  name: string;
+  config: MicrosoftProviderConfig;
+}
+
+export type AuthProviderEntry =
+  | PasswordAuthProvider
+  | OidcAuthProvider
+  | GoogleAuthProvider
+  | MicrosoftAuthProvider;
 
 export interface PublicAuthProvider {
   type: AuthProviderType;
   name: string;
 }
 
+/**
+ * How the DB-backed user directory coexists with config-based OIDC role mapping.
+ * - "fallback": DB identities take precedence; unknown OIDC users fall back to
+ *   config claim role mapping (backward compatible).
+ * - "authoritative": only users present in the DB directory may sign in via the
+ *   account providers; generic OIDC still uses its own claim mapping.
+ */
+export type DirectoryMode = "fallback" | "authoritative";
+
 export interface AuthConfig {
   providers: AuthProviderEntry[];
+  directory?: DirectoryMode;
+}
+
+export interface SmtpConfig {
+  host: string;
+  port: number;
+  secure?: boolean;
+  auth?: {
+    user: string;
+    pass: string;
+  };
+  from: string;
+}
+
+export type UserStatus = "invited" | "active";
+
+export interface AdminUser {
+  id: number;
+  email: string;
+  displayName: string | null;
+  role: Role;
+  status: UserStatus;
+  /** Linked identity providers (e.g. ["google"]). */
+  providers: string[];
+  createdAt: string;
+  /** Expiry of the pending invitation, if the user is still "invited". */
+  inviteExpiresAt: string | null;
+}
+
+export interface AdminUsersResponse {
+  users: AdminUser[];
+  total: number;
+  page: number;
+  pageSize: number;
 }
 
 export type ShoppingEnabled = boolean | "editor-only";
@@ -110,6 +183,7 @@ export interface AppConfig {
   sharing?: SharingConfig;
   ai?: AiConfig;
   i18n?: I18nConfig;
+  smtp?: SmtpConfig;
 }
 
 export interface RecipeChoicesWire {
