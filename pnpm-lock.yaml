@@ -59,8 +59,8 @@ importers:
         specifier: 13.0.6
         version: 13.0.6
       h3:
-        specifier: 1.15.10
-        version: 1.15.10
+        specifier: 1.15.11
+        version: 1.15.11
       linkedom:
         specifier: 0.18.12
         version: 0.18.12
