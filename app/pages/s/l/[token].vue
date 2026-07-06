@@ -82,6 +82,7 @@ if (!loggedIn.value) {
             onSelect: () =>
               modalStoreRun.open({
                 ingredientsFn: () => shoppingList!.ingredients.value,
+                categoriesFn: () => shoppingList!.categories.value,
                 isCheckedFn: shoppingList!.isChecked,
                 onCheckFn: shoppingList!.checkIngredient,
                 onUncheckAllFn: shoppingList!.uncheckAll,
@@ -122,7 +123,7 @@ if (!loggedIn.value) {
             })
           }}
         </p>
-        <p class="mt-1 text-sm text-muted">
+        <p class="text-muted mt-1 text-sm">
           <i18n-link to="/auth">{{ $t("actions.signIn") }}</i18n-link>
           {{ $t("signInToEdit") }}
         </p>

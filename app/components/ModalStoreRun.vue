@@ -5,6 +5,7 @@ import type { ShoppingListResponse } from "~/composables/useShoppingListActions"
 const props = withDefaults(
   defineProps<{
     ingredientsFn?: () => AddedIngredient[];
+    categoriesFn?: () => Record<string, AddedIngredient[]>;
     isCheckedFn?: (name: string) => boolean;
     onCheckFn?: (name: string, checked: boolean) => void | Promise<void>;
     onUncheckAllFn?: () => void | Promise<void>;
@@ -13,6 +14,7 @@ const props = withDefaults(
   }>(),
   {
     ingredientsFn: undefined,
+    categoriesFn: undefined,
     isCheckedFn: undefined,
     onCheckFn: undefined,
     onUncheckAllFn: undefined,
@@ -29,6 +31,9 @@ const shoppingStore = useShoppingStore();
 
 const ingredients = computed(
   () => props.ingredientsFn?.() ?? shoppingStore.ingredients,
+);
+const categories = computed(
+  () => props.categoriesFn?.() ?? shoppingStore.categories,
 );
 const isCheckedFn = computed(
   () => props.isCheckedFn ?? ((name: string) => shoppingStore.isChecked(name)),
@@ -86,7 +91,7 @@ watch(sse.updateCount, () => {
       >
         <span class="font-semibold">{{ $ts("actions.storeRun") }}</span>
         <UProgress v-model="checkedCount" :max="total" class="flex-1" />
-        <span class="text-sm text-muted tabular-nums"
+        <span class="text-muted text-sm tabular-nums"
           >{{ checkedCount }} / {{ total }}</span
         >
         <span class="flex items-center gap-1.5 text-xs text-green-500">
@@ -105,6 +110,7 @@ watch(sse.updateCount, () => {
       >
         <IngredientList
           :ingredients="ingredients"
+          :categories="categories"
           :is-checked-fn="isCheckedFn"
           :on-check-fn="onCheckFn"
           :show-header="false"
