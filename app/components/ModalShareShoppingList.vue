@@ -113,6 +113,7 @@ defineShortcuts({
             <UFormField :label="$ts('modal.share.expiresOptional')">
               <UInput
                 v-model="expiresAt"
+                size="sm"
                 type="date"
                 :min="minDate"
                 :ui="{ base: 'appearance-auto' }"
@@ -120,6 +121,7 @@ defineShortcuts({
             </UFormField>
             <UButton
               icon="i-lucide-plus"
+              class="mb-px"
               :label="$ts('actions.createLink')"
               size="sm"
               :loading="creatingLink"
