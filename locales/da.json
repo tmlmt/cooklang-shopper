@@ -114,8 +114,10 @@
     "noChoice": "n/a",
     "addFreehand": "Tilføj fritstående element",
     "freehandItems": "Frie varer",
+    "emptyList": "Tom liste",
     "ingredientLabel": "Ingrediens",
     "quantityLabel": "Mængde",
+    "selectedRecipes": "Valgte opskrifter",
     "unitLabel": "Enhed"
   },
   "cookMode": {

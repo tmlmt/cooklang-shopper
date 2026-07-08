@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
 
-const { $t, $ts, $tc } = useI18n();
+const { $ts, $tc } = useI18n();
 
 useSeoMeta({
   title: $ts("pages.shoppingList"),
@@ -136,9 +136,6 @@ watch(
       </template>
     </UAlert>
     <div class="flex flex-row items-center gap-1">
-      <h1 class="text-base font-bold md:text-lg">
-        {{ $t("pages.shoppingList") }}
-      </h1>
       <span
         v-if="shoppingStore.recipeSelection.length"
         class="text-sm md:text-base"

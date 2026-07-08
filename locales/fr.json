@@ -19,7 +19,7 @@
     "login": "Se connecter",
     "signIn": "Se connecter",
     "signOut": "Se déconnecter",
-    "back": "Précédent",
+    "back": "Retour",
     "browse": "Parcourir",
     "view": "Voir",
     "edit": "Editer",
@@ -42,7 +42,7 @@
     "uploadImage": "Charger une image",
     "downloadCook": "Télécharger .cook",
     "storeRun": "Faire les courses",
-    "categoryConfig": "Configuration de la catégorie",
+    "categoryConfig": "Catégorisation",
     "translate": "Traduire",
     "setAsDefault": "Définir par défaut"
   },
@@ -57,7 +57,7 @@
   "recipe": {
     "untitled": "(Sans titre)",
     "ingredients": "Ingrédients",
-    "cookware": "Cuisson",
+    "cookware": "Ustensiles",
     "preparation": "Préparation",
     "yield": "Rendement",
     "servings": "aucune portion | 1 portion | {count} portions",
@@ -114,8 +114,10 @@
     "noChoice": "n/a",
     "addFreehand": "Ajouter manuellement un élément",
     "freehandItems": "Éléments ajoutés manuellement",
+    "emptyList": "Liste vide",
     "ingredientLabel": "Ingrédient",
     "quantityLabel": "Quantité",
+    "selectedRecipes": "Recettes sélectionnées",
     "unitLabel": "Unité"
   },
   "cookMode": {

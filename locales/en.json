@@ -114,8 +114,10 @@
     "noChoice": "n/a",
     "addFreehand": "Add free-hand item",
     "freehandItems": "Free-hand items",
+    "emptyList": "Empty list",
     "ingredientLabel": "Ingredient",
     "quantityLabel": "Quantity",
+    "selectedRecipes": "Selected recipes",
     "unitLabel": "Unit"
   },
   "cookMode": {

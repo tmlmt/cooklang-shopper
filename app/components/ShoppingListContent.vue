@@ -128,7 +128,11 @@ onBeforeUnmount(() => {
 // ---------------------------------------------------------------------------
 
 const addItemSchema = v.object({
-  name: v.pipe(v.string(), v.trim(), v.nonEmpty($ts("validation.ingredientRequired"))),
+  name: v.pipe(
+    v.string(),
+    v.trim(),
+    v.nonEmpty($ts("validation.ingredientRequired")),
+  ),
   quantity: v.pipe(v.string(), v.trim()),
   unit: v.pipe(v.string(), v.trim()),
 });
@@ -193,11 +197,9 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
       accessorKey: "title",
       header: () => $t("shoppingList.nameColumn"),
       cell: ({ row }) =>
-        h(
-        ULink,
-        { to: $localeRoute(`/recipe/${row.original.path}`) },
-        () => row.getValue("title"),
-      ),
+        h(ULink, { to: $localeRoute(`/recipe/${row.original.path}`) }, () =>
+          row.getValue("title"),
+        ),
     },
     {
       accessorKey: "servings",
@@ -303,16 +305,13 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
 </script>
 
 <template>
-  <div class="flex w-full flex-col gap-4">
-    <UTable
-      :data="recipeSelection"
-      :columns="columns"
-      :ui="{ td: 'px-4 py-2 md:py-4' }"
-    />
-
-    <div v-if="ingredients.length > 0">
-      <div class="mb-3 flex items-center justify-between">
-        <h2 class="text-base font-bold md:text-lg">{{ $t('recipe.ingredients') }}</h2>
+  <div class="flex w-full flex-col gap-6 md:flex-row md:items-start">
+    <!-- Left column: ingredient list (primary) -->
+    <div class="flex flex-col gap-3 md:flex-1">
+      <div class="flex items-center justify-between">
+        <h2 class="text-base font-bold md:text-lg">
+          {{ $t("recipe.ingredients") }}
+        </h2>
         <UButton
           v-if="onUncheckAllFn && anyChecked"
           :label="$ts('actions.uncheckAll')"
@@ -323,52 +322,94 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
         />
       </div>
       <IngredientList
+        v-if="ingredients.length > 0"
         :ingredients="ingredients"
         :categories="categories"
         :is-checked-fn="isCheckedFn"
         :on-check-fn="onCheckFn"
       />
+      <p v-else class="text-muted text-sm">
+        {{ $ts("shoppingList.emptyList") }}
+      </p>
     </div>
 
-    <UForm
-      v-if="onAddManualItemFn"
-      :schema="addItemSchema"
-      :state="addItemState"
-      class="space-y-3"
-      @submit="addManualIngredient"
-    >
-      <h2 class="text-base font-bold md:text-lg">{{ $t('shoppingList.addFreehand') }}</h2>
-      <div class="grid grid-cols-5 items-end gap-3 md:flex md:flex-row">
-        <UFormField
-          name="name"
-          :label="$ts('shoppingList.ingredientLabel')"
-          class="col-span-2"
-          :required="true"
-        >
-          <UInput v-model="addItemState.name" />
-        </UFormField>
-        <UFormField name="quantity" :label="$ts('shoppingList.quantityLabel')">
-          <UInput
-            v-model="addItemState.quantity"
-            class="md:w-16"
-            :ui="{ root: 'w-full' }"
-          />
-        </UFormField>
-        <UFormField name="unit" :label="$ts('shoppingList.unitLabel')">
-          <UInput v-model="addItemState.unit" class="md:w-16" />
-        </UFormField>
-        <UButton type="submit" class="h-8 justify-center" :label="$ts('actions.add')" />
-      </div>
-    </UForm>
+    <!-- Right column: selected recipes + free-hand items -->
+    <div class="flex flex-col gap-4 md:w-2/5">
+      <!-- Selected recipes -->
+      <UCard
+        :ui="{ root: 'bg-neutral-50 dark:bg-neutral-900', body: 'p-3 sm:p-4' }"
+      >
+        <template #header>
+          <h2 class="text-sm font-semibold">
+            {{ $ts("shoppingList.selectedRecipes") }}
+          </h2>
+        </template>
+        <UTable
+          :data="recipeSelection"
+          :columns="columns"
+          :ui="{ td: 'px-2 py-1.5', th: 'px-2 py-1.5 text-xs' }"
+        />
+      </UCard>
 
-    <div v-if="manualItems.length > 0">
-      <USeparator class="my-4" />
-      <h2 class="text-base font-bold md:text-lg">{{ $ts('shoppingList.freehandItems') }}</h2>
-      <ManualItemsList
-        class="mt-4"
-        :items="manualItems"
-        :on-delete-fn="onRemoveManualItemFn"
-      />
+      <!-- Free-hand items -->
+      <UCard
+        :ui="{ root: 'bg-neutral-50 dark:bg-neutral-900', body: 'p-3 sm:p-4' }"
+      >
+        <template #header>
+          <h2 class="text-sm font-semibold">
+            {{ $ts("shoppingList.freehandItems") }}
+          </h2>
+        </template>
+        <ManualItemsList
+          v-if="manualItems.length > 0"
+          :items="manualItems"
+          :on-delete-fn="onRemoveManualItemFn"
+        />
+        <p v-else class="text-muted text-sm">
+          {{ $ts("shoppingList.emptyList") }}
+        </p>
+        <UForm
+          v-if="onAddManualItemFn"
+          :schema="addItemSchema"
+          :state="addItemState"
+          class="mt-4 space-y-3"
+          @submit="addManualIngredient"
+        >
+          <h3 class="text-xs font-semibold">
+            {{ $t("shoppingList.addFreehand") }}
+          </h3>
+          <div class="grid grid-cols-5 items-end gap-2 md:flex md:flex-row">
+            <UFormField
+              name="name"
+              :label="$ts('shoppingList.ingredientLabel')"
+              class="col-span-2"
+              :required="true"
+            >
+              <UInput v-model="addItemState.name" size="sm" />
+            </UFormField>
+            <UFormField
+              name="quantity"
+              :label="$ts('shoppingList.quantityLabel')"
+            >
+              <UInput
+                v-model="addItemState.quantity"
+                size="sm"
+                class="md:w-14"
+                :ui="{ root: 'w-full' }"
+              />
+            </UFormField>
+            <UFormField name="unit" :label="$ts('shoppingList.unitLabel')">
+              <UInput v-model="addItemState.unit" size="sm" class="md:w-14" />
+            </UFormField>
+            <UButton
+              type="submit"
+              size="sm"
+              class="h-7 justify-center"
+              :label="$ts('actions.add')"
+            />
+          </div>
+        </UForm>
+      </UCard>
     </div>
   </div>
 </template>
