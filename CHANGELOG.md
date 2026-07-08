@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.18.4
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.18.3...v0.18.4)
+
+### 🩹 Fixes
+
+- **i18n:** Correctly load label translations in shared recipes ([de76e70](https://github.com/tmlmt/cooklang-shopper/commit/de76e70))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.18.3
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.18.2...v0.18.3)
