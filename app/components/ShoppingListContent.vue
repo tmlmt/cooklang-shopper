@@ -151,6 +151,8 @@ const addItemState = reactive<AddItemSchema>({
   unit: "",
 });
 
+const addItemFormRef = useTemplateRef<{ clear: () => void }>("addItemForm");
+
 async function addManualIngredient(): Promise<void> {
   if (!props.onAddManualItemFn) return;
   try {
@@ -162,6 +164,8 @@ async function addManualIngredient(): Promise<void> {
     addItemState.name = "";
     addItemState.quantity = "";
     addItemState.unit = "";
+    await nextTick();
+    addItemFormRef.value?.clear();
     toast.add({
       color: "success",
       title: $ts("toast.success"),
@@ -411,6 +415,7 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
         </p>
         <UForm
           v-if="onAddManualItemFn"
+          ref="addItemForm"
           :schema="addItemSchema"
           :state="addItemState"
           class="mt-4 space-y-3"
