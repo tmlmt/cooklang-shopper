@@ -153,7 +153,7 @@ const { $tc } = useI18n();
               {{ $t("pages.cookbook") }}
             </i18n-link>
             <template v-for="(item, index) in pathItems" :key="item.to">
-              <span class="text-muted mx-1 text-base md:text-lg">/</span>
+              <span class="mx-1 text-base text-muted md:text-lg">/</span>
               <i18n-link
                 :to="item.to"
                 class="text-base md:text-lg"

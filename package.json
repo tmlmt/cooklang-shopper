@@ -72,7 +72,6 @@
     "nitropack": "2.13.4",
     "nuxt-og-image": "6.7.2",
     "prettier": "3.9.4",
-    "prettier-plugin-tailwindcss": "0.8.0",
     "prisma": "7.8.0",
     "sharp": "0.35.3",
     "typescript": "6.0.3",
