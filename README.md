@@ -103,6 +103,8 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
    openssl rand -base64 32
    ```
 
+   > **Session revocation:** Changing `sessionSecret` immediately invalidates **all** active sessions for every provider. This is the only way to force a global logout for password and generic OIDC users. Google/Microsoft (account) sessions are also revoked automatically when a user is deleted or deactivated — no secret rotation needed for those.
+
    For OG image URL signing, set `NUXT_OG_IMAGE_SECRET` as an environment variable — add it to your `.env` file or process manager config (e.g. a pm2 ecosystem file). A secret is auto-generated at startup if omitted, but setting it explicitly ensures stable signed URLs across restarts. Alternatively, set `ogImageSecret` directly in `config.yaml`.
 
 5. Add your `.cook` recipe files to `dist/public/recipes/`
@@ -183,6 +185,12 @@ Alternatively, if you have `password_admin` configured, you can sign in as the p
 #### 4. Invite users
 
 From the burger menu, open **User management** (visible to admins) to invite users by email, assign roles (`viewer`, `editor`, `admin`), resend invitations, edit, or delete accounts. Invited users complete sign-up by clicking their invite link and authenticating with Google or Microsoft.
+
+#### Session revocation
+
+When a Google/Microsoft account is deleted or deactivated (via User Management or the `reset-users` dev script), their session cookie is revoked on the next request — the server validates each account session against the database and clears it if the user no longer exists or is not active.
+
+For **password** and **OIDC** sessions (which are stateless), revocation requires rotating `sessionSecret` in `config.yaml` and restarting the server. This invalidates all active sessions across all providers simultaneously.
 
 ### Upgrade
 
