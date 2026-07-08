@@ -84,8 +84,7 @@ async function switchViewLocale(code: string | undefined) {
 
 const siteConfig = useSiteConfig();
 const recipeMeta = recipe.value?.metadata as
-  | Record<string, unknown>
-  | undefined;
+  Record<string, unknown> | undefined;
 const titleMeta = recipe.value?.metadata.title || recipeName;
 const descriptionMeta =
   (recipeMeta?.description as string) ||
@@ -140,12 +139,9 @@ const activeUiLocale = ref<string | undefined>(undefined);
 const recipeUiRoute = computed(() => {
   const locale = activeUiLocale.value;
   if (!locale) return undefined;
-  const appLocale = $getLocale();
-  const basePath =
-    appLocale && route.path.startsWith(`/${appLocale}/`)
-      ? route.path.slice(appLocale.length + 1)
-      : route.path;
-  return router.resolve($localePath(basePath, locale));
+  // Translations are loaded for the "recipe-path" route chunk. Resolve any
+  // /recipe/ path so $_ts looks in that chunk rather than the share-page chunk.
+  return router.resolve($localePath("/recipe/_", locale));
 });
 
 const recipeT: typeof $ts = (key, params, defaultValue) => {
