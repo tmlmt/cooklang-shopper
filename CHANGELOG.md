@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.18.2
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.18.1...v0.18.2)
+
+### 🩹 Fixes
+
+- **i18n:** Improve translations ([c229c10](https://github.com/tmlmt/cooklang-shopper/commit/c229c10))
+
+### 🏡 Chore
+
+- Consolidate import of $localeRoute from useI18n() ([a1829fa](https://github.com/tmlmt/cooklang-shopper/commit/a1829fa))
+- **lint:** Drop prettier-plugin-tailwindcss in favor of eslint-plugin-tailwindcss to avoid conflicts ([b0d1526](https://github.com/tmlmt/cooklang-shopper/commit/b0d1526))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.18.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.18.0...v0.18.1)
