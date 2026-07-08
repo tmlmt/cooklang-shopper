@@ -88,7 +88,7 @@ Localize the units when writing a recipe in another language. The same remark ap
 
 Cookware is written inline in prose steps like ingredients.
 
-- Single word: \`#pan\`
+- Single word: \`#pan\` and not \`#pan{}\`
 - Multi-word: \`#large pan{}\`
 - With quantity: \`#bowl{2}\`
 
@@ -123,6 +123,8 @@ If the original recipe refers to the same ingredient multiple times, define it f
 \`@flour{200%g}\` in the first step, then \`@&flour\` in later steps.
 
 This also works for cookware: \`#pan{1}\`, then \`#&pan\`.
+
+The exact name of the ingredient or cookware must be used for the reference. For instance: \`#large skillet{1}\` can be referenced later as \`#&large skillet\`, but not as \`#&skillet\`.
 
 ### Modifiers (one or more prefixes placed directly after @ or #, before the name)
 
