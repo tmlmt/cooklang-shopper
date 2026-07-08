@@ -52,7 +52,7 @@ tags:
   - tag1
   - tag2
 
-locale: en-GB   # or fr-FR or da or any other IETF locale code. This should be the locale of the recipe text you are converting, not the locale of the recipe's origin necessarily.  
+locale: en # or fr or da or any other ISO-639-1 locale code. This should be the locale of the recipe text you are converting, not the locale of the recipe's origin necessarily.  
 ---
 
 Additional metadata field you can add only if it is explicitly present in the original recipe. Do not add any field that is not in the original, even if it seems relevant.
