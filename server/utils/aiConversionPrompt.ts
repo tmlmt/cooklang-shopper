@@ -42,6 +42,7 @@ servings: 4          # integer, sets the scaling base
 
 yield: 2%loafs       # use instead of or in addition to servings when the recipe yields a specific item
                      # also accepted: "yield: 300%g" or "yield: about {{300%g}} of bread"
+                     # do not forget the % separator between quantity and unit, e.g. "yield: 300g" or "yield: 24 meatballs" are NOT valid
 
 time:                # values accept: plain minutes (30), compact (1h30m), or natural (45 minutes)
   prep: 1h30m
