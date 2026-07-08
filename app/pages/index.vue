@@ -6,8 +6,7 @@ type ViewMode = "grid" | "list";
 const recipeStore = useRecipeStore();
 const toast = useToast();
 const { isEditor } = useRole();
-const { $t, $ts } = useI18n();
-const { $localeRoute } = useNuxtApp();
+const { $t, $ts, $localeRoute } = useI18n();
 const siteConfig = useSiteConfig();
 
 defineOgImage(
@@ -154,7 +153,7 @@ const { $tc } = useI18n();
               {{ $t("pages.cookbook") }}
             </i18n-link>
             <template v-for="(item, index) in pathItems" :key="item.to">
-              <span class="mx-1 text-base text-muted md:text-lg">/</span>
+              <span class="text-muted mx-1 text-base md:text-lg">/</span>
               <i18n-link
                 :to="item.to"
                 class="text-base md:text-lg"

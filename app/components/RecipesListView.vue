@@ -10,8 +10,7 @@ const props = defineProps<{
   currentPath: string;
 }>();
 
-const { $t, $ts, $tdr } = useI18n();
-const { $localeRoute } = useNuxtApp();
+const { $t, $ts, $tdr, $localeRoute } = useI18n();
 const recipeStore = useRecipeStore();
 const shoppingStore = useShoppingStore();
 await shoppingStore.init();

@@ -3,13 +3,12 @@ import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui";
 import { useLanguageSwitcher } from "~/composables/useLanguageSwitcher";
 
 const { title: appTitle } = await usePublicConfig();
-const { $ts } = useI18n();
+const { $ts, $localeRoute } = useI18n();
 const modal = await useModalAbout();
 const { mobileHeaderMenuItems, desktopHeaderMenuItems, headerActionItems } =
   useHeaderMenu();
 const { languageMenuItem } = useLanguageSwitcher();
 const { loggedIn } = useUserSession();
-const { $localeRoute } = useNuxtApp();
 
 const headerOpen = ref(false);
 
@@ -70,7 +69,7 @@ const wrapForMobile = (items: DropdownMenuItem[]) =>
     >
       <template #left>
         <span
-          class="flex min-w-0 flex-row items-center gap-2 text-xl font-bold text-highlighted"
+          class="text-highlighted flex min-w-0 flex-row items-center gap-2 text-xl font-bold"
         >
           <Icon
             name="material-symbols:chef-hat-rounded"

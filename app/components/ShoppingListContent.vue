@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, h } from "vue";
-import { useNuxtApp } from "#imports";
 import type { TableColumn } from "@nuxt/ui";
 import type { RecipeInfo } from "~~/shared/types";
 import type { RecipeChoices, AddedIngredient } from "@tmlmt/cooklang-parser";
@@ -188,7 +187,7 @@ const UButton = resolveComponent("UButton");
 const ULink = resolveComponent("ULink");
 const UInputNumber = resolveComponent("UInputNumber");
 const UBadge = resolveComponent("UBadge");
-const { $localeRoute } = useNuxtApp();
+const { $localeRoute } = useI18n();
 
 function choicesLabel(choices?: RecipeChoices): string | null {
   if (!choices) return null;
@@ -338,7 +337,7 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
         :is-checked-fn="isCheckedFn"
         :on-check-fn="onCheckFn"
       />
-      <p v-else class="text-sm text-muted">
+      <p v-else class="text-muted text-sm">
         {{ $ts("shoppingList.emptyList") }}
       </p>
       <UButton
@@ -410,7 +409,7 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
           :items="manualItems"
           :on-delete-fn="onRemoveManualItemFn"
         />
-        <p v-else class="text-sm text-muted">
+        <p v-else class="text-muted text-sm">
           {{ $ts("shoppingList.emptyList") }}
         </p>
         <UForm
