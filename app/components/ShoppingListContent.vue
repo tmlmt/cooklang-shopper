@@ -338,7 +338,7 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
         :is-checked-fn="isCheckedFn"
         :on-check-fn="onCheckFn"
       />
-      <p v-else class="text-muted text-sm">
+      <p v-else class="text-sm text-muted">
         {{ $ts("shoppingList.emptyList") }}
       </p>
       <UButton
@@ -410,7 +410,7 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
           :items="manualItems"
           :on-delete-fn="onRemoveManualItemFn"
         />
-        <p v-else class="text-muted text-sm">
+        <p v-else class="text-sm text-muted">
           {{ $ts("shoppingList.emptyList") }}
         </p>
         <UForm
