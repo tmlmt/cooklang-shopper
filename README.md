@@ -248,13 +248,11 @@ Translations are managed via a public Crowdin project that you are welcome to co
 ### Status
 
 <!--TRANSLATION_STATUS_START-->
-
-| Language    |                       Translation (%) |                      Proofreading (%) |
-| ----------- | ------------------------------------: | ------------------------------------: |
-| 🇩🇰 Dansk    |   ![95%](https://progress-bar.xyz/95) |   ![31%](https://progress-bar.xyz/31) |
-| 🇺🇸 English  | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
+| Language | Translation (%) | Proofreading (%) |
+| --- | ---: | ---: |
+| 🇩🇰 Dansk | ![100%](https://progress-bar.xyz/100) | ![29%](https://progress-bar.xyz/29) |
+| 🇺🇸 English | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
 | 🇫🇷 Français | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
-
 <!--TRANSLATION_STATUS_END-->
 
 ## Screenshots
