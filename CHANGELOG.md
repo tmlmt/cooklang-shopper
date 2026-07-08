@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.18.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.18.0...v0.18.1)
+
+### 🚀 Enhancements
+
+- **auth:** Revoke account sessions when user is deleted or deactivated ([c77f44e](https://github.com/tmlmt/cooklang-shopper/commit/c77f44e))
+- **shopping-list:** Visual improvements ([c26c2a7](https://github.com/tmlmt/cooklang-shopper/commit/c26c2a7))
+- **shopping-list:** Add buttons to clear lists ([dbe7bdd](https://github.com/tmlmt/cooklang-shopper/commit/dbe7bdd))
+
+### 🩹 Fixes
+
+- **shopping-list:** Prevent free-hand item addition form from re-validating after submission success ([462d066](https://github.com/tmlmt/cooklang-shopper/commit/462d066))
+
+### 🏡 Chore
+
+- Lint tailwind classes ([d7e1777](https://github.com/tmlmt/cooklang-shopper/commit/d7e1777))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.18.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.17.3...v0.18.0)
