@@ -12,8 +12,7 @@ import {
 } from "@tmlmt/cooklang-parser";
 
 type IngredientQuantityEntry =
-  | IngredientQuantityGroup
-  | IngredientQuantityAndGroup;
+  IngredientQuantityGroup | IngredientQuantityAndGroup;
 
 const { $ts } = useI18n();
 const recipeT = inject<typeof $ts>("recipeT", $ts);
@@ -242,7 +241,7 @@ const displayMode = computed<DisplayMode>(() => {
 
     <!-- Mode 5: Complex case - bullet list -->
     <template v-else-if="displayMode.type === 'complex'">
-      <span class="font-bold">{{ optionalPrefix }}{{ ingredient.name }}</span
+      {{ optionalPrefix }}<span class="font-bold">{{ ingredient.name }}</span
       >:
       <ul class="ml-4 list-inside list-disc">
         <li v-for="(entry, idx) in displayMode.entries" :key="idx">
@@ -320,7 +319,7 @@ const displayMode = computed<DisplayMode>(() => {
 
     <!-- No quantities -->
     <template v-else>
-      <span class="font-bold">{{ optionalPrefix }}{{ ingredient.name }}</span>
+      {{ optionalPrefix }}<span class="font-bold">{{ ingredient.name }}</span>
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
