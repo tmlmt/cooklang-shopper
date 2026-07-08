@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.18.3
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.18.2...v0.18.3)
+
+### 🩹 Fixes
+
+- **ai:** Align instruction for locale with i18n implementation ([2c7ee09](https://github.com/tmlmt/cooklang-shopper/commit/2c7ee09))
+- **ai:** Improvements for cookware syntax ([a0efde7](https://github.com/tmlmt/cooklang-shopper/commit/a0efde7))
+- **ai:** Improve construction of yield metadata ([f2d4ab5](https://github.com/tmlmt/cooklang-shopper/commit/f2d4ab5))
+- **ingredients:** Always render "(optional)" in normal weight ([2940c74](https://github.com/tmlmt/cooklang-shopper/commit/2940c74))
+- **parser:** Round range bounds of ingredient quantities when scaling recipes by non-clean factor ([d5168ed](https://github.com/tmlmt/cooklang-shopper/commit/d5168ed))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.18.2
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.18.1...v0.18.2)
