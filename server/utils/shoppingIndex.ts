@@ -406,7 +406,9 @@ export async function addRecipeToList(
   // recipe twice by switching languages.
   const { baseKey: baseRecipePath } = parseRecipeKey(recipePath);
   const isDuplicate = sl.recipes.some((r) => {
-    const rRaw = r.path?.startsWith("./") ? r.path.substring(2) : (r.path ?? "");
+    const rRaw = r.path?.startsWith("./")
+      ? r.path.substring(2)
+      : (r.path ?? "");
     const { baseKey: rBase } = parseRecipeKey(rRaw);
     return rBase === baseRecipePath;
   });
@@ -453,7 +455,9 @@ export async function updateRecipeInList(
   // Match by base path to find the stored entry (which may have a lang code)
   const { baseKey: baseRecipePath } = parseRecipeKey(recipePath);
   const existingIdx = sl.recipes.findIndex((r) => {
-    const rRaw = r.path?.startsWith("./") ? r.path.substring(2) : (r.path ?? "");
+    const rRaw = r.path?.startsWith("./")
+      ? r.path.substring(2)
+      : (r.path ?? "");
     const { baseKey: rBase } = parseRecipeKey(rRaw);
     return rBase === baseRecipePath;
   });
@@ -504,7 +508,9 @@ export async function removeRecipeFromList(
   // Match by base path (the caller always sends the base path, without lang code)
   const { baseKey: baseRecipePath } = parseRecipeKey(recipePath);
   const recipeIdx = sl.recipes.findIndex((r) => {
-    const rRaw = r.path?.startsWith("./") ? r.path.substring(2) : (r.path ?? "");
+    const rRaw = r.path?.startsWith("./")
+      ? r.path.substring(2)
+      : (r.path ?? "");
     const { baseKey: rBase } = parseRecipeKey(rRaw);
     return rBase === baseRecipePath;
   });
@@ -540,6 +546,50 @@ export async function clearList(
     if (userLists.size === 0) index.delete(userKey);
   }
   await deleteFiles(userKey, listName);
+}
+
+export async function clearAllRecipes(
+  userKey: string,
+  listName: string = "",
+): Promise<void> {
+  const sl = getShoppingList(userKey, listName);
+  if (!sl) return;
+  while (sl.recipes.length > 0) {
+    sl.removeRecipe(0);
+  }
+  if (sl.manualItems.length === 0) {
+    const userLists = index.get(userKey);
+    if (userLists) {
+      userLists.delete(listName);
+      if (userLists.size === 0) index.delete(userKey);
+    }
+    await deleteFiles(userKey, listName);
+  } else {
+    await writeListFile(userKey, listName);
+  }
+  broadcastListUpdate(userKey, getShoppingListData(userKey, listName));
+}
+
+export async function clearAllManualItems(
+  userKey: string,
+  listName: string = "",
+): Promise<void> {
+  const sl = getShoppingList(userKey, listName);
+  if (!sl) return;
+  while (sl.manualItems.length > 0) {
+    sl.removeManualItem(0);
+  }
+  if (sl.recipes.length === 0) {
+    const userLists = index.get(userKey);
+    if (userLists) {
+      userLists.delete(listName);
+      if (userLists.size === 0) index.delete(userKey);
+    }
+    await deleteFiles(userKey, listName);
+  } else {
+    await writeListFile(userKey, listName);
+  }
+  broadcastListUpdate(userKey, getShoppingListData(userKey, listName));
 }
 
 export async function checkIngredient(

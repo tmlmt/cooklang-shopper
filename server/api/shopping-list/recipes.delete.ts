@@ -1,5 +1,5 @@
 interface RemoveRecipeBody {
-  path: string;
+  path?: string;
 }
 
 export default defineEventHandler(async (event) => {
@@ -20,10 +20,15 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody<RemoveRecipeBody>(event);
 
-  if (!body.path || typeof body.path !== "string") {
+  if (!body.path) {
+    await clearAllRecipes(userKey, listName);
+    return getShoppingListData(userKey, listName);
+  }
+
+  if (typeof body.path !== "string") {
     throw createError({
       status: 400,
-      statusText: "path is required",
+      statusText: "path must be a string",
     });
   }
   validateRecipePath(body.path);

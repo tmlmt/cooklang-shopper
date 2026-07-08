@@ -30,6 +30,9 @@ const props = withDefaults(
       unit?: string,
     ) => Promise<void>;
     onRemoveManualItemFn?: (index: number) => Promise<void>;
+    onClearRecipesFn?: () => Promise<void>;
+    onClearManualItemsFn?: () => Promise<void>;
+    onClearListFn?: () => Promise<void>;
   }>(),
   {
     canEditServings: true,
@@ -41,6 +44,9 @@ const props = withDefaults(
     onRemoveRecipeFn: undefined,
     onAddManualItemFn: undefined,
     onRemoveManualItemFn: undefined,
+    onClearRecipesFn: undefined,
+    onClearManualItemsFn: undefined,
+    onClearListFn: undefined,
   },
 );
 
@@ -331,6 +337,19 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
       <p v-else class="text-muted text-sm">
         {{ $ts("shoppingList.emptyList") }}
       </p>
+      <UButton
+        v-if="
+          onClearListFn &&
+          (recipeSelection.length > 0 || manualItems.length > 0)
+        "
+        :label="$ts('actions.clearList')"
+        color="neutral"
+        variant="soft"
+        size="xs"
+        icon="i-lucide-trash-2"
+        class="mt-2 self-start"
+        @click="onClearListFn()"
+      />
     </div>
 
     <!-- Right column: selected recipes + free-hand items -->
@@ -340,9 +359,20 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
         :ui="{ root: 'bg-neutral-50 dark:bg-neutral-900', body: 'p-3 sm:p-4' }"
       >
         <template #header>
-          <h2 class="text-sm font-semibold">
-            {{ $ts("shoppingList.selectedRecipes") }}
-          </h2>
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-semibold">
+              {{ $ts("shoppingList.selectedRecipes") }}
+            </h2>
+            <UButton
+              v-if="onClearRecipesFn && recipeSelection.length > 0"
+              :label="$ts('actions.clearList')"
+              color="error"
+              variant="ghost"
+              size="xs"
+              icon="i-lucide-trash-2"
+              @click="onClearRecipesFn()"
+            />
+          </div>
         </template>
         <UTable
           :data="recipeSelection"
@@ -356,9 +386,20 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
         :ui="{ root: 'bg-neutral-50 dark:bg-neutral-900', body: 'p-3 sm:p-4' }"
       >
         <template #header>
-          <h2 class="text-sm font-semibold">
-            {{ $ts("shoppingList.freehandItems") }}
-          </h2>
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-semibold">
+              {{ $ts("shoppingList.freehandItems") }}
+            </h2>
+            <UButton
+              v-if="onClearManualItemsFn && manualItems.length > 0"
+              :label="$ts('actions.clearList')"
+              color="error"
+              variant="ghost"
+              size="xs"
+              icon="i-lucide-trash-2"
+              @click="onClearManualItemsFn()"
+            />
+          </div>
         </template>
         <ManualItemsList
           v-if="manualItems.length > 0"

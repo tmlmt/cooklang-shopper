@@ -74,6 +74,8 @@ export const useShoppingStore = defineStore("shopping", () => {
     editServings: actions.editServings,
     removeRecipe: actions.removeRecipe,
     clearList,
+    clearRecipes: actions.clearRecipes,
+    clearManualItems: actions.clearManualItems,
     switchToOwnList,
     checkIngredient: actions.checkIngredient,
     isChecked: actions.isChecked,

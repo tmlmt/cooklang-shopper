@@ -150,6 +150,22 @@ export function useShoppingListActions(options?: {
     return true;
   }
 
+  async function clearRecipes(): Promise<void> {
+    const data = await $fetchWithHeaders<ShoppingListResponse>(url("recipes"), {
+      method: "DELETE",
+      body: {},
+    });
+    applyResponse(data);
+  }
+
+  async function clearManualItems(): Promise<void> {
+    const data = await $fetchWithHeaders<ShoppingListResponse>(
+      url("manual-items"),
+      { method: "DELETE", body: {} },
+    );
+    applyResponse(data);
+  }
+
   return {
     recipeSelection,
     ingredients,
@@ -165,5 +181,7 @@ export function useShoppingListActions(options?: {
     addRecipe,
     addManualItem,
     removeManualItem,
+    clearRecipes,
+    clearManualItems,
   };
 }

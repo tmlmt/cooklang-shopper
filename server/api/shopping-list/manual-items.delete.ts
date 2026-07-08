@@ -1,5 +1,5 @@
 interface RemoveManualItemBody {
-  index: number;
+  index?: number;
 }
 
 export default defineEventHandler(async (event) => {
@@ -19,6 +19,11 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody<RemoveManualItemBody>(event);
+
+  if (body.index === undefined) {
+    await clearAllManualItems(userKey, listName);
+    return getShoppingListData(userKey, listName);
+  }
 
   if (typeof body.index !== "number" || body.index < 0) {
     throw createError({

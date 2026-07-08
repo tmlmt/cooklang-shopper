@@ -153,8 +153,11 @@ watch(
       :on-uncheck-all-fn="shoppingStore.uncheckAll"
       :on-edit-servings-fn="(p, v, c) => shoppingStore.editServings(p, v, c)"
       :on-remove-recipe-fn="shoppingStore.removeRecipe"
+      :on-clear-recipes-fn="shoppingStore.clearRecipes"
       :on-add-manual-item-fn="shoppingStore.addManualItem"
       :on-remove-manual-item-fn="shoppingStore.removeManualItem"
+      :on-clear-manual-items-fn="shoppingStore.clearManualItems"
+      :on-clear-list-fn="shoppingStore.clearList"
       :show-choices="true"
       :track-initial-servings="true"
     />
