@@ -365,8 +365,7 @@ async function openLocaleModal() {
 
 const siteConfig = useSiteConfig();
 const recipeMeta = recipe.value?.metadata as
-  | Record<string, unknown>
-  | undefined;
+  Record<string, unknown> | undefined;
 const titleMeta = recipe.value?.metadata.title || recipeName;
 const descriptionMeta =
   (recipeMeta?.description as string) ||
@@ -1315,7 +1314,7 @@ watch(
             segment
           }}</span>
         </p>
-        <h1 class="hidden items-center gap-2 text-3xl font-bold md:flex">
+        <h1 class="hidden items-center gap-2 text-4xl font-extrabold md:flex">
           {{ recipe.metadata.title ?? $t("recipe.untitled") }}
           <RecipeLanguageSelector
             v-if="showLocaleSelector"
@@ -1323,7 +1322,7 @@ watch(
             @open="openLocaleModal"
           />
         </h1>
-        <h1 class="flex items-center gap-2 text-2xl font-bold md:hidden">
+        <h1 class="flex items-center gap-2 text-3xl font-extrabold md:hidden">
           {{ recipe.metadata.title ?? $t("recipe.untitled") }}
           <RecipeLanguageSelector
             v-if="showLocaleSelector"
@@ -1414,7 +1413,9 @@ watch(
             <UButton
               :variant="editLocale === undefined ? 'solid' : 'outline'"
               color="neutral"
-              :label="defaultLocale?.toUpperCase() ?? $ts('translate.defaultLocale')"
+              :label="
+                defaultLocale?.toUpperCase() ?? $ts('translate.defaultLocale')
+              "
               @click="loadVariantInEditor(undefined)"
             />
             <UButton
