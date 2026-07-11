@@ -238,6 +238,15 @@ Cooklang-Shopper has multiple internationalization (i18n) features:
   - File naming convention with a base recipe name <baseName>: `<baseName>.cook` is considered as the default variant, and `<baseName>.<lang>.cook` as the variant for locale `<lang>` which should be the 2-digit code of the language as per [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes). It is recommended to also specify the locale in the recipe frontmatter/metadata using the `locale` key, especially for the default variant.
 - Possibility to select whether all the labels on a recipe details page should be displayed in the same locale as the recipe content, or as the UI.
 
+### Configuration
+
+Deployment-specific locale settings can be overridden at runtime via the optional `i18n` section of `config.yaml` (see `config.yaml.example`). One can select the `defaultLocale`, `fallbackLocale` and `enabledLocales`.
+
+All values must match locale codes shipped with the build (see Status sub-section below). Notes:
+
+- Non-enabled locales are hidden from the swither but its physical route still resolves, as routes are build-baked.
+- The app uses a `prefix_except_default` routing strategy with `en` as the build default. As a result, any other default set via `config.yaml` will be served under its prefix with `/` redirecting there. The routing strategy is baked at build and can't change at runtime.
+
 ### Contribution
 
 Translations are managed via a public Crowdin project that you are welcome to contribute to.
@@ -248,11 +257,13 @@ Translations are managed via a public Crowdin project that you are welcome to co
 ### Status
 
 <!--TRANSLATION_STATUS_START-->
-| Language | Translation (%) | Proofreading (%) |
-| --- | ---: | ---: |
-| 🇩🇰 Dansk | ![100%](https://progress-bar.xyz/100) | ![29%](https://progress-bar.xyz/29) |
-| 🇺🇸 English | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
+
+| Language    |                       Translation (%) |                      Proofreading (%) |
+| ----------- | ------------------------------------: | ------------------------------------: |
+| 🇩🇰 Dansk    | ![100%](https://progress-bar.xyz/100) |   ![29%](https://progress-bar.xyz/29) |
+| 🇺🇸 English  | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
 | 🇫🇷 Français | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
+
 <!--TRANSLATION_STATUS_END-->
 
 ## Screenshots
