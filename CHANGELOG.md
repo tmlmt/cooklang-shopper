@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.18.5
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.18.4...v0.18.5)
+
+### 🚀 Enhancements
+
+- **i18n:** Allow configuration at runtime of default, fallback and enabled locales ([f82b60c](https://github.com/tmlmt/cooklang-shopper/commit/f82b60c))
+
+### 🩹 Fixes
+
+- **aiConverter:** Make fetch SSRF-safe ([052fb42](https://github.com/tmlmt/cooklang-shopper/commit/052fb42))
+
+### 🎨 Styles
+
+- **recipe:** Increase title size and weight ([d7ad473](https://github.com/tmlmt/cooklang-shopper/commit/d7ad473))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.18.4
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.18.3...v0.18.4)
