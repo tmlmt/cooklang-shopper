@@ -28,7 +28,7 @@ const MIN_CONTENT_LENGTH = 200;
 export async function scrapeRecipeText(url: string): Promise<string> {
   let html: string;
   try {
-    const response = await fetch(url, {
+    const response = await safeFetch(url, {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (compatible; CooklangShopper/1.0; +https://github.com/tmlmt/cooklang-shopper)",
