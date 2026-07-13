@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.19.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.18.5...v0.19.0)
+
+### 🚀 Enhancements
+
+- Maintain a product catalog, match ingredients and send to online store (nemlig) ([3790d49](https://github.com/tmlmt/cooklang-shopper/commit/3790d49))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.18.5
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.18.4...v0.18.5)
