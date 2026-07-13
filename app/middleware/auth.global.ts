@@ -1,6 +1,6 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   const { loggedIn } = useUserSession();
-  const { shopping, sharing, experimental } = await usePublicConfig();
+  const { shopping, sharing, cart } = await usePublicConfig();
 
   // Strip any locale prefix (e.g. /fr/s/r/token → /s/r/token) so all path
   // checks below work regardless of the active UI language.
@@ -52,7 +52,20 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
   }
 
-  if (canonicalPath === "/cart" && !experimental.value) {
+  if (
+    (canonicalPath === "/cart" || canonicalPath === "/catalog") &&
+    !cart.value
+  ) {
     return navigateTo("/");
+  }
+
+  if (
+    (canonicalPath === "/cart" || canonicalPath === "/catalog") &&
+    cart.value === "editor-only"
+  ) {
+    const { user } = useUserSession();
+    if (!hasEditorAccess(user.value?.role)) {
+      return navigateTo("/");
+    }
   }
 });

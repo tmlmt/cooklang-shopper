@@ -92,8 +92,15 @@ sessionSecret: "<session-secret>"
 # shopping:              
 #   enabled: false        # false (disabled), true (all users), or "editor-only"
 
-# Experimental Features (Shopping Cart)
-# experimental: false     # disable (false), enable (true)
+# Shopping Cart feature (product catalog + cart matching + store integration)
+# Requires the Shopping List feature (shopping.enabled) to also be enabled.
+# cart:
+#   enabled: false        # false (disabled), true (all users), or "editor-only"
+#   # Optional online store integration. When set, users can send their
+#   # matched cart directly to the store's basket from the Shopping Cart page.
+#   # The catalog product keys must match the store's product IDs.
+#   store:
+#     provider: nemlig    # id of a supported store adapter (currently: nemlig)
 
 # Base URL of this instance (required for OIDC and federation)
 # baseUrl: "https://cookbook.example.com"

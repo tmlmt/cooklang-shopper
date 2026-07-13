@@ -5,7 +5,7 @@
 
 Self-hosted, Nuxt-powered web app to manage cooklang recipes, create a shopping list, fill a cart with matching products and send it to an online store. Using the [`@tmlmt/cooklang-parser`](https://cooklang-parser.tmlmt.com/v3) Typescript parser, in its v3 version (alpha stage).
 
-The app is currently in pre-v1 i.e beta version and in active development. Only recipe management (browsing, viewing, creating, editing) and shopping lists are functional at the moment while the rest is partially developed and therefore hidden an `experimental` flag. Feel free to test it out and report issues or feature requests.
+The app is currently in pre-v1 and in active development. Recipe management (browsing, viewing, creating, editing), shopping lists and the shopping cart (product catalog, cart matching and online store integration) are functional, and versions v0.19+ can be considered as release candidates for v1. Feel free to test it out and report issues or feature requests.
 
 ## Features
 
@@ -43,7 +43,7 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
 - **🌍 Internationalization (i18n)** — multilingual UI and recipe content support. More details in the [Translation](#translations) section, including how to contribute.
 - **🛡️ Security hardening** — built-in HTTP security headers (CSP with nonce, HSTS, X-Frame-Options), request size limiting, rate limiting, and SRI via [nuxt-security](https://nuxt-security.vercel.app/)
 
-### 🛒 Shopping list
+### 📝 Shopping list
 
 > Opt-in: requires `shopping.enabled: true` (or `"editor-only"`) in `config.yaml`.
 
@@ -53,11 +53,32 @@ The app is currently in pre-v1 i.e beta version and in active development. Only 
 - **Pantry management** — define a per-user pantry in TOML format; pantry items are automatically deducted from the shopping list so ingredients you already have at home never appear
 - **Category configuration** — define a per-user ingredient categorization file to group shopping list items by aisle or category (e.g. Dairy, Bakery, Produce); uncategorized items fall into "Other"
 
-### ⚠️ Experimental (not stable and not recommended for use)
+### 🛒 Shopping cart
 
-> Requires `experimental: true` in `config.yaml`.
+> Opt-in: requires `cart.enabled: true` (or `"editor-only"`) in `config.yaml`. Requires the Shopping list feature to also be enabled.
 
-- **🛒 Shopping cart** — match aggregated ingredients against a product catalog (TOML-based) and identify unmatched items
+- **Product catalog** — maintain a per-user product catalog (TOML-based) mapping store products to ingredients
+- **Cart matching** — match aggregated shopping-list ingredients against the catalog to build a priced cart, and surface unmatched ingredients with the reason they could not be matched
+- **Online store integration** — connect to a supported online store and send the matched cart straight to its basket. Subsequent changes to the shopping list are synced as a diff, so the store basket always mirrors your cart
+
+#### Online store adapters
+
+Online stores are supported through small **adapters**. Only [nemlig.com](https://www.nemlig.com/) ships today, but adding another store is straightforward:
+
+1. Create `server/utils/onlineStore/adapters/<your-store>.ts` exporting an object that implements the `OnlineStoreAdapter` interface (`server/utils/onlineStore/types.ts`). You need to provide:
+   - `id` — the provider id used in `config.yaml`
+   - `rateLimitMs` — minimum delay enforced between sequential store calls
+   - `login(credentials, ctx)` — authenticate and return a `StoreSession`
+   - `addToBasket(session, productId, quantity, ctx)` — add a quantity of a product
+   - `removeFromBasket(session, productId, quantity, ctx)` — remove a quantity of a product
+2. Register it in `server/utils/onlineStore/adapters/index.ts`.
+3. Use the store's own product IDs as the keys in the product catalog, so matched products map directly to basket items.
+4. Always perform outbound HTTP calls through the provided `safeFetch` helper (SSRF protection). For cookie-session stores (the most common case), the `adapterHelpers.ts` module provides two ready-made utilities:
+   - `cookieHeader(session)` — converts stored `Set-Cookie` values into a `Cookie` request header
+   - `jsonPost(url, body, session?, options?)` — performs a JSON POST, attaches the cookie session if provided, and throws a 502 on non-OK responses. Pass `options.extractError` to parse a store-specific error field from the response body.
+5. Open a pull request so others can benefit from it.
+
+Credentials are only used to open a session with the store and are never persisted, logged or returned to the client.
 
 ## Getting started
 
@@ -260,9 +281,9 @@ Translations are managed via a public Crowdin project that you are welcome to co
 
 | Language    |                       Translation (%) |                      Proofreading (%) |
 | ----------- | ------------------------------------: | ------------------------------------: |
-| 🇩🇰 Dansk    | ![100%](https://progress-bar.xyz/100) |   ![29%](https://progress-bar.xyz/29) |
+| 🇩🇰 Dansk    | ![100%](https://progress-bar.xyz/100) |   ![23%](https://progress-bar.xyz/23) |
 | 🇺🇸 English  | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
-| 🇫🇷 Français | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
+| 🇫🇷 Français |   ![99%](https://progress-bar.xyz/99) |   ![79%](https://progress-bar.xyz/79) |
 
 <!--TRANSLATION_STATUS_END-->
 

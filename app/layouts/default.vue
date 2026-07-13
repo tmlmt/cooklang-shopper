@@ -8,8 +8,9 @@ import { navigateTo } from "#imports";
 import { useLanguageSwitcher } from "~/composables/useLanguageSwitcher";
 
 const route = useRoute();
-const { title: appTitle, sharing, experimental } = await usePublicConfig();
+const { title: appTitle, sharing } = await usePublicConfig();
 const { shoppingEnabled } = await useShoppingEnabled();
+const { cartEnabled } = await useCartEnabled();
 const { hasInAppHistory } = usePreviousRoute();
 const { loggedIn } = useUserSession();
 const { isAdmin } = useRole();
@@ -78,7 +79,7 @@ const wrapForMobile = (items: DropdownMenuItem[]) =>
 const mobileMenuGroups = computed<DropdownMenuItem[][]>(() => {
   const pageGroups = mobileHeaderMenuItems.value as DropdownMenuItem[][];
   return [
-    ...(shoppingEnabled.value || experimental.value
+    ...(shoppingEnabled.value || cartEnabled.value
       ? [navigationItems.value as DropdownMenuItem[]]
       : []),
     ...pageGroups,
@@ -108,7 +109,12 @@ const navigationItems = computed<BreadcrumbItem[]>(() => {
         active: route.path === $localePath({ name: "list" }),
       });
     }
-    if (experimental.value) {
+    if (cartEnabled.value) {
+      items.push({
+        label: $ts("pages.productCatalog"),
+        to: $localeRoute("/catalog"),
+        active: route.path === $localePath({ name: "catalog" }),
+      });
       items.push({
         label: $ts("pages.shoppingCart"),
         to: $localeRoute("/cart"),
@@ -161,8 +167,13 @@ const navRight = computed(() => {
     };
   } else if (
     route.path === $localePath({ name: "list" }) &&
-    experimental.value
+    cartEnabled.value
   ) {
+    return {
+      text: $ts("nav.continueTo", { page: $ts("pages.productCatalog") }),
+      to: $localeRoute("/catalog"),
+    };
+  } else if (route.path === $localePath({ name: "catalog" })) {
     return {
       text: $ts("nav.continueTo", { page: $ts("pages.shoppingCart") }),
       to: $localeRoute("/cart"),
@@ -200,10 +211,15 @@ const navLeft = computed(() => {
       text: $ts("nav.backTo", { page: $ts("pages.pantry") }),
       to: $localeRoute("/pantry"),
     };
-  } else if (route.path === $localePath({ name: "cart" })) {
+  } else if (route.path === $localePath({ name: "catalog" })) {
     return {
       text: $ts("nav.backTo", { page: $ts("pages.shoppingList") }),
       to: $localeRoute("/list"),
+    };
+  } else if (route.path === $localePath({ name: "cart" })) {
+    return {
+      text: $ts("nav.backTo", { page: $ts("pages.productCatalog") }),
+      to: $localeRoute("/catalog"),
     };
   } else {
     return undefined;
@@ -266,7 +282,7 @@ const navLeft = computed(() => {
         </span>
       </template>
       <UBreadcrumb
-        v-if="shoppingEnabled || experimental"
+        v-if="shoppingEnabled || cartEnabled"
         :ui="{ root: 'mt-1', link: 'text-base' }"
         :items="navigationItems"
       />

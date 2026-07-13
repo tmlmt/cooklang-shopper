@@ -1,0 +1,3 @@
+{
+  "placeholder": "# TOML-format for produktkatalog\nSe https://cooklang-parser.tmlmt.com/v3/guide-product-catalog.html\n\n[eggs]\naliases = [\"oeuf\", \"huevo\"]\n01123 = { name = \"Enkelt æg\", size = \"1\", price = 2 }\n11244 = { name = \"Pakke med 6 æg\", size = \"6\", price = 10 }\n\n[flour]\naliases = [\"farine\", \"Mehl\"]\n01124 = { name = \"Lille pakke\", size = \"100%g\", price = 1.5 }\n14141 = { name = \"Stor pakke\", size = \"6%kg\", price = 10 }"
+}

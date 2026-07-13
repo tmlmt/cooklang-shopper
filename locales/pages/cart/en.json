@@ -1,8 +1,27 @@
 {
   "description": "Cooklang-style recipe management and shopping list creation with automated online shopping cart generation",
+  "cart": "Cart",
   "noMatchingProducts": "Ingredients without corresponding products",
-  "columnProduct": "Product Name",
-  "columnIngredient": "Ingredient Name",
+  "columnProduct": "Product",
+  "columnIngredient": "Ingredient",
   "columnQuantity": "Quantity",
-  "columnReason": "Reason"
+  "columnPrice": "Price",
+  "columnReason": "Reason",
+  "summaryTotal": "Total",
+  "emptyCart": "No products matched yet",
+  "emptyMisMatch": "All ingredients matched a product",
+  "emptyCatalogHint": "Your product catalog is empty. Add products to start matching.",
+  "emptyListHint": "Your shopping list is empty. Add recipes to build a cart.",
+  "goToCatalog": "Go to Product Catalog",
+  "goToList": "Go to Shopping List",
+  "sendToStore": "Send to store",
+  "sendToStoreHint": "Store integration coming soon.",
+  "reasons": {
+    "incompatibleUnits": "Incompatible units between ingredient and available products",
+    "noProduct": "No product in the catalog matches the ingredient",
+    "noQuantity": "Ingredient without quantity: skipped",
+    "textValue": "Ingredient with text value: skipped",
+    "textValue_incompatibleUnits": "Ingredient with text value and incompatible units: skipped",
+    "unknown": "Unknown error"
+  }
 }

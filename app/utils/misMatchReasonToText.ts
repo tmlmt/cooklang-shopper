@@ -1,18 +1,22 @@
 import type { NoProductMatchErrorCode } from "@tmlmt/cooklang-parser";
 
+/**
+ * Maps a mismatch reason code to its i18n key (under the cart page locale,
+ * `reasons.*`). The caller is responsible for translating the returned key.
+ */
 export default function (val: NoProductMatchErrorCode): string {
   switch (val) {
     case "incompatibleUnits":
-      return "Incompatible units between ingredient and available products";
+      return "reasons.incompatibleUnits";
     case "noProduct":
-      return "No product in the catalog matches the ingredient";
+      return "reasons.noProduct";
     case "noQuantity":
-      return "Ingredient without quantity: skipped";
+      return "reasons.noQuantity";
     case "textValue":
-      return "Ingredient with text value: skipped";
+      return "reasons.textValue";
     case "textValue_incompatibleUnits":
-      return "Ingredient with text value and incompatible units: skipped";
+      return "reasons.textValue_incompatibleUnits";
     default:
-      return "Unknown error";
+      return "reasons.unknown";
   }
 }

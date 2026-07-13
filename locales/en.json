@@ -3,6 +3,7 @@
     "recipes": "Recipes",
     "pantry": "Pantry",
     "shoppingList": "Shopping List",
+    "productCatalog": "Product Catalog",
     "shoppingCart": "Shopping Cart",
     "cookbook": "Cookbook",
     "authentication": "Authentication"
@@ -189,7 +190,37 @@
     "recipesMatching": "Recipes matching \"{term}\"..."
   },
   "errors": {
-    "recipeNotFound": "Recipe not found"
+    "recipeNotFound": "Recipe not found",
+    "catalogInvalid": "Invalid product catalog",
+    "connectionError": "Connection error"
+  },
+  "onlineStore": {
+    "sendToStore": "Online store",
+    "sendToStoreHint": "Connect to your online store to send your shopping cart directly to its basket.",
+    "connectTo": "Connect to {provider}",
+    "connectTitle": "Connect to {provider}",
+    "connect": "Connect",
+    "goToCart": "Go to cart",
+    "connected": "Connected to the store",
+    "connectFailed": "Could not connect to the store",
+    "disconnect": "Disconnect",
+    "disconnected": "Disconnected from the store",
+    "username": "Username",
+    "password": "Password",
+    "usernameRequired": "Please enter your username",
+    "passwordRequired": "Please enter your password",
+    "credentialsHint": "Your credentials are used only to open a session with the store and are never stored.",
+    "readyToSend": "Your cart is ready to be sent to the store.",
+    "upToDate": "The store basket is up to date with your cart.",
+    "nothingToSend": "There are no matched products to send.",
+    "sendCart": "Send cart",
+    "updateCart": "Update basket",
+    "clearCart": "Clear basket",
+    "cleared": "Store basket cleared",
+    "clearFailed": "Could not clear the store basket",
+    "syncSuccess": "Cart sent to the store",
+    "syncFailed": "Could not send the cart to the store",
+    "syncPartial": "{count} item could not be sent | {count} items could not be sent"
   },
   "toast": {
     "success": "Success",
@@ -218,6 +249,7 @@
     "servingsUpdateError": "Failed to update servings",
     "pantryInvalid": "Invalid pantry",
     "pantrySaved": "Pantry saved",
+    "catalogSaved": "Product catalog saved",
     "categoryConfigSaved": "Category config saved",
     "categoryConfigInvalid": "Invalid category config",
     "visibilityUpdated": "Visibility updated",

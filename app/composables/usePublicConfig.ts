@@ -19,7 +19,9 @@ export async function usePublicConfig() {
       title: "",
       description: undefined as string | undefined,
       shopping: false as ShoppingEnabled,
-      experimental: false,
+      cart: false as ShoppingEnabled,
+      onlineStoreProvider: undefined as string | undefined,
+      onlineStoreCartUrl: undefined as string | undefined,
       authProviders: [
         { type: "password", name: "local" },
       ] as PublicAuthProvider[],
@@ -31,7 +33,9 @@ export async function usePublicConfig() {
 
   const title = computed(() => data.value?.title || "");
   const shopping = computed(() => data.value?.shopping ?? false);
-  const experimental = computed(() => data.value?.experimental ?? false);
+  const cart = computed(() => data.value?.cart ?? false);
+  const onlineStoreProvider = computed(() => data.value?.onlineStoreProvider);
+  const onlineStoreCartUrl = computed(() => data.value?.onlineStoreCartUrl);
   const sharing = computed(() => data.value?.sharing ?? defaultSharing);
   const baseUrl = computed(() => data.value?.baseUrl ?? "");
   const viewerCanShare = computed(
@@ -56,7 +60,9 @@ export async function usePublicConfig() {
     title,
     description,
     shopping,
-    experimental,
+    cart,
+    onlineStoreProvider,
+    onlineStoreCartUrl,
     sharing,
     baseUrl,
     viewerCanShare,

@@ -156,6 +156,18 @@ export interface ShoppingConfig {
   enabled: ShoppingEnabled;
 }
 
+/** Non-secret configuration for the online store integration. */
+export interface OnlineStoreConfig {
+  /** Adapter id, e.g. "nemlig". Must match a registered adapter. */
+  provider: string;
+}
+
+export interface CartConfig {
+  enabled: ShoppingEnabled;
+  /** Optional online store integration for sending the cart. */
+  store?: OnlineStoreConfig;
+}
+
 export type AiProviderType = "openai" | "anthropic" | "local";
 
 export interface AiConfig {
@@ -176,7 +188,7 @@ export interface AppConfig {
   sessionSecret: string;
   ogImageSecret?: string;
   shopping?: ShoppingConfig;
-  experimental?: boolean;
+  cart?: CartConfig;
   title?: string;
   description?: string;
   baseUrl?: string;
@@ -265,6 +277,32 @@ export interface ShoppingListShareLink {
   expiresAt: string | null;
   createdAt: string;
   expired: boolean;
+}
+
+/** A single product line to send to the online store cart. */
+export interface OnlineStoreItem {
+  productId: string;
+  quantity: number;
+}
+
+/** Connection status of the online store integration for the current user. */
+export interface OnlineStoreStatus {
+  /** Whether a store integration is configured at all. */
+  configured: boolean;
+  /** The configured adapter id, if any. */
+  provider?: string;
+  /** Whether the current user has an active store session. */
+  connected: boolean;
+  /** The items last successfully sent to the store, for diff-based sync. */
+  lastSent: OnlineStoreItem[];
+}
+
+/** Result of syncing the cart to the online store. */
+export interface OnlineStoreSyncResult {
+  added: OnlineStoreItem[];
+  removed: OnlineStoreItem[];
+  failed: Array<OnlineStoreItem & { error: string }>;
+  lastSent: OnlineStoreItem[];
 }
 
 // https://stackoverflow.com/questions/78945320/how-to-handle-nodejs-errors-in-typescript

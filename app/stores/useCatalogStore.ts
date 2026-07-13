@@ -5,11 +5,19 @@ export const useCatalogStore = defineStore("catalog", () => {
     // only fetch if the catalog is empty
     if (rawCatalog.value) return;
 
-    const data = await $fetchWithHeaders<string>("/api/catalog");
+    const data = await $fetchWithHeaders<{ content: string }>("/api/catalog");
     if (data) {
-      rawCatalog.value = data;
+      rawCatalog.value = data.content;
     }
   }
 
-  return { rawCatalog, fetchCatalog };
+  async function saveCatalog(content: string) {
+    const data = await $fetchWithHeaders<{ content: string }>("/api/catalog", {
+      method: "PUT",
+      body: { content },
+    });
+    rawCatalog.value = data.content;
+  }
+
+  return { rawCatalog, fetchCatalog, saveCatalog };
 });

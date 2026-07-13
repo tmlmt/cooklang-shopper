@@ -1,8 +1,27 @@
 {
   "description": "Cooklang-stil opskrift management og shopping liste skabelse med automatiseret online indkøbskurv generation",
+  "cart": "Kurv",
   "noMatchingProducts": "Ingredienser uden tilsvarende produkter",
-  "columnProduct": "Produkt Navn",
-  "columnIngredient": "Ingrediens Navn",
+  "columnProduct": "Produkt",
+  "columnIngredient": "Ingrediens",
   "columnQuantity": "Mængde",
-  "columnReason": "Årsag"
+  "columnPrice": "Pris",
+  "columnReason": "Årsag",
+  "summaryTotal": "I alt",
+  "emptyCart": "Ingen produkter matchet endnu",
+  "emptyMisMatch": "Alle ingredienser matchede et produkt",
+  "emptyCatalogHint": "Dit produktkatalog er tomt. Tilføj produkter for at begynde matchning.",
+  "emptyListHint": "Din indkøbsliste er tom. Tilføj opskrifter for at opbygge en kurv.",
+  "goToCatalog": "Gå til produktkatalog",
+  "goToList": "Gå til indkøbsliste",
+  "sendToStore": "Send til butik",
+  "sendToStoreHint": "Butiksintegration kommer snart.",
+  "reasons": {
+    "incompatibleUnits": "Inkompatible enheder mellem ingrediens og tilgængelige produkter",
+    "noProduct": "Intet produkt i kataloget matcher ingrediensen",
+    "noQuantity": "Ingrediens uden mængde: sprunget over",
+    "textValue": "Ingrediens med tekstværdi: sprunget over",
+    "textValue_incompatibleUnits": "Ingrediens med tekstværdi og inkompatible enheder: sprunget over",
+    "unknown": "Ukendt fejl"
+  }
 }

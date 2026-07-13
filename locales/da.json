@@ -3,6 +3,7 @@
     "recipes": "Opskrifter",
     "pantry": "Pantry",
     "shoppingList": "Indkøbsliste",
+    "productCatalog": "Produktkatalog",
     "shoppingCart": "Indkøbskurv",
     "cookbook": "Kogebog",
     "authentication": "Autentificering"
@@ -189,7 +190,37 @@
     "recipesMatching": "Opskrifter der matcher \"{term}\"..."
   },
   "errors": {
-    "recipeNotFound": "Opskrift ikke fundet"
+    "recipeNotFound": "Opskrift ikke fundet",
+    "catalogInvalid": "Ugyldigt produktkatalog",
+    "connectionError": "Forbindelsesfejl"
+  },
+  "onlineStore": {
+    "sendToStore": "Onlinebutik",
+    "sendToStoreHint": "Forbind til din onlinebutik for at sende din indkøbskurv direkte til dens kurv.",
+    "connectTo": "Forbind til {provider}",
+    "connectTitle": "Forbind til {provider}",
+    "connect": "Forbind",
+    "goToCart": "Gå til kurv",
+    "connected": "Forbundet til butikken",
+    "connectFailed": "Kunne ikke forbinde til butikken",
+    "disconnect": "Afbryd",
+    "disconnected": "Afbrudt fra butikken",
+    "username": "Brugernavn",
+    "password": "Adgangskode",
+    "usernameRequired": "Indtast venligst dit brugernavn",
+    "passwordRequired": "Indtast venligst din adgangskode",
+    "credentialsHint": "Dine loginoplysninger bruges kun til at åbne en session med butikken og gemmes aldrig.",
+    "readyToSend": "Din kurv er klar til at blive sendt til butikken.",
+    "upToDate": "Butikkens kurv er opdateret med din kurv.",
+    "nothingToSend": "Der er ingen matchede produkter at sende.",
+    "sendCart": "Send kurv",
+    "updateCart": "Opdater kurv",
+    "clearCart": "Tøm kurv",
+    "cleared": "Butikkens kurv er tømt",
+    "clearFailed": "Kunne ikke tømme butikkens kurv",
+    "syncSuccess": "Kurv sendt til butikken",
+    "syncFailed": "Kunne ikke sende kurven til butikken",
+    "syncPartial": "{count} vare kunne ikke sendes | {count} varer kunne ikke sendes"
   },
   "toast": {
     "success": "Succes",
@@ -218,6 +249,7 @@
     "servingsUpdateError": "Kunne ikke opdatere portioner",
     "pantryInvalid": "Ugyldigt pantry",
     "pantrySaved": "Pantry gemt",
+    "catalogSaved": "Produktkatalog gemt",
     "categoryConfigSaved": "Kategori konfiguration gemt",
     "categoryConfigInvalid": "Ugyldig kategori konfiguration",
     "visibilityUpdated": "Synlighed opdateret",

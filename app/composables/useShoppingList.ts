@@ -21,6 +21,9 @@ export default async function () {
         choices: recipe.choices,
       });
     }
+    for (const item of shoppingStore.manualItems) {
+      shoppingList.addManualItem(item);
+    }
     return shoppingList;
   }
 

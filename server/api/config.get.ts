@@ -1,4 +1,5 @@
 import { getAppConfig } from "#server/utils/appConfig";
+import { getAdapter } from "#server/utils/onlineStore/adapters";
 import type {
   PublicAuthProvider,
   PublicSharingConfig,
@@ -26,12 +27,18 @@ export default defineEventHandler(async (event) => {
   );
 
   const shopping: ShoppingEnabled = config.shopping?.enabled ?? false;
+  const cart: ShoppingEnabled = config.cart?.enabled ?? false;
+
+  const provider = config.cart?.store?.provider;
+  const storeAdapter = provider ? getAdapter(provider) : undefined;
 
   return {
     title: config.title || "Cooklang Shopper",
     description: config.description,
     shopping,
-    experimental: config.experimental ?? false,
+    cart,
+    onlineStoreProvider: provider,
+    onlineStoreCartUrl: storeAdapter?.cartUrl,
     authProviders,
     sharing,
     baseUrl: config.baseUrl,

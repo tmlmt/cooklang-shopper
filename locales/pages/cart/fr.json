@@ -1,8 +1,27 @@
 {
   "description": "Gestion de livre de recettes écrites en Cooklang et création de listes de courses avec génération automatique de panier en ligne",
+  "cart": "Panier",
   "noMatchingProducts": "Ingrédients sans produits correspondants",
-  "columnProduct": "Nom du produit",
-  "columnIngredient": "Nom de l'ingrédient",
+  "columnProduct": "Produit",
+  "columnIngredient": "Ingrédient",
   "columnQuantity": "Quantité",
-  "columnReason": "Raison"
+  "columnPrice": "Prix",
+  "columnReason": "Raison",
+  "summaryTotal": "Total",
+  "emptyCart": "Aucun produit associé pour le moment",
+  "emptyMisMatch": "Tous les ingrédients ont été associés à un produit",
+  "emptyCatalogHint": "Votre catalogue de produits est vide. Ajoutez des produits pour commencer l'association.",
+  "emptyListHint": "Votre liste de courses est vide. Ajoutez des recettes pour constituer un panier.",
+  "goToCatalog": "Aller au catalogue de produits",
+  "goToList": "Aller à la liste de courses",
+  "sendToStore": "Envoyer au magasin",
+  "sendToStoreHint": "Intégration au magasin bientôt disponible.",
+  "reasons": {
+    "incompatibleUnits": "Unités incompatibles entre l'ingrédient et les produits disponibles",
+    "noProduct": "Aucun produit du catalogue ne correspond à l'ingrédient",
+    "noQuantity": "Ingrédient sans quantité : ignoré",
+    "textValue": "Ingrédient avec valeur textuelle : ignoré",
+    "textValue_incompatibleUnits": "Ingrédient avec valeur textuelle et unités incompatibles : ignoré",
+    "unknown": "Erreur inconnue"
+  }
 }

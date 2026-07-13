@@ -86,6 +86,10 @@ export default defineNuxtConfig({
         driver: "fs",
         base: "./public/categories",
       },
+      catalog: {
+        driver: "fs",
+        base: "./public/catalog",
+      },
     },
   },
 

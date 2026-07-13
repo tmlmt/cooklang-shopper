@@ -3,6 +3,7 @@
     "recipes": "Recettes",
     "pantry": "Garde-manger",
     "shoppingList": "Liste de courses",
+    "productCatalog": "Catalogue de produits",
     "shoppingCart": "Panier",
     "cookbook": "Livre de cuisine",
     "authentication": "Authentification"
@@ -189,7 +190,37 @@
     "recipesMatching": "Recettes correspondant à \"{term}\"..."
   },
   "errors": {
-    "recipeNotFound": "Recette introuvable"
+    "recipeNotFound": "Recette introuvable",
+    "catalogInvalid": "Catalogue de produits invalide",
+    "connectionError": "Erreur de connexion"
+  },
+  "onlineStore": {
+    "sendToStore": "Magasin en ligne",
+    "sendToStoreHint": "Connectez-vous à votre magasin en ligne pour envoyer votre panier directement dans son panier.",
+    "connectTo": "Se connecter à {provider}",
+    "connectTitle": "Se connecter à {provider}",
+    "connect": "Se connecter",
+    "goToCart": "Aller au panier",
+    "connected": "Connecté au magasin",
+    "connectFailed": "Impossible de se connecter au magasin",
+    "disconnect": "Se déconnecter",
+    "disconnected": "Déconnecté du magasin",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "usernameRequired": "Veuillez saisir votre nom d'utilisateur",
+    "passwordRequired": "Veuillez saisir votre mot de passe",
+    "credentialsHint": "Vos identifiants servent uniquement à ouvrir une session avec le magasin et ne sont jamais enregistrés.",
+    "readyToSend": "Votre panier est prêt à être envoyé au magasin.",
+    "upToDate": "Le panier du magasin est à jour avec votre panier.",
+    "nothingToSend": "Aucun produit associé à envoyer.",
+    "sendCart": "Envoyer le panier",
+    "updateCart": "Mettre à jour le panier",
+    "clearCart": "Vider le panier",
+    "cleared": "Panier du magasin vidé",
+    "clearFailed": "Impossible de vider le panier du magasin",
+    "syncSuccess": "Panier envoyé au magasin",
+    "syncFailed": "Impossible d'envoyer le panier au magasin",
+    "syncPartial": "{count} article n'a pas pu être envoyé | {count} articles n'ont pas pu être envoyés"
   },
   "toast": {
     "success": "Succès",
@@ -218,6 +249,7 @@
     "servingsUpdateError": "Échec de la mise à jour des portions",
     "pantryInvalid": "Garde-manger invalide",
     "pantrySaved": "Garde-manger sauvegardé",
+    "catalogSaved": "Catalogue de produits enregistré",
     "categoryConfigSaved": "Catégorisation enregistrée",
     "categoryConfigInvalid": "Catégorisation invalide",
     "visibilityUpdated": "Visibilité mise à jour",

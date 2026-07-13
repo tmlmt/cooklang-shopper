@@ -1,4 +1,5 @@
 import { loadConfig } from "c12";
+import { listAdapterIds } from "#server/utils/onlineStore/adapters";
 import type {
   AppConfig,
   OidcAuthProvider,
@@ -7,6 +8,7 @@ import type {
   MicrosoftAuthProvider,
   AuthProviderEntry,
   ShoppingConfig,
+  CartConfig,
   SharingConfig,
 } from "~~/shared/types";
 
@@ -20,6 +22,10 @@ const AI_PROVIDERS = ["openai", "anthropic", "local"] as const;
 export const ACCOUNT_PROVIDER = "account";
 
 const defaultShopping: ShoppingConfig = {
+  enabled: false,
+};
+
+const defaultCart: CartConfig = {
   enabled: false,
 };
 
@@ -152,6 +158,18 @@ export async function getAppConfig(): Promise<AppConfig> {
 
   config.sharing = { ...defaultSharing, ...config.sharing };
   config.shopping = { ...defaultShopping, ...config.shopping };
+  config.cart = { ...defaultCart, ...config.cart };
+
+  if (config.cart.store) {
+    const provider = config.cart.store.provider;
+    const available = listAdapterIds();
+    if (!provider || !available.includes(provider)) {
+      throw createError({
+        status: 500,
+        message: `Invalid config.cart.store.provider "${provider}". Must be one of: ${available.join(", ")}`,
+      });
+    }
+  }
 
   if (config.ai) {
     const ai = config.ai;
