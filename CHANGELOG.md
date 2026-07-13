@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.19.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.19.0...v0.19.1)
+
+This release rebuilds the app with clean locale files, correcting artifact generation which failed in v0.19.0
+
 ## v0.19.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.18.5...v0.19.0)
