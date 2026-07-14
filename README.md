@@ -250,11 +250,6 @@ Rollback preserves all user data including the database. If a newer version adde
 > sudo systemctl start cooklang-shopper
 > ```
 
-## Roadmap
-
-1. Finalize shopping cart features
-2. Develop feature to send cart to a pre-configured online store
-
 ## Translations
 
 ### Features
