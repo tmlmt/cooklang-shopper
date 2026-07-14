@@ -141,10 +141,28 @@ if [[ -d "$BACKUP_DIR" ]]; then
     info "Restored recipes."
   fi
 
-  # Restore product catalog config
+  # Restore category configurations
+  if [[ -d "$BACKUP_DIR/public/categories" ]]; then
+    cp -a "$BACKUP_DIR/public/categories/." "$DIST_DIR/public/categories/"
+    info "Restored category configurations."
+  fi
+
+  # Restore product catalogs
+  if [[ -d "$BACKUP_DIR/public/catalog" ]]; then
+    cp -a "$BACKUP_DIR/public/catalog/." "$DIST_DIR/public/catalog/"
+    info "Restored product catalogs."
+  fi
+
+  # Restore pantries
+  if [[ -d "$BACKUP_DIR/public/pantry" ]]; then
+    cp -a "$BACKUP_DIR/public/pantry/." "$DIST_DIR/public/pantry/"
+    info "Restored pantries."
+  fi
+
+  # Restore product catalog example
   if [[ -d "$BACKUP_DIR/public/config" ]]; then
     cp -a "$BACKUP_DIR/public/config/." "$DIST_DIR/public/config/"
-    info "Restored product catalog config."
+    info "Restored product catalog example."
   fi
 
   # Restore config.yaml
