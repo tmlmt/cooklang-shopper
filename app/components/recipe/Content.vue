@@ -203,11 +203,11 @@ const visibleStepOverlay = ref<string | null>(null);
       </div>
     </div>
 
-    <div class="col-start-1">
+    <div class="col-start-1 md:pr-12">
       <USeparator
         :ui="{ border: 'border-gray-600' }"
         size="sm"
-        class="mt-4 h-px md:mt-0 md:pr-10"
+        class="mt-4 h-px md:mt-0"
       />
       <h2 class="mt-1 mb-2 text-2xl font-bold">
         {{ recipeT("recipe.ingredients") }}
