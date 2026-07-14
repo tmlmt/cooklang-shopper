@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.19.2
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.19.1...v0.19.2)
+
+### 🩹 Fixes
+
+- **cart:** Make total price reactive ([b7df834](https://github.com/tmlmt/cooklang-shopper/commit/b7df834))
+
+### 🏡 Chore
+
+- **README:** Mention AI recipe translation ([a0806cf](https://github.com/tmlmt/cooklang-shopper/commit/a0806cf))
+- **README:** Add a few details about starting up the app ([f7c786c](https://github.com/tmlmt/cooklang-shopper/commit/f7c786c))
+- **README:** Add product catalog files to list of files stored as plain text files ([bc84794](https://github.com/tmlmt/cooklang-shopper/commit/bc84794))
+- **README:** Remove roadmap now obsolete ([8f8c11b](https://github.com/tmlmt/cooklang-shopper/commit/8f8c11b))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.19.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.19.0...v0.19.1)
