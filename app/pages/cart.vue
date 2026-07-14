@@ -171,7 +171,7 @@ const columnsCart: TableColumn<ProductSelection>[] = [
     accessorKey: "totalPrice",
     header: () => $t("columnPrice"),
     cell: ({ row }) => formatPrice(row.original.totalPrice),
-    footer: formatPrice(summary.value.totalPrice),
+    footer: () => formatPrice(summary.value.totalPrice),
   },
 ];
 
