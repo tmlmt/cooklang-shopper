@@ -154,20 +154,21 @@ Credentials are only used to open a session with the store and are never persist
 
 ### Per-user data files
 
-In line with the file-first approach of the cooklang ecosystem, shopping lists, pantry files and category configuration files are plain text files stored on the server. Each file is scoped to a specific user via a **user key** derived from their login credentials:
+In line with the file-first approach of the cooklang ecosystem, shopping lists, pantry files, category configuration files and product catalog files are plain text files stored on the server. Each file is scoped to a specific user via a **user key** derived from their login credentials:
 
 - For **password authentication**: `password-{username}` (dots in the username replaced with underscores)
 - For **OIDC authentication**: `{provider}-{userId}` (dots in either part replaced with underscores)
 - For **Google / Microsoft accounts**: `account-{id}` (the internal database user id)
 
-| Feature         | Directory                 | Filename pattern                 | Format                  |
-| --------------- | ------------------------- | -------------------------------- | ----------------------- |
-| Shopping list   | `dist/public/recipes/`    | `.shopping-list.{userKey}`       | Cooklang shopping list  |
-| Checked items   | `dist/public/recipes/`    | `.shopping-checked.{userKey}`    | Plain text              |
-| Pantry          | `dist/public/pantry/`     | `pantry.{userKey}.conf`          | [TOML](https://toml.io) |
-| Category config | `dist/public/categories/` | `category-config.{userKey}.conf` | Cooklang category DSL   |
+| Feature         | Directory                 | Filename pattern                 | Format                                                                         |
+| --------------- | ------------------------- | -------------------------------- | ------------------------------------------------------------------------------ |
+| Shopping list   | `dist/public/recipes/`    | `.shopping-list.{userKey}`       | Cooklang shopping list                                                         |
+| Checked items   | `dist/public/recipes/`    | `.shopping-checked.{userKey}`    | Plain text                                                                     |
+| Pantry          | `dist/public/pantry/`     | `pantry.{userKey}.conf`          | [TOML](https://toml.io)                                                        |
+| Category config | `dist/public/categories/` | `category-config.{userKey}.conf` | Cooklang category DSL                                                          |
+| Product catalog | `dist/public/catalog/`    | `catalog.{userKey}.toml`         | [TOML](https://cooklang-parser.tmlmt.com/v3/guide-product-catalog-syntax.html) |
 
-The two latter ones can be edited in-app (Pantry page for the pantry; Category Config in the shopping list menu). You can also create or pre-populate them directly on the server before users log in. Refer to the [Cooklang conventions](https://cooklang.org/docs/conventions/) for the expected file formats.
+The three latter ones can be edited in-app (Pantry page for the pantry; Category Config in the shopping list menu; Product Catalog page for the product catalog). You can also create or pre-populate them directly on the server before users log in. Refer to the [Cooklang conventions](https://cooklang.org/docs/conventions/) for the expected file formats.
 
 ### Account providers (Google / Microsoft)
 
