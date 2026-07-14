@@ -129,8 +129,14 @@ Credentials are only used to open a session with the store and are never persist
    For OG image URL signing, set `NUXT_OG_IMAGE_SECRET` as an environment variable — add it to your `.env` file or process manager config (e.g. a pm2 ecosystem file). A secret is auto-generated at startup if omitted, but setting it explicitly ensures stable signed URLs across restarts. Alternatively, set `ogImageSecret` directly in `config.yaml`.
 
 5. Add your `.cook` recipe files to `dist/public/recipes/`
-6. Start the server once to initialize the database (created automatically at `dist/data/cooklang-shopper.db`)
-7. Set up the systemd service:
+6. Start the server once to initialize the database (created automatically at `dist/data/cooklang-shopper.db`):
+
+   ```
+   cd /path/to/cooklang-shopper/dist
+   node server/index.mjs
+   ```
+
+7. For a persistent setup (launch at startup), set up a systemd service using the provided example:
 
    ```bash
    # Edit the service file to adjust User, WorkingDirectory, and ExecStart paths
@@ -139,7 +145,7 @@ Credentials are only used to open a session with the store and are never persist
    sudo systemctl enable --now cooklang-shopper
    ```
 
-   Alternatively, start the server manually:
+   Alternatively, set up and use [pm2](https://pm2.keymetrics.io/docs/usage/quick-start/) or start the server manually:
 
    ```bash
    cd /path/to/cooklang-shopper/dist
