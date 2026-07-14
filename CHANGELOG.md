@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.19.3
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.19.2...v0.19.3)
+
+### 🩹 Fixes
+
+- **upgrade:** Restore pantries, category configurations and product catalogs ([1c5e260](https://github.com/tmlmt/cooklang-shopper/commit/1c5e260))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.19.2
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.19.1...v0.19.2)
