@@ -78,7 +78,10 @@ const shareItem: DropdownMenuItem = {
 const categoryConfigItem: DropdownMenuItem = {
   label: $ts("actions.categoryConfig"),
   icon: "material-symbols:category",
-  onSelect: () => modalCategoryConfig.open(),
+  onSelect: async () => {
+    const saved = await modalCategoryConfig.open();
+    if (saved) await shoppingStore.fetchList();
+  },
 };
 
 setHeaderMenuItems([categoryConfigItem]);

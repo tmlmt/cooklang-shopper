@@ -1,8 +1,8 @@
 <script setup lang="ts">
-const emit = defineEmits<{ close: [] }>();
+const emit = defineEmits<{ close: [saved: boolean] }>();
 
 defineShortcuts({
-  escape: () => emit("close"),
+  escape: () => emit("close", false),
 });
 
 const { data } = await useFetch("/api/category-config");
@@ -22,14 +22,14 @@ async function save() {
       method: "PUT",
       body: { content: content.value },
     });
-    toast.add({ color: "success", title: $ts('toast.categoryConfigSaved') });
+    toast.add({ color: "success", title: $ts("toast.categoryConfigSaved") });
     savedContent.value = content.value;
-    emit("close");
+    emit("close", true);
   } catch (e: unknown) {
     const message = (e as { data?: { message?: string } })?.data?.message;
     toast.add({
       color: "error",
-      title: $ts('toast.categoryConfigInvalid'),
+      title: $ts("toast.categoryConfigInvalid"),
       description: message,
     });
   } finally {
@@ -57,7 +57,7 @@ function onFileChange(e: Event) {
 
 <template>
   <UModal
-    :close="{ onClick: () => emit('close') }"
+    :close="{ onClick: () => emit('close', false) }"
     :title="$ts('actions.categoryConfig')"
   >
     <template #body>
