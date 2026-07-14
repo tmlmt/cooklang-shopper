@@ -258,6 +258,7 @@ Cooklang-Shopper has multiple internationalization (i18n) features:
 - **Per-recipe language variants**: recipes can be saved and displayed in multiple languages (switch via button next to the recipe title on the recipe details page)
   - File naming convention with a base recipe name <baseName>: `<baseName>.cook` is considered as the default variant, and `<baseName>.<lang>.cook` as the variant for locale `<lang>` which should be the 2-digit code of the language as per [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes). It is recommended to also specify the locale in the recipe frontmatter/metadata using the `locale` key, especially for the default variant.
 - Possibility to select whether all the labels on a recipe details page should be displayed in the same locale as the recipe content, or as the UI.
+- **AI recipe translation**: translate a recipe to the language of your choice in the editor (uses the same provider as for AI recipe conversion)
 
 ### Configuration
 
