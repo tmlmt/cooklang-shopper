@@ -1,4 +1,5 @@
 import { Recipe } from "@tmlmt/cooklang-parser";
+import type { Metadata, MetadataTime } from "@tmlmt/cooklang-parser";
 import { stat } from "node:fs/promises";
 import path from "node:path";
 import type { RecipeIndex } from "~~/shared/types";
@@ -117,23 +118,13 @@ export async function initRecipeIndex() {
 }
 
 function getTimeMetadata(
-  metadata: Record<string, unknown>,
+  metadata: Metadata,
 ):
   | { prep?: number | string; cook?: number | string; total?: number | string }
   | undefined {
-  const time = metadata.time as
-    | {
-        prep?: number | string;
-        cook?: number | string;
-        total?: number | string;
-      }
-    | undefined;
+  const time = metadata.time as MetadataTime | undefined;
   if (!time) return undefined;
-  const result: {
-    prep?: number | string;
-    cook?: number | string;
-    total?: number | string;
-  } = {};
+  const result: MetadataTime = {};
   if (time.prep !== undefined) result.prep = time.prep;
   if (time.cook !== undefined) result.cook = time.cook;
   if (time.total !== undefined) result.total = time.total;
