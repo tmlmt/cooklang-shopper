@@ -23,17 +23,7 @@ const introductionText = computed(() => {
   return intro ? String(intro) : undefined;
 });
 
-const tags = computed<string[]>(() => {
-  if (!recipe) return [];
-  const raw = (recipe.metadata as Record<string, unknown>).tags;
-  if (Array.isArray(raw)) return raw.map(String);
-  if (typeof raw === "string")
-    return raw
-      .split(",")
-      .map((t) => t.trim())
-      .filter(Boolean);
-  return [];
-});
+const tags = computed<string[]>(() => recipe.metadata.tags ?? []);
 
 const standardMetadataKeys = new Set([
   "title",
