@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.19.4
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.19.3...v0.19.4)
+
+### 🩹 Fixes
+
+- **recipe:** Increase right margin on ingredients list ([4c68f79](https://github.com/tmlmt/cooklang-shopper/commit/4c68f79))
+- **list:** Ensure application of  category config to shopping list once updated ([185f685](https://github.com/tmlmt/cooklang-shopper/commit/185f685))
+
+### 💅 Refactors
+
+- **MetadataBlock:** Simplify `tags` computed property ([01ad9db](https://github.com/tmlmt/cooklang-shopper/commit/01ad9db))
+- **shoppingIndex:** Move parseQuantityValue to parser ([eb9f9a7](https://github.com/tmlmt/cooklang-shopper/commit/eb9f9a7))
+
+### 🏡 Chore
+
+- **recipeIndex:** Reuse exported types from cooklang-parser ([d6d1b79](https://github.com/tmlmt/cooklang-shopper/commit/d6d1b79))
+- **i18n:** Import $td and $localeRoute where used ([27a993d](https://github.com/tmlmt/cooklang-shopper/commit/27a993d))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.19.3
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.19.2...v0.19.3)
