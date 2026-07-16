@@ -1,4 +1,8 @@
-import { ShoppingList, Recipe } from "@tmlmt/cooklang-parser";
+import {
+  ShoppingList,
+  Recipe,
+  parseQuantityValue,
+} from "@tmlmt/cooklang-parser";
 import type {
   RecipeChoices,
   ShoppingListRecipeRef,
@@ -19,7 +23,6 @@ import { getRecipeIndex } from "./recipeIndex";
 import { getStreams } from "./sseRegistry";
 import { readPantryFile } from "./pantryUtils";
 import { readCategoryConfigFile } from "./categoryConfigUtils";
-import { parseQuantityValue } from "~~/shared/utils/parseQuantityValue";
 
 const recipesDir = nodePath.resolve(process.cwd(), "public", "recipes");
 

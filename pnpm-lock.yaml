@@ -41,8 +41,8 @@ importers:
         specifier: 1.8.7
         version: 1.8.7(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tmlmt/cooklang-parser':
-        specifier: 3.0.0-alpha.39
-        version: 3.0.0-alpha.39(synckit@0.11.13)
+        specifier: 3.0.0-alpha.40
+        version: 3.0.0-alpha.40(synckit@0.11.13)
       better-sqlite3:
         specifier: 12.11.1
         version: 12.11.1
@@ -3517,8 +3517,8 @@ packages:
       y-protocols: ^1.0.1
       yjs: ^13.5.38
 
-  '@tmlmt/cooklang-parser@3.0.0-alpha.39':
-    resolution: {integrity: sha512-awYGnvC+W0ACkZC9RaU0urK1LLcTmGyUhNu6DEea58mDGhRHcXSgdoZBx0f8XT4Uw67r7AQTf1HSAeTnR8EdiA==}
+  '@tmlmt/cooklang-parser@3.0.0-alpha.40':
+    resolution: {integrity: sha512-D0HhOZgOVirNlAYfmXCcKWzKv9XmdLt5oSZsKJZm3lVXwhd56kfWCDMzkDi+qE0oF1bK4iI2/9kk9R3EJuBtJQ==}
     engines: {node: '>=18'}
 
   '@tybys/wasm-util@0.10.3':
@@ -10838,7 +10838,7 @@ snapshots:
       y-protocols: 1.0.7(yjs@13.6.30)
       yjs: 13.6.30
 
-  '@tmlmt/cooklang-parser@3.0.0-alpha.39(synckit@0.11.13)':
+  '@tmlmt/cooklang-parser@3.0.0-alpha.40(synckit@0.11.13)':
     dependencies:
       big.js: 7.0.1
       smol-toml: 1.7.0
