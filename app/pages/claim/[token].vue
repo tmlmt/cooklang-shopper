@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { $t, $ts } = useI18n();
+const { $t, $ts, $localeRoute } = useI18n();
 
 definePageMeta({
   layout: "naked",

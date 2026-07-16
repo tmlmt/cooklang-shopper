@@ -25,7 +25,7 @@ if (error.value) {
   });
 }
 
-const { $t, $ts } = useI18n();
+const { $t, $ts, $td } = useI18n();
 
 //---------------------------
 // OG Image

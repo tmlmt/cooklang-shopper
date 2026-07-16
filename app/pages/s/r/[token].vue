@@ -123,6 +123,7 @@ const router = useRouter();
 const {
   $t,
   $ts,
+  $td,
   $_ts,
   $getLocale,
   $getLocales,

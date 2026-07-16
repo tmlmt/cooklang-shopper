@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
 
-const { $ts, $tc } = useI18n();
+const { $ts, $tc, $td } = useI18n();
 
 useSeoMeta({
   title: $ts("pages.shoppingList"),

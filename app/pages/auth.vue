@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Role } from "~~/shared/types";
 
-const { $t, $ts } = useI18n();
+const { $t, $ts, $localeRoute } = useI18n();
 
 definePageMeta({
   layout: "naked",

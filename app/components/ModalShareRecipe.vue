@@ -9,7 +9,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{ close: [] }>();
 const toast = useToast();
-const { $ts } = useI18n();
+const { $ts, $td } = useI18n();
 const { isEditor } = useRole();
 const { baseUrl } = await usePublicConfig();
 
