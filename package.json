@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "0.111.0",
-    "@iconify-json/material-symbols": "1.2.84",
+    "@iconify-json/material-symbols": "1.2.85",
     "@iconify-json/prime": "1.2.5",
     "@nuxt/devtools": "3.2.4",
     "@nuxt/eslint": "1.16.0",
@@ -72,7 +72,7 @@
     "human-regex": "2.2.0",
     "nitropack": "2.13.4",
     "nuxt-og-image": "6.7.2",
-    "openai": "6.46.0",
+    "openai": "6.47.0",
     "prettier": "3.9.5",
     "prisma": "7.8.0",
     "sharp": "0.35.3",

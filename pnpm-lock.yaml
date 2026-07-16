@@ -102,8 +102,8 @@ importers:
         specifier: 0.111.0
         version: 0.111.0(zod@4.4.3)
       '@iconify-json/material-symbols':
-        specifier: 1.2.84
-        version: 1.2.84
+        specifier: 1.2.85
+        version: 1.2.85
       '@iconify-json/prime':
         specifier: 1.2.5
         version: 1.2.5
@@ -153,8 +153,8 @@ importers:
         specifier: 6.7.2
         version: 6.7.2(9d65e69ea9f7113dd9bae225f60ae107)
       openai:
-        specifier: 6.46.0
-        version: 6.46.0(ws@8.21.0)(zod@4.4.3)
+        specifier: 6.47.0
+        version: 6.47.0(ws@8.21.0)(zod@4.4.3)
       prettier:
         specifier: 3.9.5
         version: 3.9.5
@@ -899,8 +899,8 @@ packages:
   '@iconify-json/carbon@1.2.23':
     resolution: {integrity: sha512-7apXetbRmEiWDXIQyikFJZyq7pCVBKHYRzmeLdtT7wWoHYdWHwnFcBAzpuLoSh+ZEAfXZapSWEe8iuS6dUqf+Q==}
 
-  '@iconify-json/material-symbols@1.2.84':
-    resolution: {integrity: sha512-DWwjwrrzVNyMShkis47exANpi4uXUSoRE7/1rnOct9yO3SkMbt2I8386V/ou5od22us13bKkfwHitK2zK3Ah3g==}
+  '@iconify-json/material-symbols@1.2.85':
+    resolution: {integrity: sha512-FrnwVJvD1nbLWUS2Zw7LPgTT/8Rq3l1821GsQl/IXjA1DKloaDVpQ8Ugk0IndzlRQrlPywr0a5lN/WWPB4naEA==}
 
   '@iconify-json/prime@1.2.5':
     resolution: {integrity: sha512-5eiiFlr5dx/IDSolBmBeys7407lSuO0gPL5iAeJBckpyaxCB6HYsDW3AFVP5pMI6hm/B5hYjlN1TrSualSBCFA==}
@@ -6137,8 +6137,8 @@ packages:
     resolution: {integrity: sha512-smsWv2LzFjP03xmvFoJ331ss6h+jixfA4UUV/Bsiyuu4YJPfN+FIQGOIiv4w9/+MoHkfkJ22UIaQWRVFRfH6Vw==}
     engines: {node: '>=20'}
 
-  openai@6.46.0:
-    resolution: {integrity: sha512-DFg6jEPT2RO+oAyXtddeUJU8zkGy1OQ1AjGzNIJUMQG03TTqvCpy9tBpQ+2VVVnvrl3E56F8GEin2JYtWpITtA==}
+  openai@6.47.0:
+    resolution: {integrity: sha512-xYr+R9woSzWxVxeiqkkNbHhv89tZDEI6eBMbrdPnv3poh+mijHvbhS35a+3o6xHa411/ns8j5ENY3So9DCXWYw==}
     peerDependencies:
       '@aws-sdk/credential-provider-node': '>=3.972.0 <4'
       '@smithy/hash-node': '>=4.3.0 <5'
@@ -8389,7 +8389,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/material-symbols@1.2.84':
+  '@iconify-json/material-symbols@1.2.85':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -14232,7 +14232,7 @@ snapshots:
       powershell-utils: 0.1.0
       wsl-utils: 0.3.1
 
-  openai@6.46.0(ws@8.21.0)(zod@4.4.3):
+  openai@6.47.0(ws@8.21.0)(zod@4.4.3):
     optionalDependencies:
       ws: 8.21.0
       zod: 4.4.3
