@@ -332,6 +332,14 @@
     "default": "Standard",
     "unspecified": "Uspecificeret"
   },
+  "delimiters": {
+    "openingBracket": "(",
+    "closingBracket": ")",
+    "or": "eller",
+    "and": "og",
+    "about": "≈",
+    "comma": ", "
+  },
   "email": {
     "invitation": {
       "subject": "Du er inviteret til {app}",

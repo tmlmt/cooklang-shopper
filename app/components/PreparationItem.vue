@@ -10,6 +10,9 @@ import type {
 } from "@tmlmt/cooklang-parser";
 import { isAlternativeSelected, isGroupedItem } from "@tmlmt/cooklang-parser";
 
+const { $ts } = useI18n();
+const recipeT = inject<typeof $ts>("recipeT", $ts);
+
 const props = defineProps<{
   step: Step;
   recipe: Recipe;
@@ -112,7 +115,8 @@ function getVisibleAlternatives(
               v-if="visIdx > 0"
               class="text-neutral-500 dark:text-neutral-300"
             >
-              {{ " " }}(or
+              {{ " " }}{{ recipeT("delimiters.openingBracket")
+              }}{{ recipeT("delimiters.or") }}
             </span>
             <span
               :class="[
@@ -147,7 +151,7 @@ function getVisibleAlternatives(
             <span
               v-if="visIdx > 0"
               class="text-neutral-500 dark:text-neutral-300"
-              >)</span
+              >{{ recipeT("delimiters.closingBracket") }}</span
             >
           </template>
         </template>

@@ -103,7 +103,7 @@ const displayMode = computed<DisplayMode>(() => {
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
-        >, {{ ingredient.preparation }}</span
+        >{{ recipeT("delimiters.comma") }}{{ ingredient.preparation }}</span
       >
     </template>
 
@@ -115,7 +115,7 @@ const displayMode = computed<DisplayMode>(() => {
           :unit="displayMode.entries[0].unit"
           :equivalents="displayMode.entries[0].equivalents"
         />
-        and
+        {{ recipeT("delimiters.and") }}
         <RecipeQuantityWithEquivalents
           :quantity="displayMode.entries[1].quantity"
           :unit="displayMode.entries[1].unit"
@@ -127,7 +127,7 @@ const displayMode = computed<DisplayMode>(() => {
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
-        >, {{ ingredient.preparation }}</span
+        >{{ recipeT("delimiters.comma") }}{{ ingredient.preparation }}</span
       >
     </template>
 
@@ -173,15 +173,19 @@ const displayMode = computed<DisplayMode>(() => {
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
-        >, {{ ingredient.preparation }}</span
+        >{{ recipeT("delimiters.comma") }}{{ ingredient.preparation }}</span
       >
       <span class="text-neutral-500 dark:text-neutral-300">
-        {{ " " }}(or
+        {{ " " }}{{ recipeT("delimiters.openingBracket")
+        }}{{ recipeT("delimiters.or") }}
         <template
           v-for="(subgroup, sgIdx) in displayMode.entry.alternatives"
           :key="sgIdx"
         >
-          <template v-if="sgIdx > 0">, or </template>
+          <template v-if="sgIdx > 0"
+            >{{ recipeT("delimiters.comma")
+            }}{{ recipeT("delimiters.or") }}</template
+          >
           <template v-for="(alt, altIdx) in subgroup" :key="altIdx">
             <template v-if="altIdx > 0"> + </template>
             <template v-if="alt.quantities?.length">
@@ -202,7 +206,7 @@ const displayMode = computed<DisplayMode>(() => {
             </template>
             {{ getIngredientName(alt.index) }}
           </template></template
-        >)
+        >{{ recipeT("delimiters.closingBracket") }}
       </span>
     </template>
 
@@ -219,7 +223,8 @@ const displayMode = computed<DisplayMode>(() => {
           />
         </template>
         <template v-if="displayMode.entry.equivalents?.length">
-          {{ " " }}(≈
+          {{ " " }}{{ recipeT("delimiters.openingBracket")
+          }}{{ recipeT("delimiters.about") }}
           <template
             v-for="(eq, idx) in displayMode.entry.equivalents"
             :key="idx"
@@ -227,7 +232,7 @@ const displayMode = computed<DisplayMode>(() => {
             <template v-if="idx > 0">, </template>
             <RecipeSingleQuantity :quantity="eq.quantity" :unit="eq.unit" />
           </template>
-          )
+          {{ recipeT("delimiters.closingBracket") }}
         </template>
       </span>
       {{ " " }}
@@ -235,7 +240,7 @@ const displayMode = computed<DisplayMode>(() => {
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
-        >, {{ ingredient.preparation }}</span
+        >{{ recipeT("delimiters.comma") }}{{ ingredient.preparation }}</span
       >
     </template>
 
@@ -256,15 +261,18 @@ const displayMode = computed<DisplayMode>(() => {
                 />
               </template>
               <template v-if="entry.equivalents?.length">
-                {{ " " }}(≈
+                {{ " " }}{{ recipeT("delimiters.openingBracket")
+                }}{{ recipeT("delimiters.about") }}
                 <template v-for="(eq, eqIdx) in entry.equivalents" :key="eqIdx">
-                  <template v-if="eqIdx > 0">, </template>
+                  <template v-if="eqIdx > 0">{{
+                    recipeT("delimiters.comma")
+                  }}</template>
                   <RecipeSingleQuantity
                     :quantity="eq.quantity"
                     :unit="eq.unit"
                   />
                 </template>
-                )
+                {{ recipeT("delimiters.closingBracket") }}
               </template>
             </span>
           </template>
@@ -281,17 +289,20 @@ const displayMode = computed<DisplayMode>(() => {
           <span
             v-if="ingredient.preparation"
             class="text-neutral-500 dark:text-neutral-300"
-            >, {{ ingredient.preparation }}</span
+            >{{ recipeT("delimiters.comma") }}{{ ingredient.preparation }}</span
           >
-
           <template v-if="hasAlternatives(entry)">
             <span class="text-neutral-500 dark:text-neutral-300">
-              {{ " " }}(or
+              {{ " " }}{{ recipeT("delimiters.openingBracket")
+              }}{{ recipeT("delimiters.or") }}
               <template
                 v-for="(subgroup, sgIdx) in entry.alternatives"
                 :key="sgIdx"
               >
-                <template v-if="sgIdx > 0">, or </template>
+                <template v-if="sgIdx > 0"
+                  >{{ recipeT("delimiters.comma")
+                  }}{{ recipeT("delimiters.or") }}</template
+                >
                 <template v-for="(alt, altIdx) in subgroup" :key="altIdx">
                   <template v-if="altIdx > 0"> + </template>
                   <template v-if="alt.quantities?.length">
@@ -310,7 +321,7 @@ const displayMode = computed<DisplayMode>(() => {
                   </template>
                   {{ getIngredientName(alt.index) }}
                 </template></template
-              >)
+              >{{ recipeT("delimiters.closingBracket") }}
             </span>
           </template>
         </li>
@@ -323,7 +334,7 @@ const displayMode = computed<DisplayMode>(() => {
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
-        >, {{ ingredient.preparation }}</span
+        >{{ recipeT("delimiters.comma") }}{{ ingredient.preparation }}</span
       >
     </template>
   </div>

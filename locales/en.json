@@ -332,6 +332,14 @@
     "default": "Default",
     "unspecified": "Unspecified"
   },
+  "delimiters": {
+    "openingBracket": "(",
+    "closingBracket": ")",
+    "or": "or",
+    "and": "and",
+    "about": "≈",
+    "comma": ", "
+  },
   "email": {
     "invitation": {
       "subject": "You've been invited to {app}",
