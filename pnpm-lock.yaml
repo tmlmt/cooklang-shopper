@@ -41,8 +41,8 @@ importers:
         specifier: 2.4.2
         version: 2.4.2(csstype@3.2.3)(react@19.2.5)
       '@tmlmt/cooklang-parser':
-        specifier: 3.0.0-alpha.40
-        version: 3.0.0-alpha.40(synckit@0.11.13)
+        specifier: 3.0.0-alpha.41
+        version: 3.0.0-alpha.41(synckit@0.11.13)
       '@vue/devtools-api':
         specifier: 8.1.5
         version: 8.1.5
@@ -2971,9 +2971,9 @@ packages:
       y-protocols: ^1.0.1
       yjs: ^13.5.38
 
-  '@tmlmt/cooklang-parser@3.0.0-alpha.40':
-    resolution: {integrity: sha512-D0HhOZgOVirNlAYfmXCcKWzKv9XmdLt5oSZsKJZm3lVXwhd56kfWCDMzkDi+qE0oF1bK4iI2/9kk9R3EJuBtJQ==}
-    engines: {node: '>=18'}
+  '@tmlmt/cooklang-parser@3.0.0-alpha.41':
+    resolution: {integrity: sha512-kDOS+aj6lvw2EgVuZGTyyHp0n/6Ltb91BHWfJbu5oY1Ak/acQgXGNaxihJp/zTLk4CVZ6kEca3+H/Ed3/J0DOg==}
+    engines: {node: '>=22'}
 
   '@tybys/wasm-util@0.10.3':
     resolution: {integrity: sha512-F3fo1MYrRJYL3zER0OUOmkutjr1Vp23m7OsSgp7nq4SP6OqX6C/56XFIPAl5bt3zaBRjmW7SGz3u/6LwFpYcOg==}
@@ -10335,7 +10335,7 @@ snapshots:
       y-protocols: 1.0.7(yjs@13.6.30)
       yjs: 13.6.30
 
-  '@tmlmt/cooklang-parser@3.0.0-alpha.40(synckit@0.11.13)':
+  '@tmlmt/cooklang-parser@3.0.0-alpha.41(synckit@0.11.13)':
     dependencies:
       big.js: 7.0.1
       smol-toml: 1.7.0
