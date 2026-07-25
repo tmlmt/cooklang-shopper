@@ -3,12 +3,13 @@ import type {
   FixedValue,
   Range,
   QuantityWithPlainUnit,
+  Unit,
 } from "@tmlmt/cooklang-parser";
 
 const props = withDefaults(
   defineProps<{
     quantity: FixedValue | Range;
-    unit?: string;
+    unit?: string | Unit;
     equivalents?: QuantityWithPlainUnit[];
     wrapperStart?: string;
     wrapperEnd?: string;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Recipe, type RecipeChoices } from "@tmlmt/cooklang-parser";
-import type { TranslationDict } from "~~/shared/types";
+import type { TranslationDict, IngredientOrder } from "~~/shared/types";
 
 definePageMeta({
   layout: "shared",
@@ -151,6 +151,21 @@ const recipeT: typeof $ts = (key, params, defaultValue) => {
   return $_ts(uiRoute as Parameters<typeof $_ts>[0])(key, params, defaultValue);
 };
 provide("recipeT", recipeT);
+
+const effectiveRecipeLocale = computed(
+  () => currentLocale.value ?? defaultLocale.value,
+);
+const ingredientDisplayLocale = computed(() =>
+  $getLocales().find((l) => l.code === effectiveRecipeLocale.value),
+);
+provide(
+  "ingredientOrder",
+  computed(
+    () =>
+      (ingredientDisplayLocale.value?.ingredientOrder ??
+        "quantity-first") as IngredientOrder,
+  ),
+);
 
 async function applyRecipeUiLocale(
   targetUiLocale: string | undefined,

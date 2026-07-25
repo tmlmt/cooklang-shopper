@@ -241,6 +241,9 @@ export interface LocaleOption {
   label: string;
 }
 
+/** Whether the ingredient name is displayed before or after the quantity block. Default: 'quantity-first'. */
+export type IngredientOrder = "name-first" | "quantity-first";
+
 /** A (possibly nested) i18n translation dictionary loaded for a recipe locale. */
 export type TranslationDict = Record<string, unknown>;
 

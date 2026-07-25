@@ -10,12 +10,17 @@ import {
   isSimpleGroup,
   hasAlternatives,
 } from "@tmlmt/cooklang-parser";
+import type { IngredientOrder } from "~~/shared/types";
 
 type IngredientQuantityEntry =
   IngredientQuantityGroup | IngredientQuantityAndGroup;
 
 const { $ts } = useI18n();
 const recipeT = inject<typeof $ts>("recipeT", $ts);
+const ingredientOrder = inject(
+  "ingredientOrder",
+  ref("quantity-first" as IngredientOrder),
+);
 
 const props = defineProps<{
   ingredient: Ingredient;
@@ -91,15 +96,28 @@ const displayMode = computed<DisplayMode>(() => {
     <!-- Mode 1: Single simple quantity -->
     <template v-if="displayMode.type === 'single'">
       {{ optionalPrefix }}
-      <span>
-        <RecipeQuantityWithEquivalents
-          :quantity="displayMode.entry.quantity"
-          :unit="displayMode.entry.unit"
-          :equivalents="displayMode.entry.equivalents"
-        />
-      </span>
-      {{ " " }}
-      <span class="font-bold">{{ ingredient.name }}</span>
+      <template v-if="ingredientOrder === 'name-first'">
+        <span class="font-bold">{{ ingredient.name }}</span>
+        {{ " " }}
+        <span>
+          <RecipeQuantityWithEquivalents
+            :quantity="displayMode.entry.quantity"
+            :unit="displayMode.entry.unit"
+            :equivalents="displayMode.entry.equivalents"
+          />
+        </span>
+      </template>
+      <template v-else>
+        <span>
+          <RecipeQuantityWithEquivalents
+            :quantity="displayMode.entry.quantity"
+            :unit="displayMode.entry.unit"
+            :equivalents="displayMode.entry.equivalents"
+          />
+        </span>
+        {{ " " }}
+        <span class="font-bold">{{ ingredient.name }}</span>
+      </template>
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
@@ -109,21 +127,40 @@ const displayMode = computed<DisplayMode>(() => {
 
     <!-- Mode 2: Two simple quantities -->
     <template v-else-if="displayMode.type === 'two-plain'">
-      <span>
-        <RecipeQuantityWithEquivalents
-          :quantity="displayMode.entries[0].quantity"
-          :unit="displayMode.entries[0].unit"
-          :equivalents="displayMode.entries[0].equivalents"
-        />
-        {{ recipeT("delimiters.and") }}
-        <RecipeQuantityWithEquivalents
-          :quantity="displayMode.entries[1].quantity"
-          :unit="displayMode.entries[1].unit"
-          :equivalents="displayMode.entries[1].equivalents"
-        />
-      </span>
-      {{ " " }}
-      <span class="font-bold">{{ ingredient.name }}</span>
+      <template v-if="ingredientOrder === 'name-first'">
+        <span class="font-bold">{{ ingredient.name }}</span>
+        {{ " " }}
+        <span>
+          <RecipeQuantityWithEquivalents
+            :quantity="displayMode.entries[0].quantity"
+            :unit="displayMode.entries[0].unit"
+            :equivalents="displayMode.entries[0].equivalents"
+          />
+          {{ recipeT("delimiters.and") }}
+          <RecipeQuantityWithEquivalents
+            :quantity="displayMode.entries[1].quantity"
+            :unit="displayMode.entries[1].unit"
+            :equivalents="displayMode.entries[1].equivalents"
+          />
+        </span>
+      </template>
+      <template v-else>
+        <span>
+          <RecipeQuantityWithEquivalents
+            :quantity="displayMode.entries[0].quantity"
+            :unit="displayMode.entries[0].unit"
+            :equivalents="displayMode.entries[0].equivalents"
+          />
+          {{ recipeT("delimiters.and") }}
+          <RecipeQuantityWithEquivalents
+            :quantity="displayMode.entries[1].quantity"
+            :unit="displayMode.entries[1].unit"
+            :equivalents="displayMode.entries[1].equivalents"
+          />
+        </span>
+        {{ " " }}
+        <span class="font-bold">{{ ingredient.name }}</span>
+      </template>
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
@@ -134,6 +171,10 @@ const displayMode = computed<DisplayMode>(() => {
     <!-- Mode 3: Single entry with alternatives -->
     <template v-else-if="displayMode.type === 'single-with-alts'">
       {{ optionalPrefix }}
+      <template v-if="ingredientOrder === 'name-first'">
+        <span class="font-bold">{{ ingredient.name }}</span>
+        {{ " " }}
+      </template>
       <!-- AND group with alternatives -->
       <template v-if="isAndGroup(displayMode.entry)">
         <span>
@@ -168,8 +209,10 @@ const displayMode = computed<DisplayMode>(() => {
           />
         </span>
       </template>
-      {{ " " }}
-      <span class="font-bold">{{ ingredient.name }}</span>
+      <template v-if="ingredientOrder !== 'name-first'">
+        {{ " " }}
+        <span class="font-bold">{{ ingredient.name }}</span>
+      </template>
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
@@ -188,23 +231,44 @@ const displayMode = computed<DisplayMode>(() => {
           >
           <template v-for="(alt, altIdx) in subgroup" :key="altIdx">
             <template v-if="altIdx > 0"> + </template>
-            <template v-if="alt.quantities?.length">
-              <template
-                v-for="(altQty, qtyIdx) in alt.quantities"
-                :key="qtyIdx"
-              >
-                <template v-if="qtyIdx > 0"> + </template>
-                <RecipeQuantityWithEquivalents
-                  :quantity="altQty.quantity"
-                  :unit="altQty.unit"
-                  :equivalents="altQty.equivalents"
-                  wrapper-start="["
-                  wrapper-end="]"
-                />
+            <template v-if="ingredientOrder === 'name-first'">
+              {{ getIngredientName(alt.index) }}
+              <template v-if="alt.quantities?.length">
+                {{ " " }}
+                <template
+                  v-for="(altQty, qtyIdx) in alt.quantities"
+                  :key="qtyIdx"
+                >
+                  <template v-if="qtyIdx > 0"> + </template>
+                  <RecipeQuantityWithEquivalents
+                    :quantity="altQty.quantity"
+                    :unit="altQty.unit"
+                    :equivalents="altQty.equivalents"
+                    wrapper-start="["
+                    wrapper-end="]"
+                  />
+                </template>
               </template>
-              {{ " " }}
             </template>
-            {{ getIngredientName(alt.index) }}
+            <template v-else>
+              <template v-if="alt.quantities?.length">
+                <template
+                  v-for="(altQty, qtyIdx) in alt.quantities"
+                  :key="qtyIdx"
+                >
+                  <template v-if="qtyIdx > 0"> + </template>
+                  <RecipeQuantityWithEquivalents
+                    :quantity="altQty.quantity"
+                    :unit="altQty.unit"
+                    :equivalents="altQty.equivalents"
+                    wrapper-start="["
+                    wrapper-end="]"
+                  />
+                </template>
+                {{ " " }}
+              </template>
+              {{ getIngredientName(alt.index) }}
+            </template>
           </template></template
         >{{ recipeT("delimiters.closingBracket") }}
       </span>
@@ -213,6 +277,10 @@ const displayMode = computed<DisplayMode>(() => {
     <!-- Mode 4: AND group without alternatives -->
     <template v-else-if="displayMode.type === 'and-group'">
       {{ optionalPrefix }}
+      <template v-if="ingredientOrder === 'name-first'">
+        <span class="font-bold">{{ ingredient.name }}</span>
+        {{ " " }}
+      </template>
       <span>
         <template v-for="(qty, idx) in displayMode.entry.and" :key="idx">
           <template v-if="idx > 0"> + </template>
@@ -235,8 +303,10 @@ const displayMode = computed<DisplayMode>(() => {
           {{ recipeT("delimiters.closingBracket") }}
         </template>
       </span>
-      {{ " " }}
-      <span class="font-bold">{{ ingredient.name }}</span>
+      <template v-if="ingredientOrder !== 'name-first'">
+        {{ " " }}
+        <span class="font-bold">{{ ingredient.name }}</span>
+      </template>
       <span
         v-if="ingredient.preparation"
         class="text-neutral-500 dark:text-neutral-300"
@@ -244,7 +314,7 @@ const displayMode = computed<DisplayMode>(() => {
       >
     </template>
 
-    <!-- Mode 5: Complex case - bullet list -->
+    <!-- Mode 5: Complex case - bullet list (name always first as section header) -->
     <template v-else-if="displayMode.type === 'complex'">
       {{ optionalPrefix }}<span class="font-bold">{{ ingredient.name }}</span
       >:
@@ -305,21 +375,40 @@ const displayMode = computed<DisplayMode>(() => {
                 >
                 <template v-for="(alt, altIdx) in subgroup" :key="altIdx">
                   <template v-if="altIdx > 0"> + </template>
-                  <template v-if="alt.quantities?.length">
-                    <template
-                      v-for="(altQty, qtyIdx) in alt.quantities"
-                      :key="qtyIdx"
-                    >
-                      <template v-if="qtyIdx > 0"> + </template>
-                      <RecipeQuantityWithEquivalents
-                        :quantity="altQty.quantity"
-                        :unit="altQty.unit"
-                        :equivalents="altQty.equivalents"
-                      />
+                  <template v-if="ingredientOrder === 'name-first'">
+                    {{ getIngredientName(alt.index) }}
+                    <template v-if="alt.quantities?.length">
+                      {{ " " }}
+                      <template
+                        v-for="(altQty, qtyIdx) in alt.quantities"
+                        :key="qtyIdx"
+                      >
+                        <template v-if="qtyIdx > 0"> + </template>
+                        <RecipeQuantityWithEquivalents
+                          :quantity="altQty.quantity"
+                          :unit="altQty.unit"
+                          :equivalents="altQty.equivalents"
+                        />
+                      </template>
                     </template>
-                    {{ " " }}
                   </template>
-                  {{ getIngredientName(alt.index) }}
+                  <template v-else>
+                    <template v-if="alt.quantities?.length">
+                      <template
+                        v-for="(altQty, qtyIdx) in alt.quantities"
+                        :key="qtyIdx"
+                      >
+                        <template v-if="qtyIdx > 0"> + </template>
+                        <RecipeQuantityWithEquivalents
+                          :quantity="altQty.quantity"
+                          :unit="altQty.unit"
+                          :equivalents="altQty.equivalents"
+                        />
+                      </template>
+                      {{ " " }}
+                    </template>
+                    {{ getIngredientName(alt.index) }}
+                  </template>
                 </template></template
               >{{ recipeT("delimiters.closingBracket") }}
             </span>

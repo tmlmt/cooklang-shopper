@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { FixedValue, Range } from "@tmlmt/cooklang-parser";
+import type { FixedValue, Range, Unit } from "@tmlmt/cooklang-parser";
 import { formatQuantityWithUnit } from "@tmlmt/cooklang-parser";
 
 const props = defineProps<{
   quantity?: FixedValue | Range;
-  unit?: string;
+  unit?: string | Unit;
 }>();
 
 const displayText = computed(() => {

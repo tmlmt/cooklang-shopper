@@ -9,9 +9,14 @@ import type {
   QuantityWithExtendedUnit,
 } from "@tmlmt/cooklang-parser";
 import { isAlternativeSelected, isGroupedItem } from "@tmlmt/cooklang-parser";
+import type { IngredientOrder } from "~~/shared/types";
 
 const { $ts } = useI18n();
 const recipeT = inject<typeof $ts>("recipeT", $ts);
+const ingredientOrder = inject(
+  "ingredientOrder",
+  ref("quantity-first" as IngredientOrder),
+);
 
 const props = defineProps<{
   step: Step;
@@ -93,16 +98,32 @@ function getVisibleAlternatives(
             ]"
           >
             <template v-if="item.alternatives[0]?.quantity">
-              <RecipeQuantityWithEquivalents
-                :quantity="item.alternatives[0]!.quantity!"
-                :unit="item.alternatives[0]!.unit?.name"
-                :equivalents="
-                  toPlainEquivalents(item.alternatives[0]!.equivalents)
-                "
-              />
-              {{ " " }}
+              <template v-if="ingredientOrder === 'name-first'">
+                {{ item.alternatives[0]?.displayName }}
+                {{ " " }}
+                <RecipeQuantityWithEquivalents
+                  :quantity="item.alternatives[0]!.quantity!"
+                  :unit="item.alternatives[0]!.unit?.name"
+                  :equivalents="
+                    toPlainEquivalents(item.alternatives[0]!.equivalents)
+                  "
+                />
+              </template>
+              <template v-else>
+                <RecipeQuantityWithEquivalents
+                  :quantity="item.alternatives[0]!.quantity!"
+                  :unit="item.alternatives[0]!.unit?.name"
+                  :equivalents="
+                    toPlainEquivalents(item.alternatives[0]!.equivalents)
+                  "
+                />
+                {{ " " }}
+                {{ item.alternatives[0]?.displayName }}
+              </template>
             </template>
-            {{ item.alternatives[0]?.displayName }}
+            <template v-else>
+              {{ item.alternatives[0]?.displayName }}
+            </template>
           </span>
         </template>
         <!-- Inline alternatives -->
@@ -125,21 +146,51 @@ function getVisibleAlternatives(
               ]"
             >
               <template v-if="visibleAlt.alt.quantity">
-                <RecipeQuantityWithEquivalents
-                  :quantity="visibleAlt.alt.quantity"
-                  :unit="visibleAlt.alt.unit?.name"
-                  :equivalents="toPlainEquivalents(visibleAlt.alt.equivalents)"
-                  :wrapper-start="visIdx > 0 ? '[' : undefined"
-                  :wrapper-end="visIdx > 0 ? ']' : undefined"
-                />
-                {{ " " }}
+                <template v-if="ingredientOrder === 'name-first'">
+                  <span
+                    :class="{
+                      'font-medium text-secondary': visIdx === 0,
+                    }"
+                    >{{ visibleAlt.alt.displayName }}</span
+                  >
+                  {{ " " }}
+                  <RecipeQuantityWithEquivalents
+                    :quantity="visibleAlt.alt.quantity"
+                    :unit="visibleAlt.alt.unit?.name"
+                    :equivalents="
+                      toPlainEquivalents(visibleAlt.alt.equivalents)
+                    "
+                    :wrapper-start="visIdx > 0 ? '[' : undefined"
+                    :wrapper-end="visIdx > 0 ? ']' : undefined"
+                  />
+                </template>
+                <template v-else>
+                  <RecipeQuantityWithEquivalents
+                    :quantity="visibleAlt.alt.quantity"
+                    :unit="visibleAlt.alt.unit?.name"
+                    :equivalents="
+                      toPlainEquivalents(visibleAlt.alt.equivalents)
+                    "
+                    :wrapper-start="visIdx > 0 ? '[' : undefined"
+                    :wrapper-end="visIdx > 0 ? ']' : undefined"
+                  />
+                  {{ " " }}
+                  <span
+                    :class="{
+                      'font-medium text-secondary': visIdx === 0,
+                    }"
+                    >{{ visibleAlt.alt.displayName }}</span
+                  >
+                </template>
               </template>
-              <span
-                :class="{
-                  'font-medium text-secondary': visIdx === 0,
-                }"
-                >{{ visibleAlt.alt.displayName }}</span
-              >
+              <template v-else>
+                <span
+                  :class="{
+                    'font-medium text-secondary': visIdx === 0,
+                  }"
+                  >{{ visibleAlt.alt.displayName }}</span
+                >
+              </template>
               <template v-if="visibleAlt.alt.note && !hasInlineChoice(item)">
                 <span
                   class="font-normal text-neutral-500 italic dark:text-neutral-300"
