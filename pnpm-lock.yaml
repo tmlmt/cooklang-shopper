@@ -101,6 +101,9 @@ importers:
       '@anthropic-ai/sdk':
         specifier: 0.115.0
         version: 0.115.0(zod@4.4.3)
+      '@iconify-json/lucide':
+        specifier: 1.2.119
+        version: 1.2.119
       '@iconify-json/material-symbols':
         specifier: 1.2.87
         version: 1.2.87
@@ -907,6 +910,9 @@ packages:
   '@i18n-micro/utils@1.0.7':
     resolution: {integrity: sha512-Qme8H3qkluiu7Z/ZQll8aTd6xuGbwjs8hYzuX4Yr7mnYI8Q9ThphJmyEJ5xQQuNEGA0oT2npOq1BYXs4ig9KpA==}
     engines: {node: '>=18'}
+
+  '@iconify-json/lucide@1.2.119':
+    resolution: {integrity: sha512-KbrC7fT5wPshV1KLRM0k91poP0OH4eKEVywEOH0FCczKb+qth8Pcq1Hy9kS2tXeF52s23qzLnG8AJsExPSupeA==}
 
   '@iconify-json/material-symbols@1.2.87':
     resolution: {integrity: sha512-q7rEWgfn9w0wnN19YF/BibZPM4kcd/HjGYpg/TtZUYBs6JCVLSWhwcTBD8mOKtvy0AFEdusQemoploFonl6PdA==}
@@ -8008,6 +8014,10 @@ snapshots:
     dependencies:
       '@i18n-micro/types': 1.2.6
       globby: 14.1.0
+
+  '@iconify-json/lucide@1.2.119':
+    dependencies:
+      '@iconify/types': 2.0.0
 
   '@iconify-json/material-symbols@1.2.87':
     dependencies:

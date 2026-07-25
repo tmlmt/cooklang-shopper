@@ -58,6 +58,9 @@ export default defineNuxtConfig({
 
   icon: {
     serverBundle: "remote",
+    clientBundle: {
+      scan: true,
+    },
   },
 
   image: {
