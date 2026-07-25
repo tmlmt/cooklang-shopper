@@ -1047,7 +1047,8 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
   if (route.query.mode === "edit" || isManualEdit.value) {
     try {
       // Save to the locale-specific file if one is being edited
-      const savePath = editLocale.value ? `${path}.${editLocale.value}` : path;
+      const savedLocale = editLocale.value;
+      const savePath = savedLocale ? `${path}.${savedLocale}` : path;
       await $fetchWithHeaders(`/api/recipe/${savePath}`, {
         method: "PUT",
         body: { recipe: event.data.recipe },
@@ -1058,17 +1059,15 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
         description: $ts("toast.recipeSaved"),
       });
       isEditMode.value = false;
-      if (editLocale.value) {
+      rawRecipe.value = event.data.recipe;
+      editLocale.value = undefined;
+      setLocale(savedLocale);
+      await syncPageUiLocale(savedLocale);
+      if (savedLocale) {
         // Saved a language variant: update view to show it and refresh index for updated locales
-        rawRecipe.value = event.data.recipe;
-        setLocale(editLocale.value);
-        editLocale.value = undefined;
-        await syncPageUiLocale(currentLocale.value);
         await recipeStore.fetchIndex();
       } else {
-        rawRecipe.value = event.data.recipe;
-        setLocale(undefined);
-        await syncPageUiLocale(undefined);
+        // default locale
         recipeStore.updateRecipe(recipeName, recipeDir, event.data.recipe);
       }
       await refreshImageManifest();
