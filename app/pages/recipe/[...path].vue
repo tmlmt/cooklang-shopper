@@ -278,15 +278,31 @@ async function applyRecipeUiLocale(
   return true;
 }
 
+/**
+ * Keep page UI labels aligned with the currently viewed recipe locale when the
+ * page is in "same as recipe" mode.
+ */
+async function syncPageUiLocale(recipeLocale: string | undefined) {
+  if (pageLanguageModeCookie.value !== "recipe") {
+    activeUiLocale.value = undefined;
+    return false;
+  }
+
+  const targetUiLocale =
+    recipeLocale ?? defaultLocale.value ?? $defaultLocale();
+  if (targetUiLocale && targetUiLocale !== $getLocale()) {
+    return applyRecipeUiLocale(targetUiLocale);
+  }
+
+  activeUiLocale.value = undefined;
+  return false;
+}
+
 // On page load: apply Same as Recipe mode from the cookie. The cache is serialized
 // via the SSR payload, so when this runs on the client the dictionary is already
 // present — no hydration re-fetch and no race with an immediate user toggle.
 if (pageLanguageModeCookie.value === "recipe") {
-  const initialUiLocale =
-    viewLocale.value ?? defaultLocale.value ?? $defaultLocale();
-  if (initialUiLocale && initialUiLocale !== $getLocale()) {
-    await applyRecipeUiLocale(initialUiLocale);
-  }
+  await syncPageUiLocale(viewLocale.value);
 }
 
 /**
@@ -1047,10 +1063,12 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
         rawRecipe.value = event.data.recipe;
         setLocale(editLocale.value);
         editLocale.value = undefined;
+        await syncPageUiLocale(currentLocale.value);
         await recipeStore.fetchIndex();
       } else {
         rawRecipe.value = event.data.recipe;
         setLocale(undefined);
+        await syncPageUiLocale(undefined);
         recipeStore.updateRecipe(recipeName, recipeDir, event.data.recipe);
       }
       await refreshImageManifest();
