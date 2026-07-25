@@ -6,6 +6,7 @@ REPO="tmlmt/cooklang-shopper"
 API_URL="https://api.github.com/repos/${REPO}/releases"
 DIST_DIR="dist"
 BACKUP_DIR="dist.bak"
+DIST_PKG="${DIST_DIR}/server/package.json"
 
 # --- Color helpers ---
 info()    { printf '\033[34mINFO\033[0m: %s\n' "$1"; }
@@ -15,12 +16,17 @@ warn()    { printf '\033[33mWARN\033[0m: %s\n' "$1"; }
 
 # --- Argument parsing ---
 EDGE=false
+FORCE=false
 TAG=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --edge)
       EDGE=true
+      shift
+      ;;
+    --force)
+      FORCE=true
       shift
       ;;
     --tag)
@@ -40,6 +46,7 @@ Upgrade cooklang-shopper to the latest release.
 Options:
   --edge        Include pre-releases when finding the latest version
   --tag <tag>   Download a specific version (e.g. v1.0.0)
+  --force       Proceed even if the release is not newer than the installed version
   -h, --help    Show this help message
 EOF
       exit 0
@@ -94,6 +101,32 @@ if [[ -z "$RELEASE_TAG" ]]; then
   exit 1
 fi
 info "Found release: $RELEASE_TAG"
+
+# --- Version check ---
+if [[ -f "$DIST_PKG" ]]; then
+  CURRENT_VERSION=$(grep '"version"' "$DIST_PKG" | head -1 | sed 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
+  CV="${CURRENT_VERSION#v}"
+  RV="${RELEASE_TAG#v}"
+  if [[ "$CV" == "$RV" ]]; then
+    if [[ "$FORCE" == true ]]; then
+      warn "Already running $CURRENT_VERSION, but --force was specified. Proceeding..."
+    else
+      success "Already running the latest version ($CURRENT_VERSION). Nothing to do."
+      exit 0
+    fi
+  else
+    NEWER=$(printf '%s\n%s\n' "$CV" "$RV" | sort -V | tail -1)
+    if [[ "$NEWER" == "$CV" ]]; then
+      warn "Current version ($CURRENT_VERSION) is newer than $RELEASE_TAG."
+      if [[ "$FORCE" != true ]]; then
+        error "Use --force to downgrade."
+        exit 1
+      fi
+    else
+      info "Upgrading from $CURRENT_VERSION to $RELEASE_TAG."
+    fi
+  fi
+fi
 
 # Extract the tarball asset URL (cooklang-shopper-v*.tar.gz)
 ASSET_URL=$(printf '%s' "$RELEASE_JSON" | grep '"browser_download_url"' | grep 'cooklang-shopper-.*\.tar\.gz' | head -1 | sed 's/.*"browser_download_url"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
