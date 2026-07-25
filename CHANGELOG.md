@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.20.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.19.4...v0.20.0)
+
+### 🚀 Enhancements
+
+- Normalization of full-width (Japanese) input ([c75b426](https://github.com/tmlmt/cooklang-shopper/commit/c75b426))
+- **i18n:** Add Japanese locale ([6aea3db](https://github.com/tmlmt/cooklang-shopper/commit/6aea3db))
+
+### 🔥 Performance
+
+- Pre-bundle auto-detected icons (~100) into client bundle ([74b98f1](https://github.com/tmlmt/cooklang-shopper/commit/74b98f1))
+
+### 🩹 Fixes
+
+- **i18n:** Add "or", "and", "about", comma and brackets to translation strings ([cd1db32](https://github.com/tmlmt/cooklang-shopper/commit/cd1db32))
+- **i18n:** Allow changing display order between ingredient name / quantity and uantity value / unit ([47bfd68](https://github.com/tmlmt/cooklang-shopper/commit/47bfd68))
+- **editMode:** Clear viewed recipe locale after saving eventually selected editing variant ([274ede5](https://github.com/tmlmt/cooklang-shopper/commit/274ede5))
+- **editMode:** Sync recipe UI labels aligned with the editing variant that has just been saved ([00fe554](https://github.com/tmlmt/cooklang-shopper/commit/00fe554))
+
+### 💅 Refactors
+
+- **onSubmitEdit:** Collapse common behavior and make conditional more explicit ([561b412](https://github.com/tmlmt/cooklang-shopper/commit/561b412))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.19.4
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.19.3...v0.19.4)
