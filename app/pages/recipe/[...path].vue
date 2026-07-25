@@ -1050,6 +1050,7 @@ const onEditSubmit = async (event: FormSubmitEvent<Schema>) => {
         await recipeStore.fetchIndex();
       } else {
         rawRecipe.value = event.data.recipe;
+        setLocale(undefined);
         recipeStore.updateRecipe(recipeName, recipeDir, event.data.recipe);
       }
       await refreshImageManifest();
