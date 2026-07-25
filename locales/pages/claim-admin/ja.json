@@ -1,0 +1,15 @@
+{
+  "title": "管理者アカウントを要求する",
+  "instructions": "サインインが完了しました。管理者になるには、サーバログに印刷された一回限りの要求コードを入力してください（data/admin-claim-code.txtにも保存されます）。",
+  "identity": "としてサインインしました",
+  "codeLabel": "受け取るコード",
+  "codePlaceholder": "請求コードを入力してください",
+  "noPending": "保留中の管理者の要求はありません。最初にサインインしてください。",
+  "invalidTitle": "無効な請求コードです",
+  "invalidDetail": "入力したクレームコードが正しくないか、期限切れです。",
+  "actions": {
+    "claim": "管理者権限の要求",
+    "skip": "今はスキップ",
+    "backToLogin": "ログインに戻る"
+  }
+}

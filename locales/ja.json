@@ -1,0 +1,349 @@
+{
+  "pages": {
+    "recipes": "レシピ",
+    "pantry": "食料棚",
+    "shoppingList": "買い物リスト",
+    "productCatalog": "商品カタログ",
+    "shoppingCart": "カート",
+    "cookbook": "クックブック",
+    "authentication": "認証"
+  },
+  "actions": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "confirm": "確認",
+    "create": "作成",
+    "upload": "アップロード",
+    "add": "追加",
+    "done": "完了",
+    "login": "ログイン",
+    "signIn": "ログイン",
+    "signOut": "ログアウト",
+    "back": "戻る",
+    "browse": "検索",
+    "view": "表示",
+    "edit": "編集",
+    "move": "移動",
+    "delete": "削除",
+    "share": "共有",
+    "rename": "名前の変更",
+    "cook": "作る",
+    "uncheckAll": "すべてのチェックを外す",
+    "clearList": "リストをクリア",
+    "importFromFile": "ファイルからインポート",
+    "switchToOwnList": "自分のリストに切り替える",
+    "goToCookbook": "クックブックに移動",
+    "convertWithAi": "AIで変換",
+    "openInCookMd": "Cook.md で開く",
+    "createLink": "リンクを作成",
+    "skipSection": "セクションをスキップ",
+    "newRecipe": "新しいレシピ",
+    "newFolder": "新しいフォルダ",
+    "reindexRecipes": "レシピの再インデックス",
+    "uploadImage": "画像をアップロード",
+    "downloadCook": ".cookをダウンロード",
+    "storeRun": "ストアラン",
+    "categoryConfig": "カテゴリ設定",
+    "translate": "翻訳する",
+    "setAsDefault": "既定に設定"
+  },
+  "nav": {
+    "backToFolder": "フォルダに戻る",
+    "backTo": "{page} に戻る",
+    "continueTo": "{page} に進む",
+    "toggleColorMode": "カラーモードの切り替え",
+    "about": "このアプリについて",
+    "userManagement": "ユーザー管理"
+  },
+  "recipe": {
+    "untitled": "(無題)",
+    "ingredients": "材料",
+    "cookware": "Cookware",
+    "preparation": "準備",
+    "yield": "収穫量",
+    "servings": "ノーサーブ|1サービング| {count} サービング",
+    "scale": "スケール：",
+    "step": "Step",
+    "note": "メモ：",
+    "optionalSection": "任意のセクション",
+    "ingredientsForStep": "このステップの材料",
+    "moreInfo": "詳細情報",
+    "by": "作成者",
+    "from": "from",
+    "time": {
+      "prep": "準備",
+      "cook": "Cook",
+      "total": "合計"
+    }
+  },
+  "folder": {
+    "subfolders": "サブフォルダがありません | 1 サブフォルダー | {count} サブフォルダー",
+    "recipes": "レシピなし | 1 レシピ | {count} レシピ"
+  },
+  "sharedLink": {
+    "linkExpires": "このリンクは {date}で期限切れになります"
+  },
+  "recipeTags": {
+    "extraTags": "Extra tags"
+  },
+  "recipeCard": {
+    "today": "今日",
+    "daysAgo": "今日 | 昨日 | {count} 日前"
+  },
+  "recipeList": {
+    "folderColumn": "フォルダ",
+    "subfoldersColumn": "サブフォルダ",
+    "titleColumn": "タイトル",
+    "tagsColumn": "タグ",
+    "timeColumn": "時刻",
+    "modifiedColumn": "修正されました",
+    "yieldColumn": "収穫量",
+    "authorColumn": "作成者",
+    "sourceColumn": "ソース",
+    "actionsColumn": "アクション"
+  },
+  "ingredientList": {
+    "checkedCount": "{checked} / {total} チェック",
+    "hideChecked": "チェックした項目を非表示",
+    "other": "その他"
+  },
+  "shoppingList": {
+    "nameColumn": "名前",
+    "servingsColumn": "サービング",
+    "choicesColumn": "選択",
+    "customChoices": "カスタムの選択",
+    "noChoice": "なし",
+    "addFreehand": "フリーハンドのアイテムを追加",
+    "freehandItems": "フリーハンドアイテム",
+    "emptyList": "空のリスト",
+    "ingredientLabel": "材料",
+    "quantityLabel": "数量",
+    "selectedRecipes": "選択されたレシピ",
+    "unitLabel": "単位"
+  },
+  "cookMode": {
+    "ingredientsIntro": "このレシピには以下の材料が必要です",
+    "timers": "タイマーズ",
+    "timerDone": "タイマー完了！"
+  },
+  "choices": {
+    "title": "材料の選択肢を選択",
+    "noAlternatives": "このレシピに使用可能な材料はありません。",
+    "inlineAlternatives": "インライン代替",
+    "groupedAlternatives": "グループ化された代替",
+    "noChoice": "選択肢なし",
+    "pleaseSelect": "選択してください"
+  },
+  "modal": {
+    "file": {
+      "directory": "ディレクトリ",
+      "createSubdir": "選択範囲内にサブディレクトリを作成",
+      "name": "名前",
+      "subdirCreated": "サブディレクトリを作成しました",
+      "subdirExistsWarning": "'{name}' というサブディレクトリは既に存在します",
+      "subdirCreatedAs": "'{newName}' として作成された新しいサブディレクトリ",
+      "moveRecipe": "レシピを移動",
+      "moveFolder": "フォルダを移動"
+    },
+    "about": {
+      "title": "{appTitle} について",
+      "author": "作成者：",
+      "version": "バージョン：",
+      "code": "コード：",
+      "updateAvailable": "アップデートがあります",
+      "poweredBy": "Powered by",
+      "by": "利用者：",
+      "contact": "連絡先："
+    },
+    "share": {
+      "visibility": "公開範囲",
+      "visibilityPublic": "誰でもこのレシピを閲覧できます",
+      "visibilityPrivate": "このレシピを閲覧できるのはあなただけです",
+      "shareLinks": "リンクを共有",
+      "noLinks": "共有リンクはまだありません",
+      "expiresOptional": "有効期限（任意）",
+      "created": "作成済み",
+      "expired": "期限切れ",
+      "expires": "期限切れ",
+      "shareRecipe": "レシピを共有",
+      "shareShoppingList": "ショッピングリストを共有"
+    },
+    "imageUpload": {
+      "imageRole": "画像の役割",
+      "imageFile": "画像ファイル"
+    },
+    "storeRun": {
+      "live": "ライブ"
+    },
+    "translate": {
+      "title": "レシピを翻訳",
+      "manual": "マニュアル",
+      "usingAi": "AI の使用",
+      "localeLabel": "翻訳先の言語",
+      "localeDescription": "2文字の ISO 639-1 言語コード（例: ja、en、fr）",
+      "methodLabel": "翻訳方法"
+    }
+  },
+  "search": {
+    "placeholder": "レシピを検索…",
+    "recipesMatching": "\"{term}\" に一致するレシピ…"
+  },
+  "errors": {
+    "recipeNotFound": "レシピが見つかりません",
+    "catalogInvalid": "無効な商品カタログ",
+    "connectionError": "接続エラー"
+  },
+  "onlineStore": {
+    "sendToStore": "オンラインストア",
+    "sendToStoreHint": "オンラインストアに接続して、ショッピングカートを直接カートに送信します。",
+    "connectTo": "{provider} に接続",
+    "connectTitle": "{provider} に接続",
+    "connect": "接続する",
+    "goToCart": "カートに移動",
+    "connected": "ストアに接続されました",
+    "connectFailed": "ストアに接続できませんでした",
+    "disconnect": "接続を解除",
+    "disconnected": "ストアから切断されました",
+    "username": "ユーザー名",
+    "password": "パスワード",
+    "usernameRequired": "ユーザー名を入力してください",
+    "passwordRequired": "パスワードを入力してください",
+    "credentialsHint": "資格情報はストアでセッションを開くためにのみ使用され、保存されることはありません。",
+    "readyToSend": "カートは店舗に送信される準備ができています。",
+    "upToDate": "ストアバスケットはカートと最新の状態です。",
+    "nothingToSend": "送信する一致する商品がありません。",
+    "sendCart": "カートを送信",
+    "updateCart": "カートを更新",
+    "clearCart": "カートをクリア",
+    "cleared": "店舗カートを消去しました",
+    "clearFailed": "ストアバスケットをクリアできませんでした",
+    "syncSuccess": "カートを店舗に送信しました",
+    "syncFailed": "カートをストアに送信できませんでした",
+    "syncPartial": "{count} アイテムを送信できませんでした | {count} アイテムを送信できませんでした"
+  },
+  "toast": {
+    "success": "成功",
+    "error": "エラー",
+    "recipesReindexed": "レシピのインデックスを変更しました",
+    "folderCreated": "フォルダが作成されました",
+    "folderExistsWarning": "「{name}」というフォルダは既に存在します",
+    "folderCreatedAs": "フォルダを「{newName} 」として作成しました",
+    "folderCreationError": "フォルダの作成エラー",
+    "folderMoved": "フォルダを移動しました",
+    "folderMovedError": "フォルダの移動に失敗しました",
+    "folderRenamed": "フォルダの名前を変更しました",
+    "folderRenameError": "フォルダの名前を変更中にエラーが発生しました",
+    "folderDeleted": "フォルダを削除しました",
+    "folderDeleteError": "フォルダの削除エラー",
+    "imageUploaded": "画像がアップロードされました",
+    "imageDeleted": "画像が削除されました",
+    "recipeSaved": "レシピを保存しました",
+    "recipeDeleted": "レシピを削除しました",
+    "recipeMoved": "レシピを {path} に移動しました",
+    "recipeAddedToList": "レシピをショッピングリストに追加しました",
+    "recipeServingsModified": "ショッピングリストでサーブが変更されました",
+    "recipeRemovedFromList": "レシピをショッピングリストから削除しました",
+    "ingredientAdded": "材料を追加",
+    "ingredientAddError": "材料の追加に失敗しました",
+    "servingsUpdateError": "サーブの更新に失敗しました",
+    "pantryInvalid": "無効なパントリー",
+    "pantrySaved": "Pantry saved",
+    "catalogSaved": "製品カタログを保存しました",
+    "categoryConfigSaved": "カテゴリ設定を保存しました",
+    "categoryConfigInvalid": "不正なカテゴリ設定",
+    "visibilityUpdated": "表示を更新しました",
+    "visibilityUpdatedTo": "レシピは現在 {visibility}です",
+    "visibilityUpdateError": "表示の更新に失敗しました",
+    "shareLinkCreated": "共有リンクが作成されました",
+    "shareLinkCreateError": "共有リンクの作成に失敗しました",
+    "shareLinkRevoked": "リンクを共有が取り消されました",
+    "shareLinkRevokeError": "共有リンクを取り消せませんでした",
+    "linkCopied": "リンクをクリップボードにコピーしました",
+    "linkCopyError": "リンクのコピーに失敗しました",
+    "setAsDefaultDone": "デフォルトの言語が更新されました",
+    "translationComplete": "翻訳完了",
+    "conversionComplete": "変換完了",
+    "conversionTokens": "{in} input / {out} output tokens",
+    "conversionInterrupted": "変換が中断されました",
+    "conversionInterruptedDetail": "エディタに部分的なコンテンツを保存しました",
+    "conversionFailed": "変換失敗",
+    "sharedListExpired": "共有リストの有効期限が切れました",
+    "sharedListExpiredDetail": "共有リストのリンクの有効期限が切れました。自分のリストに切り替えてください。",
+    "loginFailed": "ログインに失敗しました",
+    "loginInvalidPassword": "無効なパスワード",
+    "loginAdminNotConfigured": "管理者パスワードが設定されていません",
+    "oidcFailedDetail": "OIDC認証に失敗しました。もう一度やり直してください。",
+    "oidcUnreachable": "プロバイダーに到達できません",
+    "oidcUnreachableDetail": "認証プロバイダに到達できませんでした。後でもう一度お試しください。",
+    "oidcCheckUnreachable": "認証プロバイダに到達できませんでした。ネットワーク接続を確認してください。",
+    "loggedOut": "ログアウトしました",
+    "loggedOutDetail": "正常にログアウトしました"
+  },
+  "emptyState": {
+    "nothingHere": "ここにはまだ何もありません",
+    "createOrAdd": "レシピを作成するか、サブフォルダを追加して開始します。"
+  },
+  "validation": {
+    "enterRecipe": "レシピを入力してください",
+    "invalidRecipe": "無効なレシピです。構文を確認してください",
+    "localeRequired": "言語コードを入力してください",
+    "localeInvalid": "2文字の言語コード（例：en、fr）でなければなりません",
+    "enterFilename": "ファイル名を入力してください",
+    "filenameNoSlash": "ファイル名に '/' を含めてはいけません",
+    "filenameChars": "文字、数字、スペース、および & ( ) _ + % のみ使用できます",
+    "enterSubdirName": "サブディレクトリ名を入力してください",
+    "subdirNoSlash": "サブディレクトリ名に '/' を含めることはできません",
+    "selectDirectory": "ディレクトリを選択してください",
+    "selectParentDir": "親ディレクトリを選択する必要があります",
+    "subdirExists": "このサブディレクトリは既に存在します",
+    "enterValue": "値を入力してください",
+    "noSlash": "'/' を含めてはいけません",
+    "noBackslash": "'\\' を含めてはいけません",
+    "ingredientRequired": "材料名が必要です"
+  },
+  "recipeLocale": {
+    "modalTitle": "レシピ言語",
+    "recipeLanguageTitle": "レシピコンテンツの言語",
+    "recipeLanguageLabel": "レシピの内容",
+    "pageLanguageLabel": "ページ言語",
+    "sameAsRecipe": "レシピと同じ",
+    "sameAsRecipeDescription": "レシピラベルをレシピの言語で表示する",
+    "sameAsApp": "アプリと同じ",
+    "sameAsAppDescription": "アプリの言語でレシピラベルを表示する ({locale})",
+    "fallbackTitle": "言語が利用できません",
+    "fallbackDescription": "'{locale}' は言語ライブラリでは使用できません。'{fallback} ' を維持してください"
+  },
+  "ai": {
+    "convertFromUrl": "URLまたはテキストからAIで変換",
+    "pasteText": "またはレシピテキストを直接ペースト…",
+    "urlWarning": "URLインポートはJavaScriptでレンダリングされたページでは動作しない可能性があります。フォールバックとしてテキスト領域を使用してください。",
+    "fetchingPage": "ページを取得しています…",
+    "converting": "AIで変換中…",
+    "noContent": "変換するコンテンツがありません",
+    "fetchError": "ページを取得できませんでした"
+  },
+  "basics": {
+    "unknown": "不明",
+    "optional": "省略可能",
+    "yes": "はい",
+    "no": "いいえ",
+    "recipe": "レシピ | レシピ",
+    "default": "デフォルト",
+    "unspecified": "未指定"
+  },
+  "delimiters": {
+    "openingBracket": "(",
+    "closingBracket": ")",
+    "or": "または",
+    "and": "と",
+    "about": "≈",
+    "comma": ", "
+  },
+  "email": {
+    "invitation": {
+      "subject": "{app} に招待されました",
+      "body": "こんにちは、\n\n{app} への招待を受けています。\n\n以下のリンクをクリックし、Google または Microsoft アカウントでサインインしてアクセスを有効化してください。\n\n{url}\n\nこの招待に心当たりがない場合は、このメールを無視していただいて問題ありません。"
+    }
+  }
+}

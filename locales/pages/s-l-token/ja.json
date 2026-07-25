@@ -1,0 +1,8 @@
+{
+  "title": "ショッピングリスト - {username} で共有",
+  "description": "Cooklangショッパーから共有されたショッピングリスト",
+  "ogImageTitle": "ショッピングリスト",
+  "ogImageSubtitle": "{username} で共有",
+  "sharedBy": "共有者",
+  "signInToEdit": "をクリックして、このショッピングリストを編集します。"
+}

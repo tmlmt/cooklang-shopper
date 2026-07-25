@@ -1,0 +1,3 @@
+{
+  "placeholder": "# 食料棚のTOML形式\n# https://cooklang.org/docs/use-cases/pantry/#the-pantry-configuration-file を参照\n\n[fridge]\nmilk = { expire = \"10.05.2024\", quantity = \"1%L\" }\n\n[freezer]\nspinach = { quantity = \"1%kg\", low = \"200%g\" }"
+}

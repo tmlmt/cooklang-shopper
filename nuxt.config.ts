@@ -49,6 +49,14 @@ export default defineNuxtConfig({
         displayName: "Dansk",
         flag: "🇩🇰",
       },
+      {
+        code: "ja",
+        iso: "ja-JP",
+        og: "ja_JP",
+        displayName: "日本語",
+        flag: "🇯🇵",
+        ingredientOrder: "name-first",
+      },
     ],
     defaultLocale: "en",
     fallbackLocale: "en",
@@ -111,7 +119,7 @@ export default defineNuxtConfig({
         fallbackLocale: "",
         disabledLocales: [],
       },
-      i18nLocales: ["en", "fr", "da"],
+      i18nLocales: ["en", "fr", "da", "ja"],
     },
   },
 

@@ -1,0 +1,14 @@
+{
+  "description": "料理本にアクセスするにはサインインしてください",
+  "loggedInAs": "次のようにログインしています",
+  "roleLabel": "ロール",
+  "passwordLabel": "パスワード",
+  "passwordPlaceholder": "パスワードを入力してください",
+  "roleViewer": "ビューアー",
+  "roleEditor": "エディター",
+  "roleAdmin": "管理者",
+  "signInWith": "{provider} でサインイン",
+  "signInWithGoogle": "Googleアカウントでログイン",
+  "signInWithMicrosoft": "Microsoftでサインイン",
+  "or": "または"
+}

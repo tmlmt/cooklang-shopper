@@ -1,0 +1,15 @@
+{
+  "defaultVariant": "デフォルト",
+  "addToList": "リストに追加",
+  "recipeNotFound": "レシピが見つかりません",
+  "translate": {
+    "editingVariant": "バリエーションの編集",
+    "translating": "翻訳中…",
+    "failed": "翻訳に失敗しました",
+    "setAsDefault": "既定に設定",
+    "buttonLabel": "翻訳する",
+    "defaultLocale": "デフォルトの言語",
+    "oldDefaultLocaleTitle": "現在のデフォルト言語",
+    "oldDefaultLocaleLabel": "現在のデフォルトファイルはどの言語ですか？（例: en）"
+  }
+}

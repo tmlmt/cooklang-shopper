@@ -1,0 +1,38 @@
+{
+  "title": "ユーザー管理",
+  "inviteHeader": "ユーザーを招待",
+  "noInviteProviders": "ユーザーを招待するには、GoogleまたはMicrosoftのプロバイダを設定する必要があります。",
+  "emailPlaceholder": "user@example.co.jp",
+  "namePlaceholder": "表示名 (任意)",
+  "confirmDelete": "ユーザー {email}を削除しますか? この操作は元に戻せません。",
+  "columns": {
+    "email": "Eメールアドレス",
+    "name": "名前",
+    "role": "ロール",
+    "status": "ステータス",
+    "providers": "プロバイダー",
+    "actions": "アクション"
+  },
+  "roles": {
+    "viewer": "ビューアー",
+    "editor": "エディター",
+    "admin": "管理者"
+  },
+  "status": {
+    "active": "アクティブ",
+    "invited": "招待済み"
+  },
+  "actions": {
+    "invite": "招待",
+    "resend": "招待を再送信する",
+    "copyLink": "リンクをコピー"
+  },
+  "toast": {
+    "invited": "招待状を送信しました",
+    "invitedNoEmail": "ユーザーが作成されました — 招待リンクをコピーします (メールが設定されていません)",
+    "inviteFailed": "招待状を作成できませんでした",
+    "updateFailed": "利用者を更新できませんでした",
+    "deleted": "ユーザーが削除されました",
+    "deleteFailed": "利用者を削除できませんでした"
+  }
+}

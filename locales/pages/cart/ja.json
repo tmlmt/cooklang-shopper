@@ -1,0 +1,27 @@
+{
+  "description": "自動化されたオンラインショッピングカート生成によるCooklangスタイルのレシピ管理とショッピングリストの作成",
+  "cart": "カート",
+  "noMatchingProducts": "対応する製品のない材料",
+  "columnProduct": "商品",
+  "columnIngredient": "材料",
+  "columnQuantity": "数量",
+  "columnPrice": "価格",
+  "columnReason": "理由",
+  "summaryTotal": "合計",
+  "emptyCart": "一致する商品はまだありません",
+  "emptyMisMatch": "すべての成分が製品に一致しました",
+  "emptyCatalogHint": "商品カタログが空です。マッチングを開始するには商品を追加してください。",
+  "emptyListHint": "ショッピングリストが空です。カートを構築するためにレシピを追加してください。",
+  "goToCatalog": "商品カタログに移動",
+  "goToList": "ショッピングリストへ移動",
+  "sendToStore": "ストアに送る",
+  "sendToStoreHint": "間もなくストア連携が開始されます。",
+  "reasons": {
+    "incompatibleUnits": "材料と利用可能な製品との互換性がない単位",
+    "noProduct": "カタログ内の商品が成分に一致しません",
+    "noQuantity": "数量のない成分: スキップされました",
+    "textValue": "テキスト値の成分: スキップ",
+    "textValue_incompatibleUnits": "テキスト値と互換性のない単位を含む原材料: スキップ",
+    "unknown": "不明なエラー"
+  }
+}
