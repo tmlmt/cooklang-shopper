@@ -283,7 +283,7 @@ setHeaderMenuItems([
 
 <template>
   <UContainer v-if="recipe" class="py-8">
-    <div v-if="heroImages.length > 0" class="md:mb-6">
+    <div v-if="heroImages.length > 0" class="mb-3 md:mb-6">
       <UCarousel
         v-slot="{ item, index }"
         :items="heroImages"
@@ -307,15 +307,7 @@ setHeaderMenuItems([
     </div>
 
     <div class="mb-2 flex flex-col gap-4">
-      <h1 class="hidden items-center gap-2 text-3xl font-bold md:flex">
-        {{ recipe.metadata.title ?? recipeName }}
-        <RecipeLanguageSelector
-          v-if="showLocaleSelector"
-          :current-locale="currentLocale"
-          @open="openLocaleModal"
-        />
-      </h1>
-      <h1 class="flex items-center gap-2 text-2xl font-bold md:hidden">
+      <h1 class="flex items-center gap-2 text-2xl md:text-3xl font-bold">
         {{ recipe.metadata.title ?? recipeName }}
         <RecipeLanguageSelector
           v-if="showLocaleSelector"
