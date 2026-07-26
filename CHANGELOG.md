@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.20.2
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.1...v0.20.2)
+
+### 🩹 Fixes
+
+- **i18n:** Add guard for malformed i18n payloads to fallback on app locale ([d446b36](https://github.com/tmlmt/cooklang-shopper/commit/d446b36))
+- **i18n:** Add missing translations for cookware and step in JA ([6252e6d](https://github.com/tmlmt/cooklang-shopper/commit/6252e6d))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.20.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.0...v0.20.1)
