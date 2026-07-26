@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.20.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.0...v0.20.1)
+
+### 🚀 Enhancements
+
+- **upgrade:** Check installed version before upgrading ([d0961e6](https://github.com/tmlmt/cooklang-shopper/commit/d0961e6))
+
+### 🩹 Fixes
+
+- **build:** Add plugin to patch pinia v4 which introduced a regression  making nuxt to fail ([7e80645](https://github.com/tmlmt/cooklang-shopper/commit/7e80645))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.20.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.19.4...v0.20.0)
