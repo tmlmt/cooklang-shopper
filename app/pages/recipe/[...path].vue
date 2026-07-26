@@ -258,15 +258,27 @@ async function applyRecipeUiLocale(
   }
   let dict = recipeUiDicts.value[targetUiLocale];
   if (!dict) {
+    let fetched: unknown;
     try {
-      dict = await $fetch<TranslationDict>(
+      fetched = await $fetch(
         `/_locales/recipe-path/${targetUiLocale}/data.json`,
       );
-      recipeUiDicts.value[targetUiLocale] = dict;
     } catch {
       activeUiLocale.value = undefined;
       return false;
     }
+    // A malformed payload (truncated body, HTML fallback, …) does not throw —
+    // $fetch hands back the raw text — and activating it would make every label
+    // render as its raw key. Stay on the app locale instead.
+    if (!isRecipeTranslationDict(fetched)) {
+      console.warn(
+        `[i18n] Unusable translation payload for "${targetUiLocale}"; keeping page labels in the app locale.`,
+      );
+      activeUiLocale.value = undefined;
+      return false;
+    }
+    dict = fetched;
+    recipeUiDicts.value[targetUiLocale] = dict;
   }
   // Populate the library chunk cache so $_ts resolves keys in this locale.
   $loadPageTranslations(
