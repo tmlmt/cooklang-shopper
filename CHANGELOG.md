@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.20.3
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.2...v0.20.3)
+
+### 🩹 Fixes
+
+- **shared-recipe:** Remove duplicate h1 element and add margin over title on mobile ([36c9ece](https://github.com/tmlmt/cooklang-shopper/commit/36c9ece))
+
+### 📦 Build
+
+- Migrate pnpm to v11 and bump node to v24.18.0 ([74c5fd2](https://github.com/tmlmt/cooklang-shopper/commit/74c5fd2))
+
+### 🏡 Chore
+
+- **deps, security:** Patch nuxt to 4.5.1 ([19c6aeb](https://github.com/tmlmt/cooklang-shopper/commit/19c6aeb))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.20.2
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.1...v0.20.2)
