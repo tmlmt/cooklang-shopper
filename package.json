@@ -3,7 +3,7 @@
   "version": "0.20.2",
   "description": "Shopping list and cart manager for cooklang recipes",
   "author": "Thomas Lamant <tom@tmlmt.com>",
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@11.17.0",
   "private": true,
   "type": "module",
   "scripts": {

@@ -1,12 +1,12 @@
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@tailwindcss/oxide'
-  - esbuild
-  - sharp
-  - unrs-resolver
-  - vue-demi
-  - '@prisma/engines'
-  - better-sqlite3
-  - prisma
 patchedDependencies:
   nuxt-auth-utils: patches/nuxt-auth-utils.patch
+allowBuilds:
+  '@parcel/watcher': true
+  '@tailwindcss/oxide': true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+  vue-demi: true
+  '@prisma/engines': true
+  better-sqlite3: true
+  prisma: true
