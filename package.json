@@ -43,7 +43,7 @@
     "ipaddr.js": "2.4.0",
     "linkedom": "0.18.13",
     "nodemailer": "^9.0.3",
-    "nuxt": "4.5.0",
+    "nuxt": "4.5.1",
     "nuxt-auth-utils": "0.5.29",
     "nuxt-i18n-micro": "3.21.4",
     "nuxt-security": "2.6.0",
