@@ -23,6 +23,6 @@ minimumReleaseAgeExclude:
   - '@takumi-rs/core@2.5.3'
   - '@takumi-rs/helpers@2.5.3'
   - ipx@4.0.0-beta.1
-  - '@tmlmt/cooklang-parser@3.0.0-alpha.44'
+  - '@tmlmt/cooklang-parser@3.0.0-alpha.44 || 3.0.0-alpha.45'
   - openai@7.1.0
   - nuxt-og-image@6.7.5
