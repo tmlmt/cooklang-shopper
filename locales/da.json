@@ -335,9 +335,9 @@
   "delimiters": {
     "openingBracket": "(",
     "closingBracket": ")",
-    "or": "eller",
-    "and": "og",
-    "about": "≈",
+    "or": "eller ",
+    "and": "og ",
+    "about": "≈ ",
     "comma": ", "
   },
   "email": {

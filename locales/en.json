@@ -335,8 +335,8 @@
   "delimiters": {
     "openingBracket": "(",
     "closingBracket": ")",
-    "or": "or",
-    "and": "and",
+    "or": "or ",
+    "and": "and ",
     "about": "≈",
     "comma": ", "
   },
