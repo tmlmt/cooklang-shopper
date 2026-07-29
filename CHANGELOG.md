@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.20.5
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.4...v0.20.5)
+
+### 🩹 Fixes
+
+- **parser:** Correctly identify oosaji as JP unit and improve fraction settings for JP units ([1f9a7b3](https://github.com/tmlmt/cooklang-shopper/commit/1f9a7b3))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.20.4
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.3...v0.20.4)

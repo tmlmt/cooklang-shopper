@@ -1,6 +1,6 @@
 {
   "name": "@tmlmt/cooklang-shopper",
-  "version": "0.20.4",
+  "version": "0.20.5",
   "description": "Shopping list and cart manager for cooklang recipes",
   "author": "Thomas Lamant <tom@tmlmt.com>",
   "packageManager": "pnpm@11.17.0",
