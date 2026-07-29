@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.20.6
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.5...v0.20.6)
+
+### 🩹 Fixes
+
+- **og-image:** Support Japanese characters ([f9a4c5d](https://github.com/tmlmt/cooklang-shopper/commit/f9a4c5d))
+- **recipe:** Ensure space after or/and/about for latin locales ([ab336ae](https://github.com/tmlmt/cooklang-shopper/commit/ab336ae))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.20.5
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.4...v0.20.5)
