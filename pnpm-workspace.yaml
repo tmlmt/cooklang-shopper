@@ -23,3 +23,4 @@ minimumReleaseAgeExclude:
   - '@takumi-rs/core@2.5.3'
   - '@takumi-rs/helpers@2.5.3'
   - ipx@4.0.0-beta.1
+  - '@tmlmt/cooklang-parser@3.0.0-alpha.44'
