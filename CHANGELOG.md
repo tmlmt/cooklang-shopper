@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.20.4
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.3...v0.20.4)
+
+### 🩹 Fixes
+
+- **units:** Improve JP units and selection of unit alias when adding or converting ([5275970](https://github.com/tmlmt/cooklang-shopper/commit/5275970))
+- **deps:** Bump nuxt-og-image to v6.7.5 to avoid NUXT_B2007 errors ([d4d11dd](https://github.com/tmlmt/cooklang-shopper/commit/d4d11dd))
+
+### 🏡 Chore
+
+- **shared-recipe:** Lint ([84aa00d](https://github.com/tmlmt/cooklang-shopper/commit/84aa00d))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.20.3
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.2...v0.20.3)
