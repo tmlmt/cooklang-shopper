@@ -5,6 +5,8 @@
   --container-8xl: 96rem;
   --container-9xl: 104rem;
   --container-10xl: 112rem;
+
+  --font-ogimage: "Inter", "Noto Sans JP", sans-serif;
 }
 
 @theme static {

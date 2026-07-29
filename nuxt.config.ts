@@ -19,12 +19,20 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "nuxt-auth-utils",
     "nuxt-seo-utils",
+    "@nuxt/fonts",
     "nuxt-og-image",
     "@nuxtjs/sitemap",
     "@nuxtjs/robots",
   ],
 
   css: ["~/assets/css/main.css"],
+
+  fonts: {
+    families: [
+      { name: "Inter", weights: [400, 500, 700], global: true },
+      { name: "Noto Sans JP", weights: [400, 500, 700], global: true },
+    ],
+  },
 
   i18n: {
     locales: [

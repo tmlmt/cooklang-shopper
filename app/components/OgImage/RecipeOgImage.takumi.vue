@@ -72,14 +72,14 @@ const coverImageHeight = Math.round(canvasHeight * 0.6);
         {{ baseUrl }}
       </p>
       <h1
-        class="m-0 w-full text-[50px] leading-tight font-bold"
+        class="m-0 w-full font-ogimage text-[50px] leading-tight font-bold"
         style="color: #111827"
       >
         {{ titleText }}
       </h1>
       <p
         v-if="truncatedDescription"
-        class="m-0 text-[24px] leading-snug"
+        class="m-0 font-ogimage text-[24px] leading-snug"
         style="color: #6b7280"
       >
         {{ truncatedDescription }}
