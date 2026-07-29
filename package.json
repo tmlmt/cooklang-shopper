@@ -73,7 +73,7 @@
     "human-regex": "2.2.0",
     "nitropack": "2.13.4",
     "nuxt-og-image": "6.7.4",
-    "openai": "6.49.0",
+    "openai": "7.1.0",
     "prettier": "3.9.6",
     "prisma": "7.9.1",
     "sharp": "0.35.3",
