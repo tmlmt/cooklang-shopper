@@ -307,7 +307,7 @@ setHeaderMenuItems([
     </div>
 
     <div class="mb-2 flex flex-col gap-4">
-      <h1 class="flex items-center gap-2 text-2xl md:text-3xl font-bold">
+      <h1 class="flex items-center gap-2 text-2xl font-bold md:text-3xl">
         {{ recipe.metadata.title ?? recipeName }}
         <RecipeLanguageSelector
           v-if="showLocaleSelector"
