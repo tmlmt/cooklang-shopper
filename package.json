@@ -72,7 +72,7 @@
     "execa": "10.0.0",
     "human-regex": "2.2.0",
     "nitropack": "2.13.4",
-    "nuxt-og-image": "6.7.4",
+    "nuxt-og-image": "6.7.5",
     "openai": "7.1.0",
     "prettier": "3.9.6",
     "prisma": "7.9.1",

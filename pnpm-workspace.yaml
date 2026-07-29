@@ -25,3 +25,4 @@ minimumReleaseAgeExclude:
   - ipx@4.0.0-beta.1
   - '@tmlmt/cooklang-parser@3.0.0-alpha.44'
   - openai@7.1.0
+  - nuxt-og-image@6.7.5
