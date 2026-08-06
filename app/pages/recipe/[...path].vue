@@ -1253,7 +1253,7 @@ watch(
             "
             size="sm"
             color="primary"
-            :label="$ts('addToList')"
+            :label="recipeT('addToList')"
             icon="material-symbols:add-shopping-cart-rounded"
             class="ml-2"
             @click="addToShoppingList(sr, servings, choices, selectedVariant)"
