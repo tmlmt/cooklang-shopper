@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.20.7
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.6...v0.20.7)
+
+### 🩹 Fixes
+
+- **security:** Close OAuth vulnerability ([bf04a3e](https://github.com/tmlmt/cooklang-shopper/commit/bf04a3e))
+- **recipe-locale:** Display addToList and moreInfo as per page language mode ([961626a](https://github.com/tmlmt/cooklang-shopper/commit/961626a))
+
+### 💅 Refactors
+
+- **recipe-locale:** Extract shared logic into shared composable and resolve translation directly from retrieved locale file ([8e10091](https://github.com/tmlmt/cooklang-shopper/commit/8e10091))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.20.6
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.5...v0.20.6)
