@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Recipe, type RecipeChoices } from "@tmlmt/cooklang-parser";
-import type { TranslationDict, IngredientOrder } from "~~/shared/types";
+import type { IngredientOrder } from "~~/shared/types";
 
 definePageMeta({
   layout: "shared",
@@ -119,38 +119,14 @@ const modalCookMode = await useModalCookMode();
 const modalRecipeLocale = await useModalRecipeLocale();
 
 const toast = useToast();
-const router = useRouter();
-const {
-  $t,
-  $ts,
-  $td,
-  $_ts,
-  $getLocale,
-  $getLocales,
-  $defaultLocale,
-  $localePath,
-  $loadPageTranslations,
-} = useI18n();
+const { $t, $ts, $td, $getLocale, $getLocales } = useI18n();
 
-const availableLocales = useAppLocaleCodes();
-
-const recipeUiDicts = ref<Record<string, TranslationDict>>({});
-const activeUiLocale = ref<string | undefined>(undefined);
-
-const recipeUiRoute = computed(() => {
-  const locale = activeUiLocale.value;
-  if (!locale) return undefined;
-  // Translations are loaded for the "recipe-path" route chunk. Resolve any
-  // /recipe/ path so $_ts looks in that chunk rather than the share-page chunk.
-  return router.resolve($localePath("/recipe/_", locale));
-});
-
-const recipeT: typeof $ts = (key, params, defaultValue) => {
-  const uiRoute = recipeUiRoute.value;
-  if (!uiRoute) return $ts(key, params, defaultValue);
-  return $_ts(uiRoute as Parameters<typeof $_ts>[0])(key, params, defaultValue);
-};
-provide("recipeT", recipeT);
+// "Page UI language follows recipe language" feature: owns `recipeT` (injected
+// into recipe-content components) and the UI-label dictionary loading.
+const { pageLanguageModeCookie, syncPageUiLocale, applyPageLanguageChoice } =
+  useRecipeUiLocale(token, {
+    recipeDefaultLocale: () => defaultLocale.value,
+  });
 
 const effectiveRecipeLocale = computed(
   () => currentLocale.value ?? defaultLocale.value,
@@ -167,44 +143,11 @@ provide(
   ),
 );
 
-async function applyRecipeUiLocale(
-  targetUiLocale: string | undefined,
-): Promise<boolean> {
-  if (!targetUiLocale || !availableLocales.value.includes(targetUiLocale)) {
-    activeUiLocale.value = undefined;
-    return false;
-  }
-  let dict = recipeUiDicts.value[targetUiLocale];
-  if (!dict) {
-    let fetched: unknown;
-    try {
-      fetched = await $fetch(
-        `/_locales/recipe-path/${targetUiLocale}/data.json`,
-      );
-    } catch {
-      activeUiLocale.value = undefined;
-      return false;
-    }
-    // A malformed payload (truncated body, HTML fallback, …) does not throw —
-    // $fetch hands back the raw text — and activating it would make every label
-    // render as its raw key. Stay on the app locale instead.
-    if (!isRecipeTranslationDict(fetched)) {
-      console.warn(
-        `[i18n] Unusable translation payload for "${targetUiLocale}"; keeping page labels in the app locale.`,
-      );
-      activeUiLocale.value = undefined;
-      return false;
-    }
-    dict = fetched;
-    recipeUiDicts.value[targetUiLocale] = dict;
-  }
-  $loadPageTranslations(
-    targetUiLocale,
-    "recipe-path",
-    dict as Parameters<typeof $loadPageTranslations>[2],
-  );
-  activeUiLocale.value = targetUiLocale;
-  return true;
+// On page load: apply Same as Recipe mode from the cookie. The dict cache is
+// serialized via the SSR payload, so when this runs on the client the dictionary
+// is already present — no hydration re-fetch and no flash.
+if (pageLanguageModeCookie.value === "recipe") {
+  await syncPageUiLocale(currentLocale.value);
 }
 
 async function openLocaleModal() {
@@ -220,39 +163,7 @@ async function openLocaleModal() {
 
   await switchViewLocale(recipeLocale);
 
-  if (pageLanguageMode === "app") {
-    activeUiLocale.value = undefined;
-    return;
-  }
-
-  const targetUiLocale =
-    recipeLocale ?? defaultLocale.value ?? $defaultLocale();
-
-  const applied = await applyRecipeUiLocale(targetUiLocale);
-
-  if (
-    !applied &&
-    targetUiLocale &&
-    !availableLocales.value.includes(targetUiLocale)
-  ) {
-    toast.add({
-      color: "warning",
-      title: $ts("recipeLocale.fallbackTitle"),
-      description: $ts("recipeLocale.fallbackDescription", {
-        locale: getLocaleDisplayName(
-          targetUiLocale,
-          $getLocale(),
-          $getLocales(),
-        ),
-        fallback: getLocaleDisplayName(
-          $getLocale(),
-          $getLocale(),
-          $getLocales(),
-        ),
-      }),
-      duration: 3000,
-    });
-  }
+  await applyPageLanguageChoice(recipeLocale, pageLanguageMode);
 }
 const { setHeaderActions, setHeaderMenuItems } = useHeaderMenu();
 

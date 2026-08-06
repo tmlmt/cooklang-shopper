@@ -3,21 +3,12 @@ import { Recipe, type RecipeChoices } from "@tmlmt/cooklang-parser";
 import * as v from "valibot";
 import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
 import { FetchError } from "ofetch";
-import type { TranslationDict, IngredientOrder } from "~~/shared/types";
+import type { IngredientOrder } from "~~/shared/types";
 
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
-const {
-  $t,
-  $ts,
-  $_ts,
-  $getLocale,
-  $getLocales,
-  $defaultLocale,
-  $localePath,
-  $loadPageTranslations,
-} = useI18n();
+const { $t, $ts, $getLocale, $getLocales } = useI18n();
 
 if (!route.params.path) {
   throw createError({
@@ -179,50 +170,21 @@ if (viewLocale.value && variantLocales.value.includes(viewLocale.value)) {
   setLocale(viewLocale.value);
 }
 
-// Fetched UI-label dictionaries for "Same as Recipe" mode, keyed by locale. Kept
-// in a useState so they ride the SSR payload (no hydration re-fetch); resolution
-// itself is delegated to the library cache, populated via $loadPageTranslations.
-const recipeUiDicts = useState<Record<string, TranslationDict>>(
-  "recipe-ui-translations",
-  () => ({}),
-);
-// Which UI locale is active for this recipe page (undefined = follow app locale).
-// Per-path useState so the choice survives hydration without recomputation.
-const activeUiLocale = useState<string | undefined>(
-  `recipe-ui-active-locale-${path}`,
-  () => undefined,
-);
-
-// The recipe route resolved in the active UI locale, so $_ts reads that locale's
-// chunk from the library cache. undefined = follow app locale (use $ts).
-const recipeUiRoute = computed(() => {
-  const locale = activeUiLocale.value;
-  if (!locale) return undefined;
-  // $localePath only prepends a prefix for non-default locales; it never strips
-  // an existing one. Feeding it the current (possibly /xx/-prefixed) path would
-  // keep that prefix, making $_ts read the wrong locale's chunk. Strip the active
-  // app-locale prefix first so the localization starts from a clean base path.
-  const appLocale = $getLocale();
-  const basePath =
-    appLocale && route.path.startsWith(`/${appLocale}/`)
-      ? route.path.slice(appLocale.length + 1)
-      : route.path;
-  return router.resolve($localePath(basePath, locale));
-});
-
-// Translate function backed by the active UI locale's chunk via $_ts, falling
-// back to the global $ts (app locale) when no override is active. Reads reactive
-// state per call, so children re-render when the active locale changes.
-const recipeT: typeof $ts = (key, params, defaultValue) => {
-  const uiRoute = recipeUiRoute.value;
-  if (!uiRoute) return $ts(key, params, defaultValue);
-  return $_ts(uiRoute as Parameters<typeof $_ts>[0])(key, params, defaultValue);
-};
-provide("recipeT", recipeT);
-
 const effectiveRecipeLocale = computed(
   () => currentLocale.value ?? defaultLocale.value,
 );
+
+// "Page UI language follows recipe language" feature: owns `recipeT` (injected
+// into recipe-content components) and the UI-label dictionary loading.
+const {
+  recipeT,
+  pageLanguageModeCookie,
+  syncPageUiLocale,
+  applyPageLanguageChoice,
+} = useRecipeUiLocale(path, {
+  recipeDefaultLocale: () => defaultLocale.value,
+});
+
 const ingredientDisplayLocale = computed(() =>
   $getLocales().find((l) => l.code === effectiveRecipeLocale.value),
 );
@@ -235,84 +197,9 @@ provide(
   ),
 );
 
-const pageLanguageModeCookie = useRecipePageLanguageMode();
-
-// App locale codes configured in nuxt-i18n-micro, used to validate UI locales.
-const availableLocales = useAppLocaleCodes();
-
-/**
- * Activate UI-label translations for `targetUiLocale` (or follow the app locale
- * when undefined / unavailable). The fetched dictionary is memoised per locale in
- * `recipeUiDicts` (SSR-payload transferred, so the client skips the re-fetch) and
- * loaded into the library chunk cache so $_ts can resolve keys in that locale.
- *
- * Returns true when the target locale was activated, false when it fell back to
- * the app locale (no target, unavailable, or fetch failure).
- */
-async function applyRecipeUiLocale(
-  targetUiLocale: string | undefined,
-): Promise<boolean> {
-  if (!targetUiLocale || !availableLocales.value.includes(targetUiLocale)) {
-    activeUiLocale.value = undefined;
-    return false;
-  }
-  let dict = recipeUiDicts.value[targetUiLocale];
-  if (!dict) {
-    let fetched: unknown;
-    try {
-      fetched = await $fetch(
-        `/_locales/recipe-path/${targetUiLocale}/data.json`,
-      );
-    } catch {
-      activeUiLocale.value = undefined;
-      return false;
-    }
-    // A malformed payload (truncated body, HTML fallback, …) does not throw —
-    // $fetch hands back the raw text — and activating it would make every label
-    // render as its raw key. Stay on the app locale instead.
-    if (!isRecipeTranslationDict(fetched)) {
-      console.warn(
-        `[i18n] Unusable translation payload for "${targetUiLocale}"; keeping page labels in the app locale.`,
-      );
-      activeUiLocale.value = undefined;
-      return false;
-    }
-    dict = fetched;
-    recipeUiDicts.value[targetUiLocale] = dict;
-  }
-  // Populate the library chunk cache so $_ts resolves keys in this locale.
-  $loadPageTranslations(
-    targetUiLocale,
-    "recipe-path",
-    dict as Parameters<typeof $loadPageTranslations>[2],
-  );
-  activeUiLocale.value = targetUiLocale;
-  return true;
-}
-
-/**
- * Keep page UI labels aligned with the currently viewed recipe locale when the
- * page is in "same as recipe" mode.
- */
-async function syncPageUiLocale(recipeLocale: string | undefined) {
-  if (pageLanguageModeCookie.value !== "recipe") {
-    activeUiLocale.value = undefined;
-    return false;
-  }
-
-  const targetUiLocale =
-    recipeLocale ?? defaultLocale.value ?? $defaultLocale();
-  if (targetUiLocale && targetUiLocale !== $getLocale()) {
-    return applyRecipeUiLocale(targetUiLocale);
-  }
-
-  activeUiLocale.value = undefined;
-  return false;
-}
-
-// On page load: apply Same as Recipe mode from the cookie. The cache is serialized
-// via the SSR payload, so when this runs on the client the dictionary is already
-// present — no hydration re-fetch and no race with an immediate user toggle.
+// On page load: apply Same as Recipe mode from the cookie. The dict cache is
+// serialized via the SSR payload, so when this runs on the client the dictionary
+// is already present — no hydration re-fetch and no race with an immediate toggle.
 if (pageLanguageModeCookie.value === "recipe") {
   await syncPageUiLocale(viewLocale.value);
 }
@@ -364,42 +251,7 @@ async function openLocaleModal() {
 
   await switchViewLocale(recipeLocale);
 
-  if (pageLanguageMode === "app") {
-    activeUiLocale.value = undefined;
-    return;
-  }
-
-  // "Same as recipe": translate recipe UI labels to the recipe's language.
-  // Priority: explicit recipe locale → index defaultLocale → app default locale
-  const targetUiLocale =
-    recipeLocale ?? defaultLocale.value ?? $defaultLocale();
-
-  const applied = await applyRecipeUiLocale(targetUiLocale);
-
-  // Warn when the recipe's language has no matching app translation.
-  if (
-    !applied &&
-    targetUiLocale &&
-    !availableLocales.value.includes(targetUiLocale)
-  ) {
-    toast.add({
-      color: "warning",
-      title: $ts("recipeLocale.fallbackTitle"),
-      description: $ts("recipeLocale.fallbackDescription", {
-        locale: getLocaleDisplayName(
-          targetUiLocale,
-          $getLocale(),
-          $getLocales(),
-        ),
-        fallback: getLocaleDisplayName(
-          $getLocale(),
-          $getLocale(),
-          $getLocales(),
-        ),
-      }),
-      duration: 3000,
-    });
-  }
+  await applyPageLanguageChoice(recipeLocale, pageLanguageMode);
 }
 
 //---------------------------
