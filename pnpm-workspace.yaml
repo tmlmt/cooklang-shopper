@@ -1,5 +1,8 @@
 patchedDependencies:
   nuxt-auth-utils: patches/nuxt-auth-utils.patch
+overrides:
+  unhead: 3.4.2
+  '@unhead/vue': 3.4.2
 allowBuilds:
   '@parcel/watcher': true
   '@tailwindcss/oxide': true
