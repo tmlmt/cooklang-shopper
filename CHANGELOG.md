@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.20.8
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.7...v0.20.8)
+
+### 🩹 Fixes
+
+- **parser:** Preserve alternatives to ingredients with no quantities ([3a43a5e](https://github.com/tmlmt/cooklang-shopper/commit/3a43a5e))
+
+### 📦 Build
+
+- Upgrade to pnpm v12 ([a416572](https://github.com/tmlmt/cooklang-shopper/commit/a416572))
+
+### 🏡 Chore
+
+- **gitignore:** Ignore temp dev files ([403f0e5](https://github.com/tmlmt/cooklang-shopper/commit/403f0e5))
+- **useModalCookMode:** Fix type mismatch with nuxt-i18n-micro ([7f32438](https://github.com/tmlmt/cooklang-shopper/commit/7f32438))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.20.7
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.6...v0.20.7)
