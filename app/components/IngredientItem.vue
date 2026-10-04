@@ -3,6 +3,7 @@ import type {
   Ingredient,
   IngredientQuantityGroup,
   IngredientQuantityAndGroup,
+  IngredientAlternativesOnlyGroup,
   AlternativeIngredientRef,
 } from "@tmlmt/cooklang-parser";
 import {
@@ -13,7 +14,9 @@ import {
 import type { IngredientOrder } from "~~/shared/types";
 
 type IngredientQuantityEntry =
-  IngredientQuantityGroup | IngredientQuantityAndGroup;
+  | IngredientQuantityGroup
+  | IngredientQuantityAndGroup
+  | IngredientAlternativesOnlyGroup;
 
 const { $ts } = useI18n();
 const recipeT = inject<typeof $ts>("recipeT", $ts);

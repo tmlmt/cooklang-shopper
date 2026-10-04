@@ -34,7 +34,7 @@
     "@prisma/adapter-better-sqlite3": "7.10.0",
     "@prisma/client": "7.10.0",
     "@takumi-rs/core": "2.14.0",
-    "@tmlmt/cooklang-parser": "3.0.0-alpha.45",
+    "@tmlmt/cooklang-parser": "3.0.0-alpha.47",
     "@vue/devtools-api": "8.2.1",
     "better-sqlite3": "13.0.3",
     "c12": "4.0.0-rc.2",

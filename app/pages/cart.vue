@@ -2,6 +2,7 @@
 import type { TableColumn, TableRow } from "@nuxt/ui";
 import {
   formatQuantityWithUnit,
+  isAlternativesOnlyGroup,
   type ProductMisMatch,
   type ProductSelection,
 } from "@tmlmt/cooklang-parser";
@@ -200,6 +201,9 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
             return q.and
               .map((a) => formatQuantityWithUnit(a.quantity, a.unit))
               .join(" + ");
+          }
+          if (isAlternativesOnlyGroup(q)) {
+            return "-";
           }
           return formatQuantityWithUnit(q.quantity, q.unit);
         })
