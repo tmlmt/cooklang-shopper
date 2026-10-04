@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.20.9
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.8...v0.20.9)
+
+### 🩹 Fixes
+
+- Workaround for mismatch in deps due to nitro bug ([cae0d5c](https://github.com/tmlmt/cooklang-shopper/commit/cae0d5c))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.20.8
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.7...v0.20.8)
