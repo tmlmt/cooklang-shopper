@@ -4,7 +4,7 @@ import { ModalCookMode } from "#components";
 type TranslateFn = (
   key: string,
   params?: Record<string, string | number | boolean>,
-  defaultValue?: string,
+  defaultValue?: string | null,
 ) => string;
 
 export default async function () {
