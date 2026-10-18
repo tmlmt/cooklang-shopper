@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.21.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.9...v0.21.0)
+
+### ⚠️ Migration Guide
+
+This release is powered by Nuxt 4.6 which introduced a new secret system. While a new script (`init.sh`) has been added to facilitate the initializastion of the necessary secrets, config file and process file for systemd or pm2, existing instances need to proceed to the change in variable manually before restarting:
+
+- remove the `ogImageSecret` variable from `config.yaml`
+- add a new NUXT_APP_SECRET environment variable to the relevant process management file (e.g. systemd or pm2 ecosystem file). A new secret can be generated using `openssl rand -hex 32`
+
+### 🚀 Enhancements
+
+- Add init script to prepopulate config and systemd/pm2 file with generated secrets ([6ffda33](https://github.com/tmlmt/cooklang-shopper/commit/6ffda33))
+
+### 🩹 Fixes
+
+- **parser:** Increase tolerance by normalizing ingredient or units names when aggregating/subtracting quantities ([7214da6](https://github.com/tmlmt/cooklang-shopper/commit/7214da6))
+
+### 🏡 Chore
+
+- Bump Nuxt to v4.6, related SEO dependencies, and introduce init script ([6d5751e](https://github.com/tmlmt/cooklang-shopper/commit/6d5751e))
+- Remove dep mismatch workaround introduced in cae0d5c and dedupe deps ([455766a](https://github.com/tmlmt/cooklang-shopper/commit/455766a))
+- Remove obsolete NUXT_OG_IMAGE_SECRET and function to generate secrets at runtime ([6ae8fb1](https://github.com/tmlmt/cooklang-shopper/commit/6ae8fb1))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.20.9
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.8...v0.20.9)
@@ -135,7 +164,7 @@
 
 ### 🩹 Fixes
 
-- **build:** Add plugin to patch pinia v4 which introduced a regression  making nuxt to fail ([7e80645](https://github.com/tmlmt/cooklang-shopper/commit/7e80645))
+- **build:** Add plugin to patch pinia v4 which introduced a regression making nuxt to fail ([7e80645](https://github.com/tmlmt/cooklang-shopper/commit/7e80645))
 
 ### ❤️ Contributors
 
@@ -176,7 +205,7 @@
 ### 🩹 Fixes
 
 - **recipe:** Increase right margin on ingredients list ([4c68f79](https://github.com/tmlmt/cooklang-shopper/commit/4c68f79))
-- **list:** Ensure application of  category config to shopping list once updated ([185f685](https://github.com/tmlmt/cooklang-shopper/commit/185f685))
+- **list:** Ensure application of category config to shopping list once updated ([185f685](https://github.com/tmlmt/cooklang-shopper/commit/185f685))
 
 ### 💅 Refactors
 
