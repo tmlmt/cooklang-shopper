@@ -1,4 +1,5 @@
 import { syncCart } from "#server/utils/onlineStore/service";
+import { defineEventHandler, readBody } from "nuxt/server";
 import type { OnlineStoreItem } from "~~/shared/types";
 
 export default defineEventHandler(async (event) => {

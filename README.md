@@ -84,7 +84,7 @@ Credentials are only used to open a session with the store and are never persist
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v22 or later)
+- [Node.js](https://nodejs.org/) v24 or later
 
 ### Installation
 
@@ -94,11 +94,13 @@ Credentials are only used to open a session with the store and are never persist
    mkdir -p /path/to/cooklang-shopper
    tar -xzf cooklang-shopper-v*.tar.gz -C /path/to/cooklang-shopper
    ```
-3. Create your configuration file by copying the provided example:
+3. Initialize your own configuration file by running the initialization script. This creates `config.yaml` from the example if it doesn't exist yet and populates it with a `sessionSecret`:
+
    ```bash
    cd /path/to/cooklang-shopper/dist
-   cp config.yaml.example config.yaml
+   ./init.sh
    ```
+
 4. Edit `config.yaml` — set the different parameters (see the file for instructions). For **password** authentication, generate hashed passwords for the editor and viewer roles:
 
    ```bash
@@ -118,37 +120,34 @@ Credentials are only used to open a session with the store and are never persist
 
    For **Google / Microsoft** authentication (invite-based accounts), see the [Account providers](#account-providers-google--microsoft) section below.
 
-   The `sessionSecret` field is required (minimum 32 characters). Generate one with:
-
-   ```bash
-   openssl rand -base64 32
-   ```
-
    > **Session revocation:** Changing `sessionSecret` immediately invalidates **all** active sessions for every provider. This is the only way to force a global logout for password and generic OIDC users. Google/Microsoft (account) sessions are also revoked automatically when a user is deleted or deactivated — no secret rotation needed for those.
 
-   For OG image URL signing, set `NUXT_OG_IMAGE_SECRET` as an environment variable — add it to your `.env` file or process manager config (e.g. a pm2 ecosystem file). A secret is auto-generated at startup if omitted, but setting it explicitly ensures stable signed URLs across restarts. Alternatively, set `ogImageSecret` directly in `config.yaml`.
-
 5. Add your `.cook` recipe files to `dist/public/recipes/`
-6. Start the server once to initialize the database (created automatically at `dist/data/cooklang-shopper.db`):
 
-   ```
-   cd /path/to/cooklang-shopper/dist
-   node server/index.mjs
-   ```
+Note: a database file is created automatically at `dist/data/cooklang-shopper.db` on first server start.
 
-7. For a persistent setup (launch at startup), set up a systemd service using the provided example:
+6. For a persistent setup (launch at startup), set up a systemd service using the provided example:
 
    ```bash
-   # Edit the service file to adjust User, WorkingDirectory, and ExecStart paths
+   cd /path/to/cooklang-shopper/dist
+   ./init.sh --systemd
    sudo cp /path/to/cooklang-shopper/dist/cooklang-shopper.service /etc/systemd/system/
+   sudoedit /etc/systemd/system/cooklang-shopper.service
+   # Adjust User, WorkingDirectory, and ExecStart paths before enabling the service
    sudo systemctl daemon-reload
    sudo systemctl enable --now cooklang-shopper
    ```
 
-   Alternatively, set up and use [pm2](https://pm2.keymetrics.io/docs/usage/quick-start/) or start the server manually:
+   Note: `./init.sh --systemd` creates an environment file with the right permissions and an auto-generated app secret required to run the app.
+
+   Alternatively, use [pm2](https://pm2.keymetrics.io/docs/usage/quick-start/) or another process manager. Generate a `NUXT_APP_SECRET` with `openssl rand -hex 32` and configure it, along with `NODE_ENV=production`, in that process manager. Keep the secret unchanged across restarts and upgrades, and use the same value on every instance. It is separate from `sessionSecret`, so changing it does not revoke Cooklang Shopper login sessions.
+
+   In case you want to manually run the app once:
 
    ```bash
    cd /path/to/cooklang-shopper/dist
+   export NODE_ENV=production
+   export NUXT_APP_SECRET='<your-persistent-secret>'
    node server/index.mjs
    ```
 
@@ -234,6 +233,8 @@ Options:
 - `--edge` — include pre-releases when finding the latest version
 - `--tag <tag>` — download a specific version (e.g. `--tag v1.0.0`)
 
+For an existing systemd installation, after upgrading run `./dist/init.sh --systemd` from the installation directory to create or preserve the protected environment file and `NUXT_APP_SECRET`. If you update the installed service to the provided example, adjust its paths and run `sudo systemctl daemon-reload` before restarting it.
+
 The previous version is kept in `dist.bak/` for easy rollback:
 
 ```bash
@@ -281,12 +282,14 @@ Translations are managed via a public Crowdin project that you are welcome to co
 ### Status
 
 <!--TRANSLATION_STATUS_START-->
-| Language | Translation (%) | Proofreading (%) |
-| --- | ---: | ---: |
-| 🇩🇰 Dansk | ![100%](https://progress-bar.xyz/100) | ![23%](https://progress-bar.xyz/23) |
-| 🇺🇸 English | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
-| 🇫🇷 Français | ![99%](https://progress-bar.xyz/99) | ![79%](https://progress-bar.xyz/79) |
-| 🇯🇵 日本語 | ![100%](https://progress-bar.xyz/100) | ![0%](https://progress-bar.xyz/0) |
+
+| Language    |                       Translation (%) |                      Proofreading (%) |
+| ----------- | ------------------------------------: | ------------------------------------: |
+| 🇩🇰 Dansk    | ![100%](https://progress-bar.xyz/100) |   ![23%](https://progress-bar.xyz/23) |
+| 🇺🇸 English  | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
+| 🇫🇷 Français |   ![99%](https://progress-bar.xyz/99) |   ![79%](https://progress-bar.xyz/79) |
+| 🇯🇵 日本語   | ![100%](https://progress-bar.xyz/100) |     ![0%](https://progress-bar.xyz/0) |
+
 <!--TRANSLATION_STATUS_END-->
 
 ## Screenshots

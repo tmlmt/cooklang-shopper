@@ -263,6 +263,8 @@ export interface RecipeImageManifest {
   hasImages: boolean;
 }
 
+export type Visibility = "public" | "private";
+
 export interface ShareLink {
   id: number;
   token: string;

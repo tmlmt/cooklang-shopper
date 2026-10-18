@@ -1,5 +1,7 @@
 import * as v from "valibot";
 import type { Role } from "~~/shared/types";
+// h3 dependance:
+// sendInvitationEmail() depends on a middleware (nuxt-i18n-micro) which still depends on H3
 
 const CreateSchema = v.object({
   email: v.pipe(v.string(), v.trim(), v.email(), v.maxLength(320)),

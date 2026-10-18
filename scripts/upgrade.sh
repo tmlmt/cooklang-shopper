@@ -226,6 +226,6 @@ info "To start the server, run (replace with your custom runner as relevant):"
 info "  cd $DIST_DIR && node server/index.mjs"
 echo ""
 if [[ ! -f "$DIST_DIR/config.yaml" ]]; then
-  warn "No config.yaml found. Copy the example and edit it:"
-  warn "  cp $DIST_DIR/config.yaml.example $DIST_DIR/config.yaml"
+  warn "No config.yaml found. Initialize it with:"
+  warn "  cd $DIST_DIR && ./init.sh"
 fi

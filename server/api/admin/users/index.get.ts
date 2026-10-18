@@ -1,5 +1,6 @@
 import * as v from "valibot";
 import type { AdminUsersResponse } from "~~/shared/types";
+import { defineEventHandler, getValidatedQuery } from "nuxt/server";
 
 const QuerySchema = v.object({
   page: v.optional(v.pipe(v.unknown(), v.transform(Number), v.minValue(1)), 1),

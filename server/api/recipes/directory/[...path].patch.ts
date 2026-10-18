@@ -1,13 +1,14 @@
 import { rename, cp, rm } from "node:fs/promises";
 import * as nodePath from "node:path";
 import { glob } from "glob";
+import { defineEventHandler, readBody } from "nuxt/server";
 
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);
 
   const decodedPath = getValidatedRecipePath(event);
 
-  const body = await readBody(event);
+  const body = await readBody<{ destination: string }>(event);
   if (body.destination === undefined) {
     throw createError({
       status: 400,

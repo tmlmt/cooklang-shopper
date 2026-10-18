@@ -1,5 +1,5 @@
-import type { H3Event } from "h3";
 import type { UserSession } from "#auth-utils";
+import type { RequestEvent } from "nuxt/server";
 import { getAppConfig } from "#server/utils/appConfig";
 
 /**
@@ -7,7 +7,9 @@ import { getAppConfig } from "#server/utils/appConfig";
  * (catalog + online store). Mirrors {@link requireShoppingAccess} but gates on
  * `cart.enabled`.
  */
-export async function requireCartAccess(event: H3Event): Promise<UserSession> {
+export async function requireCartAccess(
+  event: RequestEvent,
+): Promise<UserSession> {
   const session = await requireUserSession(event);
   const config = await getAppConfig();
   const enabled = config.cart?.enabled ?? false;

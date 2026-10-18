@@ -1,4 +1,5 @@
 import * as v from "valibot";
+import { defineEventHandler, readValidatedBody } from "nuxt/server";
 
 const ClaimSchema = v.object({
   code: v.pipe(v.string(), v.nonEmpty(), v.maxLength(256)),

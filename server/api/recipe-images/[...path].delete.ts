@@ -1,6 +1,7 @@
 import { stat, unlink } from "node:fs/promises";
 import * as nodePath from "node:path";
 import type { RecipeImageManifest } from "~~/shared/types";
+import { defineEventHandler, readBody } from "nuxt/server";
 
 export default defineEventHandler(
   async (event): Promise<RecipeImageManifest> => {

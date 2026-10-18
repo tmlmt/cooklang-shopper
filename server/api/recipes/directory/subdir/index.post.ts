@@ -1,11 +1,12 @@
 import path from "node:path";
 import { access, mkdir } from "node:fs/promises";
+import { defineEventHandler, readBody } from "nuxt/server";
 
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);
 
   // Checking the parent directory for validity and security
-  const body = await readBody(event);
+  const body = await readBody<{ parentDir: string; name: string }>(event);
   if (body.parentDir === undefined) {
     throw createError({
       status: 400,

@@ -1,4 +1,4 @@
-import { getRequestURL } from "h3";
+import { defineEventHandler, getRequestURL } from "nuxt/server";
 
 // Extract the recipe key (colon-separated) from a static asset path.
 // e.g. "/recipes/mains/gratin.jpg" → "mains:gratin"

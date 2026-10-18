@@ -1,3 +1,6 @@
+// h3 dependance:
+// sendInvitationEmail() depends on a middleware (nuxt-i18n-micro) which still depends on H3
+
 export default defineEventHandler(async (event) => {
   await requireAdminRole(event);
 

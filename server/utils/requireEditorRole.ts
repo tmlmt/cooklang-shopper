@@ -1,7 +1,10 @@
-import type { H3Event } from "h3";
+import type { RequestEvent } from "nuxt/server";
 import { getAppConfig } from "#server/utils/appConfig";
+import type { H3Event } from "h3";
 
-export async function requireEditorRole(event: H3Event): Promise<void> {
+export async function requireEditorRole(
+  event: RequestEvent | H3Event,
+): Promise<void> {
   const session = await requireUserSession(event);
   if (!hasEditorAccess(session.user.role)) {
     throw createError({
@@ -11,7 +14,9 @@ export async function requireEditorRole(event: H3Event): Promise<void> {
   }
 }
 
-export async function requireAdminRole(event: H3Event): Promise<void> {
+export async function requireAdminRole(
+  event: RequestEvent | H3Event,
+): Promise<void> {
   const session = await requireUserSession(event);
   if (!hasAdminAccess(session.user.role)) {
     throw createError({
@@ -21,7 +26,9 @@ export async function requireAdminRole(event: H3Event): Promise<void> {
   }
 }
 
-export async function requireSharePermission(event: H3Event): Promise<void> {
+export async function requireSharePermission(
+  event: RequestEvent | H3Event,
+): Promise<void> {
   const session = await requireUserSession(event);
   if (session.user.role === "editor") return;
   if (session.user.role === "admin") return;

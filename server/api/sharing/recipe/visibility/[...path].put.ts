@@ -1,3 +1,6 @@
+import { defineEventHandler, getRouterParam, readBody } from "nuxt/server";
+import type { Visibility } from "#shared/types";
+
 export default defineEventHandler(async (event) => {
   await requireSharePermission(event);
 
@@ -9,7 +12,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const body = await readBody(event);
+  const body = await readBody<{ visibility: string }>(event);
   if (!body.visibility || !["public", "private"].includes(body.visibility)) {
     throw createError({
       status: 400,
@@ -17,6 +20,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  await setRecipeVisibility(recipePath, body.visibility);
+  await setRecipeVisibility(recipePath, body.visibility as Visibility);
   return { visibility: body.visibility };
 });

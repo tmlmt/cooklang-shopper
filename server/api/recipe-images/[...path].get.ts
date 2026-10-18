@@ -1,5 +1,6 @@
 import { Recipe } from "@tmlmt/cooklang-parser";
 import type { RecipeImageManifest } from "~~/shared/types";
+import { defineEventHandler } from "nuxt/server";
 
 export default defineEventHandler(
   async (event): Promise<RecipeImageManifest> => {

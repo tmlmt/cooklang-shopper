@@ -1,5 +1,6 @@
 import { glob } from "glob";
 import path from "node:path";
+import { defineEventHandler } from "nuxt/server";
 
 export default defineEventHandler(async (event) => {
   const authenticated = await isAuthenticated(event);

@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { defineEventHandler, readBody } from "nuxt/server";
 
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);

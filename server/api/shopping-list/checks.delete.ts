@@ -1,3 +1,5 @@
+import { defineEventHandler, getQuery } from "nuxt/server";
+
 export default defineEventHandler(async (event) => {
   const token = getQuery(event).token as string | undefined;
   let userKey: string;

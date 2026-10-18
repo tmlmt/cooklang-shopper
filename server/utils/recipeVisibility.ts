@@ -1,6 +1,5 @@
 import { getAppConfig } from "#server/utils/appConfig";
-
-type Visibility = "public" | "private";
+import type { Visibility } from "#shared/types";
 
 async function getDefaultVisibility(): Promise<Visibility> {
   const config = await getAppConfig();

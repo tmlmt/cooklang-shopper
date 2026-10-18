@@ -12,7 +12,7 @@ WorkingDirectory=/path/to/cooklang-shopper/dist
 ExecStart=/usr/bin/node server/index.mjs
 Restart=on-failure
 RestartSec=5
-Environment=NODE_ENV=production
+EnvironmentFile=/etc/cooklang-shopper/cooklang-shopper.env
 
 [Install]
 WantedBy=multi-user.target

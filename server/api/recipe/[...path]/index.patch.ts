@@ -1,4 +1,5 @@
 import { copyFile, rename, unlink } from "node:fs/promises";
+import { defineEventHandler, readBody } from "nuxt/server";
 import * as nodePath from "node:path";
 
 export default defineEventHandler(async (event) => {
@@ -7,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const decodedPath = getValidatedRecipePath(event);
 
   // Checking whether a recipe body was provided
-  const body = await readBody(event);
+  const body = await readBody<{ fileName: string; dir: string }>(event);
   if (body.fileName === undefined || body.dir === undefined) {
     throw createError({
       status: 400,

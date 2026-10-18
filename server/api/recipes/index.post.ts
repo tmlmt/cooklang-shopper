@@ -1,10 +1,13 @@
 import path from "node:path";
 import { access, writeFile } from "node:fs/promises";
+import { defineEventHandler, readBody } from "nuxt/server";
 
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);
 
-  const body = await readBody(event);
+  const body = await readBody<{ dir: string; name: string; content: string }>(
+    event,
+  );
   if (body.dir === undefined) {
     throw createError({
       status: 400,

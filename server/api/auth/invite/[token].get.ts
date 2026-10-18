@@ -1,3 +1,5 @@
+import { defineEventHandler, getRouterParam } from "nuxt/server";
+
 /**
  * Public endpoint used by the claim page to check whether an invitation token
  * is still valid and which account providers are available.

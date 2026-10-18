@@ -1,11 +1,11 @@
-import type { H3Event } from "h3";
 import type { UserSession } from "#auth-utils";
+import type { RequestEvent } from "nuxt/server";
 
 /**
  * Check if the request has a valid user session without throwing an error.
  * Returns true if authenticated, false otherwise.
  */
-export async function isAuthenticated(event: H3Event): Promise<boolean> {
+export async function isAuthenticated(event: RequestEvent): Promise<boolean> {
   try {
     await requireUserSession(event);
     return true;

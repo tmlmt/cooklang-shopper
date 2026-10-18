@@ -1,4 +1,5 @@
 import { ACCOUNT_PROVIDER } from "#server/utils/appConfig";
+import { defineEventHandler } from "nuxt/server";
 
 /**
  * For sessions backed by the DB user directory (provider === "account"),

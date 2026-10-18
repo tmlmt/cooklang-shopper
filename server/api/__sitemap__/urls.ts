@@ -1,5 +1,6 @@
 import { type Metadata, Recipe } from "@tmlmt/cooklang-parser";
 import type { SitemapUrlInput } from "#sitemap/types";
+import { defineSitemapEventHandler } from "#sitemap/server";
 
 export default defineSitemapEventHandler(async () => {
   const config = await getAppConfig();

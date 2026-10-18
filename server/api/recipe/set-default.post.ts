@@ -1,5 +1,6 @@
 import { rename, copyFile, unlink } from "node:fs/promises";
 import * as nodePath from "node:path";
+import { defineEventHandler, readBody } from "nuxt/server";
 
 interface SetDefaultBody {
   /** Base recipe path (e.g. "italian/pasta") */

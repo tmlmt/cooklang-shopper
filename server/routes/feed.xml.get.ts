@@ -1,5 +1,7 @@
 import { type Metadata, Recipe } from "@tmlmt/cooklang-parser";
 import { getAppConfig } from "#server/utils/appConfig";
+// h3 dependance
+// defineCachedEventHandler() is an h3 helper
 
 export default defineCachedEventHandler(
   async (event) => {

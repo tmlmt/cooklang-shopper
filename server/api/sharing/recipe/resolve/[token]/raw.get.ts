@@ -1,3 +1,5 @@
+import { defineEventHandler, getQuery, getRouterParam } from "nuxt/server";
+
 export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, "token");
   if (!token) {
@@ -35,6 +37,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ status: 404, statusText: "Recipe not found" });
   }
 
-  setResponseHeader(event, "content-type", "text/plain; charset=utf-8");
+  event.res.headers.set("content-type", "text/plain; charset=utf-8");
   return String(content);
 });

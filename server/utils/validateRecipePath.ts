@@ -1,5 +1,6 @@
 import * as nodePath from "node:path";
-import { createError, getRouterParam, type H3Event } from "h3";
+import { getRouterParam, createError, type RequestEvent } from "nuxt/server";
+import type { H3Event } from "h3";
 import { validateRecipePath } from "~~/shared/utils/validateRecipePath";
 
 const recipesRoot = nodePath.resolve(process.cwd(), "public", "recipes");
@@ -16,7 +17,7 @@ function assertWithinRecipesRoot(resolvedPath: string) {
   }
 }
 
-export function getValidatedRecipePath(event: H3Event): string {
+export function getValidatedRecipePath(event: RequestEvent | H3Event): string {
   const path = getRouterParam(event, "path");
   if (!path) {
     throw createError({

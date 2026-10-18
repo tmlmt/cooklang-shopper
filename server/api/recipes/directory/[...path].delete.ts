@@ -1,6 +1,7 @@
 import { rm } from "node:fs/promises";
 import * as nodePath from "node:path";
 import { glob } from "glob";
+import { defineEventHandler } from "nuxt/server";
 
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);

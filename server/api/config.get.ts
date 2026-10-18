@@ -1,3 +1,4 @@
+import { defineEventHandler } from "nuxt/server";
 import { getAppConfig } from "#server/utils/appConfig";
 import { getAdapter } from "#server/utils/onlineStore/adapters";
 import type {

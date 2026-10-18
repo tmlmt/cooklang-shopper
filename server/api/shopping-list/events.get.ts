@@ -1,3 +1,6 @@
+// h3 dependance:
+// Uses h3's createEventStream for server-sent events
+
 export default defineEventHandler(async (event) => {
   const token = getQuery(event).token as string | undefined;
   let userKey: string;

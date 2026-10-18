@@ -1,10 +1,12 @@
+import { defineEventHandler, readBody } from "nuxt/server";
+
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);
 
   const decodedPath = getValidatedRecipePath(event);
 
   // Checking whether a recipe body was provided
-  const body = await readBody(event);
+  const body = await readBody<{ recipe: string }>(event);
   if (!body.recipe || body.recipe.trim().length === 0) {
     throw createError({
       status: 400,

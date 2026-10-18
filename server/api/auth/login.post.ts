@@ -1,5 +1,6 @@
 import * as v from "valibot";
 import { getPasswordProvider } from "#server/utils/appConfig";
+import { defineEventHandler, readValidatedBody } from "nuxt/server";
 import type { Role } from "~~/shared/types";
 
 const LoginSchema = v.object({

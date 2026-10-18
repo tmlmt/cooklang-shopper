@@ -1,5 +1,10 @@
 import * as v from "valibot";
 import type { Role } from "~~/shared/types";
+import {
+  defineEventHandler,
+  getRouterParam,
+  readValidatedBody,
+} from "nuxt/server";
 
 const PatchSchema = v.object({
   role: v.optional(v.picklist(["viewer", "editor", "admin"] satisfies Role[])),

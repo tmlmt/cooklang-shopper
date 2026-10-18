@@ -1,6 +1,8 @@
 import type { H3Event } from "h3";
 import { getOidcProviderByName } from "#server/utils/appConfig";
 import type { Role, OidcRoleMapping } from "~~/shared/types";
+// h3 dependance:
+// defineOAuthOidcEventHandler() depends on H3 events
 
 function matchesClaim(
   user: Record<string, unknown>,

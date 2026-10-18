@@ -1,4 +1,5 @@
 import pkg from "../../package.json";
+import { defineEventHandler } from "nuxt/server";
 
 const GITHUB_REPO = "tmlmt/cooklang-shopper";
 

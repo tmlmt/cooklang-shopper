@@ -1,3 +1,5 @@
+import { defineEventHandler, getQuery } from "nuxt/server";
+
 export default defineEventHandler(async (event) => {
   const path = getValidatedRecipePath(event);
   const recipeKey = path.replace(/\//g, ":");
@@ -26,6 +28,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ status: 404, statusText: "Recipe not found" });
   }
 
-  setResponseHeader(event, "content-type", "text/plain; charset=utf-8");
+  event.res.headers.set("content-type", "text/plain; charset=utf-8");
   return String(content);
 });

@@ -1,4 +1,5 @@
 import { Recipe } from "@tmlmt/cooklang-parser";
+import { defineEventHandler, getQuery, getRouterParam } from "nuxt/server";
 
 export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, "token");

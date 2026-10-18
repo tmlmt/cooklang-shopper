@@ -1,3 +1,5 @@
+import { defineEventHandler, getQuery } from "nuxt/server";
+
 export default defineEventHandler(async (event) => {
   const authenticated = await isAuthenticated(event);
   const decodedPath = getValidatedRecipePath(event);
@@ -38,7 +40,7 @@ export default defineEventHandler(async (event) => {
   // Tell the client which language variant was served
   const { langCode } = parseRecipeKey(fileKey);
   if (langCode) {
-    setResponseHeader(event, "x-recipe-locale", langCode);
+    event.res.headers.set("x-recipe-locale", langCode);
   }
 
   return content as string;

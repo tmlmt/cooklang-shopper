@@ -1,3 +1,5 @@
+import { defineEventHandler } from "nuxt/server";
+
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);
   const session = await requireUserSession(event);

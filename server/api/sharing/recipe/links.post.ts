@@ -1,9 +1,14 @@
 import { randomUUID } from "node:crypto";
+import { defineEventHandler, readBody } from "nuxt/server";
 
 export default defineEventHandler(async (event) => {
   await requireSharePermission(event);
 
-  const body = await readBody(event);
+  const body = await readBody<{
+    recipePath: string;
+    expiresAt?: string;
+    locale?: string;
+  }>(event);
 
   if (!body.recipePath || typeof body.recipePath !== "string") {
     throw createError({

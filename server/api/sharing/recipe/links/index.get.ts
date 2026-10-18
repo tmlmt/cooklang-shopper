@@ -1,3 +1,5 @@
+import { defineEventHandler, getQuery } from "nuxt/server";
+
 export default defineEventHandler(async (event) => {
   await requireSharePermission(event);
 

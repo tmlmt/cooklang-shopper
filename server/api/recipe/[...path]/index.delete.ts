@@ -1,5 +1,6 @@
 import { unlink } from "node:fs/promises";
 import * as nodePath from "node:path";
+import { defineEventHandler } from "nuxt/server";
 
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);
@@ -47,4 +48,3 @@ export default defineEventHandler(async (event) => {
   const recipes = Object.fromEntries(recipeIndex.entries());
   return { recipes };
 });
-

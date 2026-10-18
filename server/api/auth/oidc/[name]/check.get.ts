@@ -1,5 +1,6 @@
 import { connect } from "node:net";
 import { getOidcProviderByName } from "#server/utils/appConfig";
+import { defineEventHandler, getRouterParam } from "nuxt/server";
 
 function isReachable(
   host: string,

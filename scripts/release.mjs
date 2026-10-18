@@ -266,6 +266,8 @@ async function main() {
     // Put upgrade script to ./dist as well
     "--transform",
     "s|^scripts/upgrade.sh|upgrade.sh|",
+    "--transform",
+    "s|^scripts/init.sh|dist/init.sh|",
     // Put other important files to ./dist as well
     "--transform",
     "s|^config.yaml.example|dist/config.yaml.example|",
@@ -279,6 +281,7 @@ async function main() {
     ".output",
     "prisma/migrations",
     "scripts/upgrade.sh",
+    "scripts/init.sh",
     "config.yaml.example",
     "scripts/hash-password.mjs",
     "cooklang-shopper.service",

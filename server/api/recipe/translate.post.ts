@@ -1,4 +1,5 @@
 import { streamRecipeTranslation } from "#server/utils/aiTranslator";
+import { defineEventHandler, readBody } from "nuxt/server";
 
 export default defineEventHandler(async (event) => {
   await requireEditorRole(event);
@@ -33,9 +34,9 @@ export default defineEventHandler(async (event) => {
 
   const ai = config.ai;
 
-  setResponseHeader(event, "Content-Type", "text/plain; charset=utf-8");
-  setResponseHeader(event, "Transfer-Encoding", "chunked");
-  setResponseHeader(event, "Cache-Control", "no-cache");
+  event.res.headers.set("Content-Type", "text/plain; charset=utf-8");
+  event.res.headers.set("Transfer-Encoding", "chunked");
+  event.res.headers.set("Cache-Control", "no-cache");
 
   const encoder = new TextEncoder();
 
@@ -73,5 +74,5 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  return sendStream(event, stream);
+  return stream;
 });

@@ -1,3 +1,6 @@
+// h3 dependance
+// defineOAuthMicrosoftEventHandler() from nuxt-auth-utils relies on H3.
+
 export default defineEventHandler(async (event) => {
   const config = await getAppConfig();
   const provider = getMicrosoftProvider(config);
