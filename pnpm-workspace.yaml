@@ -10,19 +10,15 @@ allowBuilds:
   '@prisma/engines': true
   better-sqlite3: true
   prisma: true
-minimumReleaseAgeExclude:
-  - '@nuxt/image@2.1.0'
-  - '@takumi-rs/core-darwin-arm64@2.5.3'
-  - '@takumi-rs/core-darwin-x64@2.5.3'
-  - '@takumi-rs/core-linux-arm64-gnu@2.5.3'
-  - '@takumi-rs/core-linux-arm64-musl@2.5.3'
-  - '@takumi-rs/core-linux-x64-gnu@2.5.3'
-  - '@takumi-rs/core-linux-x64-musl@2.5.3'
-  - '@takumi-rs/core-win32-arm64-msvc@2.5.3'
-  - '@takumi-rs/core-win32-x64-msvc@2.5.3'
-  - '@takumi-rs/core@2.5.3'
-  - '@takumi-rs/helpers@2.5.3'
-  - ipx@4.0.0-beta.1
-  - '@tmlmt/cooklang-parser@3.0.0-alpha.47'
-  - openai@7.1.0
-  - nuxt-og-image@6.7.5
+  nuxt-i18n-micro: true
+permissions:
+  '@nuxtjs/robots':
+    skills: true
+  '@nuxtjs/sitemap':
+    skills: true
+  nuxt-og-image:
+    skills: true
+  nuxt-seo-utils:
+    skills: true
+  nuxtseo-layer-devtools:
+    skills: true
