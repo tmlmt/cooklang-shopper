@@ -200,8 +200,8 @@ importers:
         specifier: 2.16.3
         version: 2.16.3(csstype@3.2.3)(react@19.3.1)
       '@tmlmt/cooklang-parser':
-        specifier: 3.0.0-alpha.47
-        version: 3.0.0-alpha.47(synckit@0.11.13)
+        specifier: 3.0.0-alpha.48
+        version: 3.0.0-alpha.48(synckit@0.11.13)
       '@vue/devtools-api':
         specifier: 8.2.1
         version: 8.2.1
@@ -2732,8 +2732,8 @@ packages:
       y-protocols: ^1.0.1
       yjs: ^13.5.38
 
-  '@tmlmt/cooklang-parser@3.0.0-alpha.47':
-    resolution: {integrity: sha512-HBB8XUbbRT5QNrnUNFW7hBpEOsqUVfVilBw2w/zdsxy5Vtg0/Qg6Oeu6F6JSjGucGt8clIWv5auGjCT5A0G6mw==}
+  '@tmlmt/cooklang-parser@3.0.0-alpha.48':
+    resolution: {integrity: sha512-gmCfZGunsVdB6bf3XEfZvZa50TaXl6anZmAbSQxB6NFjRyV9kyfxpCddmzcP89DFA1Fhz5UbU8S2PyA0LnHpqg==}
     engines: {node: '>=22'}
 
   '@tybys/wasm-util@0.10.4':
@@ -6218,8 +6218,8 @@ packages:
     resolution: {integrity: sha512-RQsvleCbF8cVHEv+xuDGaA4pOizFqJ0GgjtMSRo6oP8pnN7WsigHgVGey6aILRBKv4W2YOMHLqbKdnB6hpB9fw==}
     engines: {node: '>=20.0.0'}
 
-  smol-toml@1.9.0:
-    resolution: {integrity: sha512-hpd+HLON7HdZXqYchMM/+LaTTbdK0AU3NngIJ4KVyWbY9bfQqdL9cD+4yf6dUoU2Ap4VsU0JkQi6FxAI1B2mXQ==}
+  smol-toml@1.9.1:
+    resolution: {integrity: sha512-j7WyPdf0CJoutMzMoPLF/bVXHtKZIT9Rb4eGeEbWw8X2t5oirjPgpL+OpaENZrILYaXqYwnVH+qgUwVbl+pUJQ==}
     engines: {node: '>= 18'}
 
   source-map-js@1.2.2:
@@ -9903,10 +9903,10 @@ snapshots:
       y-protocols: 1.0.7(yjs@13.6.33)
       yjs: 13.6.33
 
-  '@tmlmt/cooklang-parser@3.0.0-alpha.47(synckit@0.11.13)':
+  '@tmlmt/cooklang-parser@3.0.0-alpha.48(synckit@0.11.13)':
     dependencies:
       big.js: 7.0.1
-      smol-toml: 1.9.0
+      smol-toml: 1.9.1
       unrun: 0.3.1(synckit@0.11.13)
       yalps: 0.6.4
     transitivePeerDependencies:
@@ -14072,7 +14072,7 @@ snapshots:
 
   smob@1.6.2: {}
 
-  smol-toml@1.9.0: {}
+  smol-toml@1.9.1: {}
 
   source-map-js@1.2.2: {}
 
