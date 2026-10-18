@@ -126,30 +126,45 @@ Credentials are only used to open a session with the store and are never persist
 
 Note: a database file is created automatically at `dist/data/cooklang-shopper.db` on first server start.
 
-6. For a persistent setup (launch at startup), set up a systemd service using the provided example:
+6. For a persistent setup (launch at startup):
 
-   ```bash
-   cd /path/to/cooklang-shopper/dist
-   ./init.sh --systemd
-   sudo cp /path/to/cooklang-shopper/dist/cooklang-shopper.service /etc/systemd/system/
-   sudoedit /etc/systemd/system/cooklang-shopper.service
-   # Adjust User, WorkingDirectory, and ExecStart paths before enabling the service
-   sudo systemctl daemon-reload
-   sudo systemctl enable --now cooklang-shopper
-   ```
+- Option 1: set up a systemd service using the provided example:
 
-   Note: `./init.sh --systemd` creates an environment file with the right permissions and an auto-generated app secret required to run the app.
+```bash
+cd /path/to/cooklang-shopper/dist
+./init.sh --systemd
+sudo cp /path/to/cooklang-shopper/dist/cooklang-shopper.service /etc/systemd/system/
+sudoedit /etc/systemd/system/cooklang-shopper.service
+# Adjust User, WorkingDirectory, and ExecStart paths before enabling the service
+sudo systemctl daemon-reload
+sudo systemctl enable --now cooklang-shopper
+```
 
-   Alternatively, use [pm2](https://pm2.keymetrics.io/docs/usage/quick-start/) or another process manager. Generate a `NUXT_APP_SECRET` with `openssl rand -hex 32` and configure it, along with `NODE_ENV=production`, in that process manager. Keep the secret unchanged across restarts and upgrades, and use the same value on every instance. It is separate from `sessionSecret`, so changing it does not revoke Cooklang Shopper login sessions.
+`./init.sh --systemd` creates an environment file with the right permissions and an auto-generated app secret required to run the app.
 
-   In case you want to manually run the app once:
+- Option 2: alternatively, use [pm2](https://pm2.keymetrics.io/docs/usage/quick-start/):
 
-   ```bash
-   cd /path/to/cooklang-shopper/dist
-   export NODE_ENV=production
-   export NUXT_APP_SECRET='<your-persistent-secret>'
-   node server/index.mjs
-   ```
+```bash
+cd /path/to/cooklang-shopper/dist
+./init.sh --pm2
+pm2 start ecosystem.config.cjs
+pm2 save
+```
+
+`./init.sh --pm2` creates `ecosystem.config.cjs` (readable only by you) with `NODE_ENV=production` and an auto-generated `NUXT_APP_SECRET`; an existing file is left untouched.
+
+- Option 3: use another process manager:
+
+Generate a `NUXT_APP_SECRET` with `openssl rand -hex 32` and configure it, along with `NODE_ENV=production`, in that process manager. Keep the secret unchanged across restarts and upgrades, and use the same value on every instance. It is separate from `sessionSecret`, so changing it does not revoke Cooklang Shopper login sessions.
+
+In case you want to manually run the app once:
+
+```bash
+cd /path/to/cooklang-shopper/dist
+export NODE_ENV=production
+export NUXT_APP_SECRET='<your-persistent-secret>'
+node server/index.mjs
+```
 
 ### Per-user data files
 
@@ -221,7 +236,7 @@ For **password** and **OIDC** sessions (which are stateless), revocation require
 
 ### Upgrade
 
-The release tarball includes an `upgrade.sh` script at the root of the installation directory. It downloads the latest release, replaces the application files, and restores your recipes, product catalog, and `config.yaml` automatically.
+The release tarball includes an `upgrade.sh` script at the root of the installation directory. It downloads the latest release, replaces the application files, and restores your recipes, product catalog, and `config.yaml` automatically (as well as `ecosystem.config.cjs` if you use pm2).
 
 ```bash
 cd /path/to/cooklang-shopper

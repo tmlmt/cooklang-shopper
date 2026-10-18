@@ -204,6 +204,12 @@ if [[ -d "$BACKUP_DIR" ]]; then
     info "Restored config.yaml."
   fi
 
+  # Restore pm2 ecosystem file
+  if [[ -f "$BACKUP_DIR/ecosystem.config.cjs" ]]; then
+    cp -a "$BACKUP_DIR/ecosystem.config.cjs" "$DIST_DIR/ecosystem.config.cjs"
+    info "Restored pm2 ecosystem file."
+  fi
+
   # Restore database
   if [[ -d "$BACKUP_DIR/data" ]]; then
     mkdir -p "$DIST_DIR/data"

@@ -2,21 +2,27 @@
 set -euo pipefail
 
 SYSTEMD=false
+PM2=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --pm2)
+      PM2=true
+      shift
+      ;;
     --systemd)
       SYSTEMD=true
       shift
       ;;
     -h|--help)
       cat <<EOF
-Usage: $(basename "$0") [--systemd]
+Usage: $(basename "$0") [--systemd | --pm2]
 
 Initialize Cooklang Shopper secrets.
 
 Options:
   --systemd  Create or update the protected systemd environment file.
+  --pm2      Create a pm2 ecosystem file (ecosystem.config.cjs) with a generated app secret.
   -h, --help Show this help message.
 EOF
       exit 0
@@ -43,6 +49,11 @@ EXAMPLE_FILE="$APP_DIR/config.yaml.example"
 
 if ! command -v openssl >/dev/null 2>&1; then
   printf 'ERROR: openssl is required to generate secure secrets.\n' >&2
+  exit 1
+fi
+
+if [[ "$SYSTEMD" == true && "$PM2" == true ]]; then
+  printf 'ERROR: --systemd and --pm2 cannot be used together.\n' >&2
   exit 1
 fi
 
@@ -99,7 +110,40 @@ else
   printf 'Preserved the existing sessionSecret in %s.\n' "$CONFIG_FILE"
 fi
 
-if [[ "$SYSTEMD" == true ]]; then
+if [[ "$PM2" == true ]]; then
+  ECOSYSTEM_FILE="$APP_DIR/ecosystem.config.cjs"
+  if [[ -f "$ECOSYSTEM_FILE" ]]; then
+    printf 'Preserved the existing %s.\n' "$ECOSYSTEM_FILE"
+  else
+    TMP_ECO="$(mktemp "$APP_DIR/.ecosystem.XXXXXX")"
+    trap 'rm -f "${TMP_ECO:-}"' EXIT
+    cat > "$TMP_ECO" <<EOF
+module.exports = {
+  apps: [
+    {
+      cwd: '$APP_DIR',
+      script: './server/index.mjs',
+      watch: './nitro.json',
+      name: 'CooklangShopper',
+      exec_mode: 'cluster',
+      instances: 1,
+      merge_logs: true,
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
+      env: {
+        NODE_ENV: 'production',
+        NUXT_APP_SECRET: '$(openssl rand -hex 32)',
+      },
+    },
+  ],
+}
+EOF
+    chmod 600 "$TMP_ECO"
+    mv "$TMP_ECO" "$ECOSYSTEM_FILE"
+    trap - EXIT
+    printf 'Created %s with a generated NUXT_APP_SECRET.\n' "$ECOSYSTEM_FILE"
+  fi
+  printf 'SUCCESS: Initialization complete. When ready, run: pm2 start %s && pm2 save\n' "$ECOSYSTEM_FILE"
+elif [[ "$SYSTEMD" == true ]]; then
   ENV_DIR="/etc/cooklang-shopper"
   ENV_FILE="$ENV_DIR/cooklang-shopper.env"
 
