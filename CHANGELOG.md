@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.22.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.21.0...v0.22.0)
+
+### 🚀 Enhancements
+
+- **ingredient-list:** List optional ingredients last ([508d35d](https://github.com/tmlmt/cooklang-shopper/commit/508d35d))
+- Show parse diagnostics in recipe editor ([98177a6](https://github.com/tmlmt/cooklang-shopper/commit/98177a6))
+
+### 🩹 Fixes
+
+- Show optional cookware as such ([40bed54](https://github.com/tmlmt/cooklang-shopper/commit/40bed54))
+
+### 🏡 Chore
+
+- Lint ([6c3853e](https://github.com/tmlmt/cooklang-shopper/commit/6c3853e))
+
+### 🤖 CI
+
+- Bump crowdin cli to v5 and simplify translation status parsing ([904de3c](https://github.com/tmlmt/cooklang-shopper/commit/904de3c))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.21.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.20.9...v0.21.0)
