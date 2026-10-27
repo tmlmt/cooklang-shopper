@@ -297,14 +297,12 @@ Translations are managed via a public Crowdin project that you are welcome to co
 ### Status
 
 <!--TRANSLATION_STATUS_START-->
-
-| Language    |                       Translation (%) |                      Proofreading (%) |
-| ----------- | ------------------------------------: | ------------------------------------: |
-| 🇩🇰 Dansk    | ![100%](https://progress-bar.xyz/100) |   ![23%](https://progress-bar.xyz/23) |
-| 🇺🇸 English  | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
-| 🇫🇷 Français |   ![99%](https://progress-bar.xyz/99) |   ![79%](https://progress-bar.xyz/79) |
-| 🇯🇵 日本語   | ![100%](https://progress-bar.xyz/100) |     ![0%](https://progress-bar.xyz/0) |
-
+| Language | Translation (%) | Proofreading (%) |
+| --- | ---: | ---: |
+| 🇩🇰 Dansk | ![98%](https://progress-bar.xyz/98) | ![23%](https://progress-bar.xyz/23) |
+| 🇺🇸 English | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
+| 🇫🇷 Français | ![98%](https://progress-bar.xyz/98) | ![78%](https://progress-bar.xyz/78) |
+| 🇯🇵 日本語 | ![98%](https://progress-bar.xyz/98) | ![0%](https://progress-bar.xyz/0) |
 <!--TRANSLATION_STATUS_END-->
 
 ## Screenshots

@@ -51,32 +51,9 @@ function parseCrowdinStatus(source) {
   const translated = new Map();
   const proofread = new Map();
 
-  let section = "";
-  for (const rawLine of source.split(/\r?\n/)) {
-    const line = rawLine.trim();
-    if (!line) continue;
-
-    if (line === "Translated:") {
-      section = "translated";
-      continue;
-    }
-
-    if (line === "Proofread:") {
-      section = "proofread";
-      continue;
-    }
-
-    const match = line.match(/^([\w-]+)\s+(\d+(?:\.\d+)?)$/);
-    if (!match) continue;
-
-    const [, code, value] = match;
-    const numeric = Number(value);
-
-    if (section === "translated") {
-      translated.set(code, numeric);
-    } else if (section === "proofread") {
-      proofread.set(code, numeric);
-    }
+  for (const { language, translation, approval } of JSON.parse(source)) {
+    translated.set(language, translation);
+    proofread.set(language, approval);
   }
 
   return { translated, proofread };
@@ -165,7 +142,7 @@ async function main() {
     readFile(readmePath, "utf8"),
   ]);
 
-  const crowdinOutput = execSync("crowdin status --plain", {
+  const crowdinOutput = execSync("crowdin status --output json", {
     cwd: repoRoot,
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
