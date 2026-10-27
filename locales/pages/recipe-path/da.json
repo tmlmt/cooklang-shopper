@@ -11,5 +11,10 @@
     "defaultLocale": "Standardsprog",
     "oldDefaultLocaleTitle": "Nuværende standardsprog",
     "oldDefaultLocaleLabel": "Hvilket sprog er den nuværende standardfil? (f.eks da)"
+  },
+  "diagnostics": {
+    "noIssue": "Ingen problemer",
+    "warnings": "Ingen advarsler | 1 advarsel | {count} advarsler",
+    "errors": "Ingen fejl | 1 fejl | {count} fejl"
   }
 }

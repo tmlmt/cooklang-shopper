@@ -11,5 +11,10 @@
     "defaultLocale": "Langue par défaut",
     "oldDefaultLocaleTitle": "Langue par défaut actuelle",
     "oldDefaultLocaleLabel": "Dans quelle langue est écrite la recette par défaut actuelle ? (p. ex. fr)"
+  },
+  "diagnostics": {
+    "noIssue": "Aucun problème",
+    "warnings": "Aucune note d'information | 1 note d'information | {count} notes d'information",
+    "errors": "Aucune erreur | 1 erreur | {count} erreurs"
   }
 }

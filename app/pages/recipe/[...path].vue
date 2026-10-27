@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { Recipe, type RecipeChoices } from "@tmlmt/cooklang-parser";
+import {
+  DiagnosticError,
+  Recipe,
+  type Diagnostic,
+  type RecipeChoices,
+} from "@tmlmt/cooklang-parser";
 import * as v from "valibot";
 import type { FormSubmitEvent, DropdownMenuItem } from "@nuxt/ui";
 import { FetchError } from "ofetch";
@@ -8,7 +13,7 @@ import type { IngredientOrder } from "~~/shared/types";
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
-const { $t, $ts, $getLocale, $getLocales } = useI18n();
+const { $t, $ts, $tc, $getLocale, $getLocales } = useI18n();
 
 if (!route.params.path) {
   throw createError({
@@ -135,14 +140,37 @@ if (route.query.mode === "new") {
   rawRecipe.value = String(res.data.value);
 }
 
+interface ParsedRecipe {
+  recipe?: Recipe;
+  diagnostics: Diagnostic[];
+}
+
+// Memorises the last parse so the editor diagnostics and the form validator share it
+let lastParse: { source: string; result: ParsedRecipe } | undefined;
+
+function parseRecipe(source: string): ParsedRecipe {
+  if (lastParse?.source === source) return lastParse.result;
+  let result: ParsedRecipe;
+  try {
+    const parsed = new Recipe(source);
+    result = { recipe: parsed, diagnostics: parsed.diagnostics };
+  } catch (error) {
+    if (!(error instanceof DiagnosticError)) throw error;
+    result = { diagnostics: error.diagnostics };
+  }
+  lastParse = { source, result };
+  return result;
+}
+
 const recipe = shallowRef<Recipe>();
 watch(
   rawRecipe,
   (newRawRecipe) => {
     if (newRawRecipe) {
-      recipe.value = new Recipe(newRawRecipe);
+      const { recipe: parsed } = parseRecipe(newRawRecipe);
+      if (!parsed) return;
       const servings = shoppingStore.getServings(path);
-      if (servings) recipe.value = recipe.value.scaleTo(servings);
+      recipe.value = servings ? parsed.scaleTo(servings) : parsed;
     }
   },
   { immediate: true },
@@ -528,6 +556,44 @@ const formState = ref({
   recipe: rawRecipe.value || newRecipePlaceholder,
 });
 
+const diagnosticsOpen = ref(false);
+const recipeDiagnostics = computed(
+  () => parseRecipe(formState.value.recipe).diagnostics,
+);
+const errorCount = computed(
+  () =>
+    recipeDiagnostics.value.filter(
+      (diagnostic) => diagnostic.severity === "error",
+    ).length,
+);
+const warningCount = computed(
+  () =>
+    recipeDiagnostics.value.filter(
+      (diagnostic) => diagnostic.severity === "warning",
+    ).length,
+);
+const diagnosticSummary = computed<{
+  label: string;
+  color: "error" | "warning" | "success";
+}>(() => {
+  if (errorCount.value > 0) {
+    return {
+      label: `✕ ${$tc("diagnostics.errors", { count: errorCount.value })}`,
+      color: "error",
+    };
+  }
+  if (warningCount.value > 0) {
+    return {
+      label: `⚠ ${$tc("diagnostics.warnings", { count: warningCount.value })}`,
+      color: "warning",
+    };
+  }
+  return {
+    label: `✓ ${$ts("diagnostics.noIssue")}`,
+    color: "success",
+  };
+});
+
 // Edit-mode language variants: editLocale tracks which variant is loaded in the
 // textarea; variantCache memoises fetched contents (undefined = default file).
 // The cache persists while editing and is cleared on leaving edit mode so a later
@@ -692,21 +758,15 @@ const onConvertWithAi = async () => {
   }
 };
 
-const isParsableRecipe = (value: string): boolean => {
-  try {
-    new Recipe(value);
-    return true;
-  } catch {
-    return false;
-  }
-};
+const isParsableRecipe = (value: string): boolean =>
+  parseRecipe(value).recipe !== undefined;
 
 const schema = v.object({
   recipe: v.pipe(
     v.string(),
     v.trim(),
     v.nonEmpty($ts("validation.enterRecipe")),
-    v.check(isParsableRecipe, $ts("validation.invalidRecipe")),
+    v.check(isParsableRecipe, ""),
   ),
 });
 
@@ -1455,9 +1515,48 @@ watch(
             spellcheck="false"
           />
         </UFormField>
+
+        <div class="mt-4">
+          <UCollapsible
+            v-if="recipeDiagnostics.length > 0"
+            v-model:open="diagnosticsOpen"
+          >
+            <UButton
+              class="group w-full"
+              :color="diagnosticSummary.color"
+              variant="soft"
+              size="sm"
+            >
+              <div class="flex flex-row w-full">
+                <span class="text-left grow">{{
+                  diagnosticSummary.label
+                }}</span>
+                <UIcon
+                  name="i-lucide-chevron-down"
+                  class="size-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180"
+                />
+              </div>
+            </UButton>
+            <template #content>
+              <div class="mt-3 flex flex-col gap-3">
+                <DiagnosticCard
+                  v-for="(diagnostic, index) in recipeDiagnostics"
+                  :key="index"
+                  :diagnostic="diagnostic"
+                  :raw-recipe="formState.recipe"
+                />
+              </div>
+            </template>
+          </UCollapsible>
+          <p v-else class="text-sm" :class="`text-${diagnosticSummary.color}`">
+            {{ diagnosticSummary.label }}
+          </p>
+        </div>
+
         <div class="mt-4 flex flex-row gap-4">
           <UButton
             type="submit"
+            :disabled="errorCount > 0"
             :label="$ts('actions.save')"
             class="resize-y"
           />

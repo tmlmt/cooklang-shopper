@@ -11,5 +11,10 @@
     "defaultLocale": "デフォルトの言語",
     "oldDefaultLocaleTitle": "現在のデフォルト言語",
     "oldDefaultLocaleLabel": "現在のデフォルトファイルはどの言語ですか？（例: en）"
+  },
+  "diagnostics": {
+    "noIssue": "問題なし",
+    "warnings": "警告なし | 1 件の警告 | {count} 件の警告",
+    "errors": "エラーなし | 1 件のエラー | {count} 件のエラー"
   }
 }

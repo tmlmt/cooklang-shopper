@@ -11,5 +11,10 @@
     "defaultLocale": "Default language",
     "oldDefaultLocaleTitle": "Current default language",
     "oldDefaultLocaleLabel": "What language is the current default file? (e.g. en)"
+  },
+  "diagnostics": {
+    "noIssue": "No issue",
+    "warnings": "No warnings | 1 warning | {count} Warnings",
+    "errors": "No errors | 1 error | {count} Errors"
   }
 }
