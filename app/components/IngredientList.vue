@@ -40,9 +40,14 @@ const onCheck = computed(() => {
 
 const headerVisible = computed(() => props.showHeader ?? props.interactive);
 
-const sorted = computed(() =>
-  [...props.ingredients].sort((a, b) => a.name.localeCompare(b.name)),
-);
+const sorted = computed(() => {
+  return [...props.ingredients].sort((a, b) => {
+    const aIsOptional = a.flags?.includes("optional") ?? false;
+    const bIsOptional = b.flags?.includes("optional") ?? false;
+    if (aIsOptional !== bIsOptional) return aIsOptional ? 1 : -1;
+    return a.name.localeCompare(b.name);
+  });
+});
 
 const visible = computed(() =>
   props.interactive && hideChecked.value
