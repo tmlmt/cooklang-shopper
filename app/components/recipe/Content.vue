@@ -73,10 +73,17 @@ const filteredIngredients = computed(() => {
     .filter((ing) => !ing.flags?.includes("hidden") && ing.usedAsPrimary);
 });
 
-const filteredCookware = computed(() => {
-  return scaledRecipe.value.getCookwareForVariant({
-    choices: choices.value,
-  });
+const filteredAndSortedCookware = computed(() => {
+  return scaledRecipe.value
+    .getCookwareForVariant({
+      choices: choices.value,
+    })
+    .sort((a, b) => {
+      const aIsOptional = a.flags?.includes("optional") ?? false;
+      const bIsOptional = b.flags?.includes("optional") ?? false;
+      if (aIsOptional !== bIsOptional) return aIsOptional ? 1 : -1;
+      return a.name.localeCompare(b.name);
+    });
 });
 
 const sectionsWithStepNumbers = computed(() => {
@@ -233,15 +240,19 @@ const visibleStepOverlay = ref<string | null>(null);
         :interactive="false"
         :desktop-columns="1"
       />
-      <template v-if="filteredCookware.length > 0">
+      <template v-if="filteredAndSortedCookware.length > 0">
         <!-- Desktop: always visible -->
         <div class="mt-6 hidden md:block">
           <h2 class="mb-2 text-2xl font-bold">
             {{ recipeT("recipe.cookware") }}
           </h2>
           <ul class="ml-6 list-disc">
-            <li v-for="item in filteredCookware" :key="item.name">
-              {{ item.name }}
+            <li v-for="item in filteredAndSortedCookware" :key="item.name">
+              {{
+                item.flags?.includes("optional")
+                  ? `(${recipeT("basics.optional")}) `
+                  : ""
+              }}{{ item.name }}
               <span v-if="item.quantity" class="text-neutral-500">
                 ({{ formatQuantity(item.quantity) }})
               </span>
@@ -265,8 +276,12 @@ const visibleStepOverlay = ref<string | null>(null);
             />
             <template #content>
               <ul class="mt-2 ml-6 list-disc">
-                <li v-for="item in filteredCookware" :key="item.name">
-                  {{ item.name }}
+                <li v-for="item in filteredAndSortedCookware" :key="item.name">
+                  {{
+                    item.flags?.includes("optional")
+                      ? `(${recipeT("basics.optional")}) `
+                      : ""
+                  }}{{ item.name }}
                   <span v-if="item.quantity" class="text-neutral-500">
                     ({{ formatQuantity(item.quantity) }})
                   </span>
