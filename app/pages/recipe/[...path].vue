@@ -1527,8 +1527,8 @@ watch(
               variant="soft"
               size="sm"
             >
-              <div class="flex flex-row w-full">
-                <span class="text-left grow">{{
+              <div class="flex w-full flex-row">
+                <span class="grow text-left">{{
                   diagnosticSummary.label
                 }}</span>
                 <UIcon

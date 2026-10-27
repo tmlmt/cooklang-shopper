@@ -16,7 +16,7 @@ defineProps<{
       {
         'border-error-400/20 bg-error-400/10 text-error-700 dark:text-error-400':
           diagnostic.severity === 'error',
-        'bg-warning-400/10 border-warning-400/50 text-warning-600 dark:border-warning-400/20 dark:text-warning-300':
+        'border-warning-400/50 bg-warning-400/10 text-warning-600 dark:border-warning-400/20 dark:text-warning-300':
           diagnostic.severity === 'warning',
       },
     ]"
@@ -34,7 +34,7 @@ defineProps<{
     </template>
     <pre
       v-if="diagnostic.span"
-      class="scrollbar-thumb-error-300/50 scrollbar-thin overflow-auto px-4 pt-3 pb-0 text-xs text-gray-800 dark:text-gray-200"
+      class="scrollbar-thin scrollbar-thumb-error-300/50 overflow-auto px-4 pt-3 pb-0 text-xs text-gray-800 dark:text-gray-200"
       >{{ formatCodeFrame(diagnostic.span, rawRecipe) }}</pre>
     <template #footer>
       <div v-if="diagnostic.fix" class="mt-2">
