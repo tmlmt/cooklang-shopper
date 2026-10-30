@@ -21,4 +21,4 @@ permissions:
   nuxtseo-layer-devtools:
     skills: true
 minimumReleaseAgeExclude:
-  - '@tmlmt/cooklang-parser@3.0.0-alpha.48 || 3.0.0-beta.1'
+  - '@tmlmt/cooklang-parser@3.0.0-alpha.48 || 3.0.0-beta.1 || 3.0.0-beta.2'

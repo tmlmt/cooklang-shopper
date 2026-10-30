@@ -75,7 +75,7 @@ const filteredIngredients = computed(() => {
 
 const filteredAndSortedCookware = computed(() => {
   return scaledRecipe.value
-    .getCookwareForVariant({
+    .getCookwareQuantities({
       choices: choices.value,
     })
     .sort((a, b) => {
@@ -253,8 +253,15 @@ const visibleStepOverlay = ref<string | null>(null);
                   ? `(${recipeT("basics.optional")}) `
                   : ""
               }}{{ item.name }}
-              <span v-if="item.quantity" class="text-neutral-500">
-                ({{ formatQuantity(item.quantity) }})
+              <span
+                v-if="item.quantities?.length"
+                class="text-neutral-500"
+              >
+                {{
+                  item.quantities
+                    .map((quantity) => formatQuantity(quantity))
+                    .join(", ")
+                }}
               </span>
             </li>
           </ul>
@@ -282,8 +289,15 @@ const visibleStepOverlay = ref<string | null>(null);
                       ? `(${recipeT("basics.optional")}) `
                       : ""
                   }}{{ item.name }}
-                  <span v-if="item.quantity" class="text-neutral-500">
-                    ({{ formatQuantity(item.quantity) }})
+                  <span
+                    v-if="item.quantities?.length"
+                    class="text-neutral-500"
+                  >
+                    {{
+                      item.quantities
+                        .map((quantity) => formatQuantity(quantity))
+                        .join(", ")
+                    }}
                   </span>
                 </li>
               </ul>

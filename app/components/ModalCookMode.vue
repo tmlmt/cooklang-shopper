@@ -192,7 +192,7 @@ const allIngredients = computed(() =>
 );
 
 const allCookware = computed(() =>
-  props.recipe.getCookwareForVariant({ choices: props.choices }),
+  props.recipe.getCookwareQuantities({ choices: props.choices }),
 );
 
 function getStepIngredients(slide: CookSlide & { type: "step" }) {
@@ -498,8 +498,15 @@ watch(currentSlideIndex, () => {
                   <ul class="ml-6 list-disc md:columns-2">
                     <li v-for="item in allCookware" :key="item.name">
                       {{ item.name }}
-                      <span v-if="item.quantity" class="text-neutral-500">
-                        ({{ formatQuantity(item.quantity) }})
+                      <span
+                        v-if="item.quantities?.length"
+                        class="text-neutral-500"
+                      >
+                        {{
+                          item.quantities
+                            .map((quantity) => formatQuantity(quantity))
+                            .join(", ")
+                        }}
                       </span>
                     </li>
                   </ul>
@@ -580,8 +587,15 @@ watch(currentSlideIndex, () => {
                       :key="item.name"
                     >
                       {{ item.name }}
-                      <span v-if="item.quantity" class="text-neutral-500">
-                        ({{ formatQuantity(item.quantity) }})
+                      <span
+                        v-if="item.quantities?.length"
+                        class="text-neutral-500"
+                      >
+                        {{
+                          item.quantities
+                            .map((quantity) => formatQuantity(quantity))
+                            .join(", ")
+                        }}
                       </span>
                     </li>
                   </ul>
