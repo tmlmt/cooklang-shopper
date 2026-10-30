@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.22.1
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.22.0...v0.22.1)
+
+### 🩹 Fixes
+
+- **parser:** Ingredient referencing, cookware quantities across variants and W0401 source span (via @tmlmt/cooklang-parser v3.0.0-beta.2) ([a58500b](https://github.com/tmlmt/cooklang-shopper/commit/a58500b))
+
+### 🏡 Chore
+
+- Remove patch from nuxt-auth-utils now that the package has taken it into account ([6163e08](https://github.com/tmlmt/cooklang-shopper/commit/6163e08))
+- **ModalFile:** Prevent Typescript from recursively expanding Nuxt UI's tree type ([03460c5](https://github.com/tmlmt/cooklang-shopper/commit/03460c5))
+- Remove nitropack as dependency ([22c125a](https://github.com/tmlmt/cooklang-shopper/commit/22c125a))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.22.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.21.0...v0.22.0)
