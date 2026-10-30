@@ -1,5 +1,3 @@
-patchedDependencies:
-  nuxt-auth-utils: patches/nuxt-auth-utils.patch
 allowBuilds:
   '@parcel/watcher': true
   '@tailwindcss/oxide': true
