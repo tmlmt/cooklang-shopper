@@ -1,8 +1,6 @@
-import type { NitroFetchOptions, NitroFetchRequest } from "nitropack";
-
 export function $fetchWithHeaders<T>(
   url: string,
-  options?: NitroFetchOptions<NitroFetchRequest>,
+  options?: Parameters<typeof $fetch>[1],
 ) {
   const headers = useRequestHeaders(["cookie"]);
 

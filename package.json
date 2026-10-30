@@ -71,7 +71,6 @@
     "eslint-plugin-tailwindcss": "4.4.0",
     "execa": "10.2.1",
     "human-regex": "2.2.0",
-    "nitropack": "2.13.5",
     "nuxt-og-image": "7.0.7",
     "nuxtseo-devtools-host": "1.0.2",
     "nuxtseo-layer-devtools": "6.0.2",

@@ -302,9 +302,6 @@ importers:
       human-regex:
         specifier: 2.2.0
         version: 2.2.0
-      nitropack:
-        specifier: 2.13.5
-        version: 2.13.5(@electric-sql/pglite@0.4.3)(better-sqlite3@13.0.3)(mysql2@3.15.3)(oxc-parser@0.153.0)(rolldown@1.2.14)(srvx@1.0.6)(supports-color@10.2.2)(vite@8.3.5)
       nuxt-og-image:
         specifier: 7.0.7
         version: 7.0.7(866354d76f9f47a0168cd8564f8620c0)
