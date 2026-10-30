@@ -147,7 +147,7 @@ const isNotAlreadyExisting = (value: string): boolean => {
   if (!value) return false;
   if (!mainState.value.dir) return false;
   if (!mainState.value.dir.children) return false;
-  return findRecursive(mainState.value.dir.children, value) ? false : true;
+  return !findRecursive(mainState.value.dir.children as TreeItem[], value);
 };
 
 const isParentDirSelected = (value: string): boolean => {
