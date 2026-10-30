@@ -39,7 +39,7 @@
     "better-sqlite3": "13.0.3",
     "c12": "4.0.0-rc.4",
     "fuse.js": "7.5.0",
-    "glob": "13.0.6",
+    "glob": "14.0.3",
     "h3": "1.15.11",
     "ipaddr.js": "2.5.0",
     "linkedom": "0.18.14",
@@ -55,11 +55,11 @@
     "valibot": "1.5.0"
   },
   "devDependencies": {
-    "@anthropic-ai/sdk": "0.135.0",
+    "@anthropic-ai/sdk": "1.3.0",
     "@iconify-json/lucide": "1.2.149",
     "@iconify-json/material-symbols": "1.2.97",
     "@iconify-json/prime": "1.2.5",
-    "@nuxt/devtools": "3.4.3",
+    "@nuxt/devtools": "4.0.0",
     "@nuxt/eslint": "1.17.0",
     "@nuxt/hints": "1.1.5",
     "@nuxt/test-utils": "4.3.4",
