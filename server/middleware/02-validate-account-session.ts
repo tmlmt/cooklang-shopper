@@ -8,7 +8,7 @@ import { defineEventHandler } from "nuxt/server";
  * their session, even before their cookie expires.
  *
  * Password and generic OIDC sessions are stateless and cannot be checked
- * this way — rotate `sessionSecret` in config.yaml to invalidate all of them.
+ * this way — rotate `NUXT_APP_SECRET` in your .env file to invalidate all of them.
  */
 export default defineEventHandler(async (event) => {
   const session = await getUserSession(event);

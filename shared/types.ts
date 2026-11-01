@@ -185,7 +185,6 @@ export interface I18nConfig {
 
 export interface AppConfig {
   auth: AuthConfig;
-  sessionSecret: string;
   ogImageSecret?: string;
   shopping?: ShoppingConfig;
   cart?: CartConfig;

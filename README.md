@@ -94,7 +94,7 @@ Credentials are only used to open a session with the store and are never persist
    mkdir -p /path/to/cooklang-shopper
    tar -xzf cooklang-shopper-v*.tar.gz -C /path/to/cooklang-shopper
    ```
-3. Initialize your own configuration file by running the initialization script. This creates `config.yaml` from the example if it doesn't exist yet and populates it with a `sessionSecret`:
+3. Initialize your own configuration file by running the initialization script. This creates `config.yaml` from the example if it doesn't exist yet:
 
    ```bash
    cd /path/to/cooklang-shopper/dist
@@ -120,7 +120,7 @@ Credentials are only used to open a session with the store and are never persist
 
    For **Google / Microsoft** authentication (invite-based accounts), see the [Account providers](#account-providers-google--microsoft) section below.
 
-   > **Session revocation:** Changing `sessionSecret` immediately invalidates **all** active sessions for every provider. This is the only way to force a global logout for password and generic OIDC users. Google/Microsoft (account) sessions are also revoked automatically when a user is deleted or deactivated — no secret rotation needed for those.
+   > **Session revocation:** Changing your `NUXT_APP_SECRET` environment variable immediately invalidates **all** active sessions for every provider. This is the only way to force a global logout for password and generic OIDC users. Google/Microsoft (account) sessions are also revoked automatically when a user is deleted or deactivated — no secret rotation needed for those.
 
 5. Add your `.cook` recipe files to `dist/public/recipes/`
 
@@ -155,7 +155,7 @@ pm2 save
 
 - Option 3: use another process manager:
 
-Generate a `NUXT_APP_SECRET` with `openssl rand -hex 32` and configure it, along with `NODE_ENV=production`, in that process manager. Keep the secret unchanged across restarts and upgrades, and use the same value on every instance. It is separate from `sessionSecret`, so changing it does not revoke Cooklang Shopper login sessions.
+Generate a `NUXT_APP_SECRET` with `openssl rand -hex 32` and configure it, along with `NODE_ENV=production`, in that process manager. Keep the secret unchanged across restarts and upgrades, and use the same value on every instance. Changing it revokes Cooklang Shopper login sessions.
 
 In case you want to manually run the app once:
 
@@ -232,7 +232,7 @@ From the burger menu, open **User management** (visible to admins) to invite use
 
 When a Google/Microsoft account is deleted or deactivated (via User Management or the `reset-users` dev script), their session cookie is revoked on the next request — the server validates each account session against the database and clears it if the user no longer exists or is not active.
 
-For **password** and **OIDC** sessions (which are stateless), revocation requires rotating `sessionSecret` in `config.yaml` and restarting the server. This invalidates all active sessions across all providers simultaneously.
+For **password** and **OIDC** sessions (which are stateless), revocation requires rotating `NUXT_APP_SECRET` in your `.env`file and restarting the server. This invalidates all active sessions across all providers simultaneously.
 
 ### Upgrade
 
@@ -297,12 +297,14 @@ Translations are managed via a public Crowdin project that you are welcome to co
 ### Status
 
 <!--TRANSLATION_STATUS_START-->
-| Language | Translation (%) | Proofreading (%) |
-| --- | ---: | ---: |
-| 🇩🇰 Dansk | ![98%](https://progress-bar.xyz/98) | ![23%](https://progress-bar.xyz/23) |
-| 🇺🇸 English | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
-| 🇫🇷 Français | ![98%](https://progress-bar.xyz/98) | ![78%](https://progress-bar.xyz/78) |
-| 🇯🇵 日本語 | ![98%](https://progress-bar.xyz/98) | ![0%](https://progress-bar.xyz/0) |
+
+| Language    |                       Translation (%) |                      Proofreading (%) |
+| ----------- | ------------------------------------: | ------------------------------------: |
+| 🇩🇰 Dansk    |   ![98%](https://progress-bar.xyz/98) |   ![23%](https://progress-bar.xyz/23) |
+| 🇺🇸 English  | ![100%](https://progress-bar.xyz/100) | ![100%](https://progress-bar.xyz/100) |
+| 🇫🇷 Français |   ![98%](https://progress-bar.xyz/98) |   ![78%](https://progress-bar.xyz/78) |
+| 🇯🇵 日本語   |   ![98%](https://progress-bar.xyz/98) |     ![0%](https://progress-bar.xyz/0) |
+
 <!--TRANSLATION_STATUS_END-->
 
 ## Screenshots

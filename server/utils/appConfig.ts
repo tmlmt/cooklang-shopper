@@ -141,13 +141,6 @@ export async function getAppConfig(): Promise<AppConfig> {
     }
   }
 
-  if (!config.sessionSecret) {
-    throw createError({
-      status: 500,
-      message: "Missing sessionSecret in config.yaml",
-    });
-  }
-
   if (config.sharing?.federation?.enabled && !config.baseUrl) {
     throw createError({
       status: 500,
