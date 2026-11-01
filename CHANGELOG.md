@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.22.2
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.22.1...v0.22.2)
+
+This release is essentially a maintenance release closing a security issue related to one of the dependencies (@nuxt/image), and preparing some internals for the upcoming release of nuxt v5.
+
+Besides, cookie duration has been increased to 30 days to improve UX.
+
+### 🚀 Enhancements
+
+- **session:** Increase cookie duration to 30 days ([96e448f](https://github.com/tmlmt/cooklang-shopper/commit/96e448f))
+
+### 🏡 Chore
+
+- Bump nuxt-auth-utils to v0.6.0 prepping for nuxt v5 ([f1c72dd](https://github.com/tmlmt/cooklang-shopper/commit/f1c72dd))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.22.1
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.22.0...v0.22.1)
