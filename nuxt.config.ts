@@ -118,7 +118,7 @@ export default defineNuxtConfig({
       cookie: {
         sameSite: "lax",
       },
-      maxAge: 60 * 60 * 24 * 7, // 1 week
+      maxAge: 60 * 60 * 24 * 30, // 1 month
     },
     public: {
       i18nRuntime: {
