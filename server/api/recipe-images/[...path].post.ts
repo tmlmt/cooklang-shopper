@@ -2,6 +2,8 @@ import { unlink, writeFile } from "node:fs/promises";
 import * as nodePath from "node:path";
 import type { RecipeImageManifest } from "~~/shared/types";
 import { defineEventHandler, readMultipartFormData } from "h3";
+// h3 dependance:
+// This handler depends on H3 events through readMultipartFormData.
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 

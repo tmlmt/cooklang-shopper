@@ -1,5 +1,4 @@
-// h3 dependance
-// defineOAuthGoogleEventHandler() from nuxt-auth-utils relies on H3.
+import { defineEventHandler, getQuery, sendRedirect } from "nuxt/server";
 
 export default defineEventHandler(async (event) => {
   const config = await getAppConfig();

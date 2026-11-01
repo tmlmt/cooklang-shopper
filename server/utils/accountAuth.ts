@@ -1,6 +1,7 @@
 import type { User } from "~~/generated/prisma/client";
 import type { Role } from "~~/shared/types";
 import { ACCOUNT_PROVIDER } from "#server/utils/appConfig";
+import { sendRedirect, type RequestEvent } from "nuxt/server";
 
 /** The provider types backed by the DB user directory. */
 export type AccountProviderType = "google" | "microsoft";
@@ -154,7 +155,7 @@ export async function resolveAccountLogin(
  * stash a pending admin claim, or redirect back with an error.
  */
 export async function applyAccountLoginResult(
-  event: import("h3").H3Event,
+  event: RequestEvent,
   result: AccountLoginResult,
 ) {
   if (result.type === "session") {

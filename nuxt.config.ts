@@ -114,8 +114,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     session: {
-      name: "nuxt-session",
-      password: process.env.NUXT_SESSION_PASSWORD || "",
+      name: "nuxt-auth-session",
       cookie: {
         sameSite: "lax",
       },

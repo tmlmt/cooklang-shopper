@@ -1,5 +1,4 @@
-// h3 dependance
-// handleOidcCallback() depends on nuxt-auth-utils methods that in turn rely on H3.
+import { defineEventHandler } from "nuxt/server";
 
 export default defineEventHandler((event) =>
   handleOidcCallback(event, "/auth/oidc"),

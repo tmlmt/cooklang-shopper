@@ -1,4 +1,6 @@
 import type { H3Event } from "h3";
+// h3 dependance:
+// sendInvitationEmail() depends on H3 events through useTranslationServerMiddleware and sendMail.
 
 /**
  * Send an invitation email. Returns true if sent, false if SMTP is not

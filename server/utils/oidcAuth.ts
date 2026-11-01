@@ -1,8 +1,6 @@
-import type { H3Event } from "h3";
 import { getOidcProviderByName } from "#server/utils/appConfig";
 import type { Role, OidcRoleMapping } from "~~/shared/types";
-// h3 dependance:
-// defineOAuthOidcEventHandler() depends on H3 events
+import { sendRedirect, getRouterParam, type RequestEvent } from "nuxt/server";
 
 function matchesClaim(
   user: Record<string, unknown>,
@@ -41,7 +39,7 @@ function resolveProfile(user: Record<string, unknown>): string {
  * /api/auth mount points), to which the provider name is appended.
  */
 export async function handleOidcCallback(
-  event: H3Event,
+  event: RequestEvent,
   basePath: string,
 ): Promise<unknown> {
   const name = getRouterParam(event, "name");
