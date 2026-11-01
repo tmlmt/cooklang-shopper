@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.22.3
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.22.2...v0.22.3)
+
+### 🏡 Chore
+
+- Leftover from f1c72dd ([4979b28](https://github.com/tmlmt/cooklang-shopper/commit/4979b28))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.22.2
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.22.1...v0.22.2)
