@@ -75,14 +75,14 @@ async function connect() {
   if (!onlineStoreProvider.value) return;
   const ok = await openConnectModal.open(onlineStoreProvider.value);
   if (ok) {
-    toast.add({ color: "success", title: $ts("onlineStore.connected") });
+    toast.add({ color: "success", title: $ts("connected") });
   }
 }
 
 async function disconnect() {
   await onlineStore.logout();
   failedItems.value = [];
-  toast.add({ color: "neutral", title: $ts("onlineStore.disconnected") });
+  toast.add({ color: "neutral", title: $ts("disconnected") });
 }
 
 function extractMessage(err: unknown): string | undefined {
@@ -101,15 +101,15 @@ async function sendCart() {
     if (result.failed.length > 0) {
       toast.add({
         color: "warning",
-        title: $tc("onlineStore.syncPartial", result.failed.length),
+        title: $tc("syncPartial", result.failed.length),
       });
     } else {
-      toast.add({ color: "success", title: $ts("onlineStore.syncSuccess") });
+      toast.add({ color: "success", title: $ts("syncSuccess") });
     }
   } catch (err: unknown) {
     toast.add({
       color: "error",
-      title: $ts("onlineStore.syncFailed"),
+      title: $ts("syncFailed"),
       description: extractMessage(err),
       duration: 5000,
     });
@@ -128,7 +128,7 @@ async function clearOnlineCart() {
   } catch (err: unknown) {
     toast.add({
       color: "error",
-      title: $ts("onlineStore.clearFailed"),
+      title: $ts("clearFailed"),
       description: extractMessage(err),
       duration: 5000,
     });
@@ -300,7 +300,7 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
           <template #header>
             <div class="flex items-center justify-between gap-2">
               <h2 class="text-sm font-semibold">
-                {{ $ts("onlineStore.sendToStore") }}
+                {{ $ts("sendToStore") }}
               </h2>
               <UBadge
                 v-if="onlineStore.connected"
@@ -315,11 +315,11 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
           <!-- Not connected -->
           <template v-if="!onlineStore.connected">
             <p class="text-sm text-muted">
-              {{ $ts("onlineStore.sendToStoreHint") }}
+              {{ $ts("sendToStoreHint") }}
             </p>
             <UButton
               :label="
-                $ts('onlineStore.connectTo', {
+                $ts('connectTo', {
                   provider: onlineStoreProvider ?? '',
                 })
               "
@@ -333,22 +333,18 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
           <!-- Connected -->
           <template v-else>
             <p v-if="inSync && hasSent" class="text-sm text-muted">
-              {{ $ts("onlineStore.upToDate") }}
+              {{ $ts("upToDate") }}
             </p>
             <p v-else-if="cart && cart.length > 0" class="text-sm text-muted">
-              {{ $ts("onlineStore.readyToSend") }}
+              {{ $ts("readyToSend") }}
             </p>
             <p v-else class="text-sm text-muted">
-              {{ $ts("onlineStore.nothingToSend") }}
+              {{ $ts("nothingToSend") }}
             </p>
 
             <div class="mt-3 flex flex-wrap gap-2">
               <UButton
-                :label="
-                  hasSent
-                    ? $ts('onlineStore.updateCart')
-                    : $ts('onlineStore.sendCart')
-                "
+                :label="hasSent ? $ts('updateCart') : $ts('sendCart')"
                 color="primary"
                 :icon="hasSent ? 'i-lucide-arrow-down-up' : 'i-lucide-arrow-up'"
                 :loading="sending"
@@ -358,7 +354,7 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
               <UTooltip :delay-duration="0" :text="$ts('goToCartHint')">
                 <UButton
                   v-if="hasSent && onlineStoreCartUrl"
-                  :label="$ts('onlineStore.goToCart')"
+                  :label="$ts('goToCart')"
                   color="neutral"
                   variant="soft"
                   icon="i-lucide-external-link"
@@ -368,7 +364,7 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
               </UTooltip>
               <UButton
                 v-if="hasSent"
-                :label="$ts('onlineStore.clearCart')"
+                :label="$ts('clearCart')"
                 color="neutral"
                 variant="soft"
                 icon="i-lucide-trash-2"
@@ -376,7 +372,7 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
                 @click="clearOnlineCart"
               />
               <UButton
-                :label="$ts('onlineStore.disconnect')"
+                :label="$ts('disconnect')"
                 color="neutral"
                 variant="ghost"
                 size="sm"
@@ -389,7 +385,7 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
               color="warning"
               variant="soft"
               icon="i-lucide-triangle-alert"
-              :title="$tc('onlineStore.syncPartial', failedItems.length)"
+              :title="$tc('syncPartial', failedItems.length)"
             >
               <template #description>
                 <ul class="list-disc pl-4">
