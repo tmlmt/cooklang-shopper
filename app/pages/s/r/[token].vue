@@ -193,7 +193,11 @@ setHeaderMenuItems([
 </script>
 
 <template>
-  <UContainer v-if="recipe" class="py-8">
+  <UContainer
+    v-if="recipe"
+    class="sm:px-0 lg:px-0 py-6"
+    :ui="{ base: 'md:mt-0' }"
+  >
     <div v-if="heroImages.length > 0" class="mb-3 md:mb-6">
       <UCarousel
         v-slot="{ item, index }"

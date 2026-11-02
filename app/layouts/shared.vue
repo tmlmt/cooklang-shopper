@@ -120,10 +120,7 @@ const wrapForMobile = (items: DropdownMenuItem[]) =>
         </UDropdownMenu>
       </template>
     </UHeader>
-    <UContainer
-      class="mt-0 flex w-full flex-auto md:mt-5"
-      :ui="{ base: 'px-0' }"
-    >
+    <UContainer class="flex w-full flex-auto" :ui="{ base: 'px-0' }">
       <main class="flex w-full">
         <slot />
       </main>
