@@ -195,7 +195,7 @@ setHeaderMenuItems([
 <template>
   <UContainer
     v-if="recipe"
-    class="sm:px-0 lg:px-0 py-6"
+    class="sm:px-0 lg:px-0 py-6 flex flex-col"
     :ui="{ base: 'md:mt-0' }"
   >
     <div v-if="heroImages.length > 0" class="mb-3 md:mb-6">
@@ -222,7 +222,7 @@ setHeaderMenuItems([
     </div>
 
     <div class="mb-2 flex flex-col gap-4">
-      <h1 class="flex items-center gap-2 text-2xl font-bold md:text-3xl">
+      <h1 class="flex items-center gap-2 text-4xl font-extrabold">
         {{ recipe.metadata.title ?? recipeName }}
         <RecipeLanguageSelector
           v-if="showLocaleSelector"
