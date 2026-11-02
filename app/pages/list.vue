@@ -138,14 +138,6 @@ watch(
         />
       </template>
     </UAlert>
-    <div class="flex flex-row items-center gap-1">
-      <span
-        v-if="shoppingStore.recipeSelection.length"
-        class="text-sm md:text-base"
-        >·
-        {{ $tc("folder.recipes", shoppingStore.recipeSelection.length) }}</span
-      >
-    </div>
     <ShoppingListContent
       :recipe-selection="shoppingStore.recipeSelection"
       :ingredients="shoppingStore.ingredients"

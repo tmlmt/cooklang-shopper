@@ -319,7 +319,7 @@ const columns = computed<TableColumn<RecipeInfo>[]>(() => {
     <div class="flex flex-col gap-3 md:flex-1">
       <div class="flex items-center justify-between">
         <h2 class="text-base font-bold md:text-lg">
-          {{ $t("recipe.ingredients") }}
+          {{ $t("pages.shoppingList") }}
         </h2>
         <UButton
           v-if="onUncheckAllFn && anyChecked"
