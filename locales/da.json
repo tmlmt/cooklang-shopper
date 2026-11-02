@@ -8,6 +8,11 @@
     "cookbook": "Kogebog",
     "authentication": "Autentificering"
   },
+  "diagnostics": {
+    "noIssue": "Ingen problemer",
+    "warnings": "Ingen advarsler | 1 advarsel | {count} advarsler",
+    "errors": "Ingen fejl | 1 fejl | {count} fejl"
+  },
   "actions": {
     "save": "Gem",
     "cancel": "Afbryd",

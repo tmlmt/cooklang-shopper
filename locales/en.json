@@ -8,6 +8,11 @@
     "cookbook": "Cookbook",
     "authentication": "Authentication"
   },
+  "diagnostics": {
+    "noIssue": "No issue",
+    "warnings": "No warnings | 1 warning | {count} Warnings",
+    "errors": "No errors | 1 error | {count} Errors"
+  },
   "actions": {
     "save": "Save",
     "cancel": "Cancel",

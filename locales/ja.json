@@ -8,6 +8,11 @@
     "cookbook": "クックブック",
     "authentication": "認証"
   },
+  "diagnostics": {
+    "noIssue": "問題なし",
+    "warnings": "警告なし | 1 件の警告 | {count} 件の警告",
+    "errors": "エラーなし | 1 件のエラー | {count} 件のエラー"
+  },
   "actions": {
     "save": "保存",
     "cancel": "キャンセル",

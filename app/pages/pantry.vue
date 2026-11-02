@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Pantry } from "@tmlmt/cooklang-parser";
+
 const { $ts } = useI18n();
 
 useSeoMeta({
@@ -10,6 +12,10 @@ const savedContent = ref(data.value?.content ?? "");
 const content = ref(savedContent.value);
 
 const isDirty = computed(() => content.value !== savedContent.value);
+
+const parsePantry = createDiagnosticParser((source) => new Pantry(source));
+const diagnostics = computed(() => parsePantry(content.value).diagnostics);
+const { errorCount } = useDiagnosticsSummary(diagnostics);
 
 const toast = useToast();
 const saving = ref(false);
@@ -64,12 +70,13 @@ function onFileChange(e: Event) {
       :placeholder="$ts('placeholder')"
       autoresize
     />
+    <DiagnosticsCollapsible :diagnostics="diagnostics" :source="content" />
     <div class="flex gap-2">
       <UButton
         color="primary"
         :label="$ts('actions.save')"
         :loading="saving"
-        :disabled="!isDirty"
+        :disabled="!isDirty || errorCount > 0"
         @click="save"
       />
       <UButton
