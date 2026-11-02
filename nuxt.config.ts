@@ -109,6 +109,10 @@ export default defineNuxtConfig({
         driver: "fs",
         base: "./public/catalog",
       },
+      onlineStoreSessions: {
+        driver: "fs",
+        base: "./data/online-store-sessions",
+      },
     },
   },
 

@@ -3,6 +3,7 @@ import { getAdapter } from "#server/utils/onlineStore/adapters";
 import {
   clearState,
   getState,
+  persistState,
   setSession,
 } from "#server/utils/onlineStore/registry";
 import type {
@@ -33,8 +34,8 @@ async function resolveStore(): Promise<ResolvedStore | undefined> {
   return { adapter };
 }
 
-function lastSentItems(userKey: string): OnlineStoreItem[] {
-  const state = getState(userKey);
+async function lastSentItems(userKey: string): Promise<OnlineStoreItem[]> {
+  const state = await getState(userKey);
   if (!state) return [];
   return [...state.lastSent.entries()].map(([productId, quantity]) => ({
     productId,
@@ -52,8 +53,8 @@ export async function getStoreStatus(
   return {
     configured: true,
     provider: resolved.adapter.id,
-    connected: !!getState(userKey),
-    lastSent: lastSentItems(userKey),
+    connected: (await getState(userKey)) !== undefined,
+    lastSent: await lastSentItems(userKey),
   };
 }
 
@@ -66,12 +67,12 @@ export async function loginStore(
     throw createError({ status: 404, message: "No online store configured" });
   }
   const session = await resolved.adapter.login(credentials);
-  setSession(userKey, session);
+  await setSession(userKey, session);
   return getStoreStatus(userKey);
 }
 
-export function logoutStore(userKey: string): void {
-  clearState(userKey);
+export async function logoutStore(userKey: string): Promise<void> {
+  await clearState(userKey);
 }
 
 /**
@@ -87,7 +88,7 @@ export async function syncCart(
   if (!resolved) {
     throw createError({ status: 404, message: "No online store configured" });
   }
-  const state = getState(userKey);
+  const state = await getState(userKey);
   if (!state) {
     throw createError({ status: 401, message: "Not connected to the store" });
   }
@@ -136,7 +137,12 @@ export async function syncCart(
     }
   }
 
-  return { added, removed, failed, lastSent: lastSentItems(userKey) };
+  // Persist the just-synced lastSent diff state and session (an adapter may
+  // have refreshed its token in place during the calls above) so a server
+  // restart doesn't lose track of what's already in the store's basket.
+  await persistState(userKey);
+
+  return { added, removed, failed, lastSent: await lastSentItems(userKey) };
 }
 
 /** Remove everything we previously sent from the basket. */
