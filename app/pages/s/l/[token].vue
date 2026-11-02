@@ -101,7 +101,7 @@ if (!loggedIn.value) {
 </script>
 
 <template>
-  <UContainer class="sm:px-0 lg:px-0 py-6" :ui="{ base: 'md:mt-0' }">
+  <UContainer class="py-6 sm:px-0 lg:px-0" :ui="{ base: 'md:mt-0' }">
     <div v-if="loggedIn" class="flex h-64 w-full items-center justify-center">
       <UIcon name="i-lucide-loader-circle" class="animate-spin text-4xl" />
     </div>

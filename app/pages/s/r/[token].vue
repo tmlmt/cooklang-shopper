@@ -195,7 +195,7 @@ setHeaderMenuItems([
 <template>
   <UContainer
     v-if="recipe"
-    class="sm:px-0 lg:px-0 py-6 flex flex-col"
+    class="flex flex-col py-6 sm:px-0 lg:px-0"
     :ui="{ base: 'md:mt-0' }"
   >
     <div v-if="heroImages.length > 0" class="mb-3 md:mb-6">
