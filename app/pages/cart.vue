@@ -355,15 +355,17 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
                 :disabled="(inSync && hasSent) || !(cart && cart.length > 0)"
                 @click="sendCart"
               />
-              <UButton
-                v-if="hasSent && onlineStoreCartUrl"
-                :label="$ts('onlineStore.goToCart')"
-                color="neutral"
-                variant="soft"
-                icon="i-lucide-external-link"
-                :to="onlineStoreCartUrl"
-                target="_blank"
-              />
+              <UTooltip :delay-duration="0" :text="$ts('goToCartHint')">
+                <UButton
+                  v-if="hasSent && onlineStoreCartUrl"
+                  :label="$ts('onlineStore.goToCart')"
+                  color="neutral"
+                  variant="soft"
+                  icon="i-lucide-external-link"
+                  :to="onlineStoreCartUrl"
+                  target="_blank"
+                />
+              </UTooltip>
               <UButton
                 v-if="hasSent"
                 :label="$ts('onlineStore.clearCart')"
@@ -381,7 +383,6 @@ const columnsMisMatch: TableColumn<ProductMisMatch>[] = [
                 @click="disconnect"
               />
             </div>
-
             <UAlert
               v-if="failedItems.length > 0"
               class="mt-3"

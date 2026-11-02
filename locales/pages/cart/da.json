@@ -12,6 +12,7 @@
   "emptyMisMatch": "Alle ingredienser matchede et produkt",
   "emptyCatalogHint": "Dit produktkatalog er tomt. Tilføj produkter for at begynde matchning.",
   "emptyListHint": "Din indkøbsliste er tom. Tilføj opskrifter for at opbygge en kurv.",
+  "goToCartHint": "Du bliver muligvis nødt til at logge ind igen på butikkens hjemmeside.",
   "goToCatalog": "Gå til produktkatalog",
   "goToList": "Gå til indkøbsliste",
   "sendToStore": "Send til butik",

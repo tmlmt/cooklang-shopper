@@ -1,4 +1,4 @@
-import { jsonPost } from "#server/utils/onlineStore/adapterHelpers";
+import { jsonPost } from "#server/utils/onlineStore/cookieSession";
 import type {
   OnlineStoreAdapter,
   StoreCredentials,

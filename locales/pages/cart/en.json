@@ -12,6 +12,7 @@
   "emptyMisMatch": "All ingredients matched a product",
   "emptyCatalogHint": "Your product catalog is empty. Add products to start matching.",
   "emptyListHint": "Your shopping list is empty. Add recipes to build a cart.",
+  "goToCartHint": "You may need to log in again on the store's website.",
   "goToCatalog": "Go to Product Catalog",
   "goToList": "Go to Shopping List",
   "sendToStore": "Send to store",

@@ -88,7 +88,7 @@ auth:
 #   # matched cart directly to the store's basket from the Shopping Cart page.
 #   # The catalog product keys must match the store's product IDs.
 #   store:
-#     provider: nemlig    # id of a supported store adapter (currently: nemlig)
+#     provider: nemlig    # id of a supported store adapter (currently: nemlig, rema1000)
 
 # Base URL of this instance (required for OIDC and federation)
 # baseUrl: "https://cookbook.example.com"

@@ -63,7 +63,7 @@ The app is currently in pre-v1 and in active development. Recipe management (bro
 
 #### Online store adapters
 
-Online stores are supported through small **adapters**. Only [nemlig.com](https://www.nemlig.com/) ships today, but adding another store is straightforward:
+Online stores are supported through small **adapters**. [nemlig.com](https://www.nemlig.com/) and [REMA 1000](https://shop.rema1000.dk/) ship today, but adding another store is straightforward:
 
 1. Create `server/utils/onlineStore/adapters/<your-store>.ts` exporting an object that implements the `OnlineStoreAdapter` interface (`server/utils/onlineStore/types.ts`). You need to provide:
    - `id` — the provider id used in `config.yaml`
@@ -73,9 +73,11 @@ Online stores are supported through small **adapters**. Only [nemlig.com](https:
    - `removeFromBasket(session, productId, quantity, ctx)` — remove a quantity of a product
 2. Register it in `server/utils/onlineStore/adapters/index.ts`.
 3. Use the store's own product IDs as the keys in the product catalog, so matched products map directly to basket items.
-4. Always perform outbound HTTP calls through the provided `safeFetch` helper (SSRF protection). For cookie-session stores (the most common case), the `adapterHelpers.ts` module provides two ready-made utilities:
-   - `cookieHeader(session)` — converts stored `Set-Cookie` values into a `Cookie` request header
-   - `jsonPost(url, body, session?, options?)` — performs a JSON POST, attaches the cookie session if provided, and throws a 502 on non-OK responses. Pass `options.extractError` to parse a store-specific error field from the response body.
+4. Always perform outbound HTTP calls through the provided `safeFetch` helper (SSRF protection). A few ready-made helper modules under `server/utils/onlineStore/` cover common patterns, grouped by what they need to work:
+   - `cookieSession.ts` — for cookie-session stores (the most common case): `cookieHeader`/`mergeSetCookies`/`findCookieValue`/`upsertCookie` to maintain a cookie jar, `jsonPost(url, body, session?, options?)` for a cookie-attached JSON POST, and `followRedirectChain(url, cookies, maxHops?)` to manually follow a multi-hop redirect chain while accumulating cookies (e.g. for an OAuth login flow). Pass `options.extractError` to `jsonPost` to parse a store-specific error field from the response body.
+   - `bearerAuth.ts` — `bearerRequest(url, token, options?)` for a bearer-token-authenticated JSON request (any HTTP method), for stores whose API expects `Authorization: Bearer <token>` instead of cookies.
+   - `pkce.ts` — `randomPkceString`/`pkceCodeChallenge` for stores that require driving an OAuth2 Authorization Code + PKCE flow yourself.
+   - `jwt.ts` — `decodeJwtPayload`/`decodeJwtSubject` for reading claims out of a JWT access token the store hands back.
 5. Open a pull request so others can benefit from it.
 
 Credentials are only used to open a session with the store and are never persisted, logged or returned to the client.

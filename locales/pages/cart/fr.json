@@ -12,6 +12,7 @@
   "emptyMisMatch": "Tous les ingrédients ont été associés à un produit",
   "emptyCatalogHint": "Votre catalogue de produits est vide. Ajoutez des produits pour commencer l'association.",
   "emptyListHint": "Votre liste de courses est vide. Ajoutez des recettes pour constituer un panier.",
+  "goToCartHint": "Vous devrez peut-être vous reconnecter sur le site du magasin.",
   "goToCatalog": "Aller au catalogue de produits",
   "goToList": "Aller à la liste de courses",
   "sendToStore": "Envoyer au magasin",

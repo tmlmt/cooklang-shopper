@@ -1,4 +1,5 @@
 import { nemligAdapter } from "#server/utils/onlineStore/adapters/nemlig";
+import { rema1000Adapter } from "#server/utils/onlineStore/adapters/rema1000";
 import type { OnlineStoreAdapter } from "#server/utils/onlineStore/types";
 
 /**
@@ -7,6 +8,7 @@ import type { OnlineStoreAdapter } from "#server/utils/onlineStore/types";
  */
 const adapters: Record<string, OnlineStoreAdapter> = {
   [nemligAdapter.id]: nemligAdapter,
+  [rema1000Adapter.id]: rema1000Adapter,
 };
 
 export function getAdapter(id: string): OnlineStoreAdapter | undefined {

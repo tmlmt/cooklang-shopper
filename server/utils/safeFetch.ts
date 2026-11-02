@@ -79,19 +79,24 @@ export async function assertPublicUrl(rawUrl: string): Promise<URL> {
 /**
  * SSRF-safe replacement for `fetch` for user-supplied URLs. Validates the URL
  * (and every redirect target) with {@link assertPublicUrl} before connecting.
+ *
+ * Pass `follow: false` to get a single hop's raw response back as-is (status,
+ * headers including `Set-Cookie`, `Location`) instead of auto-following
+ * redirects — needed by adapters that must inspect/replay cookies across a
+ * multi-hop redirect chain (e.g. an OAuth login dance).
  */
 export async function safeFetch(
   url: string,
-  init: RequestInit & { maxRedirects?: number } = {},
+  init: RequestInit & { maxRedirects?: number; follow?: boolean } = {},
 ): Promise<Response> {
-  const { maxRedirects = 5, ...rest } = init;
+  const { maxRedirects = 5, follow = true, ...rest } = init;
   let currentUrl = url;
 
   for (let i = 0; i <= maxRedirects; i++) {
     await assertPublicUrl(currentUrl);
     const response = await fetch(currentUrl, { ...rest, redirect: "manual" });
 
-    if (response.status >= 300 && response.status < 400) {
+    if (follow && response.status >= 300 && response.status < 400) {
       const location = response.headers.get("location");
       if (!location) return response;
       currentUrl = new URL(location, currentUrl).toString();
