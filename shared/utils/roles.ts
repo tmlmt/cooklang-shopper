@@ -12,3 +12,7 @@ export function hasEditorAccess(role: Role | undefined | null): boolean {
 export function hasAdminAccess(role: Role | undefined | null): boolean {
   return role === "admin";
 }
+
+export function isRole(value: unknown): value is Role {
+  return value === "viewer" || value === "editor" || value === "admin";
+}
