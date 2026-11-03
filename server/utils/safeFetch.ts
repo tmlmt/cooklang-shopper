@@ -1,5 +1,8 @@
 import { lookup } from "node:dns/promises";
+import { lookup as lookupCb, type LookupAddress } from "node:dns";
+import type { LookupFunction } from "node:net";
 import ipaddr from "ipaddr.js";
+import { Agent, fetch as undiciFetch } from "undici";
 
 /**
  * SSRF protection for outbound requests to user-supplied URLs.
@@ -8,7 +11,9 @@ import ipaddr from "ipaddr.js";
  * routable unicast — this covers private, loopback, link-local (e.g. cloud
  * metadata at 169.254.169.254), CGNAT, multicast and reserved ranges for both
  * IPv4 and IPv6. Only standard http/https ports are permitted, and every
- * redirect hop is re-validated.
+ * redirect hop is re-validated. The addresses the socket connects to are the
+ * very ones validated (see {@link validatedLookup}), so a hostname that
+ * resolves differently on a second lookup (DNS rebinding) cannot bypass it.
  */
 
 /** Whether a resolved IP address is safe to connect to (globally routable). */
@@ -77,8 +82,42 @@ export async function assertPublicUrl(rawUrl: string): Promise<URL> {
 }
 
 /**
+ * Socket-level DNS lookup that only yields public addresses. Used as the
+ * connector's `lookup`, so validation and connection share a single
+ * resolution: there is no second lookup an attacker could answer differently.
+ */
+export const validatedLookup: LookupFunction = (hostname, options, callback) => {
+  lookupCb(hostname, { ...options, all: true }, (err, addresses) => {
+    if (err) return callback(err, "", 4);
+
+    const list = addresses as LookupAddress[];
+    if (list.length === 0 || !list.every((a) => isPublicAddress(a.address))) {
+      return callback(
+        new Error("Requests to this address are not allowed"),
+        "",
+        4,
+      );
+    }
+
+    if (options.all) {
+      // Node typings for LookupFunction omit the `all: true` array form.
+      return (
+        callback as unknown as (
+          err: null,
+          addresses: LookupAddress[],
+        ) => void
+      )(null, list);
+    }
+    callback(null, list[0]!.address, list[0]!.family);
+  });
+};
+
+const safeAgent = new Agent({ connect: { lookup: validatedLookup } });
+
+/**
  * SSRF-safe replacement for `fetch` for user-supplied URLs. Validates the URL
- * (and every redirect target) with {@link assertPublicUrl} before connecting.
+ * (and every redirect target) with {@link assertPublicUrl} before connecting,
+ * and connects only to addresses validated by {@link validatedLookup}.
  *
  * Pass `follow: false` to get a single hop's raw response back as-is (status,
  * headers including `Set-Cookie`, `Location`) instead of auto-following
@@ -94,7 +133,11 @@ export async function safeFetch(
 
   for (let i = 0; i <= maxRedirects; i++) {
     await assertPublicUrl(currentUrl);
-    const response = await fetch(currentUrl, { ...rest, redirect: "manual" });
+    const response = (await undiciFetch(currentUrl, {
+      ...(rest as Parameters<typeof undiciFetch>[1]),
+      redirect: "manual",
+      dispatcher: safeAgent,
+    })) as unknown as Response;
 
     if (follow && response.status >= 300 && response.status < 400) {
       const location = response.headers.get("location");

@@ -52,6 +52,7 @@
     "pinia": "4.1.0",
     "tailwindcss": "4.3.3",
     "turndown": "7.2.4",
+    "undici": "8.12.3",
     "valibot": "1.5.0"
   },
   "devDependencies": {

@@ -1,5 +1,22 @@
 import { describe, it, expect, vi } from "vitest";
-import { isPublicAddress, assertPublicUrl } from "~~/server/utils/safeFetch";
+import {
+  isPublicAddress,
+  assertPublicUrl,
+  validatedLookup,
+} from "~~/server/utils/safeFetch";
+
+type LookupResult = { address: string; family: number }[];
+
+function runLookup(hostname: string, all: boolean) {
+  return new Promise<{ err: Error | null; result: unknown }>((resolve) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (validatedLookup as any)(
+      hostname,
+      { all },
+      (err: Error | null, result: unknown) => resolve({ err, result }),
+    );
+  });
+}
 
 vi.stubGlobal(
   "createError",
@@ -94,5 +111,29 @@ describe("assertPublicUrl", () => {
     await expect(assertPublicUrl("https://1.1.1.1")).resolves.toBeInstanceOf(
       URL,
     );
+  });
+});
+
+describe("validatedLookup", () => {
+  it("rejects hostnames resolving to loopback addresses", async () => {
+    const { err } = await runLookup("localhost", false);
+    expect(err?.message).toBe("Requests to this address are not allowed");
+  });
+
+  it("rejects when any returned address is non-public (all mode)", async () => {
+    const { err } = await runLookup("localhost", true);
+    expect(err).toBeInstanceOf(Error);
+  });
+
+  it("returns the validated public address in single mode", async () => {
+    const { err, result } = await runLookup("1.1.1.1", false);
+    expect(err).toBeNull();
+    expect(result).toBe("1.1.1.1");
+  });
+
+  it("returns the validated address list in all mode", async () => {
+    const { err, result } = await runLookup("1.1.1.1", true);
+    expect(err).toBeNull();
+    expect(result as LookupResult).toEqual([{ address: "1.1.1.1", family: 4 }]);
   });
 });
