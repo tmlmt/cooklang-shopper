@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.23.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.22.3...v0.23.0)
+
+### 🚀 Enhancements
+
+- **store:** Add rema1000.dk ([269e04e](https://github.com/tmlmt/cooklang-shopper/commit/269e04e))
+- **store:** Persist store sessions ([efb5a1e](https://github.com/tmlmt/cooklang-shopper/commit/efb5a1e))
+- **pantry, catalog:** Show live parse diagnostics ([5ded4b6](https://github.com/tmlmt/cooklang-shopper/commit/5ded4b6))
+
+### 🔥 Performance
+
+- **locales:** Move `/cart` strings to page specific file ([8477efb](https://github.com/tmlmt/cooklang-shopper/commit/8477efb))
+
+### 🏡 Chore
+
+- Lint ([0601667](https://github.com/tmlmt/cooklang-shopper/commit/0601667))
+
+### 🎨 Styles
+
+- **list:** Remove recipe count on top and rename first header to Shopping List ([bd8c527](https://github.com/tmlmt/cooklang-shopper/commit/bd8c527))
+- **shared:** Reduce padding ([c73922d](https://github.com/tmlmt/cooklang-shopper/commit/c73922d))
+- **shared-recipe:** Align title size and margin with original recipe page ([a57f053](https://github.com/tmlmt/cooklang-shopper/commit/a57f053))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.22.3
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.22.2...v0.22.3)
