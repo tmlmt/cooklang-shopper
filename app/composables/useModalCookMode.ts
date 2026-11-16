@@ -1,11 +1,7 @@
 import type { Recipe, RecipeChoices } from "@tmlmt/cooklang-parser";
 import { ModalCookMode } from "#components";
 
-type TranslateFn = (
-  key: string,
-  params?: Record<string, string | number | boolean>,
-  defaultValue?: string | null,
-) => string;
+type TranslateFn = ReturnType<typeof useI18n>["$ts"];
 
 export default async function () {
   const overlay = useOverlay();
