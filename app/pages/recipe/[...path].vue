@@ -8,6 +8,7 @@ import type { IngredientOrder } from "~~/shared/types";
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
+const { clear: clearRecipeCoverImageCache } = useRecipeCoverImageCache();
 const { $t, $ts, $getLocale, $getLocales } = useI18n();
 
 if (!route.params.path) {

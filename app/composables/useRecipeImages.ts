@@ -2,12 +2,17 @@ import type { RecipeImageManifest } from "~~/shared/types";
 
 const COVER_CACHE_STATE_KEY = "recipe-cover-images-cache";
 
-export function clearRecipeCoverImageCache() {
+export function useRecipeCoverImageCache() {
   const cache = useState<Record<string, string | null>>(
     COVER_CACHE_STATE_KEY,
     () => ({}),
   );
-  cache.value = {};
+
+  function clear() {
+    cache.value = {};
+  }
+
+  return { cache, clear };
 }
 
 async function mapWithConcurrency<T, R>(
@@ -37,10 +42,7 @@ async function mapWithConcurrency<T, R>(
 export async function useRecipeImageManifest(
   recipePath: Ref<string> | ComputedRef<string>,
 ) {
-  const cache = useState<Record<string, string | null>>(
-    COVER_CACHE_STATE_KEY,
-    () => ({}),
-  );
+  const { cache } = useRecipeCoverImageCache();
 
   const cachedCover = computed(() => {
     const p = recipePath.value.trim();
@@ -89,10 +91,7 @@ export async function useRecipeImageManifest(
 export function useRecipeCoverImages(
   recipePaths: Ref<string[]> | ComputedRef<string[]>,
 ) {
-  const cache = useState<Record<string, string | null>>(
-    COVER_CACHE_STATE_KEY,
-    () => ({}),
-  );
+  const { cache } = useRecipeCoverImageCache();
 
   const coversKey = computed(() => {
     const paths = recipePaths.value.filter((p) => p.trim().length > 0);

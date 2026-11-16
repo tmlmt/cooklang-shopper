@@ -7,6 +7,7 @@ type ViewMode = "grid" | "list";
 
 const recipeStore = useRecipeStore();
 const toast = useToast();
+const { clear: clearRecipeCoverImageCache } = useRecipeCoverImageCache();
 const { isEditor } = useRole();
 const { $t, $ts, $tc, $localeRoute } = useI18n();
 
