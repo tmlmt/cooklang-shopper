@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.24.0
+
+[compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.23.0...v0.24.0)
+
+### 🔥 Performance
+
+- **i18n:** Bump nuxt-i18n-micro to v4 ([9036eaf](https://github.com/tmlmt/cooklang-shopper/commit/9036eaf))
+
+### 🩹 Fixes
+
+- **session:** Check user role on every request ([2c2bae9](https://github.com/tmlmt/cooklang-shopper/commit/2c2bae9))
+- **safeFetch:** Prevent DNS rebinding ([cdc41af](https://github.com/tmlmt/cooklang-shopper/commit/cdc41af))
+- **recipe-images:** Clear image cache within Nuxt context ([6491cba](https://github.com/tmlmt/cooklang-shopper/commit/6491cba))
+
+### ❤️ Contributors
+
+- Thomas Lamant ([@tmlmt](https://github.com/tmlmt))
+
 ## v0.23.0
 
 [compare changes](https://github.com/tmlmt/cooklang-shopper/compare/v0.22.3...v0.23.0)
